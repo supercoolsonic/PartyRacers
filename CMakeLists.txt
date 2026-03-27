@@ -200,7 +200,7 @@ if(NOT "${SRB2_GIT_DIR}" STREQUAL "" AND "${SRB2_SDL2_EXE_NAME}" STREQUAL "")
 		git_latest_commit(SRB2_GIT_REVISION)
 	endif()
 
-	list(APPEND EXE_NAME_PARTS "ringracers")
+	list(APPEND EXE_NAME_PARTS "ringracers_party")
 
 	if(NOT "${SRB2_GIT_REVISION}" STREQUAL "master")
 		# substitute path-unsafe characters
