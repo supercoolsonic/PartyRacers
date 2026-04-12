@@ -119,85 +119,44 @@ struct degenmobj_t
 // heightsec. Allows for multiple fake planes.
 /** Flags describing 3Dfloor behavior and appearance.
   */
-typedef enum
-{
-	FOF_EXISTS            = 0x1,        ///< Always set, to check for validity.
-	FOF_BLOCKPLAYER       = 0x2,        ///< Solid to player, but nothing else
-	FOF_BLOCKOTHERS       = 0x4,        ///< Solid to everything but player
-	FOF_SOLID             = 0x6,        ///< Clips things.
-	FOF_RENDERSIDES       = 0x8,        ///< Renders the sides.
-	FOF_RENDERPLANES      = 0x10,       ///< Renders the floor/ceiling.
-	FOF_RENDERALL         = 0x18,       ///< Renders everything.
-	FOF_SWIMMABLE         = 0x20,       ///< Is a water block.
-	FOF_NOSHADE           = 0x40,       ///< Messes with the lighting?
-	FOF_CUTSOLIDS         = 0x80,       ///< Cuts out hidden solid pixels.
-	FOF_CUTEXTRA          = 0x100,      ///< Cuts out hidden translucent pixels.
-	FOF_CUTLEVEL          = 0x180,      ///< Cuts out all hidden pixels.
-	FOF_CUTSPRITES        = 0x200,      ///< Final step in making 3D water.
-	FOF_BOTHPLANES        = 0x400,      ///< Render inside and outside planes.
-	FOF_EXTRA             = 0x800,      ///< Gets cut by ::FOF_CUTEXTRA.
-	FOF_TRANSLUCENT       = 0x1000,     ///< See through!
-	FOF_FOG               = 0x2000,     ///< Fog "brush."
-	FOF_INVERTPLANES      = 0x4000,     ///< Only render inside planes.
-	FOF_ALLSIDES          = 0x8000,     ///< Render inside and outside sides.
-	FOF_INVERTSIDES       = 0x10000,    ///< Only render inside sides.
-	FOF_DOUBLESHADOW      = 0x20000,    ///< Make two lightlist entries to reset light?
-	FOF_FLOATBOB          = 0x40000,    ///< Floats on water and bobs if you step on it.
-	FOF_NORETURN          = 0x80000,    ///< Used with ::FOF_CRUMBLE. Will not return to its original position after falling.
-	FOF_CRUMBLE           = 0x100000,   ///< Falls 2 seconds after being stepped on, and randomly brings all touching crumbling 3dfloors down with it, providing their master sectors share the same tag (allows crumble platforms above or below, to also exist).
-	FOF_GOOWATER          = 0x200000,   ///< Used with ::FOF_SWIMMABLE. Makes thick bouncey goop.
-	FOF_MARIO             = 0x400000,   ///< Acts like a question block when hit from underneath. Goodie spawned at top is determined by master sector.
-	FOF_BUSTUP            = 0x800000,   ///< You can spin through/punch this block and it will crumble!
-	FOF_QUICKSAND         = 0x1000000,  ///< Quicksand!
-	FOF_PLATFORM          = 0x2000000,  ///< You can jump up through this to the top.
-	FOF_REVERSEPLATFORM   = 0x4000000,  ///< A fall-through floor in normal gravity, a platform in reverse gravity.
-	FOF_INTANGIBLEFLATS   = 0x6000000,  ///< Both flats are intangible, but the sides are still solid.
-	FOF_RIPPLE            = 0x8000000,  ///< Ripple the flats
-	FOF_COLORMAPONLY      = 0x10000000, ///< Only copy the colormap, not the lightlevel
-	FOF_BOUNCY            = 0x20000000, ///< Bounces players
-	FOF_SPLAT             = 0x40000000, ///< Use splat flat renderer (treat cyan pixels as invisible)
-} ffloortype_e;
+typedef int ffloortype_e;
 
-typedef enum
-{
-	FF_OLD_EXISTS            = 0x1,
-	FF_OLD_BLOCKPLAYER       = 0x2,
-	FF_OLD_BLOCKOTHERS       = 0x4,
-	FF_OLD_SOLID             = 0x6,
-	FF_OLD_RENDERSIDES       = 0x8,
-	FF_OLD_RENDERPLANES      = 0x10,
-	FF_OLD_RENDERALL         = 0x18,
-	FF_OLD_SWIMMABLE         = 0x20,
-	FF_OLD_NOSHADE           = 0x40,
-	FF_OLD_CUTSOLIDS         = 0x80,
-	FF_OLD_CUTEXTRA          = 0x100,
-	FF_OLD_CUTLEVEL          = 0x180,
-	FF_OLD_CUTSPRITES        = 0x200,
-	FF_OLD_BOTHPLANES        = 0x400,
-	FF_OLD_EXTRA             = 0x800,
-	FF_OLD_TRANSLUCENT       = 0x1000,
-	FF_OLD_FOG               = 0x2000,
-	FF_OLD_INVERTPLANES      = 0x4000,
-	FF_OLD_ALLSIDES          = 0x8000,
-	FF_OLD_INVERTSIDES       = 0x10000,
-	FF_OLD_DOUBLESHADOW      = 0x20000,
-	FF_OLD_FLOATBOB          = 0x40000,
-	FF_OLD_NORETURN          = 0x80000,
-	FF_OLD_CRUMBLE           = 0x100000,
-	FF_OLD_SHATTERBOTTOM     = 0x200000,
-	FF_OLD_GOOWATER          = 0x200000,
-	FF_OLD_MARIO             = 0x400000,
-	FF_OLD_BUSTUP            = 0x800000,
-	FF_OLD_QUICKSAND         = 0x1000000,
-	FF_OLD_PLATFORM          = 0x2000000,
-	FF_OLD_REVERSEPLATFORM   = 0x4000000,
-	FF_OLD_INTANGIBLEFLATS   = 0x6000000,
-	FF_OLD_SHATTER           = 0x8000000,
-	FF_OLD_SPINBUST          = 0x10000000,
-	FF_OLD_STRONGBUST        = 0x20000000,
-	FF_OLD_RIPPLE            = 0x40000000,
-	FF_OLD_COLORMAPONLY      = (INT32)0x80000000,
-} oldffloortype_e;
+#define FOF_EXISTS            (0x1)        ///< Always set, to check for validity.
+#define FOF_BLOCKPLAYER       (0x2)        ///< Solid to player, but nothing else
+#define FOF_BLOCKOTHERS       (0x4)        ///< Solid to everything but player
+#define FOF_SOLID             (0x6)        ///< Clips things.
+#define FOF_RENDERSIDES       (0x8)        ///< Renders the sides.
+#define FOF_RENDERPLANES      (0x10)       ///< Renders the floor/ceiling.
+#define FOF_RENDERALL         (0x18)       ///< Renders everything.
+#define FOF_SWIMMABLE         (0x20)       ///< Is a water block.
+#define FOF_NOSHADE           (0x40)       ///< Messes with the lighting?
+#define FOF_CUTSOLIDS         (0x80)       ///< Cuts out hidden solid pixels.
+#define FOF_CUTEXTRA          (0x100)      ///< Cuts out hidden translucent pixels.
+#define FOF_CUTLEVEL          (0x180)      ///< Cuts out all hidden pixels.
+#define FOF_CUTSPRITES        (0x200)      ///< Final step in making 3D water.
+#define FOF_BOTHPLANES        (0x400)      ///< Render inside and outside planes.
+#define FOF_EXTRA             (0x800)      ///< Gets cut by ::FOF_CUTEXTRA.
+#define FOF_TRANSLUCENT       (0x1000)     ///< See through!
+#define FOF_FOG               (0x2000)     ///< Fog "brush."
+#define FOF_INVERTPLANES      (0x4000)     ///< Only render inside planes.
+#define FOF_ALLSIDES          (0x8000)     ///< Render inside and outside sides.
+#define FOF_INVERTSIDES       (0x10000)    ///< Only render inside sides.
+#define FOF_DOUBLESHADOW      (0x20000)    ///< Make two lightlist entries to reset light?
+#define FOF_FLOATBOB          (0x40000)    ///< Floats on water and bobs if you step on it.
+#define FOF_NORETURN          (0x80000)    ///< Used with ::FOF_CRUMBLE. Will not return to its original position after falling.
+#define FOF_CRUMBLE           (0x100000)   ///< Falls 2 seconds after being stepped on, and randomly brings all touching crumbling 3dfloors down with it, providing their master sectors share the same tag (allows crumble platforms above or below, to also exist).
+#define FOF_GOOWATER          (0x200000)   ///< Used with ::FOF_SWIMMABLE. Makes thick bouncey goop.
+#define FOF_MARIO             (0x400000)   ///< Acts like a question block when hit from underneath. Goodie spawned at top is determined by master sector.
+#define FOF_BUSTUP            (0x800000)   ///< You can spin through/punch this block and it will crumble!
+#define FOF_QUICKSAND         (0x1000000)  ///< Quicksand!
+#define FOF_PLATFORM          (0x2000000)  ///< You can jump up through this to the top.
+#define FOF_REVERSEPLATFORM   (0x4000000)  ///< A fall-through floor in normal gravity, a platform in reverse gravity.
+#define FOF_INTANGIBLEFLATS   (0x6000000)  ///< Both flats are intangible, but the sides are still solid.
+#define FOF_RIPPLE            (0x8000000)  ///< Ripple the flats
+#define FOF_COLORMAPONLY      (0x10000000) ///< Only copy the colormap, not the lightlevel
+#define FOF_BOUNCY            (0x20000000) ///< Bounces players
+#define FOF_SPLAT             (0x40000000) ///< Use splat flat renderer (treat cyan pixels as invisible)
+
 
 typedef enum
 {
@@ -205,6 +164,45 @@ typedef enum
 	FB_EXECUTOR    = 0x2, // Trigger linedef executor
 	FB_ONLYBOTTOM  = 0x4, // Only bustable from below
 } ffloorbustflags_e;
+typedef int oldffloortype_e;
+
+#define FF_OLD_EXISTS            (0x1)
+#define FF_OLD_BLOCKPLAYER       (0x2)
+#define FF_OLD_BLOCKOTHERS       (0x4)
+#define FF_OLD_SOLID             (0x6)
+#define FF_OLD_RENDERSIDES       (0x8)
+#define FF_OLD_RENDERPLANES      (0x10)
+#define FF_OLD_RENDERALL         (0x18)
+#define FF_OLD_SWIMMABLE         (0x20)
+#define FF_OLD_NOSHADE           (0x40)
+#define FF_OLD_CUTSOLIDS         (0x80)
+#define FF_OLD_CUTEXTRA          (0x100)
+#define FF_OLD_CUTLEVEL          (0x180)
+#define FF_OLD_CUTSPRITES        (0x200)
+#define FF_OLD_BOTHPLANES        (0x400)
+#define FF_OLD_EXTRA             (0x800)
+#define FF_OLD_TRANSLUCENT       (0x1000)
+#define FF_OLD_FOG               (0x2000)
+#define FF_OLD_INVERTPLANES      (0x4000)
+#define FF_OLD_ALLSIDES          (0x8000)
+#define FF_OLD_INVERTSIDES       (0x10000)
+#define FF_OLD_DOUBLESHADOW      (0x20000)
+#define FF_OLD_FLOATBOB          (0x40000)
+#define FF_OLD_NORETURN          (0x80000)
+#define FF_OLD_CRUMBLE           (0x100000)
+#define FF_OLD_SHATTERBOTTOM     (0x200000)
+#define FF_OLD_GOOWATER          (0x200000)
+#define FF_OLD_MARIO             (0x400000)
+#define FF_OLD_BUSTUP            (0x800000)
+#define FF_OLD_QUICKSAND         (0x1000000)
+#define FF_OLD_PLATFORM          (0x2000000)
+#define FF_OLD_REVERSEPLATFORM   (0x4000000)
+#define FF_OLD_INTANGIBLEFLATS   (0x6000000)
+#define FF_OLD_SHATTER           (0x8000000)
+#define FF_OLD_SPINBUST          (0x10000000)
+#define FF_OLD_STRONGBUST        (0x20000000)
+#define FF_OLD_RIPPLE            (0x40000000)
+#define FF_OLD_COLORMAPONLY      ((INT32)0x80000000)
 
 typedef enum
 {
@@ -297,10 +295,10 @@ struct r_lightlist_t
 };
 
 // Slopes
-typedef enum {
-	SL_NOPHYSICS = 1, /// This plane will have no physics applied besides the positioning.
-	SL_DYNAMIC = 1<<1, /// This plane slope will be assigned a thinker to make it dynamic.
-} slopeflags_t;
+typedef int slopeflags_t;
+
+#define SL_NOPHYSICS (1) /// This plane will have no physics applied besides the positioning.
+#define SL_DYNAMIC (1<<1) /// This plane slope will be assigned a thinker to make it dynamic.
 
 struct pslope_t
 {
@@ -340,96 +338,91 @@ struct botcontroller_t
 	angle_t forceAngle;
 };
 
-typedef enum
-{
-	// flipspecial - planes with effect
-	MSF_FLIPSPECIAL_FLOOR       =  1,
-	MSF_FLIPSPECIAL_CEILING     =  1<<1,
-	MSF_FLIPSPECIAL_BOTH        =  (MSF_FLIPSPECIAL_FLOOR|MSF_FLIPSPECIAL_CEILING),
-	// triggerspecial - conditions under which plane touch causes effect
-	MSF_TRIGGERSPECIAL_TOUCH    =  1<<2,
-	MSF_TRIGGERSPECIAL_HEADBUMP =  1<<3,
-	// triggerline - conditions for linedef executor triggering
-	MSF_TRIGGERLINE_PLANE       =  1<<4, // require plane touch
-	MSF_TRIGGERLINE_MOBJ        =  1<<5, // allow non-pushable mobjs to trigger
-	// invertprecip - inverts presence of precipitation
-	MSF_INVERTPRECIP            =  1<<6,
-	MSF_GRAVITYFLIP             =  1<<7,
-	MSF_HEATWAVE                =  1<<8,
-	MSF_NOCLIPCAMERA            =  1<<9,
-	// water ripple
-	MSF_RIPPLE_FLOOR            =  1<<10,
-	MSF_RIPPLE_CEILING          =  1<<11,
-	// invert encore color remap status
-	MSF_INVERTENCORE            =  1<<12,
-	// turn off directional lighting
-	MSF_FLATLIGHTING            =  1<<13,
-	// force it on (even if it was disabled)
-	MSF_DIRECTIONLIGHTING       =  1<<14,
-} sectorflags_t;
+typedef int sectorflags_t;
 
-typedef enum
-{
-	SSF_NOSTEPUP = 1,
-	SSF_DOUBLESTEPUP = 1<<1,
-	SSF_NOSTEPDOWN = 1<<2,
-	SSF_WINDCURRENT = 1<<3,
-	SSF_CONVEYOR = 1<<4,
-	// free: 1<<5,
-	SSF_CHEATCHECKACTIVATOR = 1<<6,
-	SSF_EXIT = 1<<7,
-	SSF_DELETEITEMS = 1<<8,
-	// free: 1<<9,
-	// free: 1<<10,
-	// free: 1<<11,
-	SSF_FAN = 1<<12,
-	// free: 1<<13,
-	// free: 1<<14,
-	SSF_ZOOMTUBESTART = 1<<15,
-	SSF_ZOOMTUBEEND = 1<<16,
-} sectorspecialflags_t;
+// flipspecial - planes with effect
+#define MSF_FLIPSPECIAL_FLOOR       (1)
+#define MSF_FLIPSPECIAL_CEILING     (1<<1)
+#define MSF_FLIPSPECIAL_BOTH        ((MSF_FLIPSPECIAL_FLOOR)|(MSF_FLIPSPECIAL_CEILING))
+// triggerspecial - conditions under which plane touch causes effect
+#define MSF_TRIGGERSPECIAL_TOUCH    (1<<2)
+#define MSF_TRIGGERSPECIAL_HEADBUMP (1<<3)
+// triggerline - conditions for linedef executor triggering
+#define MSF_TRIGGERLINE_PLANE       (1<<4) // require plane touch
+#define MSF_TRIGGERLINE_MOBJ        (1<<5) // allow non-pushable mobjs to trigger
+// invertprecip - inverts presence of precipitation
+#define MSF_INVERTPRECIP            (1<<6)
+#define MSF_GRAVITYFLIP             (1<<7)
+#define MSF_HEATWAVE                (1<<8)
+#define MSF_NOCLIPCAMERA            (1<<9)
+// water ripple
+#define MSF_RIPPLE_FLOOR            (1<<10)
+#define MSF_RIPPLE_CEILING          (1<<11)
+// invert encore color remap status
+#define MSF_INVERTENCORE            (1<<12)
+// turn off directional lighting
+#define MSF_FLATLIGHTING            (1<<13)
+// force it on (even if it was disabled)
+#define MSF_DIRECTIONLIGHTING       (1<<14)
 
-typedef enum
-{
-	// Mask to get trigger type.
-	SECSPAC_TRIGGERMASK			= 0x0000000F,
+typedef int sectorspecialflags_t;
+#define SSF_NOSTEPUP (1)
+#define SSF_DOUBLESTEPUP (1<<1)
+#define SSF_NOSTEPDOWN (1<<2)
+#define SSF_WINDCURRENT (1<<3)
+#define SSF_CONVEYOR (1<<4)
+// free: 1<<5,
+#define SSF_CHEATCHECKACTIVATOR (1<<6)
+#define SSF_EXIT (1<<7)
+#define SSF_DELETEITEMS (1<<8)
+// free: 1<<9,
+// free: 1<<10,
+// free: 1<<11,
+#define SSF_FAN (1<<12)
+// free: 1<<13,
+// free: 1<<14,
+#define SSF_ZOOMTUBESTART (1<<15)
+#define SSF_ZOOMTUBEEND (1<<16)
 
-	// Special action is activated once.
-	SECSPAC_ONCESPECIAL			= 0x00000000,
+typedef int sectoractionflags_t;
+// Mask to get trigger type.
+#define SECSPAC_TRIGGERMASK			(0x0000000F)
 
-	// Special action is repeatable.
-	SECSPAC_REPEATSPECIAL		= 0x00000001,
+// Special action is activated once.
+#define SECSPAC_ONCESPECIAL			(0x00000000)
 
-	// Special action is activated continously.
-	SECSPAC_CONTINUOUSSPECIAL	= 0x00000002,
+// Special action is repeatable.
+#define SECSPAC_REPEATSPECIAL		(0x00000001)
 
-	// When a player enters this sector.
-	SECSPAC_ENTER				= 0x00000010,
+// Special action is activated continously.
+#define SECSPAC_CONTINUOUSSPECIAL	(0x00000002)
 
-	// When a player touches the floor of this sector.
-	SECSPAC_FLOOR				= 0x00000020,
+// When a player enters this sector.
+#define SECSPAC_ENTER				(0x00000010)
 
-	// When a player touches the ceiling of this sector.
-	SECSPAC_CEILING				= 0x00000040,
+// When a player touches the floor of this sector.
+#define SECSPAC_FLOOR				(0x00000020)
 
-	// When an enemy enters this sector.
-	SECSPAC_ENTERMONSTER		= 0x00000080,
+// When a player touches the ceiling of this sector.
+#define SECSPAC_CEILING				(0x00000040)
 
-	// When an enemy touches the floor of this sector.
-	SECSPAC_FLOORMONSTER		= 0x00000100,
+// When an enemy enters this sector.
+#define SECSPAC_ENTERMONSTER		(0x00000080)
 
-	// When an enemy touches the ceiling of this sector.
-	SECSPAC_CEILINGMONSTER		= 0x00000200,
+// When an enemy touches the floor of this sector.
+#define SECSPAC_FLOORMONSTER		(0x00000100)
 
-	// When a projectile enters this sector.
-	SECSPAC_ENTERMISSILE		= 0x00000400,
+// When an enemy touches the ceiling of this sector.
+#define SECSPAC_CEILINGMONSTER		(0x00000200)
 
-	// When a projectile touches the floor of this sector.
-	SECSPAC_FLOORMISSILE		= 0x00000800,
+// When a projectile enters this sector.
+#define SECSPAC_ENTERMISSILE		(0x00000400)
 
-	// When a projectile touches the ceiling of this sector.
-	SECSPAC_CEILINGMISSILE		= 0x00001000,
-} sectoractionflags_t;
+// When a projectile touches the floor of this sector.
+#define SECSPAC_FLOORMISSILE		(0x00000800)
+
+// When a projectile touches the ceiling of this sector.
+#define SECSPAC_CEILINGMISSILE		(0x00001000)
 
 typedef enum
 {
@@ -941,69 +934,68 @@ struct pic_t
 // Possible alpha types for a patch.
 typedef enum {AST_COPY, AST_TRANSLUCENT, AST_ADD, AST_SUBTRACT, AST_REVERSESUBTRACT, AST_MODULATE, AST_OVERLAY, AST_FOG} patchalphastyle_t;
 
-typedef enum
-{
-	RF_HORIZONTALFLIP   = 0x00000001,   // Flip sprite horizontally
-	RF_VERTICALFLIP     = 0x00000002,   // Flip sprite vertically
-	RF_ABSOLUTEOFFSETS  = 0x00000004,   // Sprite uses the object's offsets absolutely, instead of relatively
-	RF_FLIPOFFSETS      = 0x00000008,   // Relative object offsets are flipped with the sprite
+typedef int renderflags_t;
 
-	RF_SPLATMASK        = 0x000000F0,   // --Floor sprite flags
-	RF_SLOPESPLAT       = 0x00000010,   // Rotate floor sprites by a slope
-	RF_OBJECTSLOPESPLAT = 0x00000020,   // Rotate floor sprites by the object's standing slope
-	RF_NOSPLATBILLBOARD = 0x00000040,   // Don't billboard floor sprites (faces forward from the view angle)
-	RF_NOSPLATROLLANGLE = 0x00000080,   // Don't rotate floor sprites by the object's rollangle (uses rotated patches instead)
+#define RF_HORIZONTALFLIP   (0x00000001)   // Flip sprite horizontally
+#define RF_VERTICALFLIP     (0x00000002)   // Flip sprite vertically
+#define RF_ABSOLUTEOFFSETS  (0x00000004)   // Sprite uses the object's offsets absolutely, instead of relatively
+#define RF_FLIPOFFSETS      (0x00000008)   // Relative object offsets are flipped with the sprite
 
-	RF_BRIGHTMASK       = 0x00000300,   // --Bright modes
-	RF_FULLBRIGHT       = 0x00000100,   // Sprite is drawn at full brightness
-	RF_FULLDARK         = 0x00000200,   // Sprite is drawn completely dark
-	RF_SEMIBRIGHT       = (RF_FULLBRIGHT | RF_FULLDARK), // between sector bright and full bright
+#define RF_SPLATMASK        (0x000000F0)   // --Floor sprite flags
+#define RF_SLOPESPLAT       (0x00000010)   // Rotate floor sprites by a slope
+#define RF_OBJECTSLOPESPLAT (0x00000020)   // Rotate floor sprites by the object's standing slope
+#define RF_NOSPLATBILLBOARD (0x00000040)   // Don't billboard floor sprites (faces forward from the view angle)
+#define RF_NOSPLATROLLANGLE (0x00000080)   // Don't rotate floor sprites by the object's rollangle (uses rotated patches instead)
 
-	RF_NOCOLORMAPS      = 0x00000400,   // Sprite is not drawn with colormaps
+#define RF_BRIGHTMASK       (0x00000300)   // --Bright modes
+#define RF_FULLBRIGHT       (0x00000100)   // Sprite is drawn at full brightness
+#define RF_FULLDARK         (0x00000200)   // Sprite is drawn completely dark
+#define RF_SEMIBRIGHT       (RF_FULLBRIGHT | RF_FULLDARK) // between sector bright and full bright
 
-	RF_ALWAYSONTOP      = 0x00000800,   // Sprite is drawn on top of level geometry
+#define RF_NOCOLORMAPS      (0x00000400)   // Sprite is not drawn with colormaps
 
-	RF_SPRITETYPEMASK   = 0x00003000,   // --Different sprite types
-	RF_PAPERSPRITE      = 0x00001000,   // Paper sprite
-	RF_FLOORSPRITE      = 0x00002000,   // Floor sprite
+#define RF_ALWAYSONTOP      (0x00000800)   // Sprite is drawn on top of level geometry
 
-	RF_SHADOWDRAW       = 0x00004000,  // Stretches and skews the sprite like a shadow.
-	RF_SHADOWEFFECTS    = 0x00008000,  // Scales and becomes transparent like a shadow.
-	RF_DROPSHADOW       = (RF_SHADOWDRAW | RF_SHADOWEFFECTS | RF_FULLDARK),
+#define RF_SPRITETYPEMASK   (0x00003000)   // --Different sprite types
+#define RF_PAPERSPRITE      (0x00001000)   // Paper sprite
+#define RF_FLOORSPRITE      (0x00002000)   // Floor sprite
 
-	RF_ABSOLUTELIGHTLEVEL = 0x00010000, //  mobj_t.lightlevel is absolute instead of relative
-	RF_REDUCEVFX          = 0x00020000, //  only mobj_t.owner can see this object
-	RF_HIDEINSKYBOX       = 0x00040000, //  do not render in skybox
+#define RF_SHADOWDRAW       (0x00004000)  // Stretches and skews the sprite like a shadow.
+#define RF_SHADOWEFFECTS    (0x00008000)  // Scales and becomes transparent like a shadow.
+#define RF_DROPSHADOW       (RF_SHADOWDRAW | RF_SHADOWEFFECTS | RF_FULLDARK)
 
-	RF_DONTDRAW         = 0x00F00000,   // --Don't generate a vissprite
-	RF_DONTDRAWP1       = 0x00100000,   // No P1
-	RF_DONTDRAWP2       = 0x00200000,   // No P2
-	RF_DONTDRAWP3       = 0x00400000,   // No P3
-	RF_DONTDRAWP4       = 0x00800000,   // No P4
+#define RF_ABSOLUTELIGHTLEVEL (0x00010000) //  mobj_t.lightlevel is absolute instead of relative
+#define RF_REDUCEVFX          (0x00020000) //  only mobj_t.owner can see this object
+#define RF_HIDEINSKYBOX       (0x00040000) //  do not render in skybox
 
-	RF_BLENDMASK       	= 0x07000000,   // --Blending override - see patchalphastyle_t
-	RF_BLENDSHIFT		= (6*4),
-	// minus 1 as effects don't distinguish between AST_COPY and AST_TRANSLUCENT
-	RF_ADD				= ((AST_ADD-1)<<RF_BLENDSHIFT),
-	RF_SUBTRACT			= ((AST_SUBTRACT-1)<<RF_BLENDSHIFT),
-	RF_REVERSESUBTRACT	= ((AST_REVERSESUBTRACT-1)<<RF_BLENDSHIFT),
-	RF_MODULATE			= ((AST_MODULATE-1)<<RF_BLENDSHIFT),
-	RF_OVERLAY			= ((AST_OVERLAY-1)<<RF_BLENDSHIFT),
+#define RF_DONTDRAW         (0x00F00000)   // --Don't generate a vissprite
+#define RF_DONTDRAWP1       (0x00100000)   // No P1
+#define RF_DONTDRAWP2       (0x00200000)   // No P2
+#define RF_DONTDRAWP3       (0x00400000)   // No P3
+#define RF_DONTDRAWP4       (0x00800000)   // No P4
 
-	RF_TRANSMASK       	= (INT32)0xF0000000,   // --Transparency override
-	RF_TRANSSHIFT		= (7*4),
-	RF_TRANS10       	= (1<<RF_TRANSSHIFT),   // 10%
-	RF_TRANS20       	= (2<<RF_TRANSSHIFT),   // 20%
-	RF_TRANS30       	= (3<<RF_TRANSSHIFT),   // 30%
-	RF_TRANS40       	= (4<<RF_TRANSSHIFT),   // 40%
-	RF_TRANS50       	= (5<<RF_TRANSSHIFT),   // 50%
-	RF_TRANS60       	= (6<<RF_TRANSSHIFT),   // 60%
-	RF_TRANS70       	= (7<<RF_TRANSSHIFT),   // 70%
-	RF_TRANS80       	= (INT32)(8U<<RF_TRANSSHIFT),   // 80%
-	RF_TRANS90       	= (INT32)(9U<<RF_TRANSSHIFT),   // 90%
-	RF_GHOSTLY			= (RF_TRANS80 | RF_FULLBRIGHT),
-	RF_GHOSTLYMASK		= (RF_TRANSMASK | RF_FULLBRIGHT),
-} renderflags_t;
+#define RF_BLENDMASK       	(0x07000000)   // --Blending override - see patchalphastyle_t
+#define RF_BLENDSHIFT		(6*4)
+// minus 1 as effects don't distinguish between AST_COPY and AST_TRANSLUCENT
+#define RF_ADD				((AST_ADD-1)<<RF_BLENDSHIFT)
+#define RF_SUBTRACT			((AST_SUBTRACT-1)<<RF_BLENDSHIFT)
+#define RF_REVERSESUBTRACT	((AST_REVERSESUBTRACT-1)<<RF_BLENDSHIFT)
+#define RF_MODULATE			((AST_MODULATE-1)<<RF_BLENDSHIFT)
+#define RF_OVERLAY			((AST_OVERLAY-1)<<RF_BLENDSHIFT)
+
+#define RF_TRANSMASK       	((INT32)0xF0000000)   // --Transparency override
+#define RF_TRANSSHIFT		(7*4)
+#define RF_TRANS10       	(1<<RF_TRANSSHIFT)   // 10%
+#define RF_TRANS20       	(2<<RF_TRANSSHIFT)   // 20%
+#define RF_TRANS30       	(3<<RF_TRANSSHIFT)   // 30%
+#define RF_TRANS40       	(4<<RF_TRANSSHIFT)   // 40%
+#define RF_TRANS50       	(5<<RF_TRANSSHIFT)   // 50%
+#define RF_TRANS60       	(6<<RF_TRANSSHIFT)   // 60%
+#define RF_TRANS70       	(7<<RF_TRANSSHIFT)   // 70%
+#define RF_TRANS80       	((INT32)(8U<<RF_TRANSSHIFT))   // 80%
+#define RF_TRANS90       	((INT32)(9U<<RF_TRANSSHIFT))   // 90%
+#define RF_GHOSTLY			(RF_TRANS80 | RF_FULLBRIGHT)
+#define RF_GHOSTLYMASK		(RF_TRANSMASK | RF_FULLBRIGHT)
 
 typedef enum
 {

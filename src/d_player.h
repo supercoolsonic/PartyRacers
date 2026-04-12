@@ -49,14 +49,12 @@ extern "C" {
 #define MAXRACESPLITS 32
 
 // Extra abilities/settings for skins (combinable stuff)
-typedef enum
-{
-	SF_MACHINE          = 1, // Beep boop. Are you a robot?
-	SF_IRONMAN			= 1<<1, // Pick a new skin during POSITION. I main Random!
-	SF_BADNIK			= 1<<2, // Explodes on death
-	SF_HIVOLT           = 1<<3, // High power TA ringboxes, like 2.0-2.3!
-	// free up to and including 1<<31
-} skinflags_t;
+typedef INT32 skinflags_t;
+#define SF_MACHINE          (1) // Beep boop. Are you a robot?
+#define SF_IRONMAN			(1<<1) // Pick a new skin during POSITION. I main Random!
+#define SF_BADNIK			(1<<2) // Explodes on death
+#define SF_HIVOLT           (1<<3) // High power TA ringboxes, like 2.0-2.3!
+// free up to and including 1<<31
 
 //
 // Player states.
@@ -71,92 +69,66 @@ typedef enum
 	PST_REBORN
 } playerstate_t;
 
-typedef enum
-{
-	IF_USERINGS		= 1,	// Have to be not holding the item button to change from using rings to using items (or vice versa) - prevents weirdness
-	IF_ITEMOUT		= 1<<1,	// Are you holding an item out?
-	IF_EGGMANOUT	= 1<<2,	// Eggman mark held, separate from IF_ITEMOUT so it doesn't stop you from getting items
-	IF_HOLDREADY	= 1<<3,	// Hold button-style item is ready to activate
-} itemflags_t;
+typedef INT32 itemflags_t;
+#define IF_USERINGS		(1)	// Have to be not holding the item button to change from using rings to using items (or vice versa) - prevents weirdness
+#define IF_ITEMOUT		(1<<1)	// Are you holding an item out?
+#define IF_EGGMANOUT	(1<<2)	// Eggman mark held, separate from IF_ITEMOUT so it doesn't stop you from getting items
+#define IF_HOLDREADY	(1<<3)	// Hold button-style item is ready to activate
 
 //
 // Player internal flags
 //
-typedef enum
-{
-	PF_GODMODE			= 1<<0, // Immortal. No lightsnake from pits either
+typedef INT32 pflags_t;
+#define PF_GODMODE			(1<<0) // Immortal. No lightsnake from pits either
+#define PF_UPDATEMYRESPAWN	(1<<1) // Scripted sequences / fastfall can set this to force a respawn waypoint update
+#define PF_AUTOROULETTE		(1<<2) // Accessibility: Non-deterministic item box, no manual stop.
+// Look back VFX has been spawned
+// TODO: Is there a better way to track this?
+#define PF_GAINAX			(1<<3)
+#define PF_KICKSTARTACCEL	(1<<4) // Accessibility feature: Is accelerate in kickstart mode?
+#define PF_POINTME			(1<<5) // An object is calling for my attention (via Obj_PointPlayersToMobj). Unset every frame!
+#define PF_CASTSHADOW		(1<<6) // Something is casting a shadow on the player
+#define PF_WANTSTOJOIN		(1<<7) // Spectator that wants to join
+#define PF_STASIS			(1<<8) // Player is not allowed to move
+#define PF_FAULT			(1<<9) // F A U L T
+#define PF_ELIMINATED		(1<<10) // Battle-style elimination, no extra penalty
+#define PF_NOCONTEST 		(1<<11) // Did not finish (last place explosion)
+#define PF_LOSTLIFE			(1<<12) // Do not lose life more than once
+#define PF_RINGLOCK			(1<<13) // Prevent picking up rings while SPB is locked on
+#define PF_ANALOGSTICK		(1<<14) // This player is using an analog joystick
+#define PF_TRUSTWAYPOINTS	(1<<15) // Do not activate lap cheat prevention next time finish line distance is updated
+#define PF_FREEZEWAYPOINTS	(1<<16) // Skip the next waypoint/finish line distance update
+#define PF_AUTORING			(1<<17) // Accessibility: Non-deterministic item box, no manual stop.
+#define PF_DRIFTINPUT		(1<<18) // Drifting!
+#define PF_GETSPARKS		(1<<19) // Can get sparks
+#define PF_DRIFTEND			(1<<20) // Drift has ended, used to adjust character angle after drift
+#define PF_BRAKEDRIFT		(1<<21) // Helper for brake-drift spark spawning
+#define PF_AIRFAILSAFE		(1<<22) // Whenever or not try the air boost
+#define PF_TRICKDELAY		(1<<23) // Prevent tricks until control stick is neutral
+#define PF_TUMBLELASTBOUNCE	(1<<24) // One more time for the funny
+#define PF_TUMBLESOUND		(1<<25) // Don't play more than once
+#define PF_HITFINISHLINE	(1<<26) // Already hit the finish line this tic
+#define PF_WRONGWAY			(1<<27) // Moving the wrong way with respect to waypoints?
+#define PF_SHRINKME			(1<<28) // "Shrink me" cheat preference
+#define PF_SHRINKACTIVE		(1<<29) // "Shrink me" cheat is in effect. (Can't be disabled mid-race)
+#define PF_VOID				(1<<30) // Removed from reality! When leaving hitlag, reenable visibility+collision and kill speed.
+#define PF_NOFASTFALL		((INT32)(1U<<31)) // Has already done ebrake/fastfall behavior for this input. Fastfalling needs a new input to prevent unwanted bounces on unexpected airtime.
 
-	PF_UPDATEMYRESPAWN	= 1<<1, // Scripted sequences / fastfall can set this to force a respawn waypoint update
-
-	PF_AUTOROULETTE		= 1<<2, // Accessibility: Non-deterministic item box, no manual stop.
-
-	// Look back VFX has been spawned
-	// TODO: Is there a better way to track this?
-	PF_GAINAX			= 1<<3,
-
-	PF_KICKSTARTACCEL	= 1<<4, // Accessibility feature: Is accelerate in kickstart mode?
-
-	PF_POINTME			= 1<<5, // An object is calling for my attention (via Obj_PointPlayersToMobj). Unset every frame!
-
-	PF_CASTSHADOW		= 1<<6, // Something is casting a shadow on the player
-
-	PF_WANTSTOJOIN		= 1<<7, // Spectator that wants to join
-
-	PF_STASIS			= 1<<8, // Player is not allowed to move
-	PF_FAULT			= 1<<9, // F A U L T
-	PF_ELIMINATED		= 1<<10, // Battle-style elimination, no extra penalty
-	PF_NOCONTEST 		= 1<<11, // Did not finish (last place explosion)
-	PF_LOSTLIFE			= 1<<12, // Do not lose life more than once
-
-	PF_RINGLOCK			= 1<<13, // Prevent picking up rings while SPB is locked on
-
-	PF_ANALOGSTICK		= 1<<14, // This player is using an analog joystick
-	PF_TRUSTWAYPOINTS	= 1<<15, // Do not activate lap cheat prevention next time finish line distance is updated
-	PF_FREEZEWAYPOINTS	= 1<<16, // Skip the next waypoint/finish line distance update
-
-	PF_AUTORING			= 1<<17, // Accessibility: Non-deterministic item box, no manual stop.
-
-	PF_DRIFTINPUT		= 1<<18, // Drifting!
-	PF_GETSPARKS		= 1<<19, // Can get sparks
-	PF_DRIFTEND			= 1<<20, // Drift has ended, used to adjust character angle after drift
-	PF_BRAKEDRIFT		= 1<<21, // Helper for brake-drift spark spawning
-
-	PF_AIRFAILSAFE		= 1<<22, // Whenever or not try the air boost
-	PF_TRICKDELAY		= 1<<23, // Prevent tricks until control stick is neutral
-
-	PF_TUMBLELASTBOUNCE	= 1<<24, // One more time for the funny
-	PF_TUMBLESOUND		= 1<<25, // Don't play more than once
-
-	PF_HITFINISHLINE	= 1<<26, // Already hit the finish line this tic
-	PF_WRONGWAY			= 1<<27, // Moving the wrong way with respect to waypoints?
-
-	PF_SHRINKME			= 1<<28, // "Shrink me" cheat preference
-	PF_SHRINKACTIVE		= 1<<29, // "Shrink me" cheat is in effect. (Can't be disabled mid-race)
-
-	PF_VOID				= 1<<30, // Removed from reality! When leaving hitlag, reenable visibility+collision and kill speed.
-	PF_NOFASTFALL		= (INT32)(1U<<31), // Has already done ebrake/fastfall behavior for this input. Fastfalling needs a new input to prevent unwanted bounces on unexpected airtime.
-} pflags_t;
-
-typedef enum
-{
-	PF2_SELFMUTE 			= 1<<1,
-	PF2_SELFDEAFEN 			= 1<<2,
-	PF2_SERVERMUTE 			= 1<<3,
-	PF2_SERVERDEAFEN 		= 1<<4,
-
-	PF2_STRICTFASTFALL 		= 1<<5, // Fastfall only with C, never with A+X. Profile preference.
-
-	PF2_ALWAYSDAMAGED		= 1<<6, // Ignore invulnerability or clash conditions when evaulating damage (P_DamageMobj). Unset after use!
-	PF2_BUBBLECONTACT		= 1<<7, // ACHTUNG VERY BAD HACK - Don't allow Bubble Shield to contact certain objects unless this is a fresh blowup.
-	PF2_SUPERTRANSFERVFX	= 1<<8, // Don't respawn the "super transfer available" VFX.
-	PF2_FASTTUMBLEBOUNCE	= 1<<9, // Don't lose speed when tumblebouncing.
-
-	PF2_SERVERTEMPMUTE		= 1<<10, // Haven't met gamestochat requirement
-	PF2_SAMEFRAMESTUNG		= 1<<11, // Goofy bullshit for tracking mutual ring sting
-	PF2_UNSTINGABLE			= 1<<12, // Was bumped out of spindash
-	PF2_GIMMESTARTAWARDS	= 1<<13, // Need to apply non-first start awards on a 1 tic delay to prevent port priority
-	PF2_GIMMEFIRSTBLOOD		= 1<<14, // And need to differentiate between First Blood and everything else!
-} pflags2_t;
+typedef INT32 pflags2_t;
+#define PF2_SELFMUTE 			(1<<1)
+#define PF2_SELFDEAFEN 			(1<<2)
+#define PF2_SERVERMUTE 			(1<<3)
+#define PF2_SERVERDEAFEN 		(1<<4)
+#define PF2_STRICTFASTFALL 		(1<<5) // Fastfall only with C, never with A+X. Profile preference.
+#define PF2_ALWAYSDAMAGED		(1<<6) // Ignore invulnerability or clash conditions when evaulating damage (P_DamageMobj). Unset after use!
+#define PF2_BUBBLECONTACT		(1<<7) // ACHTUNG VERY BAD HACK - Don't allow Bubble Shield to contact certain objects unless this is a fresh blowup.
+#define PF2_SUPERTRANSFERVFX	(1<<8) // Don't respawn the "super transfer available" VFX.
+#define PF2_FASTTUMBLEBOUNCE	(1<<9) // Don't lose speed when tumblebouncing.
+#define PF2_SERVERTEMPMUTE		(1<<10) // Haven't met gamestochat requirement
+#define PF2_SAMEFRAMESTUNG		(1<<11) // Goofy bullshit for tracking mutual ring sting
+#define PF2_UNSTINGABLE			(1<<12) // Was bumped out of spindash
+#define PF2_GIMMESTARTAWARDS	(1<<13) // Need to apply non-first start awards on a 1 tic delay to prevent port priority
+#define PF2_GIMMEFIRSTBLOOD		(1<<14) // And need to differentiate between First Blood and everything else!
 
 typedef enum
 {
@@ -306,24 +278,18 @@ typedef enum
 	KSM__MAX,
 } kartslotmachineback_t;
 */
-typedef enum
-{
-	KSPIN_THRUST    = (1<<0),
-	KSPIN_IFRAMES   = (1<<1),
-	KSPIN_AIRTIMER  = (1<<2),
+typedef INT32 kartspinoutflags_t;
+#define KSPIN_THRUST    (1<<0)
+#define KSPIN_IFRAMES   (1<<1)
+#define KSPIN_AIRTIMER  (1<<2)
 
-	KSPIN_TYPEBIT   = (1<<3),
-	KSPIN_TYPEMASK  = ~( KSPIN_TYPEBIT - 1 ),
+#define KSPIN_TYPEBIT   (1<<3)
+#define KSPIN_TYPEMASK  (~( KSPIN_TYPEBIT - 1 ))
 
-#define KSPIN_TYPE( type ) ( KSPIN_TYPEBIT << type )
-
-	KSPIN_SPINOUT   = KSPIN_TYPE(0)|KSPIN_IFRAMES|KSPIN_THRUST,
-	KSPIN_WIPEOUT   = KSPIN_TYPE(1)|KSPIN_IFRAMES,
-	KSPIN_STUNG     = KSPIN_TYPE(2),
-	KSPIN_EXPLOSION = KSPIN_TYPE(3)|KSPIN_IFRAMES|KSPIN_AIRTIMER,
-
-#undef KSPIN_TYPE
-} kartspinoutflags_t;
+#define KSPIN_SPINOUT   (( KSPIN_TYPEBIT << 0 )|KSPIN_IFRAMES|KSPIN_THRUST)
+#define KSPIN_WIPEOUT   (( KSPIN_TYPEBIT << 1 )|KSPIN_IFRAMES)
+#define KSPIN_STUNG     (( KSPIN_TYPEBIT << 2 ))
+#define KSPIN_EXPLOSION (( KSPIN_TYPEBIT << 3 )|KSPIN_IFRAMES|KSPIN_AIRTIMER)
 
 typedef enum
 {
@@ -499,18 +465,16 @@ struct botvars_t
 
 // player_t struct for round-specific condition tracking
 
-typedef enum
-{
-	UFOD_GENERIC	= 1,
-	UFOD_BOOST		= 1<<1,
-	UFOD_WHIP		= 1<<2,
-	UFOD_BANANA		= 1<<3,
-	UFOD_ORBINAUT	= 1<<4,
-	UFOD_JAWZ		= 1<<5,
-	UFOD_SPB		= 1<<6,
-	UFOD_GACHABOM	= 1<<7,
-	// free up to and including 1<<31
-} targetdamaging_t;
+typedef INT32 targetdamaging_t;
+#define UFOD_GENERIC	(1)
+#define UFOD_BOOST		(1<<1)
+#define UFOD_WHIP		(1<<2)
+#define UFOD_BANANA		(1<<3)
+#define UFOD_ORBINAUT	(1<<4)
+#define UFOD_JAWZ		(1<<5)
+#define UFOD_SPB		(1<<6)
+#define UFOD_GACHABOM	(1<<7)
+// free up to and including 1<<31
 
 struct roundconditions_t
 {

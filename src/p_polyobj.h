@@ -34,38 +34,34 @@ extern "C" {
 
 #define POLYOBJ_START_LINE    20
 
-typedef enum
-{
-	POF_CLIPLINES         = 0x1,       ///< Test against lines for collision
-	POF_CLIPPLANES        = 0x2,       ///< Test against tops and bottoms for collision
-	POF_SOLID             = 0x3,       ///< Clips things.
-	POF_TESTHEIGHT        = 0x4,       ///< Test line collision with heights
-	POF_RENDERSIDES       = 0x8,       ///< Renders the sides.
-	POF_RENDERTOP         = 0x10,      ///< Renders the top.
-	POF_RENDERBOTTOM      = 0x20,      ///< Renders the bottom.
-	POF_RENDERPLANES      = 0x30,      ///< Renders top and bottom.
-	POF_RENDERALL         = 0x38,      ///< Renders everything.
-	POF_INVERT            = 0x40,      ///< Inverts collision (like a cage).
-	POF_INVERTPLANES      = 0x80,      ///< Render inside planes.
-	POF_INVERTPLANESONLY  = 0x100,     ///< Only render inside planes.
-	POF_PUSHABLESTOP      = 0x200,     ///< Pushables will stop movement.
-	POF_LDEXEC            = 0x400,     ///< This PO triggers a linedef executor.
-	POF_ONESIDE           = 0x800,     ///< Only use the first side of the linedef.
-	POF_NOSPECIALS        = 0x1000,    ///< Don't apply sector specials.
-	POF_SPLAT             = 0x2000,    ///< Use splat flat renderer (treat cyan pixels as invisible).
-} polyobjflags_e;
+typedef INT32 polyobjflags_e;
+#define POF_CLIPLINES         (0x1)       ///< Test against lines for collision
+#define POF_CLIPPLANES        (0x2)       ///< Test against tops and bottoms for collision
+#define POF_SOLID             (0x3)       ///< Clips things.
+#define POF_TESTHEIGHT        (0x4)       ///< Test line collision with heights
+#define POF_RENDERSIDES       (0x8)       ///< Renders the sides.
+#define POF_RENDERTOP         (0x10)      ///< Renders the top.
+#define POF_RENDERBOTTOM      (0x20)      ///< Renders the bottom.
+#define POF_RENDERPLANES      (0x30)      ///< Renders top and bottom.
+#define POF_RENDERALL         (0x38)      ///< Renders everything.
+#define POF_INVERT            (0x40)      ///< Inverts collision (like a cage).
+#define POF_INVERTPLANES      (0x80)      ///< Render inside planes.
+#define POF_INVERTPLANESONLY  (0x100)     ///< Only render inside planes.
+#define POF_PUSHABLESTOP      (0x200)     ///< Pushables will stop movement.
+#define POF_LDEXEC            (0x400)     ///< This PO triggers a linedef executor.
+#define POF_ONESIDE           (0x800)     ///< Only use the first side of the linedef.
+#define POF_NOSPECIALS        (0x1000)    ///< Don't apply sector specials.
+#define POF_SPLAT             (0x2000)    ///< Use splat flat renderer (treat cyan pixels as invisible).
 
-typedef enum
-{
-	TMPF_NOINSIDES       = 1,
-	TMPF_INTANGIBLE      = 1<<1,
-	TMPF_PUSHABLESTOP    = 1<<2,
-	TMPF_INVISIBLEPLANES = 1<<3,
-	TMPF_EXECUTOR        = 1<<4,
-	TMPF_CRUSH           = 1<<5,
-	TMPF_SPLAT           = 1<<6,
-	//TMPF_DONTCLIPPLANES  = 1<<7,
-} textmappolyobjectflags_t;
+typedef INT32 textmappolyobjectflags_t;
+#define TMPF_NOINSIDES       (1)
+#define TMPF_INTANGIBLE      (1<<1)
+#define TMPF_PUSHABLESTOP    (1<<2)
+#define TMPF_INVISIBLEPLANES (1<<3)
+#define TMPF_EXECUTOR        (1<<4)
+#define TMPF_CRUSH           (1<<5)
+#define TMPF_SPLAT           (1<<6)
+// #define TMPF_DONTCLIPPLANES  (1<<7)
 
 //
 // Polyobject Structure
@@ -252,19 +248,15 @@ struct polyfade_t
 // Line Activation Data Structures
 //
 
-typedef enum
-{
-	TMPR_DONTROTATEOTHERS = 1,
-	TMPR_ROTATEPLAYERS    = 1<<1,
-	TMPR_CONTINUOUS       = 1<<2,
-	TMPR_OVERRIDE         = 1<<3,
-} textmappolyrotate_t;
+typedef INT32 textmappolyrotate_t;
+#define TMPR_DONTROTATEOTHERS (1)
+#define TMPR_ROTATEPLAYERS    (1<<1)
+#define TMPR_CONTINUOUS       (1<<2)
+#define TMPR_OVERRIDE         (1<<3)
 
-typedef enum
-{
-	PTF_PLAYERS = 1,    // Turn players with movement
-	PTF_OTHERS = 1<<1, // Turn other mobjs with movement
-} polyturnflags_e;
+typedef INT32 polyturnflags_e;
+#define PTF_PLAYERS (1)    // Turn players with movement
+#define PTF_OTHERS (1<<1) // Turn other mobjs with movement
 
 struct polyrotdata_t
 {
@@ -284,11 +276,9 @@ struct polymovedata_t
 	UINT8 overRide;     // if true, will override any action on the object
 };
 
-typedef enum
-{
-	PWF_REVERSE = 1,    // Move through waypoints in reverse order
-	PWF_LOOP    = 1<<1, // Loop movement (used with PWR_WRAP or PWR_COMEBACK)
-} polywaypointflags_e;
+typedef INT32 polywaypointflags_e;
+#define PWF_REVERSE (1)    // Move through waypoints in reverse order
+#define PWF_LOOP    (1<<1) // Loop movement (used with PWR_WRAP or PWR_COMEBACK)
 
 struct polywaypointdata_t
 {
@@ -340,14 +330,12 @@ struct polyflagdata_t
 	fixed_t momx;
 };
 
-typedef enum
-{
-	TMPF_RELATIVE        = 1,
-	TMPF_OVERRIDE        = 1<<1,
-	TMPF_TICBASED        = 1<<2,
-	TMPF_IGNORECOLLISION = 1<<3,
-	TMPF_GHOSTFADE       = 1<<4,
-} textmappolyfade_t;
+typedef INT32 textmappolyfade_t;
+#define TMPF_RELATIVE        (1)
+#define TMPF_OVERRIDE        (1<<1)
+#define TMPF_TICBASED        (1<<2)
+#define TMPF_IGNORECOLLISION (1<<3)
+#define TMPF_GHOSTFADE       (1<<4)
 
 struct polyfadedata_t
 {

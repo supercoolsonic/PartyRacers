@@ -213,6 +213,12 @@
 			"binaryDir": "build/${presetName}",
 			"inherits": [ "__testers", "__compiler-mingw-w64-i686", "__ninja", "__vcpkg-toolchain", "__mingw-static" ]
 		},
+		{
+            "name": "ninja-x86_64_mingw_static_vcpkg-release",
+            "hidden": false,
+            "binaryDir": "build/${presetName}",
+            "inherits": ["__release", "__compiler-mingw-w64-x86_64", "__ninja", "__vcpkg-toolchain", "__mingw-x64-static"]
+        },
 
 		{
 			"name": "ninja-x64_windows_vcpkg-debug",

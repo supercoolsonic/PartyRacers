@@ -100,112 +100,74 @@ extern "C" {
 //
 // Misc. mobj flags
 //
-typedef enum
-{
-	// Call P_TouchSpecialThing when touched.
-	MF_SPECIAL          = 1,
-	// Blocks.
-	MF_SOLID            = 1<<1,
-	// Can be hit.
-	MF_SHOOTABLE        = 1<<2,
-	// Don't use the sector links (invisible but touchable).
-	MF_NOSECTOR         = 1<<3,
-	// Don't use the blocklinks (inert but displayable)
-	MF_NOBLOCKMAP       = 1<<4,
-	// Thin, paper-like collision bound (for visual equivalent, see FF_PAPERSPRITE)
-	MF_PAPERCOLLISION   = 1<<5,
-	// You can push this object. It can activate switches and things by pushing it on top.
-	MF_PUSHABLE         = 1<<6,
-	// Object is a boss.
-	MF_BOSS             = 1<<7,
-	// On level spawning (initial position), hang from ceiling instead of stand on floor.
-	MF_SPAWNCEILING     = 1<<8,
-	// Don't apply gravity (every tic); object will float, keeping current height
-	//  or changing it actively.
-	MF_NOGRAVITY        = 1<<9,
-	// This object is visible from a greater distance than normal objects.
-	MF_DRAWFROMFARAWAY  = 1<<10,
-	// Slide this object when it hits a wall.
-	MF_SLIDEME          = 1<<11,
-	// Don't collide with walls or solid objects. Two MF_NOCLIP objects can't touch each other at all!
-	MF_NOCLIP           = 1<<12,
-	// Allow moves to any height, no gravity. For active floaters.
-	MF_FLOAT            = 1<<13,
-	// Change pitch/roll when touching slopes.
-	MF_SLOPE            = 1<<14,
-	// Don't hit same species, explode on block.
-	// Player missiles as well as fireballs of various kinds.
-	MF_MISSILE          = 1<<15,
-	// Item is a spring.
-	MF_SPRING           = 1<<16,
-	// Object is elemental. If it is punted, it will evaporate.
-	MF_ELEMENTAL        = 1<<17,
-	// Don't run the thinker for this object.
-	MF_NOTHINK          = 1<<18,
-	// Don't adjust z if below or above floorz/ceilingz
-	MF_NOCLIPHEIGHT     = 1<<19,
-	// This mobj is an enemy!
-	MF_ENEMY            = 1<<20,
-	// Scenery (uses scenery thinker).
-	MF_SCENERY          = 1<<21,
-	// Painful (shit hurts).
-	MF_PAIN             = 1<<22,
-	// Object cannot be punted by invincible players. (Default CAN be punted, if it deals damage or is solid.)
-	MF_DONTPUNT         = 1<<23,
-	// Object uses terrain effects. (Overlays, footsteps, etc)
-	MF_APPLYTERRAIN     = 1<<24,
-	// for chase camera, don't be blocked by things (partial clipping)
-	MF_NOCLIPTHING      = 1<<25,
-	// Missile bounces like a grenade.
-	MF_GRENADEBOUNCE    = 1<<26,
-	// Run the action thinker on spawn.
-	MF_RUNSPAWNFUNC     = 1<<27,
-	// Don't remap in Encore mode. (Not a drawflag so that it's settable by mobjinfo.)
-	MF_DONTENCOREMAP    = 1<<28,
-	// Hitbox extends just as far below as above.
-	MF_PICKUPFROMBELOW  = 1<<29,
-	// Disable momentum-based squash and stretch.
-	MF_NOSQUISH         = 1<<30,
-	// Disable hitlag for this object
-	MF_NOHITLAGFORME    = (INT32)(1U<<31),
-	// no more free slots, gotta get rid of more crusty base SRB2 flags
-} mobjflag_t;
+typedef INT32 mobjflag_t;
+#define MF_SPECIAL          (1) // Call P_TouchSpecialThing when touched.
+#define MF_SOLID            (1<<1) // Blocks.
+#define MF_SHOOTABLE        (1<<2) // Can be hit.
+#define MF_NOSECTOR         (1<<3) // Don't use the sector links (invisible but touchable).
+#define MF_NOBLOCKMAP       (1<<4) // Don't use the blocklinks (inert but displayable)
+#define MF_PAPERCOLLISION   (1<<5) // Thin, paper-like collision bound (for visual equivalent, see FF_PAPERSPRITE)
+#define MF_PUSHABLE         (1<<6) // You can push this object. It can activate switches and things by pushing it on top.
+#define MF_BOSS             (1<<7) // Object is a boss.
+#define MF_SPAWNCEILING     (1<<8) // On level spawning (initial position), hang from ceiling instead of stand on floor.
+#define MF_NOGRAVITY        (1<<9) // Don't apply gravity (every tic); object will float, keeping current height
+#define MF_DRAWFROMFARAWAY  (1<<10) // This object is visible from a greater distance than normal objects.
+#define MF_SLIDEME          (1<<11) // Slide this object when it hits a wall.
+#define MF_NOCLIP           (1<<12) // Don't collide with walls or solid objects. Two MF_NOCLIP objects can't touch each other at all!
+#define MF_FLOAT            (1<<13) // Allow moves to any height, no gravity. For active floaters.
+#define MF_SLOPE            (1<<14) // Change pitch/roll when touching slopes.
+#define MF_MISSILE          (1<<15) // Don't hit same species, explode on block.
+#define MF_SPRING           (1<<16) // Item is a spring.
+#define MF_ELEMENTAL        (1<<17) // Object is elemental. If it is punted, it will evaporate.
+#define MF_NOTHINK          (1<<18) // Don't run the thinker for this object.
+#define MF_NOCLIPHEIGHT     (1<<19) // Don't adjust z if below or above floorz/ceilingz
+#define MF_ENEMY            (1<<20) // This mobj is an enemy!
+#define MF_SCENERY          (1<<21) // Scenery (uses scenery thinker).
+#define MF_PAIN             (1<<22) // Painful (shit hurts).
+#define MF_DONTPUNT         (1<<23) // Object cannot be punted by invincible players. (Default CAN be punted, if it deals damage or is solid.)
+#define MF_APPLYTERRAIN     (1<<24) // Object uses terrain effects. (Overlays, footsteps, etc)
+#define MF_NOCLIPTHING      (1<<25) // for chase camera, don't be blocked by things (partial clipping)
+#define MF_GRENADEBOUNCE    (1<<26) // Missile bounces like a grenade.
+#define MF_RUNSPAWNFUNC     (1<<27) // Run the action thinker on spawn.
+#define MF_DONTENCOREMAP    (1<<28) // Don't remap in Encore mode. (Not a drawflag so that it's settable by mobjinfo.)
+#define MF_PICKUPFROMBELOW  (1<<29) // Hitbox extends just as far below as above.
+#define MF_NOSQUISH         (1<<30) // Disable momentum-based squash and stretch.
+#define MF_NOHITLAGFORME    ((INT32)(1U<<31)) // Disable hitlag for this object
+// no more free slots, gotta get rid of more crusty base SRB2 flags
 
-typedef enum
-{
-	MF2_AXIS           = 1,     // It's a NiGHTS axis! (For faster checking)
-	// free: 1<<1
-	MF2_DONTRESPAWN    = 1<<2,  // Don't respawn this object!
-	// free: 1<<3
-	MF2_AUTOMATIC      = 1<<4,  // Thrown ring has automatic properties
-	MF2_RAILRING       = 1<<5,  // Thrown ring has rail properties
-	MF2_BOUNCERING     = 1<<6,  // Thrown ring has bounce properties
-	MF2_EXPLOSION      = 1<<7,  // Thrown ring has explosive properties
-	MF2_SCATTER        = 1<<8,  // Thrown ring has scatter properties
-	MF2_BEYONDTHEGRAVE = 1<<9,  // Source of this missile has died and has since respawned.
-	MF2_SLIDEPUSH      = 1<<10, // MF_PUSHABLE that pushes continuously.
-	MF2_CLASSICPUSH    = 1<<11, // Drops straight down when object has negative momz.
-	MF2_INVERTAIMABLE  = 1<<12, // Flips whether it's targetable by A_LookForEnemies (enemies no, decoys yes)
-	MF2_INFLOAT        = 1<<13, // Floating to a height for a move, don't auto float to target's height.
-	MF2_DEBRIS         = 1<<14, // Splash ring from explosion ring
-	MF2_NIGHTSPULL     = 1<<15, // Attracted from a paraloop
-	MF2_JUSTATTACKED   = 1<<16, // can be pushed by other moving mobjs
-	MF2_FIRING         = 1<<17, // turret fire
-	MF2_SUPERFIRE      = 1<<18, // Firing something with Super Sonic-stopping properties. Or, if mobj has MF_MISSILE, this is the actual fire from it.
-	MF2_ALREADYHIT     = 1<<19, // This object was already damaged THIS tic, resets even during hitlag
-	MF2_STRONGBOX      = 1<<20, // Flag used for "strong" random monitors.
-	MF2_OBJECTFLIP     = 1<<21, // Flag for objects that always have flipped gravity.
-	MF2_SKULLFLY       = 1<<22, // Special handling: skull in flight.
-	MF2_FRET           = 1<<23, // Flashing from a previous hit
-	MF2_BOSSNOTRAP     = 1<<24, // No Egg Trap after boss
-	MF2_BOSSFLEE       = 1<<25, // Boss is fleeing!
-	MF2_BOSSDEAD       = 1<<26, // Boss is dead! (Not necessarily fleeing, if a fleeing point doesn't exist.)
-	MF2_AMBUSH         = 1<<27, // Alternate behaviour typically set by MTF_AMBUSH
-	MF2_LINKDRAW       = 1<<28, // Draw vissprite of mobj immediately before/after tracer's vissprite (dependent on dispoffset and position)
-	MF2_SHIELD         = 1<<29, // Thinker calls P_AddShield/P_ShieldLook (must be partnered with MF_SCENERY to use)
-	MF2_SPLAT          = 1<<30, // Renders as a splat
-	// free: to and including 1<<31
-} mobjflag2_t;
+typedef INT32 mobjflag2_t;
+#define MF2_AXIS           (1)     // It's a NiGHTS axis! (For faster checking)
+// free: 1<<1
+#define MF2_DONTRESPAWN    (1<<2)  // Don't respawn this object!
+// free: 1<<3
+#define MF2_AUTOMATIC      (1<<4)  // Thrown ring has automatic properties
+#define MF2_RAILRING       (1<<5)  // Thrown ring has rail properties
+#define MF2_BOUNCERING     (1<<6)  // Thrown ring has bounce properties
+#define MF2_EXPLOSION      (1<<7)  // Thrown ring has explosive properties
+#define MF2_SCATTER        (1<<8)  // Thrown ring has scatter properties
+#define MF2_BEYONDTHEGRAVE (1<<9)  // Source of this missile has died and has since respawned.
+#define MF2_SLIDEPUSH      (1<<10) // MF_PUSHABLE that pushes continuously.
+#define MF2_CLASSICPUSH    (1<<11) // Drops straight down when object has negative momz.
+#define MF2_INVERTAIMABLE  (1<<12) // Flips whether it's targetable by A_LookForEnemies (enemies no, decoys yes)
+#define MF2_INFLOAT        (1<<13) // Floating to a height for a move, don't auto float to target's height.
+#define MF2_DEBRIS         (1<<14) // Splash ring from explosion ring
+#define MF2_NIGHTSPULL     (1<<15) // Attracted from a paraloop
+#define MF2_JUSTATTACKED   (1<<16) // can be pushed by other moving mobjs
+#define MF2_FIRING         (1<<17) // turret fire
+#define MF2_SUPERFIRE      (1<<18) // Firing something with Super Sonic-stopping properties. Or, if mobj has MF_MISSILE, this is the actual fire from it.
+#define MF2_ALREADYHIT     (1<<19) // This object was already damaged THIS tic, resets even during hitlag
+#define MF2_STRONGBOX      (1<<20) // Flag used for "strong" random monitors.
+#define MF2_OBJECTFLIP     (1<<21) // Flag for objects that always have flipped gravity.
+#define MF2_SKULLFLY       (1<<22) // Special handling: skull in flight.
+#define MF2_FRET           (1<<23) // Flashing from a previous hit
+#define MF2_BOSSNOTRAP     (1<<24) // No Egg Trap after boss
+#define MF2_BOSSFLEE       (1<<25) // Boss is fleeing!
+#define MF2_BOSSDEAD       (1<<26) // Boss is dead! (Not necessarily fleeing, if a fleeing point doesn't exist.)
+#define MF2_AMBUSH         (1<<27) // Alternate behaviour typically set by MTF_AMBUSH
+#define MF2_LINKDRAW       (1<<28) // Draw vissprite of mobj immediately before/after tracer's vissprite (dependent on dispoffset and position)
+#define MF2_SHIELD         (1<<29) // Thinker calls P_AddShield/P_ShieldLook (must be partnered with MF_SCENERY to use)
+#define MF2_SPLAT          (1<<30) // Renders as a splat
+// free: to and including 1<<31
 
 typedef enum
 {
@@ -224,58 +186,54 @@ typedef enum
 //
 // Mobj extra flags
 //
-typedef enum
-{
-	// The mobj stands on solid floor (not on another mobj or in air)
-	MFE_ONGROUND          = 1,
-	// The mobj just hit the floor while falling, this is cleared on next frame
-	// (instant damage in lava/slime sectors to prevent jump cheat..)
-	MFE_JUSTHITFLOOR      = 1<<1,
-	// The mobj stands in a sector with water, and touches the surface
-	// this bit is set once and for all at the start of mobjthinker
-	MFE_TOUCHWATER        = 1<<2,
-	// The mobj stands in a sector with water, and his waist is BELOW the water surface
-	// (for player, allows swimming up/down)
-	MFE_UNDERWATER        = 1<<3,
-	// used for ramp sectors
-	MFE_JUSTSTEPPEDDOWN   = 1<<4,
-	// Vertically flip sprite/allow upside-down physics
-	MFE_VERTICALFLIP      = 1<<5,
-	// Goo water
-	MFE_GOOWATER          = 1<<6,
-	// The mobj is touching a lava block
-	MFE_TOUCHLAVA         = 1<<7,
-	// Mobj was already pushed this tic
-	MFE_PUSHED            = 1<<8,
-	// Mobj was already sprung this tic
-	MFE_SPRUNG            = 1<<9,
-	// Platform movement
-	MFE_APPLYPMOMZ        = 1<<10,
-	// Compute and trigger on mobj angle relative to tracer
-	// See Linedef Exec 457 (Track mobj angle to point)
-	MFE_TRACERANGLE       = 1<<11,
-	// SRB2Kart: The mobj just hit & bounced off a wall, this is cleared on next frame
-	MFE_JUSTBOUNCEDWALL   = 1<<12,
-	// SRB2Kart: In damage hitlag (displays different visual efx)
-	MFE_DAMAGEHITLAG      = 1<<13,
-	// Slope physics sent you airborne
-	MFE_SLOPELAUNCHED     = 1<<14,
-	// Thinker is paused due to hitlag
-	MFE_PAUSED            = 1<<15,
-	// Don't launch off of slopes
-	MFE_DONTSLOPELAUNCH   = 1<<16,
-} mobjeflag_t;
+typedef INT32 mobjeflag_t;
+#define MFE_ONGROUND          (1) // The mobj stands on solid floor (not on another mobj or in air)
+// The mobj just hit the floor while falling, this is cleared on next frame
+// (instant damage in lava/slime sectors to prevent jump cheat..)
+#define MFE_JUSTHITFLOOR      (1<<1)
+// The mobj stands in a sector with water, and touches the surface
+// this bit is set once and for all at the start of mobjthinker
+#define MFE_TOUCHWATER        (1<<2)
+// The mobj stands in a sector with water, and his waist is BELOW the water surface
+// (for player, allows swimming up/down)
+#define MFE_UNDERWATER        (1<<3)
+// used for ramp sectors
+#define MFE_JUSTSTEPPEDDOWN   (1<<4)
+// Vertically flip sprite/allow upside-down physics
+#define MFE_VERTICALFLIP      (1<<5)
+// Goo water
+#define MFE_GOOWATER          (1<<6)
+// The mobj is touching a lava block
+#define MFE_TOUCHLAVA         (1<<7)
+// Mobj was already pushed this tic
+#define MFE_PUSHED            (1<<8)
+// Mobj was already sprung this tic
+#define MFE_SPRUNG            (1<<9)
+// Platform movement
+#define MFE_APPLYPMOMZ        (1<<10)
+// Compute and trigger on mobj angle relative to tracer
+// See Linedef Exec 457 (Track mobj angle to point)
+#define MFE_TRACERANGLE       (1<<11)
+// SRB2Kart: The mobj just hit & bounced off a wall, this is cleared on next frame
+#define MFE_JUSTBOUNCEDWALL   (1<<12)
+// SRB2Kart: In damage hitlag (displays different visual efx)
+#define MFE_DAMAGEHITLAG      (1<<13)
+// Slope physics sent you airborne
+#define MFE_SLOPELAUNCHED     (1<<14)
+// Thinker is paused due to hitlag
+#define MFE_PAUSED            (1<<15)
+// Don't launch off of slopes
+#define MFE_DONTSLOPELAUNCH   (1<<16)
 
 //
 // PRECIPITATION flags ?! ?! ?!
 //
-typedef enum {
-	PCF_THUNK		= 1,		// Ran the thinker this tic.
-	PCF_SPLASH		= 1<<1,		// Splashed on the ground, return to the ceiling after the animation's over
-	PCF_INVISIBLE	= 1<<2,		// Don't draw.
-	PCF_PIT			= 1<<3,		// Above pit.
-	PCF_FLIP		= 1<<4,		// Spawning from floor, moving upwards.
-} precipflag_t;
+typedef INT32 precipflag_t;
+#define PCF_THUNK		(1)		// Ran the thinker this tic.
+#define PCF_SPLASH		(1<<1)		// Splashed on the ground, return to the ceiling after the animation's over
+#define PCF_INVISIBLE	(1<<2)		// Don't draw.
+#define PCF_PIT			(1<<3)		// Above pit.
+#define PCF_FLIP		(1<<4)		// Spawning from floor, moving upwards.
 
 // Map Object definition.
 struct mobj_t

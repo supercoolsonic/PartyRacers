@@ -64,13 +64,11 @@ extern UINT8 gamecomplete;
 #define CUPMENU_ROWS 2
 
 // Extra abilities/settings for skins (combinable stuff)
-typedef enum
-{
-	MA_RUNNING     = 1,    // In action
-	MA_INIT        = 1<<1, // Initialisation
-	MA_NOCUTSCENES = 1<<2, // No cutscenes
-	MA_INGAME      = 1<<3  // Timer ignores loads
-} marathonmode_t;
+typedef INT32 marathonmode_t;
+#define MA_RUNNING     (1)    // In action
+#define MA_INIT        (1<<1) // Initialisation
+#define MA_NOCUTSCENES (1<<2) // No cutscenes
+#define MA_INGAME      (1<<3)  // Timer ignores loads
 
 extern marathonmode_t marathonmode;
 extern tic_t marathontime;
@@ -98,12 +96,10 @@ typedef enum
 	MAXPRECIP
 } preciptype_t;
 
-typedef enum
-{
-	PRECIPFX_THUNDER = 1,
-	PRECIPFX_LIGHTNING = 1<<1,
-	PRECIPFX_WATERPARTICLES = 1<<2
-} precipeffect_t;
+typedef INT32 precipeffect_t;
+#define PRECIPFX_THUNDER (1)
+#define PRECIPFX_LIGHTNING (1<<1)
+#define PRECIPFX_WATERPARTICLES (1<<2)
 
 struct precipprops_t
 {
@@ -674,47 +670,44 @@ extern INT16 numgametypes;
 extern INT16 gametype, g_lastgametype;
 
 // Gametype rules
-enum GameTypeRules
-{
-	// Race rules
-	GTR_CIRCUIT				= 1,		// Enables the finish line, laps, and the waypoint system.
-	GTR_BOTS				= 1<<1,		// Allows bots in this gametype. Combine with BotTiccmd hooks to make bots support your gametype.
+typedef INT32 GameTypeRules;
+#define GTR_CIRCUIT				(1)		// Enables the finish line, laps, and the waypoint system.
+#define GTR_BOTS				(1<<1)		// Allows bots in this gametype. Combine with BotTiccmd hooks to make bots support your gametype.
 
-	// Battle gametype rules
-	GTR_BUMPERS				= 1<<2,		// Enables the bumper health system
-	GTR_SPHERES				= 1<<3,		// Replaces rings with blue spheres
-	GTR_CLOSERPLAYERS		= 1<<4,		// Buffs spindash and draft power to bring everyone together, nerfs invincibility and grow to prevent excessive combos
+// Battle gametype rules
+#define GTR_BUMPERS				(1<<2)		// Enables the bumper health system
+#define GTR_SPHERES				(1<<3)		// Replaces rings with blue spheres
+#define GTR_CLOSERPLAYERS		(1<<4)		// Buffs spindash and draft power to bring everyone together, nerfs invincibility and grow to prevent excessive combos
 
-	GTR_BATTLESTARTS		= 1<<5,		// Use Battle Mode start positions.
-	GTR_PAPERITEMS			= 1<<6,		// Replaces item boxes with paper item spawners
-	GTR_POWERSTONES			= 1<<7,		// Battle Emerald collectables.
-	GTR_KARMA				= 1<<8,		// Enables the Karma system if you're out of bumpers
-	// 1<<9 - UNUSED
+#define GTR_BATTLESTARTS		(1<<5)		// Use Battle Mode start positions.
+#define GTR_PAPERITEMS			(1<<6)		// Replaces item boxes with paper item spawners
+#define GTR_POWERSTONES			(1<<7)		// Battle Emerald collectables.
+#define GTR_KARMA				(1<<8)		// Enables the Karma system if you're out of bumpers
+// 1<<9 - UNUSED
 
-	// Bonus gametype rules
-	GTR_CHECKPOINTS			= 1<<10,	// Player respawns at specific checkpoints
-	GTR_PRISONS				= 1<<11,	// Can enter Prison Break mode
-	GTR_CATCHER				= 1<<12,	// UFO Catcher (only works with GTR_CIRCUIT)
-	GTR_ROLLINGSTART		= 1<<13,	// Rolling start (only works with GTR_CIRCUIT)
-	GTR_SPECIALSTART		= 1<<14,	// White fade instant start
-	GTR_BOSS				= 1<<15,	// Boss intro and spawning
+// Bonus gametype rules
+#define GTR_CHECKPOINTS			(1<<10)	// Player respawns at specific checkpoints
+#define GTR_PRISONS				(1<<11)	// Can enter Prison Break mode
+#define GTR_CATCHER				(1<<12)	// UFO Catcher (only works with GTR_CIRCUIT)
+#define GTR_ROLLINGSTART		(1<<13)	// Rolling start (only works with GTR_CIRCUIT)
+#define GTR_SPECIALSTART		(1<<14)	// White fade instant start
+#define GTR_BOSS				(1<<15)	// Boss intro and spawning
 
-	// General purpose rules
-	GTR_POINTLIMIT			= 1<<16,	// Reaching point limit ends the round
-	GTR_TIMELIMIT			= 1<<17,	// Reaching time limit ends the round
-	GTR_OVERTIME			= 1<<18,	// Allow overtime behavior
-	GTR_ENCORE				= 1<<19,	// Alternate Encore mirroring, scripting, and texture remapping
+// General purpose rules
+#define GTR_POINTLIMIT			(1<<16)	// Reaching point limit ends the round
+#define GTR_TIMELIMIT			(1<<17)	// Reaching time limit ends the round
+#define GTR_OVERTIME			(1<<18)	// Allow overtime behavior
+#define GTR_ENCORE				(1<<19)	// Alternate Encore mirroring, scripting, and texture remapping
 
-	GTR_TEAMS				= 1<<20,	// Teams are forced on
-	GTR_NOTEAMS				= 1<<21,	// Teams are forced off
-	GTR_TEAMSTARTS			= 1<<22,	// Use team-based start positions
+#define GTR_TEAMS				(1<<20)	// Teams are forced on
+#define GTR_NOTEAMS				(1<<21)	// Teams are forced off
+#define GTR_TEAMSTARTS			(1<<22)	// Use team-based start positions
 
-	GTR_NOMP				= 1<<23,	// No multiplayer
-	GTR_NOCUPSELECT			= 1<<24,	// Your maps are not selected via cup.
-	GTR_NOPOSITION			= 1<<25,	// No POSITION
+#define GTR_NOMP				(1<<23)	// No multiplayer
+#define GTR_NOCUPSELECT			(1<<24)	// Your maps are not selected via cup.
+#define GTR_NOPOSITION			(1<<25)	// No POSITION
 
-	// free: to and including 1<<31
-};
+// free: to and including 1<<31
 // Remember to update GAMETYPERULE_LIST in deh_soc.c
 
 #define GTR_FORBIDMP (GTR_NOMP|GTR_CATCHER|GTR_BOSS)
@@ -723,18 +716,15 @@ enum GameTypeRules
 #define gametyperules (gametypes[gametype]->rules)
 
 // TypeOfLevel things
-enum TypeOfLevel
-{
-	// Gametypes
-	TOL_RACE	 = 0x0001, ///< Race
-	TOL_BATTLE	 = 0x0002, ///< Battle
-	TOL_SPECIAL	 = 0x0004, ///< Special Stage (variant of race, but forbidden)
-	TOL_VERSUS	 = 0x0008, ///< Versus (variant of battle, but forbidden)
-	TOL_TUTORIAL = 0x0010, ///< Tutorial (variant of race, but forbidden)
+typedef INT32 TypeOfLevel;
+#define TOL_RACE	 (0x0001) ///< Race
+#define TOL_BATTLE	 (0x0002) ///< Battle
+#define TOL_SPECIAL	 (0x0004) ///< Special Stage (variant of race, but forbidden)
+#define TOL_VERSUS	 (0x0008) ///< Versus (variant of battle, but forbidden)
+#define TOL_TUTORIAL (0x0010) ///< Tutorial (variant of race, but forbidden)
 
-	// Modifiers
-	TOL_TV		= 0x0100 ///< Midnight Channel specific: draw TV like overlay on HUD
-};
+// Modifiers
+#define TOL_TV		(0x0100) ///< Midnight Channel specific: draw TV like overlay on HUD
 // Make sure to update TYPEOFLEVEL too
 
 #define MAXTOL             (1<<31)
@@ -752,28 +742,26 @@ extern UINT32 lastcustomtol;
 extern UINT8 stagefailed;
 
 // Emeralds stored as bits to throw savegame hackers off.
-typedef enum
-{
-	EMERALD_CHAOS1 = 1,
-	EMERALD_CHAOS2 = 1<<1,
-	EMERALD_CHAOS3 = 1<<2,
-	EMERALD_CHAOS4 = 1<<3,
-	EMERALD_CHAOS5 = 1<<4,
-	EMERALD_CHAOS6 = 1<<5,
-	EMERALD_CHAOS7 = 1<<6,
-	EMERALD_ALLCHAOS = EMERALD_CHAOS1|EMERALD_CHAOS2|EMERALD_CHAOS3|EMERALD_CHAOS4|EMERALD_CHAOS5|EMERALD_CHAOS6|EMERALD_CHAOS7,
+typedef INT32 emeraldflags_t;
+#define EMERALD_CHAOS1 (1)
+#define EMERALD_CHAOS2 (1<<1)
+#define EMERALD_CHAOS3 (1<<2)
+#define EMERALD_CHAOS4 (1<<3)
+#define EMERALD_CHAOS5 (1<<4)
+#define EMERALD_CHAOS6 (1<<5)
+#define EMERALD_CHAOS7 (1<<6)
+#define EMERALD_ALLCHAOS ((EMERALD_CHAOS1)|(EMERALD_CHAOS2)|(EMERALD_CHAOS3)|(EMERALD_CHAOS4)|(EMERALD_CHAOS5)|(EMERALD_CHAOS6)|(EMERALD_CHAOS7))
 
-	EMERALD_SUPER1 = 1<<7,
-	EMERALD_SUPER2 = 1<<8,
-	EMERALD_SUPER3 = 1<<9,
-	EMERALD_SUPER4 = 1<<10,
-	EMERALD_SUPER5 = 1<<11,
-	EMERALD_SUPER6 = 1<<12,
-	EMERALD_SUPER7 = 1<<13,
-	EMERALD_ALLSUPER = EMERALD_SUPER1|EMERALD_SUPER2|EMERALD_SUPER3|EMERALD_SUPER4|EMERALD_SUPER5|EMERALD_SUPER6|EMERALD_SUPER7,
+#define EMERALD_SUPER1 (1<<7)
+#define EMERALD_SUPER2 (1<<8)
+#define EMERALD_SUPER3 (1<<9)
+#define EMERALD_SUPER4 (1<<10)
+#define EMERALD_SUPER5 (1<<11)
+#define EMERALD_SUPER6 (1<<12)
+#define EMERALD_SUPER7 (1<<13)
+#define EMERALD_ALLSUPER ((EMERALD_SUPER1)|(EMERALD_SUPER2)|(EMERALD_SUPER3)|(EMERALD_SUPER4)|(EMERALD_SUPER5)|(EMERALD_SUPER6)|(EMERALD_SUPER7))
 
-	EMERALD_ALL = EMERALD_ALLCHAOS|EMERALD_ALLSUPER
-} emeraldflags_t;
+#define EMERALD_ALL ((EMERALD_ALLCHAOS)|(EMERALD_ALLSUPER))
 
 #define ALLCHAOSEMERALDS(v) ((v & EMERALD_ALLCHAOS) == EMERALD_ALLCHAOS)
 #define ALLSUPEREMERALDS(v) ((v & EMERALD_ALLSUPER) == EMERALD_ALLSUPER)

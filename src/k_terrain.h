@@ -93,15 +93,13 @@ struct t_overlay_t
 	fixed_t speed;			// Speed-up based on object speed. 0 plays the animation at a constant rate.
 };
 
-typedef enum
-{
-	// Terrain flag values.
-	TRF_LIQUID = 1, // Texture has water properties (wavy, slippery, etc)
-	TRF_SNEAKERPANEL = 1<<1, // Texture is a booster
-	TRF_STAIRJANK = 1<<2, // Texture is bumpy road
-	TRF_TRIPWIRE = 1<<3, // Texture is a tripwire when used as a midtexture
-	TRF_REMAP = 1<<4, // Texture colors may be remapped with ENCOREMAP or TWEAKMAP
-} terrain_flags_t;
+typedef INT32 terrain_flags_t;
+// Terrain flag values.
+#define TRF_LIQUID (1) // Texture has water properties (wavy, slippery, etc)
+#define TRF_SNEAKERPANEL (1<<1) // Texture is a booster
+#define TRF_STAIRJANK (1<<2) // Texture is bumpy road
+#define TRF_TRIPWIRE (1<<3) // Texture is a tripwire when used as a midtexture
+#define TRF_REMAP (1<<4) // Texture colors may be remapped with ENCOREMAP or TWEAKMAP
 
 struct terrain_t
 {
