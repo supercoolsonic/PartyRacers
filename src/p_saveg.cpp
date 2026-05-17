@@ -1318,7 +1318,7 @@ static void P_NetUnArchivePlayers(savebuffer_t *save)
 		players[i].timestonefrozentimer = READUINT16(save->p);					//SCS ADD
 
 		players[i].normalshieldboostcharge = READUINT16(save->p);				//SCS ADD
-		players[i].normalshieldboosttap = READUINT8(save->p);					//SCS ADD
+		players[i].normalshieldboosttap = READFIXED(save->p);					//SCS ADD
 		
 		players[i].megachoppertimer = READUINT16(save->p);						//SCS ADD
 		players[i].megachopperdelaytime = READUINT16(save->p);					//SCS ADD
@@ -1326,7 +1326,7 @@ static void P_NetUnArchivePlayers(savebuffer_t *save)
 		players[i].armageddonshieldboosttimer = READUINT16(save->p);			//SCS ADD
 		players[i].armageddonshieldboostdelay = READUINT16(save->p);			//SCS ADD
 		players[i].armashielddraindelay = READUINT16(save->p);					//SCS ADD
-		players[i].armashielddeployed = READUINT8(save->p);						//SCS ADD
+		players[i].armashielddeployed = READFIXED(save->p);						//SCS ADD
 		
 		players[i].lastabjawztarget = READSINT8(save->p);						//SCS ADD
 		players[i].abjawztargetdelay = READUINT8(save->p);						//SCS ADD
@@ -1339,7 +1339,7 @@ static void P_NetUnArchivePlayers(savebuffer_t *save)
 		players[i].squishedtimer = READSINT8(save->p);							//SCS ADD
 		
 		players[i].playerringgunpower = READUINT16(save->p);					//SCS ADD
-		players[i].playerringguntap = READUINT8(save->p);						//SCS ADD
+		players[i].playerringguntap = READFIXED(save->p);						//SCS ADD
 		players[i].playerringgundelay = READSINT8(save->p);						//SCS ADD
 		
 		players[i].inkblotchtimer = READUINT16(save->p);						//SCS ADD
