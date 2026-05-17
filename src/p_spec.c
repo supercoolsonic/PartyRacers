@@ -3846,8 +3846,8 @@ boolean P_ProcessSpecial(activator_t *activator, INT16 special, INT32 *args, cha
 				// set viewpoint mobj
 				if (args[2] != TMS_CENTERPOINT)
 				{
-					//if (viewid >= 0 && viewid < 16)
-					if (viewid >= 0 && viewid < MAXPLAYERS)			//SCS EDIT
+					if (viewid >= 0 && viewid < 16)
+					//if (viewid >= 0 && viewid < MAXPLAYERS)			//SCS EDIT
 						set = skyboxviewpnts[viewid];
 					else
 						set = NULL;
@@ -3858,8 +3858,8 @@ boolean P_ProcessSpecial(activator_t *activator, INT16 special, INT32 *args, cha
 				// set centerpoint mobj
 				if (args[2] != TMS_VIEWPOINT)
 				{
-					//if (centerid >= 0 && centerid < 16)
-					if (centerid >= 0 && centerid < MAXPLAYERS)			//SCS EDIT
+					if (centerid >= 0 && centerid < 16)
+					//if (centerid >= 0 && centerid < MAXPLAYERS)			//SCS EDIT
 						set = skyboxcenterpnts[centerid];
 					else
 						set = NULL;
