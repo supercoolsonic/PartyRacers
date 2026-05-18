@@ -27,6 +27,7 @@
 
 // Radio
 #include "../radioracers/rr_hud.h"			//SCS - RADIO
+#include "../radioracers/rr_cvar.h"			//SCS ADD
 
 #define POHBEE_HOVER (128 << FRACBITS)
 #define POHBEE_SPEED (128 << FRACBITS)
@@ -623,10 +624,10 @@ boolean Obj_ShrinkLaserCollide(mobj_t *gun, mobj_t *victim)
 		}
 		else
 		{
-			// RadioRacers: .. right around here														//SCS - RADIO START
-			if (owner != NULL && !(victim->player->growshrinktimer < 0)) {								//SCS - EDIT - to prevent spamming and flooding the hitfeed with Shrink notifs (NOT WORKING??)
+			// RadioRacers: .. right around here																//SCS - RADIO START
+			if (owner != NULL && !(victim->player->growshrinktimer < 0) && cv_hudfeed_toggle_shrink.value) {	//SCS - EDIT - to prevent spamming and flooding the hitfeed with Shrink notifs
 				RR_PushPlayerInteractionToFeed(owner->mo, victim, ATTACK_SHRINK, 0);
-			}																							//SCS - RADIO END
+			}																									//SCS - RADIO END
 
 			// Start shrinking!
 			victim->player->growshrinktimer -= FixedInt(FixedMul(FRACUNIT*5*TICRATE, scale));

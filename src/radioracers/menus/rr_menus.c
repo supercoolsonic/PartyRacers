@@ -153,7 +153,10 @@ static menuitem_t OPTIONS_RadioRacersHudfeed[] =
 		NULL, {.cvar = &cv_hudfeed_show_snipes}, 0, 0},
 
 	{IT_STRING | IT_CVAR, "Show Amps?", "Show amps gained in the feed?",
-		NULL, {.cvar = &cv_hudfeed_show_amps}, 0, 0}
+		NULL, {.cvar = &cv_hudfeed_show_amps}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Show Shrink Hits?", "Show Shrink hits in the feed?",									//SCS ADD
+		NULL, {.cvar = &cv_hudfeed_toggle_shrink}, 0, 0}
 };
 
 void RadioHudfeedMenu_Init(void)
@@ -319,7 +322,7 @@ static menuitem_t OPTIONS_RadioRacersAccessibility[] =
 	{IT_HEADER, "CPU Randomization", NULL,
 		NULL, {NULL}, 0, 0},
 		
-	{IT_STRING | IT_CVAR, "CPU Colors and Followers", "Make it so CPUs can randomize their color and follower each race.",
+	{IT_STRING | IT_CVAR, "CPU Colors and Followers", "Make it so CPUs can randomize their color and follower each race. (Local Only!)",
 		NULL, {.cvar = &cv_toggle_cpu_colorfollowerrand}, 0, 0},   
 
 
