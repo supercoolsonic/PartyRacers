@@ -1905,7 +1905,12 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 	if (guard1 || guard2)
 		return false;
 	
-	if (t1->type == MT_MEGACHOPPER || t2->type == MT_MEGACHOPPER)
+	if (t1->type == MT_MEGACHOPPER && t2->type == MT_MEGACHOPPER)								//SCS ADD - If two choppers collide, remove them both to prevent players from getting stuck in place
+	{
+		P_RemoveMobj(t1);
+		P_RemoveMobj(t2);
+	}
+	else if (t1->type == MT_MEGACHOPPER || t2->type == MT_MEGACHOPPER)								//SCS ADD - Otherwise, if only one of them is a chopper, don't damage them
 		return false;
 
 	// Clash instead of damage if both parties have any of these conditions
