@@ -26,7 +26,7 @@ boolean RR_UseVoteSnitch(void)
 void RR_VoteSnitchNewVote(midVoteType_e type, player_t *victim, player_t *caller)
 {
     const char *voteReason;
-	const char *levelTitle = mapheaderinfo[gamemap-1]->lvlttl;
+	const char *levelTitle = G_BuildMapTitle(gamemap);
 	switch (type){
 		case MVT_KICK: // Kick
 			voteReason = va("\x82KICK \x89%s\x86", player_names[victim - players]);
