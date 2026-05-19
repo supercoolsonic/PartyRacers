@@ -9225,10 +9225,6 @@ static void K_drawTrickCool(void)
 			adjustedspeedlevel = 10;
 		
 	}
-	else if (adjustedspeedlevel > 9)
-	{
-		adjustedspeedlevel = 9;
-	}
 
 	if (timer <= 6)
 	{
