@@ -104,3 +104,6 @@ Custom Sprites for Double Banana, Triple Banana, Quad Banana, Double Sneakers, T
 Saturn Build here: https://github.com/Indev450/SRB2Kart-Saturn
 
 Blankart Build here: https://codeberg.org/NepDisk/blankart
+
+Signpost ribbon from Expanded Signposts mod for SRB2Kart.
+Original Expanded Signposts mode here: https://mb.srb2.org/addons/expanded-signposts.4968/
