@@ -9867,7 +9867,7 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 			}
 
 			mobj_t *cur = mobj->hnext;
-			while (cur && !P_MobjWasRemoved(cur))								//SCS NOTE - This loops through all of the other sign pieces, the 3D parts, to sping them around
+			while (cur && !P_MobjWasRemoved(cur))								//SCS NOTE - This loops through all of the other sign pieces, the 3D parts, to spin them around
 			{
 				fixed_t amt = cur->extravalue1 * mobj->scale;
 				angle_t dir = mobj->angle + (cur->extravalue2 * ANGLE_90);
@@ -9930,8 +9930,6 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 			P_RemoveMobj(mobj);
 		else
 			P_MoveOrigin(mobj, mobj->target->x, mobj->target->y, mobj->target->z + (mobj->target->height/4));
-		
-		//P_MoveOrigin(mobj, mobj->target->x, mobj->target->y, mobj->target->z + FixedDiv((mobj->target->height)/2, mobj->target->destscale));
 	
 	break;
 	case MT_CDUFO:

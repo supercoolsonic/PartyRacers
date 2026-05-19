@@ -417,10 +417,10 @@ static menuitem_t OPTIONS_RadioRacersFun[] =
 	{IT_STRING | IT_CVAR, "Show 'S' ranks", "Show S ranks in the player tally and standings (purely cosmetic).",
 		NULL, {.cvar = &cv_show_s_ranks}, 0, 0},
 		
-	{IT_SPACE | IT_NOTHING, NULL,  NULL,
+	{IT_SPACE | IT_NOTHING, NULL,  NULL,																										//SCS ADD START
 		NULL, {NULL}, 0, 0},
 		
-	{IT_HEADER, "CPU Randomization", NULL,																										//SCS ADD START
+	{IT_HEADER, "CPU Randomization", NULL,
 		NULL, {NULL}, 0, 0},
 		
 	{IT_STRING | IT_CVAR, "CPU Colors and Followers", "Make it so CPUs can randomize their color and follower each race. (Local Only!)",
@@ -445,7 +445,7 @@ static menuitem_t OPTIONS_RadioRacersFun[] =
 		NULL, {.cvar = &cv_toggle_ribbon_signposts}, 0, 0}, 
 		
 	{IT_STRING | IT_CVAR, "Sign Sparkles", "Should 1st place's signpost sparkle if the player achieved perfect EXP during the race?",
-		NULL, {.cvar = &cv_toggle_sparkling_signposts}, 0, 0},
+		NULL, {.cvar = &cv_toggle_sparkling_signposts}, 0, 0},																					//SCS ADD END
 		
 };
 
