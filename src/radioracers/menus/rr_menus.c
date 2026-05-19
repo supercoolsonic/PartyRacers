@@ -315,16 +315,6 @@ static menuitem_t OPTIONS_RadioRacersAccessibility[] =
 
 	{IT_STRING | IT_CVAR, "Extra Countdown Jingle", "Play an extra sound on the last second the coutdown jingle.",
 		NULL, {.cvar = &cv_powersoundjoke}, 0, 0},
-		
-	{IT_SPACE | IT_NOTHING, NULL,  NULL,
-		NULL, {NULL}, 0, 0},
-		
-	{IT_HEADER, "CPU Randomization", NULL,
-		NULL, {NULL}, 0, 0},
-		
-	{IT_STRING | IT_CVAR, "CPU Colors and Followers", "Make it so CPUs can randomize their color and follower each race. (Local Only!)",
-		NULL, {.cvar = &cv_toggle_cpu_colorfollowerrand}, 0, 0},   
-
 
 };
 
@@ -426,6 +416,37 @@ static menuitem_t OPTIONS_RadioRacersFun[] =
 
 	{IT_STRING | IT_CVAR, "Show 'S' ranks", "Show S ranks in the player tally and standings (purely cosmetic).",
 		NULL, {.cvar = &cv_show_s_ranks}, 0, 0},
+		
+	{IT_SPACE | IT_NOTHING, NULL,  NULL,
+		NULL, {NULL}, 0, 0},
+		
+	{IT_HEADER, "CPU Randomization", NULL,																										//SCS ADD START
+		NULL, {NULL}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "CPU Colors and Followers", "Make it so CPUs can randomize their color and follower each race. (Local Only!)",
+		NULL, {.cvar = &cv_toggle_cpu_colorfollowerrand}, 0, 0},
+		
+	{IT_SPACE | IT_NOTHING, NULL,  NULL,
+		NULL, {NULL}, 0, 0},
+		
+	{IT_HEADER, "Signpost Customization", NULL,
+		NULL, {NULL}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Multiple Signposts", "Last position from 1st place that will spawn a signpost when you cross the finish line.",
+		NULL, {.cvar = &cv_toggle_multi_signposts}, 0, 0},  
+		
+	{IT_STRING | IT_CVAR, "Sign Coloration", "Should 1st, 2nd, and 3rd place signposts be colored gold, silver, and bronze?",
+		NULL, {.cvar = &cv_toggle_colorized_signposts}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Sign Sizes", "Should each sign after 1st place be smaller than the previous position's sign?",
+		NULL, {.cvar = &cv_toggle_scaling_signposts}, 0, 0},   
+		
+	{IT_STRING | IT_CVAR, "Sign Ribbons", "Should a ribbon be tied to signposts for players that cross the finish line with 20 rings?",
+		NULL, {.cvar = &cv_toggle_ribbon_signposts}, 0, 0}, 
+		
+	{IT_STRING | IT_CVAR, "Sign Sparkles", "Should 1st place's signpost sparkle if the player achieved perfect EXP during the race?",
+		NULL, {.cvar = &cv_toggle_sparkling_signposts}, 0, 0},
+		
 };
 
 void RadioFunMenu_Init(void)

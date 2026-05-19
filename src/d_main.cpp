@@ -1460,7 +1460,8 @@ static void IdentifyVersion(void)
 	configfile_radio[sizeof configfile_radio - 1] = '\0';																	//SCS - RADIO END
 
 	D_AddFile(startupiwads, num_startupiwads++, va(spandf,srb2waddir,"data","scripts.pk3"), ASSET_HASH_SCRIPTS_PK3);
-	D_AddFile(startupiwads, num_startupiwads++, va(spandf,srb2waddir,"data","gfx.pk3"), ASSET_HASH_GFX_PK3);
+	//D_AddFile(startupiwads, num_startupiwads++, va(spandf,srb2waddir,"data","gfx.pk3"), ASSET_HASH_GFX_PK3);
+	D_AddFile(startupiwads, num_startupiwads++, va(spandf,srb2waddir,"data","gfx.pk3"), NULL);								//SCS EDIT - Do we really even need the hash anymore?
 	D_AddFile(startupiwads, num_startupiwads++, va(spandf,srb2waddir,"data","textures_general.pk3"), ASSET_HASH_TEXTURES_GENERAL_PK3);
 	D_AddFile(startupiwads, num_startupiwads++, va(spandf,srb2waddir,"data","textures_segazones.pk3"), ASSET_HASH_TEXTURES_SEGAZONES_PK3);
 	D_AddFile(startupiwads, num_startupiwads++, va(spandf,srb2waddir,"data","textures_originalzones.pk3"), ASSET_HASH_TEXTURES_ORIGINALZONES_PK3);

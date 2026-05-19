@@ -882,6 +882,8 @@ char sprnames[NUMSPRITES + 1][5] =
 	
 	"SUPS",		//SCS ADD
 	
+	"PRIB",		//SCS ADD
+	
 	//new multi-item sprites		//SCS ADD
 	"ITMB",
 	"ITMJ",
@@ -3892,11 +3894,13 @@ state_t states[NUMSTATES] =
 	{SPR_KINO, FF_FULLBRIGHT|2,  1, {NULL}, 0, 0, S_KARTINVULN_LARGE3},	// S_KARTINVULN_LARGE2
 	{SPR_KINO, FF_FULLBRIGHT|5,  1, {NULL}, 0, 0, S_KARTINVULN_LARGE4},	// S_KARTINVULN_LARGE3
 	{SPR_KINO, FF_FULLBRIGHT|6,  1, {NULL}, 0, 0, S_KARTINVULN_LARGE5},	// S_KARTINVULN_LARGE4
-	{SPR_KINO, FF_FULLBRIGHT|7,  1, {NULL}, 0, 0, S_NULL},				// S_KARTINVULN_LARGE5			
+	{SPR_KINO, FF_FULLBRIGHT|7,  1, {NULL}, 0, 0, S_NULL},				// S_KARTINVULN_LARGE5		//SCS ADD END	
 	
-	{SPR_TTSP, FF_FULLBRIGHT|FF_ANIMATE, -1, {NULL}, 2, 1, S_TT_SPARKLE},	// S_TT_SPARKLE		//SCS ADD END
+	{SPR_TTSP, FF_FULLBRIGHT|FF_ANIMATE, -1, {NULL}, 2, 1, S_TT_SPARKLE},	// S_TT_SPARKLE		//SCS ADD
 	
-	{SPR_SUPS, FF_FULLBRIGHT|FF_ANIMATE, -1, {NULL}, 8, 1, S_SF_SPARKLE},	// S_SF_SPARKLE		//SCS ADD END
+	{SPR_SUPS, FF_FULLBRIGHT|FF_ANIMATE, -1, {NULL}, 8, 1, S_SF_SPARKLE},	// S_SF_SPARKLE		//SCS ADD
+	
+	{SPR_PRIB, FF_FULLBRIGHT, -1, {NULL}, 8, 1, S_SP_RIBBON},				// S_SP_RIBBON		//SCS ADD
 };
 
 mobjinfo_t mobjinfo[NUMMOBJTYPES] =
@@ -24168,8 +24172,34 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP|MF_NOCLIP|MF_NOGRAVITY|MF_NOCLIPHEIGHT|MF_DONTENCOREMAP, // flags
 		S_NULL					// raisestate
 	},
+	
+	{           // MT_SIGNPOSTRIBBON
+		-1,						// doomednum
+		S_SP_RIBBON,			// spawnstate
+		1,						// spawnhealth
+		S_NULL,					// seestate
+		sfx_None,				// seesound
+		0,						// reactiontime
+		sfx_None,				// attacksound
+		S_NULL,					// painstate
+		3,						// painchance
+		sfx_None,				// painsound
+		S_NULL,					// meleestate
+		S_NULL,					// missilestate
+		S_NULL,					// deathstate
+		S_NULL,					// xdeathstate
+		sfx_None,				// deathsound
+		8,						// speed
+		1*FRACUNIT,				// radius
+		1*FRACUNIT,				// height
+		2,						// display offset
+		1000,					// mass
+		8,						// damage
+		sfx_None,				// activesound
+		MF_NOBLOCKMAP|MF_NOCLIP|MF_NOGRAVITY|MF_NOCLIPHEIGHT|MF_DONTENCOREMAP, // flags
+		S_NULL					// raisestate
+	},
 };
-
 
 skincolor_t skincolors[MAXSKINCOLORS] = {
 	{"Default",        {  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0}, SKINCOLOR_NONE,             0, 0,             false, UINT16_MAX}, // SKINCOLOR_NONE

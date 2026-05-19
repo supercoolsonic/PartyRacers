@@ -55,6 +55,8 @@
 #include "k_podium.h"
 #include "g_party.h"
 
+#include "radioracers/rr_cvar.h"		//SCS ADD
+
 actioncache_t actioncachehead;
 
 static mobj_t *overlaycap = NULL;
@@ -9722,6 +9724,9 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 					mobj->z = mobj->movefactor;
 					mobj->momz = 0;
 					mobj->movecount = 2;
+					
+					if (mobj->extravalue2 == NULL)								//SCS ADD - Trying to get the Dynamite Derby sign to not be green
+						mobj->color = SKINCOLOR_GREY;
 
 					if (!P_MobjWasRemoved(mobj->target))
 					{
@@ -9807,6 +9812,16 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 				if (mobj->angle != endangle)
 					mobj->angle += ANGLE_11hh;
 			}
+			
+			if (cv_toggle_sparkling_signposts.value && mobj->target->player->exp == EXP_TARGET)													//SCS ADD
+			{
+				P_SpawnMobj(
+						mobj->x + (P_RandomRange(PR_DECORATION, -((mobj->radius*3)/FRACUNIT), ((mobj->radius*3)/FRACUNIT))*FRACUNIT),
+						mobj->y + (P_RandomRange(PR_DECORATION, -((mobj->radius*3)/FRACUNIT), ((mobj->radius*3)/FRACUNIT))*FRACUNIT),
+						mobj->z + (P_RandomRange(PR_DECORATION, 0, ((mobj->height*3)/2)>>FRACBITS)*FRACUNIT),
+						MT_SIGNSPARKLE
+					);				
+			}
 
 			boolean newperfect = false;
 			if (
@@ -9852,7 +9867,7 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 			}
 
 			mobj_t *cur = mobj->hnext;
-			while (cur && !P_MobjWasRemoved(cur))
+			while (cur && !P_MobjWasRemoved(cur))								//SCS NOTE - This loops through all of the other sign pieces, the 3D parts, to sping them around
 			{
 				fixed_t amt = cur->extravalue1 * mobj->scale;
 				angle_t dir = mobj->angle + (cur->extravalue2 * ANGLE_90);
@@ -9862,7 +9877,9 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 				{
 					if (newplayer != NULL)
 					{
-						cur->color = skincolors[newplayer->skincolor].invcolor;
+						if (mobj->target->player->position > 3)										//SCS EDIT - Don't change the color for 1st, 2nd, and 3rd
+							cur->color = skincolors[newplayer->skincolor].invcolor;
+
 						cur->frame = cur->state->frame + skincolors[newplayer->skincolor].invshade;
 					}
 				}
@@ -9872,7 +9889,7 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 					z += (5*mobj->scale);
 					amt += 1;
 
-					if (newplayer != NULL)
+					if (newplayer != NULL)										//SCS NOTE - This is the face of the sign, the part that shows your character
 					{
 						cur->skin = skins[newplayer->skin];
 						cur->color = newplayer->skincolor;
@@ -9892,6 +9909,9 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 					z += (5*mobj->scale);
 					amt += 1;
 				}
+				
+				if (mobj->extravalue2 == NULL && cur->color != SKINCOLOR_GREY && cur->state != &states[S_KART_SIGN] && cur->state != &states[S_KART_SIGL])								//SCS ADD - Trying to get the Dynamite Derby sign to not be green
+					cur->color = SKINCOLOR_GREY;
 
 				P_MoveOrigin(
 					cur,
@@ -9905,6 +9925,15 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 			}
 		}
 		break;
+	case MT_SIGNPOSTRIBBON:															//SCS ADD
+		if (mobj->target == NULL)
+			P_RemoveMobj(mobj);
+		else
+			P_MoveOrigin(mobj, mobj->target->x, mobj->target->y, mobj->target->z + (mobj->target->height/4));
+		
+		//P_MoveOrigin(mobj, mobj->target->x, mobj->target->y, mobj->target->z + FixedDiv((mobj->target->height)/2, mobj->target->destscale));
+	
+	break;
 	case MT_CDUFO:
 		if (!mobj->spawnpoint || mobj->fuse)
 			break;

@@ -4669,20 +4669,40 @@ boolean P_ProcessSpecial(activator_t *activator, INT16 special, INT32 *args, cha
 	return true;
 }
 
-static void P_SetupSignObject(mobj_t *sign, mobj_t *pmo, boolean error)
+static void P_SetupSignObject(mobj_t *sign, mobj_t *pmo, boolean error, UINT16 signcolor)	//SCS EDIT - Added extra parameter for colorizing the sign
 {
-	mobj_t *cur = sign, *prev = NULL;
+	mobj_t *cur = sign, *prev = NULL, *ribbon = NULL;										//SCS EDIT
 
 	// Setup the sign itself
 	P_SetScale(sign, (sign->destscale = 5 * sign->scale / 2)); // 2.5x
 	P_SetTarget(&sign->target, pmo);
 	P_SetMobjState(sign, S_SIGN_POLE);
+	
+	if (cv_toggle_scaling_signposts.value && signcolor != SKINCOLOR_MUSTARD)														//SCS ADD - We gradually scale down all sign posts after 1st
+		sign->destscale = ((sign->destscale/pmo->player->position)*3)/2;
+		
+		//P_SetScale(sign, (sign->scale/pmo->player->position));
 
 	sign->movefactor = sign->z;
 	sign->z += (576*sign->scale) * P_MobjFlip(sign);
 	sign->old_z = sign->z; // interp hijack
 	sign->movecount = 1;
 	sign->extravalue1 = AngleFixed(sign->angle) >> FRACBITS;
+	sign->extravalue2 = sign->angle;														//SCS ADD
+	sign->color = signcolor;																//SCS ADD
+	
+	
+	if (cv_toggle_ribbon_signposts.value && pmo->player->rings >= 20)						//SCS ADD
+	{
+		ribbon = P_SpawnMobjFromMobj(sign, 0, 0, 0, MT_SIGNPOSTRIBBON);
+		
+		if (ribbon != NULL)
+		{
+			ribbon->destscale = sign->destscale/3;
+			ribbon->target = sign;
+			ribbon->color = pmo->player->skincolor;
+		}
+	}
 
 	// Setup the overlay pieces
 	// Front
@@ -4691,6 +4711,7 @@ static void P_SetupSignObject(mobj_t *sign, mobj_t *pmo, boolean error)
 	P_SetMobjState(cur->hnext, S_SIGN_FACE);
 	cur->hnext->extravalue1 = 6;
 	cur->hnext->extravalue2 = 0;
+	cur->hnext->color = signcolor;															//SCS ADD
 
 	prev = cur;
 	cur = cur->hnext;
@@ -4703,6 +4724,7 @@ static void P_SetupSignObject(mobj_t *sign, mobj_t *pmo, boolean error)
 	P_SetMobjState(cur->hnext, (error == true) ? S_SIGN_ERROR : S_KART_SIGN);
 	cur->hnext->extravalue1 = 7;
 	cur->hnext->extravalue2 = 0;
+	cur->hnext->color = signcolor;															//SCS ADD
 
 	prev = cur;
 	cur = cur->hnext;
@@ -4714,6 +4736,7 @@ static void P_SetupSignObject(mobj_t *sign, mobj_t *pmo, boolean error)
 	P_SetMobjState(cur->hnext, S_SIGN_BACK);
 	cur->hnext->extravalue1 = 6;
 	cur->hnext->extravalue2 = 2;
+	cur->hnext->color = signcolor;															//SCS ADD
 
 	prev = cur;
 	cur = cur->hnext;
@@ -4725,6 +4748,7 @@ static void P_SetupSignObject(mobj_t *sign, mobj_t *pmo, boolean error)
 	P_SetMobjState(cur->hnext, S_SIGN_SIDE);
 	cur->hnext->extravalue1 = 30;
 	cur->hnext->extravalue2 = 1;
+	cur->hnext->color = signcolor;															//SCS ADD
 
 	prev = cur;
 	cur = cur->hnext;
@@ -4735,6 +4759,7 @@ static void P_SetupSignObject(mobj_t *sign, mobj_t *pmo, boolean error)
 	P_SetMobjState(cur->hnext, S_SIGN_SIDE);
 	cur->hnext->extravalue1 = 30;
 	cur->hnext->extravalue2 = 3;
+	cur->hnext->color = signcolor;															//SCS ADD
 
 	prev = cur;
 	cur = cur->hnext;
@@ -4753,9 +4778,25 @@ void P_SetupSignExit(player_t *player, boolean tie)
 	msecnode_t *node = player->mo->subsector->sector->touching_thinglist; // things touching this sector
 	thinker_t *think;
 	INT32 numfound = 0;
+	UINT16 signcolor = 0;												//SCS ADD START
+	
+	if (cv_toggle_colorized_signposts.value)
+	{
+		if (player->position == 1)
+			signcolor = SKINCOLOR_MUSTARD;
+		else if (player->position == 2)
+			signcolor = SKINCOLOR_SILVER;
+		else if (player->position == 3)
+			signcolor = SKINCOLOR_CINNAMON;
+		else
+			signcolor = SKINCOLOR_GREY;										
+	}
+	else
+		signcolor = SKINCOLOR_GREY;										//SCS ADD END
 
-	if (player->position != 1
-	|| (gametyperules & GTR_SPECIALSTART))
+	//if (player->position != 1											//SCS EDIT - Disable to allow positions other than 1st to get signposts
+	//|| (gametyperules & GTR_SPECIALSTART))
+	if (gametyperules & GTR_SPECIALSTART)
 		return;
 
 	angle_t bestAngle = K_MomentumAngle(player->mo) + ANGLE_180;
@@ -4766,7 +4807,8 @@ void P_SetupSignExit(player_t *player, boolean tie)
 		if (thing->type != MT_SIGN)
 			continue;
 
-		bestAngle = thing->angle;
+		//bestAngle = thing->angle;
+		bestAngle = thing->extravalue2;									//SCS EDIT - We now store the first sign's initial angle in its extravalue2, so when other signs spawn, they grab that instead of the sign's current angle, which may be spinning...
 
 		if (tie)
 		{
@@ -4776,7 +4818,7 @@ void P_SetupSignExit(player_t *player, boolean tie)
 		if (thing->state != &states[thing->info->spawnstate])
 			continue;
 
-		P_SetupSignObject(thing, player->mo, false);
+		P_SetupSignObject(thing, player->mo, false, signcolor);
 		++numfound;
 	}
 
@@ -4794,7 +4836,8 @@ void P_SetupSignExit(player_t *player, boolean tie)
 		if (thing->type != MT_SIGN)
 			continue;
 
-		bestAngle = thing->angle;
+		//bestAngle = thing->angle;
+		bestAngle = thing->extravalue2;																		//SCS EDIT
 
 		if (tie)
 		{
@@ -4804,7 +4847,7 @@ void P_SetupSignExit(player_t *player, boolean tie)
 		if (thing->state != &states[thing->info->spawnstate])
 			continue;
 
-		P_SetupSignObject(thing, player->mo, false);
+		P_SetupSignObject(thing, player->mo, false, signcolor);
 		++numfound;
 	}
 
@@ -4816,7 +4859,8 @@ void P_SetupSignExit(player_t *player, boolean tie)
 	{
 		thing = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->floorz, MT_SIGN);
 		thing->angle = bestAngle;
-		P_SetupSignObject(thing, player->mo, (tie == false)); // Use :youfuckedup: sign face, except during ties
+		//P_SetupSignObject(thing, player->mo, (tie == false), signcolor); // Use :youfuckedup: sign face, except during ties
+		P_SetupSignObject(thing, player->mo, false, signcolor); // Use :youfuckedup: sign face, except during ties						//SCS EDIT - but what if we don't hide the face
 	}
 }
 

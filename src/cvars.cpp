@@ -715,14 +715,33 @@ consvar_t cv_toggle_position_number = Player("positionnumbertoggle", "Small").va
 	{1, "Small"},
 	{2, "Off"}
 }).radio();
-
-consvar_t cv_toggle_cpu_colorfollowerrand = Player("cpurandomizationtoggle", "Full").values({		//SCS ADD (Toggle for CPU color and follower randomization)
+//Toggle for CPU color and follower randomization
+consvar_t cv_toggle_cpu_colorfollowerrand = Player("cpurandomizationtoggle", "Full").values({							//SCS ADD START
 	{0, "Full"}, 
 	{1, "Color"},
 	{2, "Follower"},
 	{3, "Off"}
 }).radio();
 
+// Allow places after 1st to drop signposts when crossing the finish line
+consvar_t cv_toggle_multi_signposts = Player("signpostnumtoggle", "1st").values({
+	{1, "1st"}, 	//This essentially toggles the feature, leaving 1st as the only one with a signpost
+	{2, "2nd"}, 
+	{3, "3rd"}, 
+	{4, "4th"}, 
+	{5, "5th"}, 
+	{6, "6th"}, 
+	{7, "7th"}, 
+	{8, "8th"}		//Gonna cut you off there, sorry! Don't want it to get too cluttered, and with scaling on, you aren't gonna see anything past here lol
+}).radio();
+//Colorize the 1st, 2nd, and 3rd place signposts as gold, silver, and bronze?
+consvar_t cv_toggle_colorized_signposts = Player("signpostcolorizetoggle", "No").yes_no().radio();
+//Scale each successive signpost down a bit to reduce clutter? (Highly recommend it! lol)
+consvar_t cv_toggle_scaling_signposts = Player("signpostscalingtoggle", "Yes").yes_no().radio();
+//Tie a nice ribbon onto each signpost for each player that finishes with 20 rings (or 0 with a SPB chasing them)?
+consvar_t cv_toggle_ribbon_signposts = Player("signpostribbontoggle", "Yes").yes_no().radio();
+//Make the signpost of 1st place continue to sparkle after it lands if they achieved perfect EXP during the race?
+consvar_t cv_toggle_sparkling_signposts = Player("signpostsparkletoggle", "Yes").yes_no().radio();						//SCS ADD END
 
 consvar_t cv_toggle_race_minimap = Player("raceminimaptoggle", "On").on_off().radio();
 consvar_t cv_toggle_trick_cool = Player("tricktexttoggle", "On").on_off().radio();
