@@ -58,11 +58,12 @@ void K_drawKart2PTimestamp(void)
 
 void K_drawKart4PTimestamp(void)
 {
-	Draw row = Draw(159, 0).flags(kHudFlags).font(Draw::Font::kZVote).align(Draw::Align::kCenter);
+	Draw row = Draw(147, 0).flags(kHudFlags).font(Draw::Font::kZVote).align(Draw::Align::kCenter);			//SCS EDIT
 
 	auto draw = [](const Draw& row, tic_t time)
 	{
-		row.text("{:03}", time / TICRATE);
+		row.patch("K_STTIMS");																				//SCS ADD
+		row.x(20).text("{:03}", time / TICRATE);															//SCS EDIT
 	};
 
 	auto time_of = [](int k) -> tic_t { return k <= r_splitscreen ? player_timer(&players[displayplayers[k]]) : 0u; };

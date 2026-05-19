@@ -1215,7 +1215,7 @@ consvar_t cv_debugrender_visplanes = PlayerCheat("debugrender_visplanes", "Off")
 consvar_t cv_debugvirtualkeyboard = PlayerCheat("debugvirtualkeyboard", "Off").on_off().description("Always show virtual keyboard instead of using real keyboard input.");
 consvar_t cv_devmode_screen = PlayerCheat("devmode_screen", "1").min_max(1, 4).description("Choose which splitscreen player devmode applies to");
 consvar_t cv_drawpickups = PlayerCheat("drawpickups", "Yes").yes_no().description("Hide rings, spheres, item capsules, prison capsules (visual only)");
-consvar_t cv_drawtimer = PlayerCheat("drawtimer", "No").yes_no().description("Always draw the timer (race checkpoint timing, etc)");
+consvar_t cv_drawtimer = Player("drawtimer", "No").yes_no().description("Always draw the timer (race checkpoint timing, etc)");													//SCS EDIT - No longer a cheat
 consvar_t cv_debugfonts = PlayerCheat("debugfonts", "No").yes_no().description("Draw font bounding boxes (integer precision, beware centered text!)");
 consvar_t cv_vorpal = ServerCheat("vorpal", "No").yes_no().description("Show real EXP odds modification");
 

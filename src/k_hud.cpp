@@ -9211,7 +9211,13 @@ static void K_drawTrickCool(void)
 	tic_t timer = TICRATE - stplyr->karthud[khud_trickcool];
 	SINT8 adjustedspeedlevel = stplyr->trickspeedlevel;
 	
-	if (splitscreen)
+	
+	if (adjustedspeedlevel > 9)
+		adjustedspeedlevel = 9;
+	else if (adjustedspeedlevel < 0)
+		adjustedspeedlevel = 0;
+	
+	if (r_splitscreen > 0)
 	{
 		adjustedspeedlevel = adjustedspeedlevel + 10;
 		
@@ -10066,7 +10072,12 @@ void K_drawKartHUD(void)
 
 			// RADIO - 2.4 removed timestamps
 			if (modeattacking || (gametyperules & GTR_TIMELIMIT) || cv_drawtimer.value)
-				K_drawKartTimestamp(realtime, TIME_X, TIME_Y + (ta ? 2 : 0), flags, 0);
+			{
+				if (G_GametypeHasTeams() == true)												//SCS ADD - change timer to 2P version if teams are active
+					K_drawKart2PTimestamp();
+				else
+					K_drawKartTimestamp(realtime, TIME_X, TIME_Y + (ta ? 2 : 0), flags, 0);				
+			}
 
 			if (modeattacking)
 			{
