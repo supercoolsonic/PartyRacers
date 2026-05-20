@@ -117,11 +117,9 @@ boolean RR_ShouldGhostRing(mobj_t *mo)
 {
     return canGhost() &&
     isRing(mo) && 
-	!((stplyr)->timestonefrozen) &&															//SCS ADD - Don't ghost rings if we have the Time Stone active, since we get to keep picking them up to add to superring
     !(!P_MobjWasRemoved(mo->target) && mo->target->type == MT_PLAYER) && 
-    (IS_BEING_CHASED_BY_SPB(stplyr) || RINGTOTAL(stplyr) >= 20);
-}
-
+    (IS_BEING_CHASED_BY_SPB(stplyr) || (RINGTOTAL(stplyr) >= 20 && !((stplyr)->timestonefrozen))); //SCS EDIT - Don't ghost rings if we have the Time Stone active, since we get to keep picking them up to add to superring
+}											
 boolean RR_ShouldGhostRingboxes(mobj_t *mo)
 {
     return canGhost() &&
