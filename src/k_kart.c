@@ -10020,7 +10020,7 @@ void K_KartPlayerHUDUpdate(player_t *player)
 			player->hudrings = player->rings;
 		}
 
-		if (player->mo && player->mo->hitlag <= 0)
+		if (player->mo && player->mo->hitlag <= 0 && !player->timestonefrozen)			//SCS EDIT
 		{
 			// 0 is the fast spin animation, set at 30 tics of ring boost or higher!
 			if (player->ringboost >= 30)
@@ -11510,7 +11510,10 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 		// CONS_Printf("R=%d SR=%d PR=%d DR=%d TR=%d\n", player->rings, player->superring, player->pickuprings, debtrings, totalrings);
 
 		player->rings = -20;
-		player->superring = 0;
+		
+		if (!player->timestonefrozen)			//SCS ADD
+			player->superring = 0;
+	
 		player->ringboxaward = 0;
 		player->ringboxdelay = 0;
 		player->superringdisplay = 0;
@@ -11757,7 +11760,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 		}
 	}
 
-	if (player->superring)
+	if (player->superring && !player->timestonefrozen)	//SCS EDIT
 	{
 		player->nextringaward++;
 
@@ -11790,7 +11793,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 				if (player->superring == 1)
 					ring->cvmem = 1; // play caching when collected
 				player->nextringaward = 0;
-				player->superring--;
+				player->superring--;	
 			}
 		}
 	}
@@ -16216,7 +16219,9 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 					// Allow players to spend out of pending payout to "dump" rings faster.
 					if (player->superring)
 					{
-						player->superring--;
+						if (!player->timestonefrozen)
+							player->superring--;
+						
 						dumprate = 2;
 						
 						if (!G_CompatLevel(0x0011))
@@ -17670,7 +17675,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 											K_DefensiveOverdrive(player);
 											player->playerringgunpower++;
 											
-											if (player->bot)					//lol cheating
+											if (player->bot)					//SCS ADD - lol cheating
 												player->playerringgunpower++;
 												
 											S_StartSound(player->mo, sfx_antiri);

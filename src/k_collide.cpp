@@ -2029,7 +2029,7 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 	// Ring sting, this is a bit more unique
 	auto doSting = [](mobj_t *t1, mobj_t *t2)
 	{
-		if (t2->player->curshield != KSHIELD_NONE || t2->player->playerringgunpower >= 60)		//SCS EDIT
+		if (t2->player->curshield != KSHIELD_NONE || t2->player->playerringgunpower >= 60 || t2->player->timestonefrozen)		//SCS EDIT
 		{
 			return false;
 		}

@@ -5699,11 +5699,25 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 			superringcolor = SKINCOLOR_GOLD;
 		}
 	}
+	if (stplyr->usedmasteremeraldduringringboxaward)												//SCS ADD
+		superringcolor = SKINCOLOR_CRIMSON;
 
 	rn[0] = ((abs(stplyr->hudrings) / 10) % 10);
 	rn[1] = (abs(stplyr->hudrings) % 10);
 
-	if (stplyr->hudrings <= 0 && stplyr->ringvisualwarning > 1)
+	if (stplyr->timestonefrozen)																	//SCS ADD
+	{
+		colorring = true;
+		if ((leveltime/2 & 1) || (cv_reducevfx.value))
+		{
+			ringmap = R_GetTranslationColormap(TC_RAINBOW, SKINCOLOR_GREEN, GTC_CACHE);
+		}
+		else
+		{
+			ringmap = R_GetTranslationColormap(TC_RAINBOW, SKINCOLOR_WHITE, GTC_CACHE);
+		}
+	}
+	else if (stplyr->hudrings <= 0 && stplyr->ringvisualwarning > 1)								//SCS EDIT
 	{
 		colorring = true;
 		if ((leveltime/2 & 1) || (cv_reducevfx.value))

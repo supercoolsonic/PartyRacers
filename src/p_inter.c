@@ -860,7 +860,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				return;
 
 			// Reached the cap, don't waste 'em!
-			if (RINGTOTAL(player) >= 20)
+			if (RINGTOTAL(player) >= 20 && !player->timestonefrozen)			//SCS EDIT - You get to keep picking them up if frozen!
 				return;
 
 			special->momx = special->momy = special->momz = 0;
@@ -873,7 +873,10 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			special->renderflags &= ~RF_DONTDRAW;
 			special->fuse = 0;
 
-			player->pickuprings++;
+			if (player->timestonefrozen)							//SCS ADD - Time Stone lets you pick up rings and not have them be immediately consumed by the void
+				K_AwardPlayerRings(player, 1, true);
+			else
+				player->pickuprings++;
 
 			return;
 
@@ -3774,7 +3777,9 @@ static boolean P_DamageMobjCompat(mobj_t *target, mobj_t *inflictor, mobj_t *sou
 
 			if (player->rings <= -20 || (inflictor && inflictor->type == MT_RINGGUNBLASTMAX))		//SCS EDIT
 			{
-				player->markedfordeath = true;
+				if (!player->timestonefrozen)			//SCS ADD - Time Stone buff, protects you from -20 death
+					player->markedfordeath = true;
+				
 				damagetype = DMG_TUMBLE;
 				type = DMG_TUMBLE;
 				P_StartQuakeFromMobj(5, 44 * player->mo->scale, 2560 * player->mo->scale, player->mo);
@@ -4821,7 +4826,9 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, INT32 da
 
 			if (player->rings <= -20 || (inflictor && inflictor-> type == MT_RINGGUNBLASTMAX))		//SCS EDIT
 			{
-				player->markedfordeath = true;
+				if (!player->timestonefrozen)			//SCS ADD - Time Stone buff, protects you from -20 death
+					player->markedfordeath = true;
+					
 				damagetype = DMG_TUMBLE;
 				type = DMG_TUMBLE;
 				P_StartQuakeFromMobj(5, 44 * player->mo->scale, 2560 * player->mo->scale, player->mo);

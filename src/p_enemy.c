@@ -3529,7 +3529,7 @@ void A_AttractChase(mobj_t *actor)
 			{
 				if (!G_CompatLevel(0x0010) && !stale)
 					if (actor->target->player->pickuprings)
-						actor->target->player->pickuprings--;
+						actor->target->player->pickuprings = max(actor->target->player->pickuprings--, 0);		//SCS EDIT - fix underflow?
 
 				P_RemoveMobj(actor);
 				return;
@@ -3615,7 +3615,7 @@ void A_AttractChase(mobj_t *actor)
 				actor->target->player->ringtransparency -= RINGTRANSPARENCYCOLLECTPENALTY;
 
 				if (actor->target->player->pickuprings || !G_CompatLevel(0x0011))
-					actor->target->player->pickuprings--;
+					actor->target->player->pickuprings = max(actor->target->player->pickuprings--, 0);		//SCS EDIT - fix underflow?
 
 				P_RemoveMobj(actor);
 				return;
