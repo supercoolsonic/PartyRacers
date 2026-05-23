@@ -59,6 +59,8 @@ extern consvar_t cv_targetrackplayers;  // Toggle the TARGET HUD graphics for ot
 
 void KartLocalEncore_OnChange(void);
 void KartHaki_OnChange(void);
+void EmeraldsMinimap_OnChange(void);
+void AccessibilityRings_OnChange(void);
 void KartExtraPowerSound_OnChange(void);
 void KartFinishLineTicker_OnChange(void);
 void RR_ChatEmotes_OnChange(void);
@@ -128,7 +130,7 @@ extern consvar_t cv_hudfeed_toggle_shrink; // Show Shrink hits in the feed?			//
 
 // HUD -- Battle
 extern consvar_t cv_battle_toggle_emerald_on_minimap; 
-extern consvar_t cv_battle_toggle_ufo_timer_on_minimap;
+//extern consvar_t cv_battle_toggle_ufo_timer_on_minimap;
 extern consvar_t cv_battle_toggle_winner_announcement;
 
 // Server

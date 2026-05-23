@@ -20,8 +20,38 @@ void KartLocalEncore_OnChange(void)
     CONS_Printf(M_GetText("Encore Mode palettes will be \x82%s\x80 next round.\n"), cv_applylocalencore.string);
 }
 
+static boolean FakeNetCvar_OnChange(consvar_t* cvar)
+{
+    if (netgame && !cvar->enablefornetgames) {
+        CONS_Alert(
+            CONS_NOTICE,
+            M_GetText("This feature cannot be toggled, you are playing in a server.\n")
+        );
+        CV_StealthSetValue(cvar, 0);
+        return false;
+    }
+    return true;
+}
+
 void KartHaki_OnChange(void)
 {
+	// Check if it's been disabled by the server
+    // or if it's a core server
+    if (!FakeNetCvar_OnChange(&cv_applyhaki)) {
+        hakimode = false;
+        return;
+    }
+
+    // Check if in a level before enabling it
+    if (gamestate != GS_LEVEL) {
+        CONS_Alert(
+            CONS_NOTICE,
+            M_GetText("You must be in a level to toggle this feature.\n")
+        );
+        CV_StealthSetValue(&cv_applyhaki, 0);
+        return;
+    }
+	
     hakimode = (boolean)cv_applyhaki.value;
 
     if (hakimode == 1) {
@@ -37,6 +67,18 @@ void KartHaki_OnChange(void)
     }
     // TODO: Play dramatic sound.
     CONS_Printf(M_GetText("Your observation haki will be turned \x82%s\x80 next round.\n"), cv_applyhaki.string);
+}
+
+void EmeraldsMinimap_OnChange(void)
+{
+    if (!FakeNetCvar_OnChange(&cv_battle_toggle_emerald_on_minimap))
+        return;
+}
+
+void AccessibilityRings_OnChange(void)
+{
+    if (!FakeNetCvar_OnChange(&cv_accessibility_rings_hide))
+        return;
 }
 
 void KartExtraPowerSound_OnChange(void)

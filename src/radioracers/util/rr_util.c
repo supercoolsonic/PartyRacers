@@ -26,12 +26,18 @@
 boolean shouldApplyEncore(void)
 {
     // Check the encoremode flag first, THEN the clientside flag.
-    return (encoremode || localencore) || hakimode;
+    return (encoremode || localencore) || (shouldUseHaki());
 }
 
 boolean shouldUseHaki(void)
 {
     // Prefer to use a function rather then just checking for 'hakimode' everywhere.
+    if (netgame) {
+        if (cv_applyhaki.enablefornetgames) {
+            return hakimode;
+        }
+        return false;
+    }
     return hakimode;
 }
 
@@ -110,7 +116,18 @@ static boolean isRingBox(mobj_t* mo)
 
 static boolean canGhost(void)
 {
+    if (netgame && !cv_accessibility_rings_hide.enablefornetgames) {
+        return false;
+    }
     return cv_accessibility_rings_hide.value && r_splitscreen == 0;
+}
+
+boolean RR_ShouldShowEmeraldsInMinimap(void)
+{
+    if (netgame && !cv_battle_toggle_emerald_on_minimap.enablefornetgames) {
+        return false;
+    }
+    return cv_battle_toggle_emerald_on_minimap.value;
 }
 
 boolean RR_ShouldGhostRing(mobj_t *mo)

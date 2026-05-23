@@ -25,6 +25,8 @@
 #include "../../r_defs.h"
 #include "../../r_picformats.h"
 #include "../../deh_tables.h"
+#include "../../command.h"
+#include "../../s_sound.h"
 
 static const char* EMOTE_FRAME_NAME = "FRAME";
 static const char* EMOTE_ATLAS_FRAME_NAME = "EMOATLAS";
@@ -187,6 +189,7 @@ static constexpr const char* EMOTE      = "Emote";
 
 static constexpr const char* GRADE_EMOTE_CONFIG_LUMP = "EMOTEDEF";
 static constexpr const char* EMOTE_ATLAS_CONFIG_LUMP = "ATLASDEF";
+static constexpr const char* SERVER_CONFIG_LUMP = "RADIO_SERVCFG";
 
 static std::vector<emote_t>* getRankEmoteArray(char rank) {
     for (size_t i = 0; i < sizeof(rankLookupTable) / sizeof(RankLookup); ++i) {
@@ -970,6 +973,118 @@ static void AddOldRings(void)
     // CONS_Printf("RADIO TEST: %s\n", FREE_STATES[test]);
 
     // and then define the states manually
+}
+
+static boolean isFakeRadioNetVar(consvar_t *cvar) {
+    if (cvar == NULL) return false;
+    return (cvar->is_radio_cvar && cvar->is_fake_netcvar);
+}
+
+static boolean parseCvarValue(const char* cvar_val) {
+    if (!stricmp(cvar_val, "on") || !stricmp(cvar_val, "yes") || !stricmp(cvar_val, "true"))
+        return true;
+
+    if (!stricmp(cvar_val, "off") || !stricmp(cvar_val, "no") || !stricmp(cvar_val, "false"))
+        return false;
+
+    return false;
+}
+
+static void ParseRadioServerConfig(
+    const std::string& lines,
+    std::vector<std::string>& toggled_features
+) {
+    const char* delimiters = "\r\n";
+    size_t start = 0, end = 0;
+
+    // Example line, 'radio_hakimode off'    
+    while ((start = lines.find_first_not_of(delimiters, end)) != std::string::npos)
+    {
+        // Ignore comments
+        if (lines[start] == '#') {
+            end = lines.find_first_of(delimiters, start);
+            continue;
+        }
+        end = lines.find_first_of(" ", start);
+
+        // No cvar?
+        if (end == std::string::npos)
+            break;
+
+        // Get the cvar name
+        std::string cvar_str = lines.substr(start, end-start);
+        std::transform(cvar_str.begin(), cvar_str.end(), cvar_str.begin(), ::tolower);
+
+        // Before even checking for the value, is this a feature that can even be toggled?
+        consvar_t *radio_cvar = CV_FindVar(cvar_str.c_str());
+        
+        // If not, break
+        if (!isFakeRadioNetVar(radio_cvar))
+            break;
+
+        // Get the cvar value
+        start = end+1;
+        end = lines.find_first_of(delimiters, start);
+        std::string cvar_value = lines.substr(start, end - start);
+
+        const boolean should_enable_feature = parseCvarValue(cvar_value.c_str());
+
+        if (should_enable_feature) {
+            radio_cvar->enablefornetgames = true;
+            toggled_features.push_back(
+                (radio_cvar->description != NULL) ? radio_cvar->description : cvar_str
+            );
+        }
+    }
+}
+
+// Parse incoming addons for a custom lump to toggle Radio features
+void RR_CheckForServerConfig(UINT16 wadnum) {
+    UINT16 lump, lastlump = 0;
+
+    boolean found = false;
+    size_t lump_size;
+
+    while(
+        (lump = W_CheckNumForNamePwad(SERVER_CONFIG_LUMP, wadnum, lastlump)) != INT16_MAX
+    ) {
+        lastlump = lump + 1;
+
+        char* buffer = static_cast<char*>(W_CacheLumpNumPwad(wadnum, lump, PU_CACHE));
+        lump_size = W_LumpLengthPwad(wadnum, lump);
+
+        // Validate which cvars are being toggled (and if they can be toggled)
+        std::string bufferStr(buffer, lump_size);
+        std::vector<std::string> toggled_features;
+        ParseRadioServerConfig(bufferStr, toggled_features);
+        
+        // Alert the player when these features have been toggled by the server
+        if (netgame) {
+            HU_AddChatText(
+                va(
+                    M_GetText("\x83[\x82RADIO\x83]: This server is hosting a custom configuration for Radio clients. Check your console for more information.")
+                ),
+                false
+            );
+
+            if (toggled_features.size() > 0) {
+                CONS_Printf("\n\x83[\x82RADIO\x83]: The following features have been enabled by the server: \n");
+                for (auto & feature : toggled_features) {
+                    CONS_Printf("\x82* %s\n", feature.c_str());
+                }
+            } else {
+                CONS_Printf("\n\x83[\x82RADIO\x83: No features have been toggled.\n\n");
+            }
+        }
+    }
+}
+
+void RR_resetRadioFakeNetCvars(void)
+{
+    // Don't think this is right
+    cv_applyhaki.enablefornetgames = false;
+    cv_accessibility_rings_hide.enablefornetgames = false;
+	cv_battle_toggle_emerald_on_minimap.enablefornetgames = false;
 }
 
 /** Initialize anything relating to RadioRacers */

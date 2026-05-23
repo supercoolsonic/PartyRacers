@@ -8802,13 +8802,13 @@ static void K_drawKartMinimap(void)
 					colormap = R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(K_RainbowColor(leveltime)), GTC_CACHE);
 				}
 			case MT_MONITOR:																				//SCS - RADIO START
-				if (cv_battle_toggle_emerald_on_minimap.value && Obj_MonitorGetEmerald(mobj) != 0) {
+				if (RR_ShouldShowEmeraldsInMinimap() && Obj_MonitorGetEmerald(mobj) != 0) {
 					workingPic = static_cast<patch_t*>(W_CachePatchName("K_EMERC", GTC_CACHE));
 					colormap = R_GetTranslationColormap(TC_DEFAULT, static_cast<skincolornum_t>(K_GetChaosEmeraldColor(Obj_MonitorGetEmerald(mobj))), GTC_CACHE);
 				}
 				break;
 			case MT_EMERALD:
-				if (cv_battle_toggle_emerald_on_minimap.value) {
+				if (RR_ShouldShowEmeraldsInMinimap()) {
 					workingPic = static_cast<patch_t*>(W_CachePatchName("K_EMERC", GTC_CACHE));
 					colormap = R_GetTranslationColormap(TC_DEFAULT, static_cast<skincolornum_t>(mobj->color), GTC_CACHE);
 				}

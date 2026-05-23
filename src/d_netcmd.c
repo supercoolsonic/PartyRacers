@@ -83,6 +83,9 @@
 #include "discord.h"
 #endif
 
+// Radio
+#include "radioracers/rr_setup.h"
+
 // ------
 // protos
 // ------
@@ -6419,6 +6422,9 @@ void Command_ExitGame_f(void)
 			demo.attract = DEMO_ATTRACT_OFF; // shouldn't ever happen, but let's keep the code symmetrical
 		}
 	}
+	
+	// Radio: inject
+	RR_resetRadioFakeNetCvars();
 }
 
 void Command_Retry_f(void)

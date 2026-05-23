@@ -98,11 +98,11 @@ static menuitem_t OPTIONS_RadioRacersHudBattle[] =
 	{IT_HEADER, "Toggle HUD Elements", NULL,
 		NULL, {NULL}, 0, 0},
 
-	{IT_STRING | IT_CVAR, "Emeralds", "Show emerald positions in the minimap?",
+	{IT_STRING | IT_CVAR, "Emeralds", "Show emerald positions in the minimap? \x82(Disabled in netgames.)",
 		NULL, {.cvar = &cv_battle_toggle_emerald_on_minimap}, 0, 0},
 
-	{IT_STRING | IT_CVAR, "Combat UFO Timer", "Show where and how long until the next Combat UFO spawns?",
-		NULL, {.cvar = &cv_battle_toggle_ufo_timer_on_minimap}, 0, 0},
+	/*{IT_STRING | IT_CVAR, "Combat UFO Timer", "Show where and how long until the next Combat UFO spawns?",
+		NULL, {.cvar = &cv_battle_toggle_ufo_timer_on_minimap}, 0, 0},*/
 
 	{IT_STRING | IT_CVAR, "Track Players", "Display TARGET markers on the HUD to track players?",
 		NULL, {.cvar = &cv_targetrackplayers}, 0, 0},
@@ -280,7 +280,7 @@ menu_t OPTIONS_RadioRacersHudDef = {
 // Accessibility
 static menuitem_t OPTIONS_RadioRacersAccessibility[] =
 {
-	{IT_STRING | IT_CVAR, "Observation Haki", "Apply a grayscale filter to the level, keeping important elements in colour.",
+	{IT_STRING | IT_CVAR, "Observation Haki", "Apply a grayscale filter to the level. \x82(Disabled in netgames.)",
 		NULL, {.cvar = &cv_applyhaki}, 0, 0},
 
 	{IT_STRING | IT_CVAR, "Obvious Voltage", "Re-colour your voltage aura depending on your driftcharge.",
@@ -289,7 +289,7 @@ static menuitem_t OPTIONS_RadioRacersAccessibility[] =
 	{IT_STRING | IT_CVAR, "Precise Countdown", "Show a more precise countdown, accompanied with a little bar.",
 		NULL, {.cvar = &cv_precise_countdown}, 0, 0},
 
-	{IT_STRING | IT_CVAR, "Ghost Rings", "Ghost rings and ringboxes when you're unable to collect any rings.",
+	{IT_STRING | IT_CVAR, "Ghost Rings", "Draw rings at an opacity level reflecting your ring count. \x82(Disabled in netgames.)",
 		NULL, {.cvar = &cv_accessibility_rings_hide}, 0, 0},
 
 	{IT_STRING | IT_CVAR, "Dangerous Player Checks", "Draw warning symbols to the side of the HUD for any incoming danger.",
@@ -429,7 +429,7 @@ static menuitem_t OPTIONS_RadioRacersFun[] =
 	{IT_HEADER, "CPU Randomization", NULL,
 		NULL, {NULL}, 0, 0},
 		
-	{IT_STRING | IT_CVAR, "CPU Colors and Followers", "Make it so CPUs can randomize their color and follower each race. (Local Only!)",
+	{IT_STRING | IT_CVAR, "CPU Colors and Followers", "Make it so CPUs can randomize their color and follower each race. \82(Disabled in netgames.)",
 		NULL, {.cvar = &cv_toggle_cpu_colorfollowerrand}, 0, 0},
 		
 	{IT_SPACE | IT_NOTHING, NULL,  NULL,
