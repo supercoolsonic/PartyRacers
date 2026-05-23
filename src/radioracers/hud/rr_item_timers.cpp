@@ -116,6 +116,9 @@ std::vector<ItemTimer> getTimers(void) {
             {14, 12} 
         });
     }
+	
+	// Octus Ink
+    timers.push_back({stplyr->inkblotchtimer, "INKTAO"});										//SCS ADD
 
     // Drift charge
     

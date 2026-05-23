@@ -9716,6 +9716,38 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 
 			if (mobj->movecount == 1)
 			{
+				if (mobj->extravalue2 == NULL)								//SCS ADD START - Trying to get the Dynamite Derby sign to not be green, and have ribbons
+				{
+					if (cv_toggle_colorized_signposts.value)
+					{
+						if (mobj->target->player->position == 1)
+							mobj->color = SKINCOLOR_MUSTARD;
+						else if (mobj->target->player->position == 2)
+							mobj->color = SKINCOLOR_SILVER;
+						else if (mobj->target->player->position == 3)
+							mobj->color = SKINCOLOR_CINNAMON;
+						else
+							mobj->color = SKINCOLOR_GREY;										
+					}
+					else
+						mobj->color = SKINCOLOR_GREY;
+								
+					if (cv_toggle_ribbon_signposts.value && mobj->target->player->rings >= 20)
+					{
+						mobj_t *ribbon = P_SpawnMobjFromMobj(mobj, 0, 0, 0, MT_SIGNPOSTRIBBON);
+									
+						if (ribbon != NULL)
+						{
+							ribbon->destscale = mobj->destscale/3;
+							ribbon->scale = ribbon->destscale;
+							ribbon->target = mobj;
+							ribbon->color = mobj->target->player->skincolor;
+						}
+					}
+
+					mobj->extravalue2 = endangle;	//we set this here so this codeblock only runs once
+				}														//SCS ADD END				
+				
 				if (mobj->z + mobj->momz <= mobj->movefactor)
 				{
 					if (mobj->info->attacksound)
@@ -9724,9 +9756,6 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 					mobj->z = mobj->movefactor;
 					mobj->momz = 0;
 					mobj->movecount = 2;
-					
-					if (mobj->extravalue2 == NULL)								//SCS ADD - Trying to get the Dynamite Derby sign to not be green
-						mobj->color = SKINCOLOR_GREY;
 
 					if (!P_MobjWasRemoved(mobj->target))
 					{
@@ -9910,8 +9939,29 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 					amt += 1;
 				}
 				
-				if (mobj->extravalue2 == NULL && cur->color != SKINCOLOR_GREY && cur->state != &states[S_KART_SIGN] && cur->state != &states[S_KART_SIGL])								//SCS ADD - Trying to get the Dynamite Derby sign to not be green
-					cur->color = SKINCOLOR_GREY;
+				if (cur->color != mobj->color && cur->state != &states[S_KART_SIGN] && cur->state != &states[S_KART_SIGL])						//SCS ADD START - Trying to get the Dynamite Derby sign to not be green
+				{
+					//if (mobj->extravalue2 == NULL)
+					//{
+						if (cv_toggle_colorized_signposts.value)
+						{
+							if (mobj->target->player->position == 1)
+								cur->color = SKINCOLOR_MUSTARD;
+							else if (mobj->target->player->position == 2)
+								cur->color = SKINCOLOR_SILVER;
+							else if (mobj->target->player->position == 3)
+								cur->color = SKINCOLOR_CINNAMON;
+							else if (cur->state != &states[S_SIGN_FACE])
+								cur->color = SKINCOLOR_GREY;										
+						}
+						else if (cur->state != &states[S_SIGN_FACE])
+							cur->color = SKINCOLOR_GREY;
+
+					//}		
+				}																															//SCS ADD END
+				
+				//if (mobj->extravalue2 == NULL && cur->color != SKINCOLOR_GREY && cur->state != &states[S_KART_SIGN] && cur->state != &states[S_KART_SIGL])
+					//cur->color = SKINCOLOR_GREY;
 
 				P_MoveOrigin(
 					cur,

@@ -597,6 +597,12 @@ consvar_t cv_rr_rumble_rings = Player("rr_rumble_rings", "On").on_off().radio();
 consvar_t cv_rr_rumble_spheres = Player("rr_rumble_spheres", "On").on_off().radio();
 consvar_t cv_rr_rumble_wavedash = Player("rr_rumble_wavedash", "On").on_off().radio();
 
+// Change how the Ring Counter appears															//SCS ADD
+consvar_t cv_ringcountertype = Player("ringcountertype", "Numerical").values({
+	{0, "Numerical"}, 
+	{1, "Meter"}
+}).radio();
+
 // Rings drawn on player (akin to driftgauge)
 consvar_t cv_ringsonplayer = Player("ringsonplayer", "Custom").values({
 	{0, "Vanilla"}, 

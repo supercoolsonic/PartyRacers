@@ -124,6 +124,10 @@ static patch_t *kp_amps[7][12];
 static patch_t *kp_amps_underlay[12];
 static patch_t *kp_overdrive[2][32];
 
+static patch_t *kp_ringmeter[2];				//SCS ADD
+static patch_t *kp_ringmeterbail[2];			//SCS ADD
+static patch_t *kp_ringmeterbar[2];				//SCS ADD
+
 static patch_t *kp_speedometersticker;
 static patch_t *kp_speedometerlabel[4];
 
@@ -595,6 +599,15 @@ void K_LoadKartHUDGraphics(void)
 		buffer[7] = '0'+((i+1) % 10);
 		HU_UpdatePatch(&kp_ringspblocksmall[i], "%s", buffer);
 	}
+	
+	HU_UpdatePatch(&kp_ringmeter[0], "RMETER");				//SCS ADD START
+	HU_UpdatePatch(&kp_ringmeter[1], "RMETES");
+	
+	HU_UpdatePatch(&kp_ringmeterbail[0], "BMETER");
+	HU_UpdatePatch(&kp_ringmeterbail[1], "BMETES");
+	
+	HU_UpdatePatch(&kp_ringmeterbar[0], "RMETBL");
+	HU_UpdatePatch(&kp_ringmeterbar[1], "RMETBS");			//SCS ADD END
 
 	// Speedometer
 	HU_UpdatePatch(&kp_speedometersticker, "K_SPDMBG");
@@ -855,16 +868,16 @@ void K_LoadKartHUDGraphics(void)
 		HU_UpdatePatch(&kp_timestone[i+10], "%s", buffer);
 	}
 	HU_UpdatePatch(&kp_timestone[19], "K_ISTSN10");
-	HU_UpdatePatch(&kp_normalshield[1], "K_ISSHLD");			//SCS ADD
+	HU_UpdatePatch(&kp_normalshield[1], "K_ISSHLD");		//SCS ADD
 	HU_UpdatePatch(&kp_megachopper[1], "K_ISMCHP");			//SCS ADD
 	HU_UpdatePatch(&kp_armashield[1], "K_ISARMA");			//SCS ADD
 	HU_UpdatePatch(&kp_aburnerjawz[1], "K_ISABJZ");			//SCS ADD
-	HU_UpdatePatch(&kp_pressuremine[1], "K_ISPRMN");			//SCS ADD
+	HU_UpdatePatch(&kp_pressuremine[1], "K_ISPRMN");		//SCS ADD
 	HU_UpdatePatch(&kp_chamblaster[1], "K_ISCBLR");			//SCS ADD
 	HU_UpdatePatch(&kp_eggblaster[1], "K_ISXEGB");			//SCS ADD
-	HU_UpdatePatch(&kp_ringgun[1], "K_ISXSNP");			//SCS ADD
+	HU_UpdatePatch(&kp_ringgun[1], "K_ISXSNP");				//SCS ADD
 	HU_UpdatePatch(&kp_butlerhyu[1], "K_ISHYUB");			//SCS ADD
-	HU_UpdatePatch(&kp_octus[1], "K_ISTAKN");			//SCS ADD
+	HU_UpdatePatch(&kp_octus[1], "K_ISTAKN");				//SCS ADD
 	HU_UpdatePatch(&kp_bar[1], "K_SBBAR");
 	HU_UpdatePatch(&kp_doublebar[1], "K_SBBAR2");
 	HU_UpdatePatch(&kp_triplebar[1], "K_SBBAR3");
@@ -2201,7 +2214,7 @@ static void K_drawKartItem(void)
 			itembar = stplyr->timestonefrozentimer;
 			maxl = (itemtime*4) - barlength;
 			
-			localpatch[1] = kp_timestone[offset];
+			localpatch[1] = kp_timestone[offset ? 10 : 0];
 			flashOnOne = true;
 		}
 		else if (stplyr->sadtimer > 0)
@@ -2610,7 +2623,7 @@ static void K_drawKartItem(void)
 	}
 
 	// Extensible meter, currently only used for rocket sneaker...
-	if (itembar)
+	if (itembar && !stplyr->exiting)									//SCS EDIT - Fixes issue where lone item timer bar appears sometimes after finishing a race (Pretty sure, anyway)
 	{
 		const INT32 fill = ((itembar*barlength)/maxl);
 		const INT32 length = std::min(barlength, fill);
@@ -5343,6 +5356,8 @@ static void RR_drawRingCounterOnPlayer(
 	INT32 ringstickerwidth = 33;
 	INT32 RINGC_X = 0;
 	INT32 fy = 0;
+	const INT32 bailbarlength = (r_splitscreen > 1 ? 10 : 20);					//SCS ADD
+	INT32 bailbar = 0;															//SCS ADD
 
 	const boolean DRAW_SPEEDO_ON_PLAYER = (cv_kartspeedometer.value && cv_speedometeronplayer.value);
 	const boolean DRAW_EXP_ON_PLAYER = cv_exponplayer.value == 1;
@@ -5422,18 +5437,142 @@ static void RR_drawRingCounterOnPlayer(
 	if (hr < -999)
 		hr = -999;
 
-	if (hr < 0) // Draw the minus for ring debt
+	if (cv_ringcountertype.value == 1)																												//SCS ADD START
 	{
-		V_DrawMappedPatch(RINGC_X+23-1, fy, ringcounterflags, kp_ringdebtminus, ringmap);
-		using srb2::Draw;
-		Draw row = Draw(RINGC_X+29+0, fy-4).flags(ringcounterflags).font(Draw::Font::kThinTimer).colormap(ringmap);
-		row.text("{:02}", abs(hr));
+		if (hr < -20)
+		{
+			bailbar = abs(hr);
+			const INT32 fill = ((bailbar*bailbarlength)/(180-bailbarlength));
+			const INT32 length = std::min(bailbarlength, fill);
+			const INT32 height = 1;
+
+			V_DrawScaledPatch(RINGC_X+24-1, fy+6, ringcounterflags, kp_ringmeterbail[0]);
+			// The left dark "AA" edge
+			V_DrawFill(RINGC_X+24-1, fy+7, (length == 2 ? 2 : 1), height, 12|ringcounterflags);
+			// The bar itself
+			if (length > 2)
+			{
+				V_DrawFill(RINGC_X+24-1+length, fy+7+1, 1, height, 12|ringcounterflags); // the right one
+
+				V_DrawFill(RINGC_X+24-1+2, fy+7+1, length-2, 1, 0|ringcounterflags); // the shine
+			}
+		}
+			
+		if (hr < 0)	//pink and red bars
+		{
+			for (int bariterator = 0; bariterator < 20; bariterator += 2)
+			{
+				if (hr < -10) //if we're below -10, we can use crimson bars
+				{
+					if (hr + bariterator < -10)
+					{
+						if (stplyr->timestonefrozen)	
+						{
+							V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_MINT), GTC_CACHE));
+						}
+						else
+							V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_CRIMSON), GTC_CACHE));
+						
+					}
+					else
+					{
+						if (stplyr->timestonefrozen)
+						{
+							V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+						}
+						else
+							V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_RASPBERRY), GTC_CACHE));
+						
+					}
+						
+					hr--;						
+				}
+				else
+				{
+					if (hr < 0)
+					{
+						if (stplyr->timestonefrozen)
+						{
+							V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+						}
+						else
+							V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_RASPBERRY), GTC_CACHE));
+							
+					}
+					else
+						V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREY), GTC_CACHE));
+						
+					hr++;				
+				}		
+			}			
+		}
+		else		//gold and blue bars
+		{
+			for (int bariterator = 0; bariterator < 20; bariterator += 2)
+			{
+				if (hr > 0)
+				{
+					if (hr > 10) //if we're above 10, we can use blue bars
+					{
+						if (hr - bariterator > 10)
+						{
+							if (stplyr->timestonefrozen)	
+							{
+								V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_MINT), GTC_CACHE));
+							}
+							else
+								V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_SAPPHIRE), GTC_CACHE));
+							
+						}
+						else
+						{
+							if (stplyr->timestonefrozen)	
+							{
+								V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+							}
+							else
+								V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_YELLOW), GTC_CACHE));
+							
+						}
+		
+						hr++;	
+					}
+					else
+					{
+						if (stplyr->timestonefrozen)	
+						{
+							V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+						}
+						else
+							V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_YELLOW), GTC_CACHE));
+
+						hr--;
+					}
+				}
+				else
+				{
+					V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREY), GTC_CACHE));
+				}
+			}
+		}
+			
+		V_DrawMappedPatch(RINGC_X+23-1, fy-3, ringcounterflags, kp_ringmeter[0], NULL);	//draw the meter on top of the bar chunks
 	}
-	else
+	else if (cv_ringcountertype.value == 0)																								//SCS ADD END
 	{
-		using srb2::Draw;
-		Draw row = Draw(RINGC_X+23+3, fy-4).flags(ringcounterflags).font(Draw::Font::kThinTimer).colormap(ringmap);
-		row.text("{:02}", abs(hr));
+		if (hr < 0) // Draw the minus for ring debt
+		{
+			V_DrawMappedPatch(RINGC_X+23-1, fy, ringcounterflags, kp_ringdebtminus, ringmap);
+			using srb2::Draw;
+			Draw row = Draw(RINGC_X+29+0, fy-4).flags(ringcounterflags).font(Draw::Font::kThinTimer).colormap(ringmap);
+			row.text("{:02}", abs(hr));
+		}
+		else
+		{
+			using srb2::Draw;
+			Draw row = Draw(RINGC_X+23+3, fy-4).flags(ringcounterflags).font(Draw::Font::kThinTimer).colormap(ringmap);
+			row.text("{:02}", abs(hr));
+		}
 	}
 
 	if (stplyr->inkblotchtimer >= 10 || (stplyr->inkblotchtimer && stplyr->inkblotchtimer < 10 && leveltime % 2 == 0))			//SCS ADD - want it to flicker when about to disappear
@@ -5529,6 +5668,8 @@ static void RR_handleRingCounterLogicMini(
 	INT32 fx = LAPS_X, fy = LAPS_Y, fr = fx;
 	INT32 splitflags = V_SNAPTOLEFT|V_SNAPTOBOTTOM;
 	const INT32 flipflag = 0;
+	const INT32 bailbarlength = 10;					//SCS ADD
+	INT32 bailbar = 0;															//SCS ADD
 
 	if (gametypeinfoshown)
 	{
@@ -5590,18 +5731,148 @@ static void RR_handleRingCounterLogicMini(
 
 		if (hr < -999)
 			hr = -999;
+		
+		if (cv_ringcountertype.value == 1)
+		{
+			if (hr < -20)																								//SCS ADD START
+			{
+				bailbar = abs(hr);
+				const INT32 fill = ((bailbar*bailbarlength)/(100-bailbarlength));
+				const INT32 length = std::min(bailbarlength, fill);
+				const INT32 height = 1;
 
-		if (hr < 0) // Draw the minus for ring debt
-		{
-			V_DrawMappedPatch(fr+11, fy, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringdebtminussmall, ringmap);
-			using srb2::Draw;
-			Draw row = Draw(fr+15, fy).flags(V_HUDTRANS|V_SLIDEIN|splitflags).font(Draw::Font::kPing).colormap(ringmap);
-			row.text("{:02}", abs(hr));
+				V_DrawScaledPatch(fr+11-1, fy+6, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbail[1]);
+				// The left dark "AA" edge
+				V_DrawFill(fr+11-1, fy+7, (length == 2 ? 2 : 1), height, 12|V_HUDTRANS|V_SLIDEIN|splitflags);
+				// The bar itself
+				if (length > 2)
+				{
+					V_DrawFill(fr+11-1+length, fy+7+1, 1, height, 12|V_HUDTRANS|V_SLIDEIN|splitflags); // the right one
+
+					V_DrawFill(fr+11-1+2, fy+7+1, length-2, 1, 0|V_HUDTRANS|V_SLIDEIN|splitflags); // the shine
+				}
+			}
+			
+			if (hr < 0)	//pink and red bars
+			{
+				for (int bariterator = 0; bariterator < 10; bariterator++)
+				{
+					if (hr < -10) //if we're below -10, we can use crimson bars
+					{
+						if (hr + bariterator < -10)
+						{
+							if (stplyr->timestonefrozen)	
+							{
+								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_MINT), GTC_CACHE));
+							}
+							else
+								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_CRIMSON), GTC_CACHE));
+							
+						}
+						else
+						{
+							if (stplyr->timestonefrozen)	
+							{
+								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+							}
+							else
+								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_RASPBERRY), GTC_CACHE));
+							
+						}
+						
+						//hr--;						
+					}
+					else
+					{
+						if (hr + bariterator < 0)
+						{
+							if (stplyr->timestonefrozen)	
+							{
+								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+							}
+							else
+								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_RASPBERRY), GTC_CACHE));
+							
+						}
+						else
+							V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREY), GTC_CACHE));
+						
+						//hr++;				
+					}		
+				}			
+			}
+			else		//gold and blue bars
+			{
+				for (int bariterator = 0; bariterator < 10; bariterator++)
+				{
+					if (hr > 0)
+					{
+						if (hr > 10) //if we're above 10, we can use blue bars
+						{
+							if (hr - bariterator > 10)
+							{
+								if (stplyr->timestonefrozen)	
+								{
+									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_MINT), GTC_CACHE));
+								}
+								else	
+									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_SAPPHIRE), GTC_CACHE));
+								
+							}
+							else
+							{
+								if (stplyr->timestonefrozen)	
+								{
+									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+								}
+								else
+									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_YELLOW), GTC_CACHE));
+								
+							}
+		
+							//hr++;	
+						}
+						else
+						{
+							if (hr - bariterator > 0)
+							{
+								if (stplyr->timestonefrozen)	
+								{
+									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+								}
+								else
+									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_YELLOW), GTC_CACHE));
+								
+							}
+							else
+								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREY), GTC_CACHE));
+
+							//hr--;
+						}
+					}
+					else
+					{
+						V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREY), GTC_CACHE));
+					}
+				}
+			}
+			
+			V_DrawMappedPatch(fr+10-1, fy+1-3, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeter[1], NULL);	//draw the meter on top of the bar chunks			
 		}
-		else
+		else if (cv_ringcountertype.value == 0)																												//SCS ADD END
 		{
-			V_DrawMappedPatch(fr+11, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[PINGNUM_FONT].font[rn[0]], ringmap);
-			V_DrawMappedPatch(fr+15, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[PINGNUM_FONT].font[rn[1]], ringmap);
+			if (hr < 0) // Draw the minus for ring debt
+			{
+				V_DrawMappedPatch(fr+11, fy, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringdebtminussmall, ringmap);
+				using srb2::Draw;
+				Draw row = Draw(fr+15, fy).flags(V_HUDTRANS|V_SLIDEIN|splitflags).font(Draw::Font::kPing).colormap(ringmap);
+				row.text("{:02}", abs(hr));
+			}
+			else
+			{
+				V_DrawMappedPatch(fr+11, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[PINGNUM_FONT].font[rn[0]], ringmap);
+				V_DrawMappedPatch(fr+15, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[PINGNUM_FONT].font[rn[1]], ringmap);
+			}
 		}
 		
 		if (stplyr->inkblotchtimer >= 10 || (stplyr->inkblotchtimer && stplyr->inkblotchtimer < 10 && leveltime % 2 == 0))			//SCS ADD - want it to flicker when about to disappear
@@ -5677,7 +5948,9 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 	UINT8 *ringmap = NULL;
 	boolean colorring = false;
 	//INT32 ringx = 0, fy = 0;
-	INT32 ringx = 0, fy = 0, lives_y = 0;					//SCS - RADIO
+	INT32 ringx = 0, fy = 0, lives_y = 0;										//SCS - RADIO
+	const INT32 bailbarlength = (r_splitscreen > 1 ? 10 : 20);					//SCS ADD
+	INT32 bailbar = 0;															//SCS ADD
 
 	const boolean DRAW_MINI_HUD_DETAILS = cv_hud_compact.value == 1 && r_splitscreen == 0;		//SCS - RADIO START
 	const boolean DRAW_RINGS_ON_PLAYER = cv_ringsonplayer.value == 1;
@@ -5847,18 +6120,148 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 
 		if (hr < -999)
 			hr = -999;
+		
+		if (cv_ringcountertype.value == 1)
+		{
+			if (hr < -20)																								//SCS ADD START
+			{
+				bailbar = abs(hr);
+				const INT32 fill = ((bailbar*bailbarlength)/(100-bailbarlength));
+				const INT32 length = std::min(bailbarlength, fill);
+				const INT32 height = 1;
 
-		if (hr < 0) // Draw the minus for ring debt
-		{
-			V_DrawMappedPatch(fr+11, fy, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringdebtminussmall, ringmap);
-			using srb2::Draw;
-			Draw row = Draw(fr+15, fy).flags(V_HUDTRANS|V_SLIDEIN|splitflags).font(Draw::Font::kPing).colormap(ringmap);
-			row.text("{:02}", abs(hr));
+				V_DrawScaledPatch(fr+11-1, fy+6, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbail[1]);
+				// The left dark "AA" edge
+				V_DrawFill(fr+11-1, fy+7, (length == 2 ? 2 : 1), height, 12|V_HUDTRANS|V_SLIDEIN|splitflags);
+				// The bar itself
+				if (length > 2)
+				{
+					V_DrawFill(fr+11-1+length, fy+7+1, 1, height, 12|V_HUDTRANS|V_SLIDEIN|splitflags); // the right one
+
+					V_DrawFill(fr+11-1+2, fy+7+1, length-2, 1, 0|V_HUDTRANS|V_SLIDEIN|splitflags); // the shine
+				}
+			}
+			
+			if (hr < 0)	//pink and red bars
+			{
+				for (int bariterator = 0; bariterator < 10; bariterator++)
+				{
+					if (hr < -10) //if we're below -10, we can use crimson bars
+					{
+						if (hr + bariterator < -10)
+						{
+							if (stplyr->timestonefrozen)	
+							{
+								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_MINT), GTC_CACHE));
+							}
+							else
+								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_CRIMSON), GTC_CACHE));
+							
+						}
+						else
+						{
+							if (stplyr->timestonefrozen)	
+							{
+								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+							}
+							else
+								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_RASPBERRY), GTC_CACHE));
+							
+						}
+						
+						//hr--;						
+					}
+					else
+					{
+						if (hr + bariterator < 0)
+						{
+							if (stplyr->timestonefrozen)	
+							{
+								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+							}
+							else
+								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_RASPBERRY), GTC_CACHE));
+							
+						}
+						else
+							V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREY), GTC_CACHE));
+						
+						//hr++;				
+					}		
+				}			
+			}
+			else		//gold and blue bars
+			{
+				for (int bariterator = 0; bariterator < 10; bariterator++)
+				{
+					if (hr > 0)
+					{
+						if (hr > 10) //if we're above 10, we can use blue bars
+						{
+							if (hr - bariterator > 10)
+							{
+								if (stplyr->timestonefrozen)	
+								{
+									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_MINT), GTC_CACHE));
+								}
+								else
+									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_SAPPHIRE), GTC_CACHE));
+								
+							}
+							else
+							{
+								if (stplyr->timestonefrozen)	
+								{
+									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+								}
+								else
+									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_YELLOW), GTC_CACHE));
+								
+							}
+		
+							//hr++;	
+						}
+						else
+						{
+							if (hr - bariterator > 0)
+							{
+								if (stplyr->timestonefrozen)	
+								{
+									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+								}
+								else
+									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_YELLOW), GTC_CACHE));
+								
+							}
+							else
+								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREY), GTC_CACHE));
+
+							//hr--;
+						}
+					}
+					else
+					{
+						V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREY), GTC_CACHE));
+					}
+				}
+			}
+			
+			V_DrawMappedPatch(fr+10-1, fy+1-3, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeter[1], NULL);	//draw the meter on top of the bar chunks
 		}
-		else
+		else if (cv_ringcountertype.value == 0)																												//SCS ADD END
 		{
-			V_DrawMappedPatch(fr+11, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[PINGNUM_FONT].font[rn[0]], ringmap);
-			V_DrawMappedPatch(fr+15, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[PINGNUM_FONT].font[rn[1]], ringmap);
+			if (hr < 0) // Draw the minus for ring debt
+			{
+				V_DrawMappedPatch(fr+11, fy, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringdebtminussmall, ringmap);
+				using srb2::Draw;
+				Draw row = Draw(fr+15, fy).flags(V_HUDTRANS|V_SLIDEIN|splitflags).font(Draw::Font::kPing).colormap(ringmap);
+				row.text("{:02}", abs(hr));
+			}
+			else
+			{
+				V_DrawMappedPatch(fr+11, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[PINGNUM_FONT].font[rn[0]], ringmap);
+				V_DrawMappedPatch(fr+15, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[PINGNUM_FONT].font[rn[1]], ringmap);
+			}
 		}
 
 		// SPB ring lock
@@ -6019,28 +6422,152 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 
 		if (hr < -999)
 			hr = -999;
+		
+		if (cv_ringcountertype.value == 1)
+		{
+			if (hr < -20)																								//SCS ADD START
+			{
+				bailbar = abs(hr);
+				const INT32 fill = ((bailbar*bailbarlength)/(180-bailbarlength));
+				const INT32 length = std::min(bailbarlength, fill);
+				const INT32 height = 1;
 
-		// "Why fy-4? Why LAPS_X+29+1?"
-		// "use magic numbers" - jartha 2024-03-05
-		if (hr < 0) // Draw the minus for ring debt
-		{
-			//V_DrawMappedPatch(LAPS_X+23-1, fy, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringdebtminus, ringmap);
-			V_DrawMappedPatch(RINGC_X+23-1, fy, ringcounterflags, kp_ringdebtminus, ringmap);					//SCS - RADIO
-			using srb2::Draw;
-			//Draw row = Draw(LAPS_X+29+0, fy-4).flags(V_HUDTRANS|V_SLIDEIN|splitflags).font(Draw::Font::kThinTimer).colormap(ringmap);
-			Draw row = Draw(RINGC_X+29+0, fy-4).flags(ringcounterflags).font(Draw::Font::kThinTimer).colormap(ringmap);						//SCS - RADIO
-			row.text("{:02}", abs(hr));
-			// V_DrawMappedPatch(LAPS_X+29, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[TALLNUM_FONT].font[rn[0]], ringmap);
-			// V_DrawMappedPatch(LAPS_X+35, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[TALLNUM_FONT].font[rn[1]], ringmap);
+				V_DrawScaledPatch(RINGC_X+24-1, fy+6, ringcounterflags, kp_ringmeterbail[0]);
+				// The left dark "AA" edge
+				V_DrawFill(RINGC_X+24-1, fy+7, (length == 2 ? 2 : 1), height, 12|ringcounterflags);
+				// The bar itself
+				if (length > 2)
+				{
+					V_DrawFill(RINGC_X+24-1+length, fy+7+1, 1, height, 12|ringcounterflags); // the right one
+
+					V_DrawFill(RINGC_X+24-1+2, fy+7+1, length-2, 1, 0|ringcounterflags); // the shine
+				}
+			}
+			
+			if (hr < 0)	//pink and red bars
+			{
+				for (int bariterator = 0; bariterator < 20; bariterator += 2)
+				{
+					if (hr < -10) //if we're below -10, we can use crimson bars
+					{
+						if (hr + bariterator < -10)
+						{
+							if (stplyr->timestonefrozen)	
+							{
+								V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_MINT), GTC_CACHE));
+							}
+							else
+								V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_CRIMSON), GTC_CACHE));
+							
+						}
+						else
+						{
+							if (stplyr->timestonefrozen)	
+							{
+								V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+							}
+							else
+								V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_RASPBERRY), GTC_CACHE));
+							
+						}
+						
+						hr--;						
+					}
+					else
+					{
+						if (hr < 0)
+						{
+							if (stplyr->timestonefrozen)	
+							{
+								V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+							}
+							else
+								V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_RASPBERRY), GTC_CACHE));
+							
+						}
+						else
+							V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREY), GTC_CACHE));
+						
+						hr++;				
+					}		
+				}			
+			}
+			else		//gold and blue bars
+			{
+				for (int bariterator = 0; bariterator < 20; bariterator += 2)
+				{
+					if (hr > 0)
+					{
+						if (hr > 10) //if we're above 10, we can use blue bars
+						{
+							if (hr - bariterator > 10)
+							{
+								if (stplyr->timestonefrozen)	
+								{
+									V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_MINT), GTC_CACHE));
+								}
+								else
+									V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_SAPPHIRE), GTC_CACHE));
+								
+							}
+							else
+							{
+								if (stplyr->timestonefrozen)	
+								{
+									V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+								}
+								else
+									V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_YELLOW), GTC_CACHE));
+								
+							}
+		
+							hr++;	
+						}
+						else
+						{
+							if (stplyr->timestonefrozen)	
+							{
+								V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
+							}
+							else
+								V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_YELLOW), GTC_CACHE));
+
+							hr--;
+						}
+					}
+					else
+					{
+						V_DrawMappedPatch(RINGC_X+25+bariterator-1, fy-1, ringcounterflags, kp_ringmeterbar[0], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREY), GTC_CACHE));
+					}
+				}
+			}
+			
+			V_DrawMappedPatch(RINGC_X+23-1, fy-3, ringcounterflags, kp_ringmeter[0], NULL);	//draw the meter on top of the bar chunks
 		}
-		else
+		else if (cv_ringcountertype.value == 0)																								//SCS ADD END
 		{
-			using srb2::Draw;
-			//Draw row = Draw(LAPS_X+23+3, fy-4).flags(V_HUDTRANS|V_SLIDEIN|splitflags).font(Draw::Font::kThinTimer).colormap(ringmap);
-			Draw row = Draw(RINGC_X+23+3, fy-4).flags(ringcounterflags).font(Draw::Font::kThinTimer).colormap(ringmap);						//SCS - RADIO
-			row.text("{:02}", abs(hr));
-			// V_DrawMappedPatch(LAPS_X+23, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[TALLNUM_FONT].font[rn[0]], ringmap);
-			// V_DrawMappedPatch(LAPS_X+29, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[TALLNUM_FONT].font[rn[1]], ringmap);
+			// "Why fy-4? Why LAPS_X+29+1?"
+			// "use magic numbers" - jartha 2024-03-05
+			if (hr < 0) // Draw the minus for ring debt
+			{
+				//V_DrawMappedPatch(LAPS_X+23-1, fy, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringdebtminus, ringmap);
+				V_DrawMappedPatch(RINGC_X+23-1, fy, ringcounterflags, kp_ringdebtminus, ringmap);					//SCS - RADIO
+				using srb2::Draw;
+				//Draw row = Draw(LAPS_X+29+0, fy-4).flags(V_HUDTRANS|V_SLIDEIN|splitflags).font(Draw::Font::kThinTimer).colormap(ringmap);
+				Draw row = Draw(RINGC_X+29+0, fy-4).flags(ringcounterflags).font(Draw::Font::kThinTimer).colormap(ringmap);						//SCS - RADIO
+				row.text("{:02}", abs(hr));
+				// V_DrawMappedPatch(LAPS_X+29, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[TALLNUM_FONT].font[rn[0]], ringmap);
+				// V_DrawMappedPatch(LAPS_X+35, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[TALLNUM_FONT].font[rn[1]], ringmap);
+			}
+			else
+			{
+				using srb2::Draw;
+				//Draw row = Draw(LAPS_X+23+3, fy-4).flags(V_HUDTRANS|V_SLIDEIN|splitflags).font(Draw::Font::kThinTimer).colormap(ringmap);
+				Draw row = Draw(RINGC_X+23+3, fy-4).flags(ringcounterflags).font(Draw::Font::kThinTimer).colormap(ringmap);						//SCS - RADIO
+				row.text("{:02}", abs(hr));
+				// V_DrawMappedPatch(LAPS_X+23, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[TALLNUM_FONT].font[rn[0]], ringmap);
+				// V_DrawMappedPatch(LAPS_X+29, fy, V_HUDTRANS|V_SLIDEIN|splitflags, fontv[TALLNUM_FONT].font[rn[1]], ringmap);
+			}
 		}
 
 		// SPB ring lock

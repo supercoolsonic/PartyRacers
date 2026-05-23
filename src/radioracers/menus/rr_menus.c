@@ -207,6 +207,9 @@ menuitem_t OPTIONS_RadioRacersHud[] =
 	{IT_HEADER, "Ring Counter Options", NULL,
 		NULL, {NULL}, 0, 0},
 		
+	{IT_STRING | IT_CVAR, "Ring Counter Type", "Change how the Ring Counter looks.",					//SCS ADD
+		NULL, {.cvar = &cv_ringcountertype}, 0, 0},		
+		
 	{IT_STRING | IT_CVAR, "Ring Counter Position", "Toggle the RING COUNTER's HUD position.",
 		NULL, {.cvar = &cv_ringsonplayer}, 0, 0},
 			

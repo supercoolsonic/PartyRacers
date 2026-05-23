@@ -23,6 +23,7 @@ extern "C" {
 
 // Player (Clientside)
 extern consvar_t cv_votesnitch;         // Vote Snitch
+extern consvar_t cv_ringcountertype;	//Ring Counter Appearance																		//SCS ADD	
 extern consvar_t cv_ringsonplayer;      // Rings drawn on player
 extern consvar_t cv_speedometeronplayer;      // Speedometer drawn on player
 extern consvar_t cv_exponplayer;      // EXP drawn on player
