@@ -33,6 +33,9 @@ static menuitem_t OPTIONS_RadioRacersHudRace[] =
 	{IT_HEADER, "Toggle HUD Elements", NULL,
 		NULL, {NULL}, 0, 0},
 		
+	{IT_STRING | IT_CVAR, "Show Timer During Races", "Toggle if the timer appears in normal races.",											//SCS ADD
+		NULL, {.cvar = &cv_drawtimer}, 0, 0},
+		
 	{IT_STRING | IT_CVAR, "Nametags", "Toggle in-game nametags.",
 		NULL, {.cvar = &cv_toggle_nametags}, 0, 0},   
 		
@@ -236,9 +239,6 @@ menuitem_t OPTIONS_RadioRacersHud[] =
 		
 	{IT_STRING | IT_CVAR, "Display Delay Counter Beside FPS", "Toggle if the delay counter should be displayed next to the FPS counter.",
 		NULL, {.cvar = &cv_hud_displaypingbesideticrate}, 0, 0},
-		
-	{IT_STRING | IT_CVAR, "Show Timer During Races", "Toggle if the timer appears in normal races.",											//SCS ADD
-		NULL, {.cvar = &cv_drawtimer}, 0, 0},
 
 	{IT_HEADER, "Roulette Options", NULL,
 		NULL, {NULL}, 0, 0},
@@ -414,7 +414,7 @@ static menu_t OPTIONS_RadioRacersGameplayDef = {
 // Fun features
 static menuitem_t OPTIONS_RadioRacersFun[] =
 {
-	{IT_STRING | IT_CVAR, "Enable Encore Palettes (Clientside)", "Toggle encore palettes clientside for levels, if available.",
+	{IT_STRING | IT_CVAR, "Enable Encore Palettes", "Toggle encore palettes clientside for levels, if available.",
 		NULL, {.cvar = &cv_applylocalencore}, 0, 0},
 
 	{IT_STRING | IT_CVAR, "Riders Finish Line Ticker", "Show a finish line ticker, like in Sonic Riders!",
