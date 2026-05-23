@@ -30,6 +30,7 @@ extern consvar_t cv_exponplayer;      // EXP drawn on player
 extern consvar_t cv_rouletteonplayer;   // Item/Ring Roulette drawn on player
 extern consvar_t cv_applylocalencore;    // Clientside encore palettes
 extern consvar_t cv_show_s_ranks;       // Show 'S' ranks during tally
+extern consvar_t cv_toggle_checkpointitemnum;	//How many checkpoints need to be crossed in a race to make item boxes appear			//SCS ADD
 
 // Accessibility
 extern consvar_t cv_applyhaki;                      // Observation Haki mode

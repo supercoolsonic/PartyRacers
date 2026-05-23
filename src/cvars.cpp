@@ -551,6 +551,9 @@ consvar_t cv_applyhaki = Player("radio_hakimode", "Off")
 // Show 'S' ranks in the tally and player standings
 consvar_t cv_show_s_ranks = Player("showperfectranks", "On").on_off().radio();
 
+// How many checkpoints are needed to make item boxes appear in offline races						//SCS ADD
+consvar_t cv_toggle_checkpointitemnum = Player("numcheckpointsforitemboxes", "1").min_max(0, 99).radio();
+
 // Rings Ghost Accessibility
 consvar_t cv_accessibility_rings_hide = Player("radio_ringsaccessibility", "On").on_off()
 .onchange_noinit(AccessibilityRings_OnChange)
@@ -1043,6 +1046,8 @@ consvar_t cv_kartbumpers = UnsavedNetVar("battlebumpers", "3").min_max(0, 12);
 
 void KartEliminateLast_OnChange(void);
 consvar_t cv_karteliminatelast = NetVar("eliminatelast", "Yes").yes_no().onchange(KartEliminateLast_OnChange);
+
+consvar_t cv_toggle_checkpointitemnum_net = NetVar("numcheckpointsforitemboxesonline", "1").min_max(0, 99);		//SCS ADD
 
 void KartEncore_OnChange(void);
 consvar_t cv_kartencore = UnsavedNetVar("encore", "Auto").values({{-1, "Auto"}, {0, "Off"}, {1, "On"}}).onchange_noinit(KartEncore_OnChange);

@@ -5006,7 +5006,7 @@ void K_CheckpointCrossAward(player_t *player)
 	player->gradingpointnum++;
 	player->exp = K_GetEXP(player);
 	//CONS_Printf("player: %s factor: %.2f exp: %d\n", player_names[player-players], FIXED_TO_FLOAT(player->gradingfactor), player->exp);
-	if (!player->cangrabitems)
+	if (!player->cangrabitems && ((netgame && player->gradingpointnum >= cv_toggle_checkpointitemnum_net.value) || !netgame && player->gradingpointnum >= cv_toggle_checkpointitemnum.value)) //SCS EDIT - Can modify how many checkpoints are needed to make item boxes appear
 		player->cangrabitems = 1;
 
 	K_AwardPlayerRings(player, (player->bot ? 20 : 10), true);
@@ -11623,6 +11623,8 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 			|| (gametype == GT_TUTORIAL)
 			|| !M_NotFreePlay()
 			|| (K_GetNumWaypoints() == 0))
+			player->cangrabitems = EARLY_ITEM_FLICKER;
+		else if ((netgame && cv_toggle_checkpointitemnum_net.value == 0) || (!netgame && cv_toggle_checkpointitemnum.value == 0))		//SCS ADD - You can set number of checkpoints needed for items to spawn to 0, which makes them appear immediately
 			player->cangrabitems = EARLY_ITEM_FLICKER;
 		else
 			player->cangrabitems = 0;

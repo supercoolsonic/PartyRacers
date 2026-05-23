@@ -748,7 +748,7 @@ static fixed_t K_PercentSPBOdds(const itemroulette_t *roulette, UINT8 position)
 	}
 	else
 	{
-		if (GetTotalInGameRacers() > 16)
+		if (GetTotalInGameRacers() > 16)															//SCS ADD
 		{
 			//CONS_Printf("We're using the farther distance for SPB\n");
 

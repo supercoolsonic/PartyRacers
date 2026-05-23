@@ -37,6 +37,9 @@ menuitem_t OPTIONS_Gameplay[] =
 
 	{IT_STRING | IT_CVAR, "Last Place Explodes", "Once the standings are complete, give the race an explosive finish!",
 		NULL, {.cvar = &cv_karteliminatelast}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Checkpoint Items Number", "How many checkpoints are needed in a race to make item boxes appear? \x82(Netgames only.)",		//SCS ADD
+		NULL, {.cvar = &cv_toggle_checkpointitemnum_net}, 0, 0},
 
 
 	{IT_HEADER, "Battle...", NULL,

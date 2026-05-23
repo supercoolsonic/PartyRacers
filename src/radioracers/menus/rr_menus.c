@@ -423,13 +423,16 @@ static menuitem_t OPTIONS_RadioRacersFun[] =
 	{IT_STRING | IT_CVAR, "Show 'S' ranks", "Show S ranks in the player tally and standings (purely cosmetic).",
 		NULL, {.cvar = &cv_show_s_ranks}, 0, 0},
 		
-	{IT_SPACE | IT_NOTHING, NULL,  NULL,																										//SCS ADD START
+	{IT_STRING | IT_CVAR, "Checkpoint Items Number", "How many checkpoints are needed to make item boxes appear? \x82(Offline only.)",		//SCS ADD START
+		NULL, {.cvar = &cv_toggle_checkpointitemnum}, 0, 0},
+		
+	{IT_SPACE | IT_NOTHING, NULL,  NULL,
 		NULL, {NULL}, 0, 0},
 		
 	{IT_HEADER, "CPU Randomization", NULL,
 		NULL, {NULL}, 0, 0},
 		
-	{IT_STRING | IT_CVAR, "CPU Colors and Followers", "Make it so CPUs can randomize their color and follower each race. \82(Disabled in netgames.)",
+	{IT_STRING | IT_CVAR, "CPU Colors and Followers", "Make it so CPUs can randomize their color and follower each race. \x82(Disabled in netgames.)",
 		NULL, {.cvar = &cv_toggle_cpu_colorfollowerrand}, 0, 0},
 		
 	{IT_SPACE | IT_NOTHING, NULL,  NULL,
@@ -451,7 +454,7 @@ static menuitem_t OPTIONS_RadioRacersFun[] =
 		NULL, {.cvar = &cv_toggle_ribbon_signposts}, 0, 0}, 
 		
 	{IT_STRING | IT_CVAR, "Sign Sparkles", "Should 1st place's signpost sparkle if the player achieved perfect EXP during the race?",
-		NULL, {.cvar = &cv_toggle_sparkling_signposts}, 0, 0},																					//SCS ADD END
+		NULL, {.cvar = &cv_toggle_sparkling_signposts}, 0, 0},																								//SCS ADD END
 		
 };
 
