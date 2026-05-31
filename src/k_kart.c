@@ -4406,7 +4406,7 @@ fixed_t K_GetKartAccel(const player_t *player)
 {
 	fixed_t k_accel = 121;
 	//UINT8 stat = (9 - player->kartspeed);
-	SINT8 stat = (9 - player->kartspeed);			//SCS EDIT MERGE REQUEST (SCS 2nd edit - changing from INT8 to SINT8 to allow compiling on Linux)
+	INT16 stat = (9 - player->kartspeed);			//SCS EDIT MERGE REQUEST
 
 	if (K_PodiumSequence() == true)
 	{
@@ -17363,7 +17363,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
 							{
 								//K_AwardPlayerRings(player, (20*(player->position * 5)/2), true);		6*player->ringboxaward + 10
-								K_AwardPlayerRings(player,  K_CalcRingBoxAward(player, 2, true), true);
+								K_AwardPlayerRings(player,  K_CalcRingBoxAward(player, (3/2), true), true);
 								//S_StartSound(player, sfx_mycwin);
 								S_StartSound(player->mo, SUPERJACKPOT_SOUND);
 								K_AdjustPlayerItemAmount(player, -1);
@@ -17416,10 +17416,12 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 									}
 									
 									player->playermasteremeraldringdraindelay = 5;
-									K_AwardPlayerRings(player, 50, true);
+									
+									if (player->invincibilitytimer)
+										K_AwardPlayerRings(player, 100, true);			//If you're already invincible from a normal Invincibility, you get a bonus!
+									else
+										K_AwardPlayerRings(player, 50, true);
 								}
-								else if (player->invincibilitytimer)
-									K_AwardPlayerRings(player, 100, true);			//If you're already invincible from a normal Invincibility, you get a bonus!
 								else
 									K_AwardPlayerRings(player, 50, true);
 								
