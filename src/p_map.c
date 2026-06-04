@@ -1092,6 +1092,37 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 	if (thing->type == MT_DROPTARGET || g_tm.thing->type == MT_DROPTARGET
 		|| thing->type == MT_DROPTARGET_SHIELD || g_tm.thing->type == MT_DROPTARGET_SHIELD)
 		return BMIT_CONTINUE;
+		
+	if (g_tm.thing->type == MT_PPOCKETHYUDORO || g_tm.thing->type == MT_MINIHYUDORO)			//SCS ADD START
+	{
+		//CONS_Printf("Type1\n");	
+		// see if it went over / under
+		if (g_tm.thing->z > thing->z + thing->height)
+			return BMIT_CONTINUE; // overhead
+		if (g_tm.thing->z + g_tm.thing->height < thing->z)
+			return BMIT_CONTINUE; // underneath
+		
+		if (thing->type != MT_PLAYER)
+			return K_PickpocketCollide(g_tm.thing, thing) ? BMIT_CONTINUE : BMIT_ABORT;
+		else if (thing != NULL && thing->health > 0 && K_TryPickMeUp(g_tm.thing, thing, false))
+			return true;
+		
+	}
+	else if (thing->type == MT_PPOCKETHYUDORO || thing->type == MT_MINIHYUDORO)
+	{
+		//CONS_Printf("Type2\n");	
+		// see if it went over / under
+		if (g_tm.thing->z > thing->z + thing->height)
+			return BMIT_CONTINUE; // overhead
+		if (g_tm.thing->z + g_tm.thing->height < thing->z)
+			return BMIT_CONTINUE; // underneath
+
+		if (g_tm.thing->type != MT_PLAYER)
+			return K_PickpocketCollide(thing, g_tm.thing) ? BMIT_CONTINUE : BMIT_ABORT;
+		else if (g_tm.thing != NULL && g_tm.thing->health > 0 && K_TryPickMeUp(thing, g_tm.thing, false))
+			return true;
+		
+	}																							//SCS ADD END
 
 	if (g_tm.thing->type == MT_ORBINAUT || g_tm.thing->type == MT_JAWZ || g_tm.thing->type == MT_GACHABOM
 		|| g_tm.thing->type == MT_ORBINAUT_SHIELD || g_tm.thing->type == MT_JAWZ_SHIELD
@@ -1202,7 +1233,7 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 		return K_GHZBallCollide(thing, g_tm.thing) ? BMIT_CONTINUE : BMIT_ABORT;
 	}
 	
-	if (g_tm.thing->type == MT_RINGGUNBLASTMAX)													//SCS ADD START
+	if (g_tm.thing->type == MT_RINGGUNBLASTMAX)
 	{
 		// see if it went over / under
 		if (g_tm.thing->z > thing->z + thing->height)

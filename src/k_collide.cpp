@@ -145,7 +145,7 @@ boolean K_BananaBallhogCollide(mobj_t *t1, mobj_t *t2)
 		// Bomb death
 		P_KillMobj(t2, t1, t1, DMG_NORMAL);
 	}
-	else if (t2->flags & MF_SHOOTABLE)
+	else if (t2->flags & MF_SHOOTABLE && t2->type != MT_MINIHYUDORO && t2->type != MT_PPOCKETHYUDORO)
 	{
 		// Shootable damage
 		P_DamageMobj(t2, t1, t1->target, 1, DMG_NORMAL);
@@ -446,7 +446,7 @@ boolean K_MineCollide(mobj_t *t1, mobj_t *t2)
 		P_SetObjectMomZ(t2, 24*FRACUNIT, false);
 		P_InstaThrust(t2, bounceangle, 16*FRACUNIT);
 	}
-	else if (t2->flags & MF_SHOOTABLE)
+	else if (t2->flags & MF_SHOOTABLE && t2->type != MT_MINIHYUDORO && t2->type != MT_PPOCKETHYUDORO)
 	{
 		// Bomb death
 		P_KillMobj(t1, t2, t2, DMG_NORMAL);
@@ -554,7 +554,7 @@ boolean K_LandMineCollide(mobj_t *t1, mobj_t *t2)
 		// Bomb death
 		P_KillMobj(t2, t1, t1, DMG_NORMAL);
 	}
-	else if (t2->flags & MF_SHOOTABLE)
+	else if (t2->flags & MF_SHOOTABLE && t2->type != MT_MINIHYUDORO && t2->type != MT_PPOCKETHYUDORO)
 	{
 		// Shootable damage
 		P_DamageMobj(t2, t1, t1->target, 1, DMG_NORMAL);
@@ -652,6 +652,83 @@ void K_GHZBall_BallBounce(mobj_t *t1, mobj_t *t2)			//SCS ADD
 	}	
 }
 
+boolean K_PickpocketCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
+{
+	if (((t1->target == t2) || (!(t2->flags & (MF_ENEMY|MF_BOSS)) && (t1->target == t2->target))) && (t1->threshold > 0 || (t2->type != MT_PLAYER && t2->threshold > 0)))
+		return true;
+
+	if (t1->health <= 0 || t2->health <= 0)
+		return true;
+	
+	if (t1->state == &states[S_PPOCKET_STUNNED] || t1->state == &states[S_PPOCKET_VANISH]) //If we're already stunned or disappearing, don't process any more hits
+		return false;
+		
+	if (t1->extravalue1 != 0)		//If we're not patroling, we're rushing back to our owner - don't collide with anything
+		return false;
+		
+	//CONS_Printf("Collided!\n");	
+
+
+	if (t2->type == MT_BANANA || t2->type == MT_BANANA_SHIELD 
+		|| t2->type == MT_ORBINAUT || t2->type == MT_ORBINAUT_SHIELD
+		|| t2->type == MT_JAWZ || t2->type == MT_JAWZ_SHIELD
+		|| t2->type == MT_BALLHOG || t2->type == MT_GACHABOM
+		|| t2->type == MT_AFTERBURNER_JAWZ || t2->type == MT_GHZBALL
+		|| t2->type == MT_GARDENTOP)
+	{
+		if (t2->eflags & MFE_VERTICALFLIP)
+			t2->z -= t2->height;
+		else
+			t2->z += t2->height;
+		
+		//CONS_Printf("We should get stunned.\n");	
+
+		P_SpawnMobj(t2->x/2 + t1->x/2, t2->y/2 + t1->y/2, t2->z/2 + t1->z/2, MT_ITEMCLASH);
+		
+		if (t1->state != &states[S_PPOCKET_STUNNED] && t1->state != &states[S_PPOCKET_VANISH])
+		{
+			t1->flags |= MF_NOCLIP;						//become intangible after getting hit
+			P_SetMobjState(t1, S_PPOCKET_STUNNED);
+				
+			t1->cusval = 10;				//how long we stay stunned in place before fleeing/disappearing
+			t1->momx = 0;
+			t1->momy = 0;
+			t1->momz = 0;
+			
+			if (t1->type == MT_PPOCKETHYUDORO)
+				t1->cusval *= 8;
+			else
+			{
+				if (t1->target != NULL)
+				{
+					t1->target->extravalue2--;
+					
+					if (t1->target->extravalue2 < 0)
+						t1->target->extravalue2 = 0;
+					
+					t1->target = NULL;
+				}
+			}
+			
+			t1->destscale = t1->scale*3;
+			
+			//CONS_Printf("Setting stun state...\n");	
+		}
+
+		t1->reactiontime = t2->hitlag;
+	}
+	else if (t2->type == MT_SSMINE_SHIELD || t2->type == MT_SSMINE || t2->type == MT_LANDMINE || t2->type == MT_PRESSUREMINE)
+	{
+		//Do nothing lol
+	}
+	else if (t2->flags & MF_SHOOTABLE)
+	{
+		t1->reactiontime = t2->hitlag;
+	}
+
+	return true;
+}
+
 boolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 {
 	if (((t1->target == t2) || (!(t2->flags & (MF_ENEMY|MF_BOSS)) && (t1->target == t2->target))) && (t1->threshold > 0 || (t2->type != MT_PLAYER && t2->threshold > 0)))
@@ -731,7 +808,7 @@ boolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 		|| t2->type == MT_ORBINAUT || t2->type == MT_ORBINAUT_SHIELD
 		|| t2->type == MT_JAWZ || t2->type == MT_JAWZ_SHIELD
 		|| t2->type == MT_BALLHOG || t2->type == MT_GACHABOM
-		|| t2->type == MT_AFTERBURNER_JAWZ)							//SCS ADD
+		|| t2->type == MT_AFTERBURNER_JAWZ)
 	{
 		if (t2->type == MT_BANANA || t2->type == MT_BANANA_SHIELD) //Speeds it up?
 		{
@@ -800,7 +877,7 @@ boolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 		// Bomb death
 		P_KillMobj(t2, t1, t1, DMG_NORMAL);
 	}
-	else if (t2->flags & MF_SHOOTABLE)
+	else if (t2->flags & MF_SHOOTABLE && t2->type != MT_MINIHYUDORO && t2->type != MT_PPOCKETHYUDORO)
 	{
 		// Shootable damage
 		P_DamageMobj(t2, t1, t1->target, 1, DMG_NORMAL);
@@ -1127,7 +1204,7 @@ boolean K_DropTargetCollide(mobj_t *t1, mobj_t *t2)
 		if (t2->type == MT_JAWZ || t2->type == MT_AFTERBURNER_JAWZ)				//SCS EDIT
 			P_SetTarget(&t2->tracer, t2->target); // Back to the source!
 			
-		// Reflected item becomes owned by the DT owner, so it becomes dangerous the the thrower
+		// Reflected item becomes owned by the DT owner, so it becomes dangerous to the thrower
 		if (t1->target && !P_MobjWasRemoved(t1->target))
 			P_SetTarget(&t2->target, t1->target);
 			
@@ -1440,7 +1517,7 @@ boolean K_BubbleShieldCollide(mobj_t *t1, mobj_t *t2)
 		return K_BubbleShieldReflect(t1, t2);
 	}
 
-	if (t2->flags & MF_SHOOTABLE)
+	if (t2->flags & MF_SHOOTABLE && t2->type != MT_MINIHYUDORO && t2->type != MT_PPOCKETHYUDORO)
 	{
 		P_DamageMobj(t2, t1, t1->target, 1, DMG_NORMAL);
 	}
@@ -1624,7 +1701,7 @@ boolean K_InstaWhipCollide(mobj_t *shield, mobj_t *victim)
 			}
 			else
 			{
-				if (P_DamageMobj(victim, shield, attacker, 1, DMG_NORMAL))
+				if (victim->type != MT_PPOCKETHYUDORO && P_DamageMobj(victim, shield, attacker, 1, DMG_NORMAL))		//SCS EDIT - Don't damage pickpockets
 				{
 					K_AddHitLag(attacker, attackerHitlag, false);
 					shield->hitlag = attacker->hitlag;
@@ -1703,8 +1780,8 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 
 		if (t2->player->itemtype == KITEM_PICKPOCKETHYU && t1->player->itemtype == KITEM_PICKPOCKETHYU)
 		{
-			K_PickpocketHyuChainDestroy(t1->player);
-			K_PickpocketHyuChainDestroy(t2->player);			
+			//K_PickpocketHyuChainDestroy(t1->player);
+			//K_PickpocketHyuChainDestroy(t2->player);			
 			t1->player->itemtype = KITEM_KITCHENSINK;
 			t2->player->itemtype = KITEM_KITCHENSINK;
 			S_StartSound(t1, sfx_s3k92);
@@ -1713,10 +1790,10 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 			t2->player->pickpockethyucombo = 0;
 			
 			
-			pickpocketamps = K_PvPAmpReward(5, t1->player, t2->player);
+			pickpocketamps = K_PvPAmpReward(10, t1->player, t2->player);
 			K_SpawnAmps(t1->player, pickpocketamps, t1);
 			RR_PushPlayerInteractionToFeed(t1, t2, ATTACK_PICKPOCKETHYU, pickpocketamps);
-			pickpocketamps = K_PvPAmpReward(5, t2->player, t1->player);
+			pickpocketamps = K_PvPAmpReward(10, t2->player, t1->player);
 			K_SpawnAmps(t2->player, pickpocketamps, t2);
 			RR_PushPlayerInteractionToFeed(t2, t1, ATTACK_PICKPOCKETHYU, pickpocketamps);
 		}
@@ -1724,13 +1801,13 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 		{
 			if (t2->player->rings > 0) //Can grab ring awards too, but only once it's started being given to the victim if they have less than or equal to 0 rings. Bit of forgiveness, here.
 			{
-				t1->player->pickpockethyucombo++;				
+				t1->player->pickpockethyucombo++;								
 							
 				//CONS_Printf(" Pickpocket combo at: %u\n", t1->player->pickpockethyucombo);
 				
 				if (t1->player->pickpockethyucombo > 10)
 					t1->player->pickpockethyucombo = 10;	//We cap out at 10.
-				else
+				/*else																//OLD version
 				{
 					mobj_t *newhyudoro = P_SpawnMobj(t1->player->mo->x, t1->player->mo->y, t1->player->mo->z, MT_MINIHYUDORO);	//only spawn a new mini hyu if we aren't already capped
 					
@@ -1750,7 +1827,7 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 							t1->player->lastpickpockethyudoro = newhyudoro;
 						}
 					}					
-				}
+				}*/
 				//void K_AddMessageForPlayer(player_t *player, const char *msg, boolean interrupt, boolean persist)
 				//void K_AddMessage			(				   const char *msg, boolean interrupt, boolean persist)
 				
@@ -1774,19 +1851,17 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 				K_AwardPlayerRings(t1->player, ((10*t1->player->pickpockethyucombo)*t1->player->itemamount), true);
 				t1->player->itemtype = t2->player->itemtype;
 				t1->player->itemamount = t2->player->itemamount;
-				K_StripItems(t2->player);
-				K_PickpocketHyuChainDestroy(t1->player);
+				K_StripItemsExceptBackup(t2->player);
+				//K_PickpocketHyuChainDestroy(t1->player);
 				t2->player->hyudorotimer = hyudorotime;
 			}
 			else
-			{
 				t2->player->hyudorotimer = hyudorotime/3;
-			}
 			
 			S_StartSound(t1->player->mo, sfx_s3k92);
 			t2->player->stealingtimer = hyudorotime;
 			
-			pickpocketamps = K_PvPAmpReward(5, t1->player, t2->player);
+			pickpocketamps = K_PvPAmpReward(10, t1->player, t2->player);
 			K_SpawnAmps(t1->player, pickpocketamps, t1);
 			
 			RR_PushPlayerInteractionToFeed(t1, t2, ATTACK_PICKPOCKETHYU, pickpocketamps);				//SCS ADD
@@ -1795,13 +1870,13 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 		{
 			if (t1->player->rings > 0) //Can grab ring awards too, but only once it's started being given to the victim if they have less than or equal to 0 rings. Bit of forgiveness, here.
 			{
-				t2->player->pickpockethyucombo++;
+				t2->player->pickpockethyucombo++;	
 							
 				//CONS_Printf(" Pickpocket combo at: %u\n", t1->player->pickpockethyucombo);
 				
-				if (t2->player->pickpockethyucombo > 10)
+				if (t2->player->pickpockethyucombo > 10)											
 					t2->player->pickpockethyucombo = 10;	//We cap out at 10.
-				else
+				/*else																//OLD version
 				{
 					mobj_t *newhyudoro = P_SpawnMobj(t2->player->mo->x, t2->player->mo->y, t2->player->mo->z, MT_MINIHYUDORO);	//only spawn a new mini hyu if we aren't already capped
 					
@@ -1821,7 +1896,7 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 							t2->player->lastpickpockethyudoro = newhyudoro;
 						}
 					}					
-				}
+				}*/
 				
 				//K_AddMessage(va("Pickpocket Combo x%d!", t2->player->pickpockethyucombo), true, false);
 				K_AddMessageForPlayer(t2->player, va("Pickpocket Combo x%d!", t2->player->pickpockethyucombo), true, false);
@@ -1843,8 +1918,8 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 				K_AwardPlayerRings(t2->player, ((10*t2->player->pickpockethyucombo)*t2->player->itemamount), true);
 				t2->player->itemtype = t1->player->itemtype;
 				t2->player->itemamount = t1->player->itemamount;
-				K_StripItems(t1->player);
-				K_PickpocketHyuChainDestroy(t2->player);
+				K_StripItemsExceptBackup(t1->player);
+				//K_PickpocketHyuChainDestroy(t2->player);
 				t1->player->hyudorotimer = hyudorotime;
 			}
 			else
@@ -1855,7 +1930,7 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 			S_StartSound(t2->player->mo, sfx_s3k92);
 			t1->player->stealingtimer = hyudorotime;
 
-			pickpocketamps = K_PvPAmpReward(5, t2->player, t1->player);
+			pickpocketamps = K_PvPAmpReward(10, t2->player, t1->player);
 			K_SpawnAmps(t2->player, pickpocketamps, t2);
 			
 			RR_PushPlayerInteractionToFeed(t2, t1, ATTACK_PICKPOCKETHYU, pickpocketamps);				//SCS ADD

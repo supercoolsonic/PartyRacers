@@ -23,6 +23,8 @@
 #include "../g_game.h"
 #include "../k_hitlag.h"
 #include "../p_slopes.h"
+#include "../k_hud.h" // K_AddMessage   SCS ADD
+//#include "../k_kart.h"				  //SCS ADD
 
 // Radio
 #include "../radioracers/rr_hud.h"				//SCS - RADIO
@@ -32,6 +34,7 @@ enum {
 	HYU_RETURN,
 	HYU_HOVER,
 	HYU_ORBIT,
+	HYU_VANISH								//SCS ADD
 };
 
 // TODO: make these general functions
@@ -94,6 +97,9 @@ is_hyudoro (mobj_t *thing)
 static mobj_t *
 get_hyudoro_master (mobj_t *hyu)
 {
+	if (hyu->type == MT_PPOCKETHYUDORO || hyu->type == MT_MINIHYUDORO)				//SCS ADD
+		return hyu->type == MT_MINIHYUDORO ? hyu->target->target : hyu->target;
+	
 	mobj_t *center = hyudoro_center(hyu);
 
 	return center ? hyudoro_center_master(center) : NULL;
@@ -338,7 +344,7 @@ move_to_player (mobj_t *hyu)
 		else
 			speed = min(speed*3, normalspeed*3);		//SCS ADD - for Butler Hyudoro
 		
-	}
+	}													//SCS NOTE - the pickpocket will not get a speedboost
 
 	P_InstaThrust(hyu, angle, speed);
 
@@ -446,7 +452,7 @@ pop_hyudoro (mobj_t **head)
 }
 
 static mobj_t *
-spawn_capsule (mobj_t *hyu)
+spawn_capsule (mobj_t *hyu, INT32 item)					//SCS EDIT - adding item parameter so flags can not be set if it's a pickpocket ringbox
 {
 	mobj_t *caps = P_SpawnMobjFromMobj(
 			hyu, 0, 0, 0, MT_ITEMCAPSULE);
@@ -461,7 +467,12 @@ spawn_capsule (mobj_t *hyu)
 		MF_NOCLIPHEIGHT;
 
 	/* signal that this item capsule always puts items in the HUD */
-	caps->flags2 |= MF2_STRONGBOX;
+	if (item >= 0)														//SCS ADD - if we're less than 0, it's likely a pickpocket ringbox
+		caps->flags2 |= MF2_STRONGBOX;
+	else																//SCS ADD - We're gonna use extravalue2 to keep track of the item amount when it returns to the player
+		caps->extravalue2 = hyu->extravalue2;
+		
+	//CONS_Printf("Item amount set: %d \n", caps->extravalue2);
 
 	P_SetTarget(&hyudoro_capsule(hyu), caps);
 
@@ -497,13 +508,15 @@ set_item
 		INT32 amount)
 {
 	mobj_t *caps = P_MobjWasRemoved(hyudoro_capsule(hyu))
-		? spawn_capsule(hyu) : hyudoro_capsule(hyu);
+		? spawn_capsule(hyu, item) : hyudoro_capsule(hyu);
 
 	hyudoro_itemtype(hyu) = item;
 	hyudoro_itemcount(hyu) = amount;
 
-	caps->threshold = hyudoro_itemtype(hyu);
+	caps->threshold = item == -1 ? HYUCAPSULE_RING : hyudoro_itemtype(hyu);	//SCS EDIT - -1 is the value passed by pickpockets for stealing rings
 	caps->movecount = hyudoro_itemcount(hyu);
+	
+	//CONS_Printf("Amount: %d \n", amount);
 }
 
 static void
@@ -511,7 +524,7 @@ hyudoro_set_held_item_from_player
 (		mobj_t * hyu,
 		player_t * player)
 {
-	if (K_ItemEnabled(KITEM_KITCHENSINK))
+	if (hyu->type != MT_PPOCKETHYUDORO && K_ItemEnabled(KITEM_KITCHENSINK))		//SCS EDIT
 	{
 		boolean convert = false;
 
@@ -549,9 +562,63 @@ hyudoro_set_held_item_from_player
 			set_item(hyu, player->itemtype, min(player->itemamount*2, 99));
 		
 	}
-	else
-		set_item(hyu, player->itemtype, player->itemamount);
-	
+	else if (player->itemtype != KITEM_NONE)					//SCS ADD - Pickpockets don't try to grab items; if the item is valid, spawn a new normal hyu to grab it
+	{
+		if (hyu->type != MT_PPOCKETHYUDORO)		//if you're not a pickpocket, grab the item like normal
+		{
+			set_item(hyu, player->itemtype, player->itemamount);
+			return;
+		}
+		else if (player->rings > 0 || player->superring > 0)
+		{
+			mobj_t *itemhyu = P_SpawnMobjFromMobj(hyu, 0, 0, 0, MT_HYUDORO);
+			
+			if (itemhyu)
+			{
+				itemhyu->target = hyu->target;
+				set_item(itemhyu, player->itemtype, player->itemamount);	//new hyu grabs the item
+				hyudoro_mode(itemhyu) = HYU_RETURN;
+			}
+			
+			hyu->target->player->pickpockethyucombo = min(hyu->target->player->pickpockethyucombo++, 10);
+			
+			if (player->superring > 0)										//pickpocket grabs the moolah
+				set_item(hyu, -1, ((player->rings + player->superring)*hyu->target->player->pickpockethyucombo));			
+			else
+				set_item(hyu, -1, (player->rings*hyu->target->player->pickpockethyucombo));
+			
+			player->rings = 0;
+			player->superring = 0;
+			K_AddMessageForPlayer(hyu->target->player, va("Pickpocket Combo x%d!", hyu->target->player->pickpockethyucombo), true, false);
+		}
+	}
+	else if (player->rings > 0 || player->superring > 0)		//SCS ADD - For pickpocket, stealing rings only
+	{
+		hyu->target->player->pickpockethyucombo = min(hyu->target->player->pickpockethyucombo++, 10);
+		set_item(hyu, -1, ((player->rings + player->superring)*hyu->target->player->pickpockethyucombo));
+		player->rings = 0;
+		player->superring = 0;
+		K_AddMessageForPlayer(hyu->target->player, va("Pickpocket Combo x%d!", hyu->target->player->pickpockethyucombo), true, false);
+	}
+}
+
+static void pickpocket_hyudoro_chain_destroy (mobj_t * hyu)							//SCS ADD
+{
+	if (hyu->tracer != NULL)
+		pickpocket_hyudoro_chain_destroy(hyu->tracer);
+
+	hyu->target = NULL;
+	P_RemoveMobj(hyu);
+	//CONS_Printf("Chain Destroy\n");
+}
+
+static void pickpocket_hyudoro_set_stunned (mobj_t * hyu)							//SCS ADD
+{
+	if (hyu->tracer != NULL)
+		pickpocket_hyudoro_set_stunned(hyu->tracer);
+
+	P_SetMobjState(hyu, S_PPOCKET_STUNNED);
+	hyu->destscale = hyu->scale*2;
 }
 
 static boolean
@@ -581,35 +648,51 @@ hyudoro_patrol_hit_player
 
 	// NO ITEM?
 	if (!player->itemamount)
+		if (hyu->type != MT_PPOCKETHYUDORO && hyu->type != MT_MINIHYUDORO)		//SCS ADD (These types steal rings too)
+			return false;
+		
+	if ((hyu->type == MT_PPOCKETHYUDORO || hyu->type == MT_MINIHYUDORO) && player->rings <= 0 && player->superring <= 0)	//SCS ADD
 		return false;
-
+	
+	if (hyu->type == MT_MINIHYUDORO)		//SCS ADD - If we hit one of the mini-hyudoros in the chain of the pickpocket, switch over to the leader, and handle interacting with the leader from here on
+		hyu = hyu->target;
+		
+	if (hyu->state == &states[S_PPOCKET_STUNNED] || hyu->state == &states[S_PPOCKET_VANISH])	//Stunned Pickpockets can't steal
+		return false;
+		
+	if (hyu->type == MT_PPOCKETHYUDORO && hyu->extravalue2 == 0)	//point blank hit, do nothing
+		return false;
+		
 	K_AddHitLag(toucher, TICRATE/2, false);
+	
+	if (hyu->type == MT_PPOCKETHYUDORO && hyu->tracer != NULL)	//SCS ADD - Also destroy all the mini ones at this point
+		pickpocket_hyudoro_chain_destroy(hyu->tracer);	
 
 	hyudoro_mode(hyu) = HYU_RETURN;
 
 	hyudoro_set_held_item_from_player(hyu, player);
 
-	if (!P_MobjWasRemoved(hyudoro_capsule(hyu)))
+	if (!P_MobjWasRemoved(hyudoro_capsule(hyu)) && hyudoro_capsule(hyu)->extravalue2 <= 0)		//SCS EDIT - Don't meddle with HYUCAPSULE capsules, we need this value to properly transfer itemamount back to the player owner
 	{
 		hyudoro_capsule(hyu)->extravalue2 = player->skincolor;
 	}
-
+	
 	//K_StripItems(player);
 	K_StripItemsExceptBackup(player);		//SCS EDIT - So, what? Does the backup item just vanish into the void???
 
-	S_StartSound(toucher, sfx_s3k92);
-
 	/* do not make 1st place invisible */
-	if (player->leaderpenalty == 0)
+	if (hyu->type == MT_PPOCKETHYUDORO || player->leaderpenalty == 0)			//SCS EDIT - Pickpockets always grant some invisibility time, since it's not a trap item
 	{
-		player->hyudorotimer = hyudorotime;
+		player->hyudorotimer = (hyudoro_capsule(hyu)->threshold > 0 && hyudoro_capsule(hyu)->threshold != HYUCAPSULE_RING) ? hyudorotime : (hyudorotime/3);	//SCS EDIT - Pickpocket ring steal grants less invisibility time
 	}
+
+	S_StartSound(toucher, sfx_s3k92);
 
 	player->stealingtimer = hyudorotime;
 	
-	if (hyu->type == MT_BHYUDORO)
+	if (hyu->type == MT_BHYUDORO)				//SCS ADD
 	{
-		player->bstealingtimer = hyudorotime;	//this is literally only used for the HUD to show a different stealing graphic in the ietm slot
+		player->bstealingtimer = hyudorotime;	//this is literally only used for the HUD to show a different stealing graphic in the item slot
 		hyu->destscale = hyu->scale/2;			//when returning to the owner, shrink back down as to not obstruct the owner's view
 	}
 
@@ -621,19 +704,24 @@ hyudoro_patrol_hit_player
 		master = find_duel_target(toucher);
 	}
 
-	P_SetTarget(&hyudoro_target(hyu), master);
+	P_SetTarget(&hyudoro_target(hyu), master);									//SCS NOTE - this is what sets the target for the hyudoro so it moves back to the player
 
 	//if (master && !P_MobjWasRemoved(master))
 		//K_SpawnAmps(master->player, K_PvPAmpReward(20, master->player, player), toucher);
 	
 	UINT8 hyuAmps = 0;															//SCS - RADIO START
 	if (master && !P_MobjWasRemoved(master)) {
-		hyuAmps = K_PvPAmpReward(20, master->player, player);
+		hyuAmps = K_PvPAmpReward(hyu->type == MT_PPOCKETHYUDORO ? 5 : 20, master->player, player);
 		K_SpawnAmps(master->player, hyuAmps, toucher);
 	}																			//SCS - RADIO END
 
-	if (center)
-		P_RemoveMobj(center);
+	if (hyu->type != MT_PPOCKETHYUDORO && hyu->type != MT_MINIHYUDORO)	//SCS ADD
+	{
+		if (center)
+			P_RemoveMobj(center);
+	}
+	else
+		hyu->flags |= MF_NOCLIP;
 
 	hyu->renderflags &= ~(RF_DONTDRAW);
 
@@ -666,20 +754,52 @@ award_immediately (mobj_t *hyu)
 
 	if (player)
 	{
+		if (hyudoro_itemtype(hyu) == -1 && hyu->target->health > 0)				//SCS ADD - -1 means we have rings and are a pickpocket. We can always take rings!
+		{
+			deliver_item(hyu);
+			return true;
+		}		
+		
+		if (hyudoro_itemtype(hyu) == -2 && hyu->target->health > 0)				//SCS ADD - -2 means we got hit after being fired, and are returning to go into the player's item slot
+		{
+			P_SetMobjState(hyu, S_PPOCKET_VANISH);
+			
+			if (hyu->target->player)
+			{
+				//CONS_Printf("We're giving back: %d\n", hyu->extravalue2);
+				
+				if (hyu->target->player->itemtype == KITEM_PICKPOCKETHYU || hyu->target->player->itemtype == KITEM_NONE)		//Going back into player's item slots
+				{
+					hyu->target->player->itemtype = KITEM_PICKPOCKETHYU;
+					K_AdjustPlayerItemAmount(hyu->target->player, hyu->extravalue2);
+				}
+				else if (hyu->target->player->backupitemtype == KITEM_PICKPOCKETHYU || hyu->target->player->backupitemtype == KITEM_NONE)
+				{
+					hyu->target->player->backupitemtype = KITEM_PICKPOCKETHYU;
+					K_AdjustPlayerBackupItemAmount(hyu->target->player, hyu->extravalue2);
+				}
+			}
+			
+			hyudoro_mode(hyu) = HYU_VANISH;
+			hyu->threshold = 5;
+			//P_RemoveMobj(hyu);
+			return true;
+		}
+		
+		if (!P_CanPickupItem(player, PICKUP_ITEMBOX))
+			return false;
+		
 		if (player->leaderpenalty)
 		{
 			return false;
 		}
-
-		if (!P_CanPickupItem(player, PICKUP_ITEMBOX))
-			return false;
 
 		// Prevent receiving any more items or even stacked
 		// Hyudoros! Put on a timer so roulette cannot become
 		// locked permanently.
 		player->itemRoulette.reserved = 2*TICRATE;
 	}
-
+	//CONS_Printf("Bing bing wahoo");
 	deliver_item(hyu);
 
 	return true;
@@ -915,8 +1035,174 @@ Obj_ButlerHyudoroDeploy (mobj_t *master)						//SCS ADD
 	S_StartSound(master, sfx_s3k92); // scary ghost noise
 }
 
+void
+Obj_PPocketHyudoroDeploy (mobj_t *master, mobj_t *hyu)						//SCS ADD (This just sets the mode, since it's already created by throwing it as a kart item)
+{
+	hyudoro_mode(hyu) = HYU_PATROL;
+
+	S_StartSound(master, sfx_s3k92); // scary ghost noise
+}
+
 void 
 Obj_MiniHyudoroThink(mobj_t *th)
+{
+	//angle_t newangle = th->target->angle + th->angle + ANGLE_90;
+	
+	//UINT32 newx = th->target->x + th->target->momx + FixedMul(FixedMul(th->target->scale, th->scale*10), FINECOSINE((newangle) >> ANGLETOFINESHIFT));
+
+	//UINT32 newy = th->target->y + th->target->momy + FixedMul(FixedMul(th->target->scale, th->scale*10), FINESINE((newangle) >> ANGLETOFINESHIFT));
+	if (th->extravalue2 > 0)	//vanishing
+	{
+		th->extravalue2--;
+		
+		if (th->extravalue2 <= 0)
+		{
+			th->tracer = NULL;
+			P_RemoveMobj(th);
+			return;
+		}
+	}
+	else if (th->cusval > 0)
+	{
+		th->cusval--;
+		
+		if (th->cusval <= 0)
+		{
+			th->extravalue2 = 5;
+			P_SetMobjState(th, S_PPOCKET_VANISH);
+		}
+	}
+	else if (th->threshold > 0)
+	{
+		th->threshold--;
+	}
+	else if (th->target != NULL)
+	{
+		th->momx = th->target->momx;		//just follow the leader
+		th->momy = th->target->momy;
+		th->z = th->target->z;
+	}
+	//th->angle = th->target->angle;
+	
+	//if (K_GetForwardMove(th->target->player) < 0)
+	//{
+	//	th->angle = th->target->angle + ANGLE_180;
+	//}
+	
+	//newx = FixedDiv(newx - th->x, 1);
+//	newy = FixedDiv(newy - th->y, 1);
+	
+	//P_SetOrigin(th, (newx + th->threshold*FRACUNIT), (newy + th->threshold*FRACUNIT), (th->target->z + FRACUNIT*15));
+	//P_MoveOrigin(th, (newx + th->threshold*FRACUNIT), (newy + th->threshold*FRACUNIT), th->target->z + th->target->height);
+	//th->momx = FixedDiv(newx - th->x, 1);
+	//th->momy = FixedDiv(newy - th->y, 1);
+	
+	//th->z = th->target->z + FRACUNIT*8;
+}
+
+void 
+Obj_PPocketHyudoroThink(mobj_t *hyu)
+{
+	switch (hyudoro_mode(hyu))
+	{
+		case HYU_PATROL:
+		
+		if (hyu->cusval > 0)	//we're stunned
+		{
+			hyu->cusval--;
+			
+			if (hyu->tracer != NULL && hyu->tracer->state != &states[S_PPOCKET_STUNNED])
+				pickpocket_hyudoro_set_stunned(hyu->tracer);
+			
+			//CONS_Printf("Timer: %d\n", hyu->cusval);
+			
+			if (hyu->cusval <= 0)
+			{
+				P_SetMobjState(hyu, S_HYUDORO);						//start returning to our owner
+				
+				if (hyu->tracer != NULL)							//get rid of the mini-hyudoro while we flee
+					pickpocket_hyudoro_chain_destroy(hyu->tracer);
+					
+				
+				hyudoro_mode(hyu) = HYU_RETURN;
+				hyu->destscale = hyu->scale/3;
+				hyudoro_itemtype(hyu) = -2;			//Mark as "don't deliver anything"			
+			}
+		}
+		else if (hyu->threshold > -1)
+		{
+			hyu->threshold--;
+			
+			if (hyu->threshold % 10 == 0)
+			{
+				mobj_t *mini = P_SpawnMobjFromMobj((hyu->tracer != NULL && hyu->tracer->state != &states[S_PPOCKET_STUNNED] && hyu->tracer->state != &states[S_PPOCKET_VANISH]) ? hyu->tracer : hyu, 0, 0, 0, MT_MINIHYUDORO);
+				
+				if (mini != NULL)
+				{
+					mini->target = hyu;
+					mini->threshold = 5;	//how long until it starts moving
+					mini->angle = hyu->angle;
+					
+					if (hyu->tracer != NULL)	//if it's NOT the first one we spawned
+					{
+						mini->tracer = hyu->tracer;
+					}
+						
+					hyu->tracer = mini;
+				}
+			}
+		}
+		break;
+		case HYU_RETURN:
+			move_to_player(hyu);
+			trail_ghosts(hyu, true);
+
+			if (hyudoro_timer(hyu) > 0)
+				hyu->whiteshadow = !hyu->whiteshadow;
+			break;
+
+		case HYU_HOVER:
+			if (hyudoro_target(hyu))
+			{
+				project_hyudoro_hover(hyu);
+
+				if (hyudoro_hover_await_stack(hyu))
+					break;
+			}
+			blend_hover_hyudoro(hyu);
+		break;
+
+		case HYU_ORBIT:
+			if (!project_hyudoro_orbit(hyu))
+			{
+				hyu->tracer = NULL;	//Used to mark a delivering hyudoro rather than one that hit a wall (The minis should already be gone by this point)
+				P_RemoveMobj(hyu);
+				return;
+			}
+		break;
+		case HYU_VANISH:
+			if (hyu->threshold > 0 && hyudoro_itemtype(hyu) == -2 && !P_MobjWasRemoved(hyu))		//SCS ADD
+			{
+				//CONS_Printf("Disappear: %d\n", hyu->threshold);
+				hyu->threshold--;
+				
+				if (hyu->threshold == 0)
+					P_RemoveMobj(hyu);
+				
+			}		
+		break;
+	}
+
+	update_capsule_position(hyu);
+
+	if (hyudoro_timer(hyu) > 0)
+		hyudoro_timer(hyu)--;
+	
+}
+
+/*
+void 
+Obj_MiniHyudoroThink_OLD(mobj_t *th)
 {
 	angle_t newangle = th->target->angle + th->angle + ANGLE_90;
 	
@@ -944,7 +1230,7 @@ Obj_MiniHyudoroThink(mobj_t *th)
 	
 	//th->z = th->target->z + FRACUNIT*8;
 }
-
+*/
 void
 Obj_HyudoroThink (mobj_t *hyu)
 {
@@ -1006,6 +1292,8 @@ Obj_HyudoroCollide
 (		mobj_t * hyu,
 		mobj_t * toucher)
 {
+	//CONS_Printf("Collided!\n");	
+	
 	switch (hyudoro_mode(hyu))
 	{
 		case HYU_PATROL:

@@ -731,6 +731,8 @@ UINT8 K_ItemResultToAmount(SINT8 getitem, const itemroulette_t *roulette)
 			
 		case KITEM_EGGBLASTER:			//SCS ADD - always comes with a fixed amount of shots
 			return 5;
+		case KITEM_PICKPOCKETHYU:		//SCS ADD - New pickpocket
+			return 3;
 
 		default:
 			return 1;
@@ -4861,7 +4863,7 @@ void K_AwardPlayerRings(player_t *player, UINT16 rings, boolean overload)
 	/* check if not overflow */
 	if (superring > player->superring)
 	{
-		player->superring = superring;
+		player->superring = min(superring, 9999);				//SCS EDIT - I'm gonna cap you here, just because it's probably never gonna be possible to reach this high, and if it IS possible, wtf. Even I'D say that's overpowered
 		player->superringpeak = superring;
 		player->superringalert = TICRATE/2;
 	}
@@ -8232,7 +8234,7 @@ static void K_DoShrink(player_t *user)
 			if (mobj->type == MT_BANANA_SHIELD || mobj->type == MT_JAWZ_SHIELD ||
 			mobj->type == MT_SSMINE_SHIELD || mobj->type == MT_EGGMANITEM_SHIELD ||
 			mobj->type == MT_SINK_SHIELD || mobj->type == MT_ORBINAUT_SHIELD ||
-			mobj->type == MT_DROPTARGET_SHIELD || mobj->type == MT_AFTERBURNER_JAWZ)		//SCS EDIT
+			mobj->type == MT_DROPTARGET_SHIELD)
 			{
 				if (mobj->target && mobj->target->player)
 				{
@@ -9083,8 +9085,9 @@ void K_DropPaperItem(player_t *player, UINT8 itemtype, UINT16 itemamount)
 	K_FlipFromObjectNoInterp(drop, player->mo);
 }
 
-void K_PickpocketHyuChainDestroy(player_t *player)
+void K_PickpocketHyuChainDestroy(player_t *player)					//SCS - Old, now unused
 {
+	/*
 	if (player->lastpickpockethyudoro != NULL)
 	{
 		UINT16 i = player->pickpockethyucombo;
@@ -9112,6 +9115,7 @@ void K_PickpocketHyuChainDestroy(player_t *player)
 			i--;
 		}
 	}
+	*/
 }
 
 // For getting EXTRA hit!
@@ -10368,8 +10372,8 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 		}
 	}
 	
-	if (player && player->itemtype != KITEM_PICKPOCKETHYU && player->pickpockethyucombo != 0)
-		player->pickpockethyucombo = 0;
+	//if (player && player->itemtype != KITEM_PICKPOCKETHYU && player->pickpockethyucombo != 0)			//SCS ADD - EDIT New pickpocket needs to keep the combo going even when you don't have the item
+		//player->pickpockethyucombo = 0;
 
 	if (!P_MobjWasRemoved(player->whip) && (player->whip->flags2 & MF2_AMBUSH))
 	{
@@ -14588,6 +14592,13 @@ void K_StripItems(player_t *player)
 {
 	K_DropRocketSneaker(player);
 	K_DropKitchenSink(player);
+	
+	if (player->itemtype == KITEM_PICKPOCKETHYU)	//SCS - only lose the combo if you drop it while you're holding it
+	{
+		K_AddMessageForPlayer(player, va("Pickpocket Combo Lost..."), true, false);
+		player->pickpockethyucombo = 0;
+	}		
+	
 	player->itemtype = KITEM_NONE;
 	K_SetPlayerItemAmount(player, 0);
 	player->itemflags &= ~(IF_ITEMOUT|IF_EGGMANOUT);
@@ -14636,8 +14647,7 @@ void K_StripItems(player_t *player)
 	player->gunfiredelay = 0;					//SCS ADD
 	player->chamblasterrapidshots = 0;			//SCS ADD
 	player->sadtimer = 0;
-	K_PickpocketHyuChainDestroy(player);
-	player->pickpockethyucombo = 0;
+	//K_PickpocketHyuChainDestroy(player);
 
 	K_UpdateHnextList(player, true);
 }
@@ -14646,6 +14656,13 @@ void K_StripItemsExceptBackup(player_t *player)
 {
 	K_DropRocketSneaker(player);
 	K_DropKitchenSink(player);
+	
+	if (player->itemtype == KITEM_PICKPOCKETHYU)	//SCS - only lose the combo if you drop it while you're holding it
+	{
+		K_AddMessageForPlayer(player, va("Pickpocket Combo Lost..."), true, false);
+		player->pickpockethyucombo = 0;
+	}
+	
 	player->itemtype = KITEM_NONE;
 	K_SetPlayerItemAmount(player, 0);
 	player->itemflags &= ~(IF_ITEMOUT|IF_EGGMANOUT);
@@ -14691,8 +14708,7 @@ void K_StripItemsExceptBackup(player_t *player)
 	player->gunfiredelay = 0;					//SCS ADD
 	player->chamblasterrapidshots = 0;			//SCS ADD
 	player->sadtimer = 0;
-	K_PickpocketHyuChainDestroy(player);
-	player->pickpockethyucombo = 0;
+	//K_PickpocketHyuChainDestroy(player);
 
 	K_UpdateHnextList(player, true);
 }
@@ -17269,18 +17285,43 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 										player->lastpickpockethyudoro = newhyudoro;
 									}
 								}*/								
-								
-								S_StartSound(player->mo, sfx_s3k92);
+								if (player->itemamount == 1)
+								{
+									S_StartSound(player->mo, sfx_s3k92);
 
-								K_PickpocketHyuChainDestroy(player);
-								
-								if (player->pickpockethyucombo <= 0)
-									player->pickpockethyucombo = 1;
-								
-								K_AwardPlayerRings(player, (10*player->position*player->pickpockethyucombo), true);
-								K_AdjustPlayerItemAmount(player, -1);
-								player->botvars.itemconfirm = 0;
-								player->pickpockethyucombo = 0;
+									//K_PickpocketHyuChainDestroy(player);				OLD
+									
+									if (player->pickpockethyucombo <= 0)
+										player->pickpockethyucombo = 1;
+									
+									K_AwardPlayerRings(player, (10*player->position*player->pickpockethyucombo), true);
+									K_AdjustPlayerItemAmount(player, -1);
+									player->botvars.itemconfirm = 0;
+									player->pickpockethyucombo = 0;
+								}
+								else
+								{
+									K_SetItemOut(player); // need this to set itemscale
+									mobj_t *hyuleader = K_ThrowKartItem(player, true, MT_PPOCKETHYUDORO, 0, 0, 0);
+									
+									if (hyuleader)
+									{
+										hyuleader->fuse = 99999;
+										hyuleader->threshold = (player->itemamount-1)*10;
+										hyuleader->extravalue2 = player->itemamount;
+										Obj_PPocketHyudoroDeploy(player->mo, hyuleader);
+										P_SetTarget(&hyuleader, player->mo);
+										//hyuleader->flags &= ~(MF_NOCLIP);
+									}
+									
+									K_AdjustPlayerItemAmount(player, -1*player->itemamount);
+									
+									K_UnsetItemOut(player);
+									K_PlayAttackTaunt(player->mo);
+									
+									K_UpdateHnextList(player, false);
+									player->botvars.itemconfirm = 0;
+								}
 							}
 							break;
 						case KITEM_NORMALSHIELD:
@@ -18764,6 +18805,7 @@ void K_UpdateMobjItemOverlay(mobj_t *part, SINT8 itemType, UINT8 itemCount)
 			part->frame = FF_FULLBRIGHT|FF_PAPERSPRITE|4;
 			break;
 		case KCAPSULE_RING:
+		case HYUCAPSULE_RING:					//SCS ADD
 			part->sprite = SPR_IBON;
 			part->frame = FF_FULLBRIGHT|FF_PAPERSPRITE;
 			break;
@@ -19280,6 +19322,7 @@ boolean K_IsPickMeUpItem(mobjtype_t type)
 		case MT_AFTERBURNER_JAWZ:				//SCS ADD
 		case MT_PRESSUREMINE:					//SCS ADD
 		case MT_INKBUBBLE:						//SCS ADD
+		case MT_PPOCKETHYUDORO:					//SCS ADD
 			return true;
 		default:
 			return false;
@@ -19352,6 +19395,24 @@ static boolean K_PickUp(player_t *player, mobj_t *picked)
 			break;
 		case MT_INKBUBBLE:						//SCS ADD
 			type = KITEM_OCTUS;
+			break;
+		case MT_PPOCKETHYUDORO:					//SCS ADD
+			if (picked->extravalue1 != 0)						//if we're not patrolling, we're returning to the owner. Don't pick up here
+				return false;
+		
+			if (player != picked->target)
+			{
+				if (picked->state != &states[S_PPOCKET_STUNNED] && picked->state != &states[S_PPOCKET_VANISH])
+					return false;
+				
+			}
+			else if (picked->threshold > 0)
+				return false;
+			else
+				picked->target = NULL;		//Don't reset your own combo, but DO reset someone else's combo if you stole it from them!
+		
+			type = KITEM_PICKPOCKETHYU;
+			amount = picked->extravalue2;
 			break;
 		default:
 			type = KITEM_SAD;

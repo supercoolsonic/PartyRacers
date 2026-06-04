@@ -1514,15 +1514,15 @@ patch_t *K_GetSmallStaticCachedItemPatch(kartitems_t item)
 
 	switch (item)
 	{
-		case KITEM_INVINCIBILITY:
+		case KITEM_INVINCIBILITY:	//SCS ADD
 			offset = 7;
 			break;
 		
-		case KITEM_MASTEREMERALD:
+		case KITEM_MASTEREMERALD:	//SCS ADD
 			offset = 6;
 			break;
 
-		case KITEM_PICKPOCKETHYU:
+		case KITEM_PICKPOCKETHYU:	//SCS ADD
 			offset = 9;
 			break;
 
@@ -2070,7 +2070,7 @@ static void K_drawKartItem(void)
 					
 				case KITEM_PICKPOCKETHYU:
 					localpatch[i] = localpickpocket;			//SCS ADD
-					localamt[i] = amt;
+					//localamt[i] = amt;
 					break;
 
 				case KITEM_TIMESTONE:
@@ -3643,6 +3643,9 @@ void PositionFacesInfo::draw_1p()
 	UINT16 workingskin;
 	UINT8 *colormap;
 	UINT32 skinflags;
+	INT32 shakeoffset = 0;	//SCS ADD
+	INT32 shakeangle;		//SCS ADD
+	INT32 tumbleoffset;		//SCS ADD
 
 	if (gametyperules & GTR_POINTLIMIT) // playing battle
 	{
@@ -3747,7 +3750,18 @@ void PositionFacesInfo::draw_1p()
 			flipflag = 0;
 			xoff = yoff = 0;
 		}
-
+		
+		if (cv_toggle_minirankingshaking.value == 1)		//SCS ADD
+		{
+			tumbleoffset = 0;
+			
+			if (players[rankplayer[i]].tumbleBounces > 0)
+				tumbleoffset = (3/players[rankplayer[i]].tumbleBounces)*25;
+			
+			shakeangle = FixedAngle(FixedDiv((leveltime%(TICRATE/2)), TICRATE)*720);							//This math is based on the math used in Mini Ranking Plus! So, credit to its original writer, you are good at math lol
+			shakeoffset = (FSIN(shakeangle)*(players[rankplayer[i]].spinouttimer + tumbleoffset))/15000;
+		}
+		
 		if (players[rankplayer[i]].mo->color)
 		{
 			if ((skin_t*)players[rankplayer[i]].mo->skin)
@@ -3762,9 +3776,9 @@ void PositionFacesInfo::draw_1p()
 				colormap = R_GetTranslationColormap(workingskin, static_cast<skincolornum_t>(players[rankplayer[i]].mo->color), GTC_CACHE);
 
 			if (cv_hud_usehighresportraits.value) {			//SCS - RADIO START
-				V_DrawSmallMappedPatch(FACE_X + xoff, Y + yoff, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT|flipflag, faceprefix[workingskin][FACE_WANTED], colormap);
+				V_DrawSmallMappedPatch(FACE_X + xoff + (shakeoffset/8), Y + yoff, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT|flipflag, faceprefix[workingskin][FACE_WANTED], colormap);	//SCS EDIT
 			} else {										//SCS - RADIO END
-				V_DrawMappedPatch(FACE_X + xoff, Y + yoff, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT|flipflag, faceprefix[workingskin][FACE_RANK], colormap);
+				V_DrawMappedPatch(FACE_X + xoff + (shakeoffset/8), Y + yoff, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT|flipflag, faceprefix[workingskin][FACE_RANK], colormap);			//SCS EDIT
 			}												//SCS - RADIO
 
 			if (LUA_HudEnabled(hud_battlebumpers))

@@ -621,7 +621,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			}
 
 			// Ring Capsules shouldn't affect pickup cheese, they're just used as condensed ground-ring placements.
-			if (special->threshold != KCAPSULE_RING)
+			if (special->threshold != KCAPSULE_RING && special->threshold != HYUCAPSULE_RING)		//SCS EDIT
 				P_UpdateLastPickup(player, 3);
 
 			S_StartSound(toucher, special->info->deathsound);
@@ -833,6 +833,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 
 		case MT_HYUDORO:
 		case MT_BHYUDORO:							//SCS ADD
+		case MT_PPOCKETHYUDORO:						//SCS ADD
 			Obj_HyudoroCollide(special, toucher);
 			return;
 
@@ -2318,6 +2319,31 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, UINT8 damaget
 						K_AwardPlayerRings(player, 5 * target->movecount, true);
 						break;
 					}
+					
+					if (target->threshold == HYUCAPSULE_RING)							//SCS ADD - Pickpocket
+					{
+						K_AwardPlayerRings(player, target->movecount, true);
+						
+						//CONS_Printf("Item amount delivered: %d \n", target->extravalue2);
+						
+						if (!player->itemRoulette.active && (player->itemtype == KITEM_PICKPOCKETHYU || player->itemtype == KITEM_NONE))							//try to fill main item slot first
+						{
+							player->itemtype = KITEM_PICKPOCKETHYU;
+							K_AdjustPlayerItemAmount(player, (player->itemamount + target->extravalue2));
+						}
+						else if (player->backupitemtype == KITEM_PICKPOCKETHYU || player->backupitemtype == KITEM_NONE)			//then try backup slot
+						{
+							player->backupitemtype = KITEM_PICKPOCKETHYU;
+							K_AdjustPlayerBackupItemAmount(player, (player->backupitemamount + target->extravalue2));
+						}
+						else																									//If you got no room, no more pickpocket. Reset the combo.
+						{
+							K_AddMessageForPlayer(player, va("Pickpocket Combo Lost..."), true, false);
+							player->pickpockethyucombo = 0;
+						}
+							
+						break;
+					}
 
 					// special behavior for SPB capsules
 					if (target->threshold == KITEM_SPB)
@@ -2576,6 +2602,21 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, UINT8 damaget
 	if ((target->type == MT_JAWZ || target->type == MT_AFTERBURNER_JAWZ || target->type == MT_JAWZ_SHIELD) && !(target->flags2 & MF2_AMBUSH))		//SCS EDIT
 	{
 		target->z += P_MobjFlip(target)*20*target->scale;
+	}
+	
+	if (target->type == MT_PPOCKETHYUDORO)				//SCS ADD
+	{
+		if (target->target != NULL)
+		{
+			if (target->target->player->itemtype != KITEM_PICKPOCKETHYU && target->target->player->backupitemtype != KITEM_PICKPOCKETHYU)
+			{
+				K_AddMessageForPlayer(target->target->player, va("Pickpocket Combo Lost..."), true, false);
+				target->target->player->pickpockethyucombo = 0;
+				S_StartSound(target, sfx_s3k92);
+			}
+			//CONS_Printf("COMBO RESET (You missed)\n");
+		}
+		//CONS_Printf("We disappeared... /n");
 	}
 
 	// kill tracer
@@ -3297,6 +3338,9 @@ static boolean P_DamageMobjCompat(mobj_t *target, mobj_t *inflictor, mobj_t *sou
 				S_StartSound(player, sfx_kc59);
 			}
 			
+			if (inflictor && inflictor->type == (MT_PPOCKETHYUDORO || inflictor->type == MT_MINIHYUDORO))		//SCS ADD
+				return false;
+			
 			UINT8 type = (damagetype & DMG_TYPEMASK);
 			const boolean hardhit = (type == DMG_EXPLODE || type == DMG_KARMA || type == DMG_TUMBLE); // This damage type can do evil stuff like ALWAYS combo
 			INT16 ringburst = 5;
@@ -3507,9 +3551,33 @@ static boolean P_DamageMobjCompat(mobj_t *target, mobj_t *inflictor, mobj_t *sou
 				
 				if (player->itemtype == KITEM_PICKPOCKETHYU)		//SCS ADD
 				{
-					K_PickpocketHyuChainDestroy(player);
-					K_DropItems(player);
-					player->pickpockethyucombo = 0;
+					//K_PickpocketHyuChainDestroy(player);
+					//K_DropItems(player);
+					//player->pickpockethyucombo = 0;
+					
+					//mobj_t *losehyu = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height/2, player->itemamount == 1 ? MT_PPOCKETHYUDORO : MT_MINIHYUDORO);
+					mobj_t *losehyu = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height/2, MT_PPOCKETHYUDORO);
+					
+					if (losehyu != NULL)
+					{
+						//CONS_Printf("We spawned lost ghost!\n");
+						losehyu->flags |= MF_NOCLIP;
+						losehyu->momx = player->mo->momx;
+						losehyu->momy = player->mo->momy;
+						losehyu->momz = FRACUNIT;
+						losehyu->destscale = player->mo->scale*3;
+						losehyu->extravalue1 = 4;		//Set to VANISH mode
+						losehyu->movefactor = -2;
+						P_SetMobjState(losehyu, S_PPOCKET_VANISH);
+						
+						//if (losehyu->type == MT_PPOCKETHYUDORO)
+						losehyu->threshold = 30;
+						//else
+							//losehyu->extravalue2 = 250;
+
+						S_StartSound(losehyu, sfx_s3k92);
+					}
+					K_AdjustPlayerItemAmount(player, -1);
 				}
 				
 				if (player->timestonefrozen && player->timestonefrozentimer > 0)		//SCS ADD
@@ -3553,9 +3621,33 @@ static boolean P_DamageMobjCompat(mobj_t *target, mobj_t *inflictor, mobj_t *sou
 				
 				if (player->itemtype == KITEM_PICKPOCKETHYU)		//SCS ADD
 				{
-					K_PickpocketHyuChainDestroy(player);
-					K_DropItems(player);
-					player->pickpockethyucombo = 0;
+					//K_PickpocketHyuChainDestroy(player);
+					//K_DropItems(player);
+					//player->pickpockethyucombo = 0;
+					
+					//mobj_t *losehyu = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height/2, player->itemamount == 1 ? MT_PPOCKETHYUDORO : MT_MINIHYUDORO);
+					mobj_t *losehyu = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height/2, MT_PPOCKETHYUDORO);
+					
+					if (losehyu != NULL)
+					{
+						//CONS_Printf("We spawned lost ghost!\n");
+						losehyu->flags |= MF_NOCLIP;
+						losehyu->momx = player->mo->momx;
+						losehyu->momy = player->mo->momy;
+						losehyu->momz = FRACUNIT;
+						losehyu->destscale = player->mo->scale*3;
+						losehyu->extravalue1 = 4;		//Set to VANISH mode
+						losehyu->movefactor = -2;
+						P_SetMobjState(losehyu, S_PPOCKET_VANISH);
+						
+						//if (losehyu->type == MT_PPOCKETHYUDORO)
+						losehyu->threshold = 30;
+						//else
+							//losehyu->extravalue2 = 250;
+
+						S_StartSound(losehyu, sfx_s3k92);
+					}
+					K_AdjustPlayerItemAmount(player, -1);
 				}
 				
 				if (player->timestonefrozen && player->timestonefrozentimer > 0)		//SCS ADD
@@ -4337,6 +4429,9 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, INT32 da
 				
 				player->growshrinktimer -= 2*TICRATE;
 			}
+			
+			if (inflictor && inflictor->type == (MT_PPOCKETHYUDORO || inflictor->type == MT_MINIHYUDORO))		//SCS ADD
+				return false;
 
 			if (inflictor && !P_MobjWasRemoved(inflictor) && inflictor->type == MT_INSTAWHIP && type == DMG_WHUMBLE)
 				truewhumble = true;
@@ -4568,9 +4663,34 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, INT32 da
 				
 				if (player->itemtype == KITEM_PICKPOCKETHYU)		//SCS ADD
 				{
-					K_PickpocketHyuChainDestroy(player);
-					K_DropItems(player);
-					player->pickpockethyucombo = 0;
+					//K_PickpocketHyuChainDestroy(player);
+					//K_DropItems(player);
+					//player->pickpockethyucombo = 0;
+					
+					
+					//mobj_t *losehyu = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height/2, player->itemamount == 1 ? MT_PPOCKETHYUDORO : MT_MINIHYUDORO);
+					mobj_t *losehyu = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height/2, MT_PPOCKETHYUDORO);
+					
+					if (losehyu != NULL)
+					{
+						//CONS_Printf("We spawned lost ghost!\n");
+						losehyu->flags |= MF_NOCLIP;
+						losehyu->momx = player->mo->momx;
+						losehyu->momy = player->mo->momy;
+						losehyu->momz = FRACUNIT;
+						losehyu->destscale = player->mo->scale*3;
+						losehyu->extravalue1 = 4;		//Set to VANISH mode
+						losehyu->movefactor = -2;
+						P_SetMobjState(losehyu, S_PPOCKET_VANISH);
+						
+						//if (losehyu->type == MT_PPOCKETHYUDORO)
+						losehyu->threshold = 30;
+						//else
+							//losehyu->extravalue2 = 250;
+
+						S_StartSound(losehyu, sfx_s3k92);
+					}
+					K_AdjustPlayerItemAmount(player, -1);
 				}
 				
 				if (player->timestonefrozen && player->timestonefrozentimer > 0)		//SCS ADD
@@ -4615,9 +4735,33 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, INT32 da
 
 				if (player->itemtype == KITEM_PICKPOCKETHYU)		//SCS ADD
 				{
-					K_PickpocketHyuChainDestroy(player);
-					K_DropItems(player);
-					player->pickpockethyucombo = 0;
+					//K_PickpocketHyuChainDestroy(player);
+					//K_DropItems(player);
+					//player->pickpockethyucombo = 0;
+					
+					//mobj_t *losehyu = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height/2, player->itemamount == 1 ? MT_PPOCKETHYUDORO : MT_MINIHYUDORO);
+					mobj_t *losehyu = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height/2, MT_PPOCKETHYUDORO);
+					
+					if (losehyu != NULL)
+					{
+						//CONS_Printf("We spawned lost ghost!\n");
+						losehyu->flags |= MF_NOCLIP;
+						losehyu->momx = player->mo->momx;
+						losehyu->momy = player->mo->momy;
+						losehyu->momz = FRACUNIT;
+						losehyu->destscale = player->mo->scale*3;
+						losehyu->extravalue1 = 4;		//Set to VANISH mode
+						losehyu->movefactor = -2;
+						P_SetMobjState(losehyu, S_PPOCKET_VANISH);
+						
+						//if (losehyu->type == MT_PPOCKETHYUDORO)
+						losehyu->threshold = 30;
+						//else
+							//losehyu->extravalue2 = 250;
+
+						S_StartSound(losehyu, sfx_s3k92);
+					}
+					K_AdjustPlayerItemAmount(player, -1);
 				}
 				
 				if (player->timestonefrozen && player->timestonefrozentimer > 0)		//SCS ADD
@@ -5013,7 +5157,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, INT32 da
 					break;
 				case MT_JAWZ:
 				case MT_JAWZ_SHIELD:
-				case MT_AFTERBURNER_JAWZ:				//SCS ADD
+				case MT_AFTERBURNER_JAWZ:			//SCS ADD
 					targetdamaging = UFOD_JAWZ;
 					break;
 				case MT_SPB:

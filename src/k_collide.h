@@ -34,6 +34,8 @@ boolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2);		//SCS ADD
 void K_GHZBall_BalBounce(mobj_t *t1, mobj_t *t2);		//SCS ADD
 void K_GHZBall_BounceWithOther(mobj_t *t1, mobj_t *t2); //SCS ADD
 
+boolean K_PickpocketCollide(mobj_t *t1, mobj_t *t2);		//SCS ADD
+
 boolean K_MegaChopperCollide(mobj_t *t1, mobj_t *t2);		//SCS ADD
 
 boolean K_DropTargetCollide(mobj_t *t1, mobj_t *t2);

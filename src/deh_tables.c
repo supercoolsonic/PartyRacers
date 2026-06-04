@@ -3219,6 +3219,9 @@ const char *const STATE_LIST[] = { // array length left dynamic for sanity testi
 	"S_SF_SPARKLE",			//SCS ADD
 	
 	"S_SP_RIBBON",			//SCS ADD
+	
+	"S_PPOCKET_STUNNED",	//SCS ADD
+	"S_PPOCKET_VANISH",		//SCS ADD
 };
 
 // RegEx to generate this from info.h: ^\tMT_([^,]+), --> \t"MT_\1",
@@ -4149,6 +4152,7 @@ const char *const MOBJTYPE_LIST[] = {  // array length left dynamic for sanity t
 	"MT_EMERALDORBIT",	//SCS ADD
 	"MT_XEMBEAM",
 	
+	"MT_PPOCKETHYUDORO",	//SCS ADD
 	"MT_MINIHYUDORO", //SCS ADD
 	
 	"MT_YOGOSPRING", //SCS ADD
@@ -5411,6 +5415,7 @@ struct int_const_s const INT_CONST[] = {
 	{"NUMKARTRESULTS",NUMKARTRESULTS},
 	{"KDROP_STONESHOETRAP",KDROP_STONESHOETRAP},
 	{"KCAPSULE_RING", KCAPSULE_RING},
+	{"HYUCAPSULE_RING", HYUCAPSULE_RING},				//SCS ADD - Pickpocket
 	{"FIRSTPOWERUP",FIRSTPOWERUP},
 	{"POWERUP_SMONITOR",POWERUP_SMONITOR},
 	{"POWERUP_BARRIER",POWERUP_BARRIER},

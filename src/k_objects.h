@@ -31,7 +31,11 @@ boolean Obj_HyudoroShadowZ(mobj_t *actor, fixed_t *return_z, pslope_t **return_s
 /* Butler Hyudoro */			//SCS ADD
 void Obj_InitBHyudoroCenter(mobj_t *center, mobj_t *master);
 void Obj_ButlerHyudoroDeploy(mobj_t *master);
+
+/* Pickpocket Hyudoro */		//SCS ADD
 void Obj_MiniHyudoroThink(mobj_t *actor);
+void Obj_PPocketHyudoroThink(mobj_t *th);
+void Obj_PPocketHyudoroDeploy(mobj_t *master, mobj_t *hyu);
 
 /* Garden Top */
 void Obj_GardenTopDeploy(mobj_t *rider);

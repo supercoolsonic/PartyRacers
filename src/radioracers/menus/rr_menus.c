@@ -423,16 +423,7 @@ static menuitem_t OPTIONS_RadioRacersFun[] =
 	{IT_STRING | IT_CVAR, "Show 'S' ranks", "Show S ranks in the player tally and standings (purely cosmetic).",
 		NULL, {.cvar = &cv_show_s_ranks}, 0, 0},
 		
-	{IT_STRING | IT_CVAR, "Checkpoint Items Number", "How many checkpoints are needed to make item boxes appear? \x82(Offline only.)",		//SCS ADD START
-		NULL, {.cvar = &cv_toggle_checkpointitemnum}, 0, 0},
-		
-	{IT_SPACE | IT_NOTHING, NULL,  NULL,
-		NULL, {NULL}, 0, 0},
-		
-	{IT_HEADER, "CPU Randomization", NULL,
-		NULL, {NULL}, 0, 0},
-		
-	{IT_STRING | IT_CVAR, "CPU Colors and Followers", "Make it so CPUs can randomize their color and follower each race. \x82(Disabled in netgames.)",
+	{IT_STRING | IT_CVAR, "CPU Randomization", "Make it so CPUs can randomize their color and follower each race. \x82(Disabled in netgames.)",		//SCS ADD START
 		NULL, {.cvar = &cv_toggle_cpu_colorfollowerrand}, 0, 0},
 		
 	{IT_SPACE | IT_NOTHING, NULL,  NULL,
@@ -483,6 +474,38 @@ static menu_t OPTIONS_RadioRacersFunDef = {
 	NULL,
 };
 
+// MOAR Fun features
+static menuitem_t OPTIONS_RadioRacersFun2[] =														//SCS ADD
+{
+	{IT_STRING | IT_CVAR, "Checkpoint Items Number", "How many checkpoints are needed to make item boxes appear? \x82(Offline only.)",
+		NULL, {.cvar = &cv_toggle_checkpointitemnum}, 0, 0},	
+	
+	{IT_STRING | IT_CVAR, "Randomized Item Capsules", "Item (Not Ring) Capsules in races will have randomized content. (\x82(Offline only.)",
+		NULL, {.cvar = &cv_randomizeitemcapsules}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Mini-Ranking Shaking", "Toggle whether the player icons in the mini-ranking shake when they take damage.",
+		NULL, {.cvar = &cv_toggle_minirankingshaking}, 0, 0},
+		
+};
+
+static menu_t OPTIONS_RadioRacersFunDef2 = {
+	sizeof (OPTIONS_RadioRacersFun2) / sizeof (menuitem_t),
+	&OPTIONS_RadioRacersMenuDef,
+	0,
+	OPTIONS_RadioRacersFun2,
+	48, 80,
+	SKINCOLOR_SUNSLAM, 0,
+	MBF_DRAWBGWHILEPLAYING,
+	NULL,
+	2, 5,
+	M_DrawGenericOptions,
+	M_DrawOptionsCogs,
+	M_OptionsTick,
+	NULL,
+	NULL,
+	NULL,
+};
+
 // Main
 menuitem_t OPTIONS_RadioRacersMenu[] =
 {
@@ -497,6 +520,9 @@ menuitem_t OPTIONS_RadioRacersMenu[] =
 
 	{IT_STRING | IT_SUBMENU, "\\(^_^)/", "Fun stuff!",
 		NULL, {.submenu = &OPTIONS_RadioRacersFunDef}, 0, 0},
+		
+	{IT_STRING | IT_SUBMENU, "\\(0w0)/", "More fun stuff!",
+		NULL, {.submenu = &OPTIONS_RadioRacersFunDef2}, 0, 0},
 
 	{IT_SPACE | IT_NOTHING, NULL,  NULL,
 		NULL, {NULL}, 0, 0},

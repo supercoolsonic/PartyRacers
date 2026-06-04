@@ -772,7 +772,13 @@ consvar_t cv_toggle_scaling_signposts = Player("signpostscalingtoggle", "Yes").y
 //Tie a nice ribbon onto each signpost for each player that finishes with 20 rings (or 0 with a SPB chasing them)?
 consvar_t cv_toggle_ribbon_signposts = Player("signpostribbontoggle", "Yes").yes_no().radio();
 //Make the signpost of 1st place continue to sparkle after it lands if they achieved perfect EXP during the race?
-consvar_t cv_toggle_sparkling_signposts = Player("signpostsparkletoggle", "Yes").yes_no().radio();						//SCS ADD END
+consvar_t cv_toggle_sparkling_signposts = Player("signpostsparkletoggle", "Yes").yes_no().radio();
+//Random item capsules? Chaos, anyone?
+consvar_t cv_randomizeitemcapsules = Player("randomitemcapsules", "No").yes_no().radio();
+//Shake the mini-ranking like in Mini Ranking Plus when a player takes damage?
+consvar_t cv_toggle_minirankingshaking = Player("shakeminiranking", "No").yes_no().radio();						//SCS ADD END
+
+
 
 consvar_t cv_toggle_race_minimap = Player("raceminimaptoggle", "On").on_off().radio();
 consvar_t cv_toggle_trick_cool = Player("tricktexttoggle", "On").on_off().radio();

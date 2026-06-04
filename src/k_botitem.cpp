@@ -2290,7 +2290,8 @@ void K_BotItemUsage(const player_t *player, ticcmd_t *cmd, INT16 turnamt)
 						K_BotItemLandmine(player, cmd, turnamt);
 						break;
 					case KITEM_PICKPOCKETHYU:														//SCS ADD
-						K_BotItemPickpocket(player, cmd);
+						//K_BotItemPickpocket(player, cmd);
+						K_BotItemLandmine(player, cmd, turnamt);			//Temp
 						break;
 					case KITEM_BALLHOG:
 						K_BotItemBallhog(player, cmd);

@@ -227,6 +227,7 @@ typedef enum
 
 	KDROP_STONESHOETRAP,
 	KCAPSULE_RING,
+	HYUCAPSULE_RING,				//SCS ADD - Pickpocket
 
 	// Power-ups exist in the same enum as items so it's easy
 	// for paper items to be reused for them.

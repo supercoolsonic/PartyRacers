@@ -56,6 +56,7 @@
 #include "g_party.h"
 
 #include "radioracers/rr_cvar.h"		//SCS ADD
+#include "k_hud.h"						//SCS ADD
 
 actioncache_t actioncachehead;
 
@@ -1889,7 +1890,6 @@ boolean P_XYMovement(mobj_t *mo)
 								mo->threshold = 0;
 							}
 							/*FALLTHRU*/
-
 						case MT_JAWZ:
 						case MT_AFTERBURNER_JAWZ:		//SCS ADD
 							if (mo->health == 1)
@@ -1902,7 +1902,10 @@ boolean P_XYMovement(mobj_t *mo)
 								P_InstaThrust(mo, R_PointToAngle2(mo->x, mo->y, mo->x + xmove, mo->y + ymove)+ANGLE_90, 16*FRACUNIT);
 							}
 							break;
-
+							
+						case MT_PPOCKETHYUDORO:
+							P_RemoveMobj(mo);
+							break;
 						case MT_BUBBLESHIELDTRAP:
 							S_StartSound(mo, sfx_s3k44); // Bubble bounce
 							break;
@@ -4461,7 +4464,7 @@ static void P_RefreshItemCapsuleParts(mobj_t *mobj)
 	UINT32 newRenderFlags = 0;
 	boolean colorized;
 
-	if (itemType < 1 || (itemType >= NUMKARTITEMS && itemType != KCAPSULE_RING))
+	if (itemType < 1 || (itemType >= NUMKARTITEMS && itemType != KCAPSULE_RING && itemType != HYUCAPSULE_RING))		//SCS EDIT
 		itemType = KITEM_SAD;
 
 	// update invincibility properties
@@ -4480,7 +4483,7 @@ static void P_RefreshItemCapsuleParts(mobj_t *mobj)
 	// update cap colors
 	if (mobj->extravalue2)
 		color = mobj->extravalue2;
-	else if (itemType == KCAPSULE_RING)
+	else if (itemType == KCAPSULE_RING || itemType == HYUCAPSULE_RING)			//SCS EDIT
 	{
 		color = SKINCOLOR_GOLD;
 		newRenderFlags |= RF_SEMIBRIGHT;
@@ -4529,6 +4532,9 @@ static void P_RefreshItemCapsuleParts(mobj_t *mobj)
 					count = mobj->movecount * 20; // give Super Rings
 				else
 					count = mobj->movecount * 5;
+				break;
+			case HYUCAPSULE_RING:									//SCS ADD
+				count = mobj->movecount;
 				break;
 			case KITEM_SAD: // never display the number
 			case KITEM_SPB:
@@ -5366,6 +5372,7 @@ boolean P_IsKartItem(INT32 type)
 		case MT_PRESSUREMINE:				//SCS ADD
 		case MT_BHYUDORO:					//SCS ADD
 		case MT_INKBUBBLE:					//SCS ADD
+		case MT_PPOCKETHYUDORO:				//SCS ADD
 			return true;
 
 		default:
@@ -5399,6 +5406,7 @@ boolean P_IsKartFieldItem(INT32 type)
 		case MT_AFTERBURNER_JAWZ:			//SCS ADD
 		case MT_PRESSUREMINE:				//SCS ADD
 		case MT_INKBUBBLE:					//SCS ADD
+		case MT_PPOCKETHYUDORO:				//SCS ADD
 			return true;
 
 		default:
@@ -5443,6 +5451,7 @@ boolean P_IsRelinkItem(INT32 type)
 		case MT_BHYUDORO_CENTER:					//SCS ADD
 		case MT_INKBUBBLE:							//SCS ADD
 		case MT_MINIHYUDORO:						//SCS ADD
+		case MT_PPOCKETHYUDORO:						//SCS ADD
 			return true;
 
 		default:
@@ -6969,11 +6978,15 @@ static boolean P_MobjDeadThink(mobj_t *mobj)
 	case MT_PLAYER:
 		/// \todo Have the player's dead body completely finish its animation even if they've already respawned.
 		
-		if (mobj->player && mobj->player->itemtype == KITEM_PICKPOCKETHYU)		//SCS ADD
+		if (mobj->player->itemtype == KITEM_PICKPOCKETHYU)		//SCS ADD
 		{
-			K_PickpocketHyuChainDestroy(mobj->player);
-			K_DropItems(mobj->player);
-			mobj->player->pickpockethyucombo = 0;
+			//K_PickpocketHyuChainDestroy(player);
+			//if (mobj->target->player->itemtype != KITEM_PICKPOCKETHYU && mobj->target->player->backupitemtype != KITEM_PICKPOCKETHYU)
+			//{
+				K_DropItems(mobj->player);
+				mobj->player->pickpockethyucombo = 0;
+				K_AddMessageForPlayer(mobj->player, va("Pickpocket Combo Lost..."), true, false);
+			//}
 		}
 		if (!mobj->fuse)
 		{ // Go away.
@@ -7574,6 +7587,11 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 		Obj_WreckingBallThink(mobj);
 		P_MobjCheckWater(mobj);
 		break;		
+	}
+	case MT_PPOCKETHYUDORO:			//SCS ADD
+	{
+		Obj_PPocketHyudoroThink(mobj);
+		break;
 	}
 	case MT_MINIHYUDORO:			//SCS ADD
 	{
@@ -11192,6 +11210,9 @@ void P_MobjThinker(mobj_t *mobj)
 {
 	I_Assert(mobj != NULL);
 	I_Assert(!P_MobjWasRemoved(mobj));
+	
+	if (mobj == NULL) return;						//SCS
+	
 	// Remove dead target/tracer.
 	if (mobj->target && P_MobjWasRemoved(mobj->target))
 		P_SetTarget(&mobj->target, NULL);
@@ -12088,7 +12109,7 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 		case MT_ITEMCAPSULE:
 		{
 			// set default item & count
-#if 0 // set to 1 to test capsules with random items, e.g. with objectplace
+#if 0 // set to 1 to test capsules with random items, e.g. with objectplace				//SCS NOTE - Item capsule randomization code stems from here, but isn't used
 			if (P_RandomChance(PR_ITEM_SPAWNER, FRACUNIT/3))
 				mobj->threshold = KCAPSULE_RING;
 			else if (P_RandomChance(PR_ITEM_SPAWNER, FRACUNIT/3))
@@ -12628,6 +12649,35 @@ void P_RemoveMobj(mobj_t *mobj)
 			P_RemoveMobj(mobj);
 			break;
 		}*/
+		case MT_PPOCKETHYUDORO:
+		{
+			if (mobj->extravalue1 == 1)		//DO NOT REMOVE while it's returning
+				return;
+			
+			if (mobj->tracer != NULL)
+				P_RemoveMobj(mobj->tracer);
+
+			if (mobj->target != NULL && mobj->target->player->itemtype != KITEM_PICKPOCKETHYU && mobj->target->player->backupitemtype != KITEM_PICKPOCKETHYU)
+			{
+				//CONS_Printf("COMBO RESET (You hit a wall)!\n");
+				mobj->target->player->pickpockethyucombo = 0;
+				K_AddMessageForPlayer(mobj->target->player, va("Pickpocket Combo Lost..."), true, false);
+			}
+			
+			//CONS_Printf("Hyudoro died!\n");
+			break;
+		}
+		case MT_MINIHYUDORO:
+		{
+			if (mobj->target != NULL)		  //If our target is not NULL at this point, we're not getting destroyed by the chain destroy function. This means the leader got hit and is going to retreat, we got hit directly, or we hit a wall.
+				mobj->target->extravalue2 = max(mobj->target->extravalue2--, 0);  //For the retreat scenario, we knock off one from the item total as a penalty.
+			
+			if (mobj->tracer != NULL)
+				P_RemoveMobj(mobj->tracer);
+			
+			//CONS_Printf("Mini-Hyudoro died!\n");
+			break;
+		}
 		default:
 		{
 			break;
@@ -14707,6 +14757,8 @@ static boolean P_SetupSpawnedMapThing(mapthing_t *mthing, mobj_t *mobj)
 	}
 	case MT_ITEMCAPSULE:
 	{
+		SINT8 randitemamtmax = 1;
+		
 		// we have to adjust for reverse gravity early so that the below grounded checks work
 		if (mthing->options & MTF_OBJECTFLIP)
 		{
@@ -14731,6 +14783,64 @@ static boolean P_SetupSpawnedMapThing(mapthing_t *mthing, mobj_t *mobj)
 
 		// Parameter = extra items (x5 for rings)
 		mobj->movecount += mthing->thing_args[1];
+		
+		if (!netgame && cv_randomizeitemcapsules.value == 1 && mobj->threshold != KCAPSULE_RING && mobj->threshold != HYUCAPSULE_RING)
+		{
+			mobj->threshold = P_RandomRange(PR_ITEM_SPAWNER, 1, NUMKARTITEMS - 1);													//SCS TESTING RANDOM ITEM CAPSULES IDEA
+	
+			switch (mobj->threshold)
+			{
+				case KITEM_SNEAKER:
+				case KITEM_EGGMAN:
+				case KITEM_MINE:
+				case KITEM_LANDMINE:
+				case KITEM_HYUDORO:
+				case KITEM_KITCHENSINK:
+				case KITEM_GACHABOM:
+				case KITEM_MEGACHOPPER:
+					randitemamtmax = 3;
+				break;
+				case KITEM_ROCKETSNEAKER:
+				case KITEM_INVINCIBILITY:
+				case KITEM_GROW:
+				case KITEM_POGOSPRING:
+				case KITEM_STONESHOE:
+				case KITEM_TOXOMISTER:
+				case KITEM_WRECKINGBALL:
+				case KITEM_YOGOSPRING:
+				case KITEM_RINGGUN:
+				case KITEM_BUTLERHYU:
+					randitemamtmax = 2;
+				break;
+				case KITEM_ORBINAUT:
+				case KITEM_JAWZ:
+				case KITEM_DROPTARGET:
+				case KITEM_PRESSUREMINE:
+				case KITEM_OCTUS:
+					randitemamtmax = 4;
+				break;
+				case KITEM_SPB:
+				case KITEM_SHRINK:
+				case KITEM_LIGHTNINGSHIELD:
+				case KITEM_BUBBLESHIELD:
+				case KITEM_FLAMESHIELD:
+				case KITEM_GARDENTOP:
+				case KITEM_SUPERJACKPOT:
+				case KITEM_MASTEREMERALD:
+				case KITEM_TIMESTONE:
+				case KITEM_BOGOSPRING:
+				case KITEM_NORMALSHIELD:
+				case KITEM_ARMASHIELD:
+				case KITEM_CHAMBLASTER:
+					randitemamtmax = 1;
+				break;
+				default:
+					randitemamtmax = 10;
+				break;
+			}
+			
+			mobj->movecount = P_RandomChance(PR_ITEM_SPAWNER, FRACUNIT/3) ? 1 : P_RandomKey(PR_ITEM_SPAWNER, randitemamtmax) + 1;
+		}
 
 		// Ambush = double size (grounded) / half size (aerial)
 		if (!(mthing->thing_args[2] & TMICF_INVERTSIZE) == !P_IsObjectOnGround(mobj))
