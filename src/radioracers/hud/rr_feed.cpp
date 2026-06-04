@@ -682,7 +682,19 @@ static ItemConfigForFeedUpdate getItemConfigForFeedAttackUpdate(playerattacks_t 
                 {
                     .animated = true,
                     .animated_frames = 3,
-                    .tics_per_frame = 1
+                    .tics_per_frame = 2
+                },
+                .y_offset = 0
+            };
+		case ATTACK_PICKPOCKETHYUCONTACT:				//SCS ADD
+            return {
+                .patch = "RRISPKH",
+                .width = 27,
+                .height = 26,
+                {
+                    .animated = true,
+                    .animated_frames = 3,
+                    .tics_per_frame = 2
                 },
                 .y_offset = 0
             };

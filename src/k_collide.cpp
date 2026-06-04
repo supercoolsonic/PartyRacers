@@ -1792,10 +1792,10 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 			
 			pickpocketamps = K_PvPAmpReward(10, t1->player, t2->player);
 			K_SpawnAmps(t1->player, pickpocketamps, t1);
-			RR_PushPlayerInteractionToFeed(t1, t2, ATTACK_PICKPOCKETHYU, pickpocketamps);
+			RR_PushPlayerInteractionToFeed(t1, t2, ATTACK_PICKPOCKETHYUCONTACT, pickpocketamps);
 			pickpocketamps = K_PvPAmpReward(10, t2->player, t1->player);
 			K_SpawnAmps(t2->player, pickpocketamps, t2);
-			RR_PushPlayerInteractionToFeed(t2, t1, ATTACK_PICKPOCKETHYU, pickpocketamps);
+			RR_PushPlayerInteractionToFeed(t2, t1, ATTACK_PICKPOCKETHYUCONTACT, pickpocketamps);
 		}
 		else if (t1->player->itemtype == KITEM_PICKPOCKETHYU)
 		{
@@ -1864,7 +1864,7 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 			pickpocketamps = K_PvPAmpReward(10, t1->player, t2->player);
 			K_SpawnAmps(t1->player, pickpocketamps, t1);
 			
-			RR_PushPlayerInteractionToFeed(t1, t2, ATTACK_PICKPOCKETHYU, pickpocketamps);				//SCS ADD
+			RR_PushPlayerInteractionToFeed(t1, t2, ATTACK_PICKPOCKETHYUCONTACT, pickpocketamps);				//SCS ADD
 		}
 		else
 		{
@@ -1933,7 +1933,7 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 			pickpocketamps = K_PvPAmpReward(10, t2->player, t1->player);
 			K_SpawnAmps(t2->player, pickpocketamps, t2);
 			
-			RR_PushPlayerInteractionToFeed(t2, t1, ATTACK_PICKPOCKETHYU, pickpocketamps);				//SCS ADD
+			RR_PushPlayerInteractionToFeed(t2, t1, ATTACK_PICKPOCKETHYUCONTACT, pickpocketamps);				//SCS ADD
 		}
 		
 		K_AddHitLag(t1, TICRATE/7, false);

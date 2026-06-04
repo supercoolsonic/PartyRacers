@@ -12649,15 +12649,18 @@ void P_RemoveMobj(mobj_t *mobj)
 			P_RemoveMobj(mobj);
 			break;
 		}*/
-		case MT_PPOCKETHYUDORO:
+		case MT_PPOCKETHYUDORO:				//SCS ADD
 		{
+			if (mobj == NULL)
+				return;
+			
 			if (mobj->extravalue1 == 1)		//DO NOT REMOVE while it's returning
 				return;
 			
 			if (mobj->tracer != NULL)
 				P_RemoveMobj(mobj->tracer);
 
-			if (mobj->target != NULL && mobj->target->player->itemtype != KITEM_PICKPOCKETHYU && mobj->target->player->backupitemtype != KITEM_PICKPOCKETHYU)
+			if (mobj->target != NULL && mobj->target->player != NULL && mobj->target->player->itemtype != KITEM_PICKPOCKETHYU && mobj->target->player->backupitemtype != KITEM_PICKPOCKETHYU)
 			{
 				//CONS_Printf("COMBO RESET (You hit a wall)!\n");
 				mobj->target->player->pickpockethyucombo = 0;
@@ -12667,8 +12670,11 @@ void P_RemoveMobj(mobj_t *mobj)
 			//CONS_Printf("Hyudoro died!\n");
 			break;
 		}
-		case MT_MINIHYUDORO:
+		case MT_MINIHYUDORO:			//SCS ADD
 		{
+			if (mobj == NULL)
+				return;
+			
 			if (mobj->target != NULL)		  //If our target is not NULL at this point, we're not getting destroyed by the chain destroy function. This means the leader got hit and is going to retreat, we got hit directly, or we hit a wall.
 				mobj->target->extravalue2 = max(mobj->target->extravalue2--, 0);  //For the retreat scenario, we knock off one from the item total as a penalty.
 			

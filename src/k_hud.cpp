@@ -3751,7 +3751,7 @@ void PositionFacesInfo::draw_1p()
 			xoff = yoff = 0;
 		}
 		
-		if (cv_toggle_minirankingshaking.value == 1)		//SCS ADD
+		if (cv_toggle_minirankingshaking.value == 1 && players[rankplayer[i]].mo->health > 0)		//SCS ADD
 		{
 			tumbleoffset = 0;
 			
@@ -3811,7 +3811,7 @@ void PositionFacesInfo::draw_1p()
 		}
 
 		if (i == strank)
-			V_DrawScaledPatch(FACE_X, Y, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, kp_facehighlight[(leveltime / 4) % 8]);
+			V_DrawScaledPatch(FACE_X + (shakeoffset/8), Y, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, kp_facehighlight[(leveltime / 4) % 8]);	//SCS EDIT
 
 		if ((gametyperules & GTR_BUMPERS) && (players[rankplayer[i]].pflags & PF_ELIMINATED))
 			V_DrawScaledPatch(FACE_X-4, Y-3, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, kp_ranknobumpers);

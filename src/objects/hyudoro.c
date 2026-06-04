@@ -578,6 +578,7 @@ hyudoro_set_held_item_from_player
 				itemhyu->target = hyu->target;
 				set_item(itemhyu, player->itemtype, player->itemamount);	//new hyu grabs the item
 				hyudoro_mode(itemhyu) = HYU_RETURN;
+				P_SetMobjState(itemhyu, S_HYUDORO_RETURNING);
 			}
 			
 			hyu->target->player->pickpockethyucombo = min(hyu->target->player->pickpockethyucombo++, 10);
@@ -731,12 +732,18 @@ hyudoro_patrol_hit_player
 	// This will flicker the shadow
 	hyudoro_timer(hyu) = 18;
 
-	if (hyu->type == MT_BHYUDORO)
+	if (hyu->type == MT_BHYUDORO)		//SCS ADD
 	{
 		P_SetMobjState(hyu, S_BHYUDORO_RETURNING);
 		// Radio
-		RR_PushPlayerInteractionToFeed(master, toucher, ATTACK_HYUDOROBUTLER, hyuAmps);		//SCS ADD
+		RR_PushPlayerInteractionToFeed(master, toucher, ATTACK_HYUDOROBUTLER, hyuAmps);
 	}
+	else if (hyu->type == MT_PPOCKETHYUDORO)	//SCS ADD
+	{
+		P_SetMobjState(hyu, S_HYUDORO_RETURNING);
+		// Radio
+		RR_PushPlayerInteractionToFeed(master, toucher, ATTACK_PICKPOCKETHYUCONTACT, hyuAmps);
+	}	
 	else
 	{
 		P_SetMobjState(hyu, S_HYUDORO_RETURNING);
@@ -1176,6 +1183,7 @@ Obj_PPocketHyudoroThink(mobj_t *hyu)
 			if (!project_hyudoro_orbit(hyu))
 			{
 				hyu->tracer = NULL;	//Used to mark a delivering hyudoro rather than one that hit a wall (The minis should already be gone by this point)
+				
 				P_RemoveMobj(hyu);
 				return;
 			}
