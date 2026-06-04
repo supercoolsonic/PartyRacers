@@ -1805,8 +1805,8 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 							
 				//CONS_Printf(" Pickpocket combo at: %u\n", t1->player->pickpockethyucombo);
 				
-				if (t1->player->pickpockethyucombo > 10)
-					t1->player->pickpockethyucombo = 10;	//We cap out at 10.
+				if (t1->player->pickpockethyucombo > 5)
+					t1->player->pickpockethyucombo = 5;	//We cap out at 5.
 				/*else																//OLD version
 				{
 					mobj_t *newhyudoro = P_SpawnMobj(t1->player->mo->x, t1->player->mo->y, t1->player->mo->z, MT_MINIHYUDORO);	//only spawn a new mini hyu if we aren't already capped
@@ -1874,8 +1874,8 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 							
 				//CONS_Printf(" Pickpocket combo at: %u\n", t1->player->pickpockethyucombo);
 				
-				if (t2->player->pickpockethyucombo > 10)											
-					t2->player->pickpockethyucombo = 10;	//We cap out at 10.
+				if (t2->player->pickpockethyucombo > 5)											
+					t2->player->pickpockethyucombo = 5;	//We cap out at 5.
 				/*else																//OLD version
 				{
 					mobj_t *newhyudoro = P_SpawnMobj(t2->player->mo->x, t2->player->mo->y, t2->player->mo->z, MT_MINIHYUDORO);	//only spawn a new mini hyu if we aren't already capped

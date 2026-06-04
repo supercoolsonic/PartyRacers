@@ -581,7 +581,7 @@ hyudoro_set_held_item_from_player
 				P_SetMobjState(itemhyu, S_HYUDORO_RETURNING);
 			}
 			
-			hyu->target->player->pickpockethyucombo = min(hyu->target->player->pickpockethyucombo++, 10);
+			hyu->target->player->pickpockethyucombo = min(hyu->target->player->pickpockethyucombo++, 5);
 			
 			if (player->superring > 0)										//pickpocket grabs the moolah
 				set_item(hyu, -1, ((player->rings + player->superring)*hyu->target->player->pickpockethyucombo));			
@@ -595,7 +595,7 @@ hyudoro_set_held_item_from_player
 	}
 	else if (player->rings > 0 || player->superring > 0)		//SCS ADD - For pickpocket, stealing rings only
 	{
-		hyu->target->player->pickpockethyucombo = min(hyu->target->player->pickpockethyucombo++, 10);
+		hyu->target->player->pickpockethyucombo = min(hyu->target->player->pickpockethyucombo++, 5);
 		set_item(hyu, -1, ((player->rings + player->superring)*hyu->target->player->pickpockethyucombo));
 		player->rings = 0;
 		player->superring = 0;
