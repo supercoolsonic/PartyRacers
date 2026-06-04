@@ -3578,6 +3578,12 @@ static boolean P_DamageMobjCompat(mobj_t *target, mobj_t *inflictor, mobj_t *sou
 						S_StartSound(losehyu, sfx_s3k92);
 					}
 					K_AdjustPlayerItemAmount(player, -1);
+					
+					if (player->itemamount <= 0)
+					{
+						player->pickpockethyucombo = 0;
+						K_AddMessageForPlayer(player, va("Pickpocket Combo Lost..."), true, false);
+					}
 				}
 				
 				if (player->timestonefrozen && player->timestonefrozentimer > 0)		//SCS ADD
@@ -3648,6 +3654,12 @@ static boolean P_DamageMobjCompat(mobj_t *target, mobj_t *inflictor, mobj_t *sou
 						S_StartSound(losehyu, sfx_s3k92);
 					}
 					K_AdjustPlayerItemAmount(player, -1);
+					
+					if (player->itemamount <= 0)
+					{
+						player->pickpockethyucombo = 0;
+						K_AddMessageForPlayer(player, va("Pickpocket Combo Lost..."), true, false);
+					}
 				}
 				
 				if (player->timestonefrozen && player->timestonefrozentimer > 0)		//SCS ADD
@@ -4691,6 +4703,12 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, INT32 da
 						S_StartSound(losehyu, sfx_s3k92);
 					}
 					K_AdjustPlayerItemAmount(player, -1);
+					
+					if (player->itemamount <= 0)
+					{
+						player->pickpockethyucombo = 0;
+						K_AddMessageForPlayer(player, va("Pickpocket Combo Lost..."), true, false);
+					}
 				}
 				
 				if (player->timestonefrozen && player->timestonefrozentimer > 0)		//SCS ADD
@@ -4762,6 +4780,12 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, INT32 da
 						S_StartSound(losehyu, sfx_s3k92);
 					}
 					K_AdjustPlayerItemAmount(player, -1);
+					
+					if (player->itemamount <= 0)
+					{
+						player->pickpockethyucombo = 0;
+						K_AddMessageForPlayer(player, va("Pickpocket Combo Lost..."), true, false);
+					}
 				}
 				
 				if (player->timestonefrozen && player->timestonefrozentimer > 0)		//SCS ADD
