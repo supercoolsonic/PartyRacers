@@ -742,7 +742,7 @@ hyudoro_patrol_hit_player
 	{
 		P_SetMobjState(hyu, S_HYUDORO_RETURNING);
 		// Radio
-		RR_PushPlayerInteractionToFeed(master, toucher, ATTACK_PICKPOCKETHYUCONTACT, hyuAmps);
+		RR_PushPlayerInteractionToFeed(master, toucher, ATTACK_PICKPOCKETHYU, hyuAmps);
 	}	
 	else
 	{
