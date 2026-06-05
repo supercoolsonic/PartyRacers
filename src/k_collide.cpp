@@ -1851,6 +1851,7 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 				K_AwardPlayerRings(t1->player, ((10*t1->player->pickpockethyucombo)*t1->player->itemamount), true);
 				t1->player->itemtype = t2->player->itemtype;
 				t1->player->itemamount = t2->player->itemamount;
+				t1->player->pickpockethyucombo = 0;
 				K_StripItemsExceptBackup(t2->player);
 				//K_PickpocketHyuChainDestroy(t1->player);
 				t2->player->hyudorotimer = hyudorotime;
@@ -1918,6 +1919,7 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 				K_AwardPlayerRings(t2->player, ((10*t2->player->pickpockethyucombo)*t2->player->itemamount), true);
 				t2->player->itemtype = t1->player->itemtype;
 				t2->player->itemamount = t1->player->itemamount;
+				t2->player->pickpockethyucombo = 0;
 				K_StripItemsExceptBackup(t1->player);
 				//K_PickpocketHyuChainDestroy(t2->player);
 				t1->player->hyudorotimer = hyudorotime;
