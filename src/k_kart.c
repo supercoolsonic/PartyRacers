@@ -4864,7 +4864,7 @@ void K_AwardPlayerRings(player_t *player, UINT16 rings, boolean overload)
 	if (superring > player->superring)
 	{
 		player->superring = min(superring, 9999);				//SCS EDIT - I'm gonna cap you here, just because it's probably never gonna be possible to reach this high, and if it IS possible, wtf. Even I'D say that's overpowered
-		player->superringpeak = superring;
+		player->superringpeak = min(superring, 9999);			//SCS EDIT
 		player->superringalert = TICRATE/2;
 	}
 }
