@@ -2100,6 +2100,9 @@ static void P_3dMovement(player_t *player)
 	// Smiley Face
 	if (onground)
 	{
+		if (player != NULL && player->toxomisterCloud != NULL && player->toxomisterCloud->hnext != player->mo)	//SCS ADD - Fixing issue where Toxomister cloud effect still lingers on you even after passing it off to someone else
+			player->toxomisterCloud = NULL;
+		
 		movepushforward = K_3dKartMovement(player);
 
 		if (player->mo->movefactor != FRACUNIT) // Friction-scaled acceleration...

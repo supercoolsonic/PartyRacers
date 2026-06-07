@@ -17404,7 +17404,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
 							{
 								//K_AwardPlayerRings(player, (20*(player->position * 5)/2), true);		6*player->ringboxaward + 10
-								K_AwardPlayerRings(player,  K_CalcRingBoxAward(player, (3/2), true), true);
+								K_AwardPlayerRings(player,  K_CalcRingBoxAward(player, 2, true), true);
 								//S_StartSound(player, sfx_mycwin);
 								S_StartSound(player->mo, SUPERJACKPOT_SOUND);
 								K_AdjustPlayerItemAmount(player, -1);

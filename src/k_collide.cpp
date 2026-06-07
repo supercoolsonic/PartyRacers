@@ -1836,11 +1836,11 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 				
 				if (t2->player->superring > 0)
 				{
-					K_AwardPlayerRings(t1->player, (t2->player->rings + t2->player->superring)*(t1->player->pickpockethyucombo*t1->player->itemamount), true);
+					K_AwardPlayerRings(t1->player, ((t2->player->rings + t2->player->superring)*(t1->player->pickpockethyucombo*t1->player->itemamount)) / (t2->player->bot ? 2 : 1), true);
 					t2->player->superring = 0;					
 				}
 				else
-					K_AwardPlayerRings(t1->player, (t2->player->rings)*(t1->player->pickpockethyucombo*t1->player->itemamount), true);
+					K_AwardPlayerRings(t1->player, ((t2->player->rings)*(t1->player->pickpockethyucombo*t1->player->itemamount)) / (t2->player->bot ? 2 : 1), true);
 
 				t2->player->rings = 0;
 				S_StartSound(t2->player->mo, sfx_antiri);
@@ -1848,7 +1848,7 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 			
 			if (t2->player->itemtype != KITEM_NONE)
 			{
-				K_AwardPlayerRings(t1->player, ((10*t1->player->pickpockethyucombo)*t1->player->itemamount), true);
+				K_AwardPlayerRings(t1->player,  (((t2->player->bot ? 3 : 5) * t1->player->pickpockethyucombo)*t1->player->itemamount), true);
 				t1->player->itemtype = t2->player->itemtype;
 				t1->player->itemamount = t2->player->itemamount;
 				t1->player->pickpockethyucombo = 0;
@@ -1904,11 +1904,11 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 				
 				if (t1->player->superring > 0)
 				{
-					K_AwardPlayerRings(t2->player, (t1->player->rings + t1->player->superring)*(t2->player->pickpockethyucombo*t2->player->itemamount), true);
+					K_AwardPlayerRings(t2->player, ((t1->player->rings + t1->player->superring)*(t2->player->pickpockethyucombo*t2->player->itemamount)) / (t1->player->bot ? 2 : 1), true);
 					t1->player->superring = 0;					
 				}
 				else
-					K_AwardPlayerRings(t2->player, (t1->player->rings)*(t2->player->pickpockethyucombo*t2->player->itemamount), true);
+					K_AwardPlayerRings(t2->player, ((t1->player->rings)*(t2->player->pickpockethyucombo*t2->player->itemamount)) / (t1->player->bot ? 2 : 1), true);
 				
 				t1->player->rings = 0;
 				S_StartSound(t1->player->mo, sfx_antiri);
@@ -1916,7 +1916,7 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 			
 			if (t1->player->itemtype != KITEM_NONE)
 			{
-				K_AwardPlayerRings(t2->player, ((10*t2->player->pickpockethyucombo)*t2->player->itemamount), true);
+				K_AwardPlayerRings(t2->player, (((t1->player->bot ? 3 : 5) *t2->player->pickpockethyucombo)*t2->player->itemamount), true);
 				t2->player->itemtype = t1->player->itemtype;
 				t2->player->itemamount = t1->player->itemamount;
 				t2->player->pickpockethyucombo = 0;

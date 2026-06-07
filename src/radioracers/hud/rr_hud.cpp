@@ -27,6 +27,7 @@
 #include "../../k_battle.h" // K_NumEmeralds
 #include "../../k_color.h" // K_RainbowColor
 #include "../../z_zone.h" // Z_Realloc
+#include "../../r_fps.h" // Z_Realloc
 #include "../../i_time.h"
 
 #include "../../v_draw.hpp" // srb2:Draw
@@ -341,7 +342,8 @@ void RR_DoChatStuff(chat_box_parameters_t parameters) {
 struct PlayerFinishTicker {
     std::string position;
     boolean is_local_player;
-    int x;
+    fixed_t x;
+    fixed_t old_x;
 };
 
 static std::deque<PlayerFinishTicker> playerFinishTickerQueue;
@@ -377,7 +379,8 @@ void RR_addPlayerToFinshTicker(player_t *player)
         {
             M_GetText(va("%s \x86%s", position_string(player->position).c_str(), player_names[player-players])),
             P_IsMachineLocalPlayer(player),
-            offscreen_right_offset() // Start just off-screen to the right
+            (offscreen_right_offset()) * FRACUNIT, // Start just off-screen to the right,
+            (offscreen_right_offset()) * FRACUNIT// Interpolation (thanks to NepDisk for bringing this up)
         }
     );
 }
@@ -387,7 +390,8 @@ void RR_ridersFinishTick(void)
     if (playerFinishTickerQueue.empty() || !cv_show_riders_finish_ticker.value) return;
     
     // Move over to the left
-    playerFinishTickerQueue.front().x -= 2;
+    playerFinishTickerQueue.front().old_x = playerFinishTickerQueue.front().x;
+    playerFinishTickerQueue.front().x -= (2*FRACUNIT);
 
     auto string_width = [](std::string string) -> INT32 
     {
@@ -399,10 +403,14 @@ void RR_ridersFinishTick(void)
      * the middle of the screen, start drawing the next player who finished.
      */
     for (size_t i = 1; i < playerFinishTickerQueue.size(); ++i) {
-        const INT32 padding = string_width(playerFinishTickerQueue[i-1].position) + 25;
+        const fixed_t padding = (
+            string_width(playerFinishTickerQueue[i-1].position) + 25
+        ) * FRACUNIT;
 
-        if (playerFinishTickerQueue[i].x - playerFinishTickerQueue[i-1].x >= padding)
-            playerFinishTickerQueue[i].x -= 2;
+        if (playerFinishTickerQueue[i].x - playerFinishTickerQueue[i-1].x >= padding) {
+            playerFinishTickerQueue[i].old_x = playerFinishTickerQueue[i].x;
+            playerFinishTickerQueue[i].x -= (2*FRACUNIT);
+        }
     }
 
     const INT32 OFFSCREEN_X = 0 - offscreen_offset() - string_width(
@@ -410,7 +418,7 @@ void RR_ridersFinishTick(void)
     );
 
     // Once the player at the front of the queue is offscreen to the left, pop them
-    if (playerFinishTickerQueue.front().x <= OFFSCREEN_X) {
+    if (playerFinishTickerQueue.front().x <= OFFSCREEN_X*FRACUNIT) {
         playerFinishTickerQueue.pop_front();
 
         if (drawLapFlagAtStart)
@@ -438,19 +446,32 @@ void RR_drawRidersFinishTicker(void)
         {
             flags = V_YELLOWMAP|V_10TRANS;
         }
+		
+		fixed_t x = R_InterpolateFixed(player.old_x, player.x);
 
         if (i == 0 && drawLapFlagAtStart)
         {
-            V_DrawMappedPatch(
-                player.x - 15,
-                FINISH_TICKER_Y,
+            V_DrawFixedPatch(
+                x - (15 * FRACUNIT),
+                FINISH_TICKER_Y * FRACUNIT,
+                FRACUNIT,
                 0,
                 lapFlag,
                 NULL
             );
         }
         
-        V_DrawThinString(player.x, FINISH_TICKER_Y, flags, player.position.c_str());
+        V_DrawStringScaled(
+            x,
+            FINISH_TICKER_Y * FRACUNIT,
+            FRACUNIT,
+            FRACUNIT,
+            FRACUNIT,
+            flags,
+            NULL,
+            TINY_FONT,
+            player.position.c_str()
+        );
     }
 }
 

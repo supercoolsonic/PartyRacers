@@ -2329,12 +2329,12 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, UINT8 damaget
 						if (!player->itemRoulette.active && (player->itemtype == KITEM_PICKPOCKETHYU || player->itemtype == KITEM_NONE))							//try to fill main item slot first
 						{
 							player->itemtype = KITEM_PICKPOCKETHYU;
-							K_AdjustPlayerItemAmount(player, (player->itemamount + target->extravalue2));
+							K_AdjustPlayerItemAmount(player, target->extravalue2);
 						}
 						else if (player->backupitemtype == KITEM_PICKPOCKETHYU || player->backupitemtype == KITEM_NONE)			//then try backup slot
 						{
 							player->backupitemtype = KITEM_PICKPOCKETHYU;
-							K_AdjustPlayerBackupItemAmount(player, (player->backupitemamount + target->extravalue2));
+							K_AdjustPlayerBackupItemAmount(player, target->extravalue2);
 						}
 						else																									//If you got no room, no more pickpocket. Reset the combo.
 						{
