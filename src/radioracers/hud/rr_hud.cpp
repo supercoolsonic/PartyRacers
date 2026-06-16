@@ -356,7 +356,7 @@ static boolean drawLapFlagAtStart = false;
 
 void RR_addPlayerToFinshTicker(player_t *player)
 {    
-	if (dedicated) return;																//SCS ADD
+	//if (dedicated) return;																//SCS ADD
 
     // https://www.mathsisfun.com/numbers/cardinal-ordinal-chart.html
     auto position_string = [](UINT8 position) -> std::string {

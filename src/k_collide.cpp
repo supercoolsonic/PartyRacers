@@ -761,7 +761,7 @@ boolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 			S_StartSound(t2, sfx_mbv92);
 			K_SetHitLagForObjects(t2, t1, t1->target, 3, false);
 		}
-		else if (t2->player->invincibilitytimer || t2->player->overshield || (t2->player->growshrinktimer > 0 && K_IsBigger(t1, t2)))
+		else if (t2->player->invincibilitytimer || t2->player->overshield || (t2->player->growshrinktimer > 0 && K_IsBigger(t2, t1)))
 		{
 			P_DamageMobj(t1, t2, t2, 50, DMG_NORMAL);
 		}
@@ -772,10 +772,10 @@ boolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 			{
 				if (R_PointToDist2(0, 0, t1->momx, t1->momy) > FRACUNIT*2)
 				{
-					if (t2->player->squishedtimer || t2->player->growshrinktimer > 0 || K_IsBigger(t2, t1))		//squish smaller/tiny players
+					if (!t2->player->squishedtimer && ((t2->player->growshrinktimer < 0 && K_IsBigger(t1, t2))))// || (K_IsBigger(t1, t2) && t1->scale >= 2)))		//squish smaller/tiny players
 					{
 						t2->player->squishedtimer = 80;
-						RR_PushPlayerInteractionToFeed(t1, t2, ATTACK_PANCAKE, 0);				//SCS ADD
+						RR_PushPlayerInteractionToFeed(t1->target, t2, ATTACK_PANCAKE, 0);				//SCS ADD
 					}
 					
 					if (P_DamageMobj(t2, t1, t1->target, 1, DMG_TUMBLE))

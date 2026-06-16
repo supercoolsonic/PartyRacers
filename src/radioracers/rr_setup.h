@@ -11,6 +11,10 @@
 #ifndef __RR_SETUP__
 #define __RR_SETUP__
 
+#include "../doomtype.h"
+#include "../doomdef.h"
+#include "../../s_sound.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -22,6 +26,7 @@ extern UINT8 radio_mapmusrng;
 extern boolean found_radioracers;
 extern boolean found_radioracers_plus;
 extern boolean radioracers_usemuteicons;
+extern boolean radioracers_usebookmarkicons;
 extern boolean radioracers_usehakiencore;
 extern boolean radioracers_useendkey;
 extern boolean radioracers_usehudfeed;
@@ -82,6 +87,9 @@ extern void RR_SaveFavouriteEmotes(void);
 extern void RR_UpdateEmoteUsageVector(void);
 extern void RR_FavouriteEmote(char* name);
 extern void RR_UnfavouriteEmote(char* name);
+extern void RR_SaveBookmarks(void);
+extern void RR_LoadBookmarks(void);
+extern void RR_RefreshBookmarks(void);
 
 #ifdef __cplusplus
 } // extern "C"

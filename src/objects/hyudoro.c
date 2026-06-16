@@ -579,6 +579,7 @@ hyudoro_set_held_item_from_player
 				set_item(itemhyu, player->itemtype, player->itemamount);	//new hyu grabs the item
 				hyudoro_mode(itemhyu) = HYU_RETURN;
 				P_SetMobjState(itemhyu, S_HYUDORO_RETURNING);
+				player->hyudorotimer = hyudorotime;
 			}
 			
 			hyu->target->player->pickpockethyucombo = min(hyu->target->player->pickpockethyucombo++, 5);
@@ -682,8 +683,8 @@ hyudoro_patrol_hit_player
 	K_StripItemsExceptBackup(player);		//SCS EDIT - So, what? Does the backup item just vanish into the void???
 
 	/* do not make 1st place invisible */
-	if (hyu->type == MT_PPOCKETHYUDORO || player->leaderpenalty == 0)			//SCS EDIT - Pickpockets always grant some invisibility time, since it's not a trap item
-	{
+	if (player->hyudorotimer <= 0 && (hyu->type == MT_PPOCKETHYUDORO || player->leaderpenalty == 0))		//SCS EDIT - Pickpockets always grant some invisibility time, since it's not a trap item. If their timer is already set here, a pickpocket took an item.
+	{																																																//In that case, it's a full timer set. Don't reset it here.
 		player->hyudorotimer = (hyudoro_capsule(hyu)->threshold > 0 && hyudoro_capsule(hyu)->threshold != HYUCAPSULE_RING) ? hyudorotime : (hyudorotime/3);	//SCS EDIT - Pickpocket ring steal grants less invisibility time
 	}
 

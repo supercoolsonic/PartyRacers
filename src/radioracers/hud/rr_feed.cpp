@@ -662,6 +662,12 @@ static ItemConfigForFeedUpdate getItemConfigForFeedAttackUpdate(playerattacks_t 
 			return {"RRISARMA", 18, 18};
 		case ATTACK_HYUDOROBUTLER:				//SCS ADD
 			return {"RRISHYUB", 23, 22};
+		case ATTACK_POGOSPRING:					//SCS ADD
+			return {"RRISPOGO", 20, 14};
+		case ATTACK_YOGOSPRING:					//SCS ADD
+			return {"RRISYOGO", 20, 14};
+		case ATTACK_BOGOSPRING:					//SCS ADD
+			return {"RRISBOGO", 20, 14};
 		case ATTACK_MASTEREMERALD:				//SCS ADD
             return {
                 .patch = "RRISEMR",

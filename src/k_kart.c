@@ -17118,7 +17118,11 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 							{
 								K_PlayBoostTaunt(player->mo);
 								//K_DoPogoSpring(player->mo, 32<<FRACBITS, 2);
-								P_SpawnMobjFromMobj(player->mo, 0, 0, 0, MT_POGOSPRING);
+								mobj_t *pspring = P_SpawnMobjFromMobj(player->mo, 0, 0, 0, MT_POGOSPRING);	//SCS EDIT
+								
+								if (pspring != NULL)								//SCS ADD
+									P_SetTarget(&pspring->target, player->mo);
+								
 								K_AdjustPlayerItemAmount(player, -1);
 								player->botvars.itemconfirm = 0;
 							}
@@ -17421,7 +17425,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 								if (ball)
 								{
 									ball->scalespeed = ball->scale*2/14;
-									ball->destscale = ball->scale*2;							
+									ball->destscale = (ball->scale*3)/2;							
 									ball->scale = ball->scale/2;
 									ball->fuse = 5000;
 								}
@@ -17477,7 +17481,11 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 							{
 								K_PlayBoostTaunt(player->mo);
 								//K_DoPogoSpring(player->mo, 32<<FRACBITS, 2);
-								P_SpawnMobjFromMobj(player->mo, 0, 0, 0, MT_YOGOSPRING);
+								mobj_t *yspring = P_SpawnMobjFromMobj(player->mo, 0, 0, 0, MT_YOGOSPRING);
+								
+								if (yspring != NULL)
+									P_SetTarget(&yspring->target, player->mo);
+								
 								K_AdjustPlayerItemAmount(player, -1);
 								player->botvars.itemconfirm = 0;
 							}
@@ -17512,7 +17520,11 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 							{
 								K_PlayBoostTaunt(player->mo);
 								//K_DoPogoSpring(player->mo, 32<<FRACBITS, 2);
-								P_SpawnMobjFromMobj(player->mo, 0, 0, 0, MT_BOGOSPRING);
+								mobj_t *bspring = P_SpawnMobjFromMobj(player->mo, 0, 0, 0, MT_BOGOSPRING);
+								
+								if (bspring != NULL)
+									P_SetTarget(&bspring->target, player->mo);
+								
 								K_AdjustPlayerItemAmount(player, -1);
 								player->botvars.itemconfirm = 0;
 							}

@@ -100,6 +100,7 @@ static patch_t *kp_racefinish[6];
 static patch_t *kp_positionnum[10][2][2]; // number, overlay or underlay, splitscreen
 
 patch_t *kp_facenum[MAXPLAYERS+1];
+patch_t *kp_spdnum[10];		//SCS ADD
 static patch_t *kp_facehighlight[8];
 
 static patch_t *kp_nocontestminimap;
@@ -130,6 +131,7 @@ static patch_t *kp_ringmeterbar[2];				//SCS ADD
 
 static patch_t *kp_speedometersticker;
 static patch_t *kp_speedometerlabel[4];
+static patch_t *kp_smallspeedometerlabel[4];	//SCS ADD
 
 static patch_t *kp_rankbumper;
 static patch_t *kp_bigbumper;
@@ -485,6 +487,14 @@ void K_LoadKartHUDGraphics(void)
 		buffer[7] = '0'+(i%10);
 		HU_UpdatePatch(&kp_facenum[i], "%s", buffer);
 	}
+	
+	sprintf(buffer, "SPDNUMxx");				//SCS ADD
+	for (i = 0; i < 10; i++)
+	{
+		buffer[6] = '0'+(i/10);
+		buffer[7] = '0'+(i%10);
+		HU_UpdatePatch(&kp_spdnum[i], "%s", buffer);
+	}
 
 	sprintf(buffer, "K_CHILIx");
 	for (i = 0; i < 8; i++)
@@ -617,6 +627,13 @@ void K_LoadKartHUDGraphics(void)
 	{
 		buffer[7] = '0'+(i+1);
 		HU_UpdatePatch(&kp_speedometerlabel[i], "%s", buffer);
+	}
+
+	sprintf(buffer, "K_SPDMSx");									//SCS ADD
+	for (i = 0; i < 4; i++)
+	{
+		buffer[7] = '0'+(i+1);
+		HU_UpdatePatch(&kp_smallspeedometerlabel[i], "%s", buffer);
 	}
 
 	// Extra ranking icons
@@ -2779,9 +2796,9 @@ static void K_drawBackupItem(void)
 	bool tiny = r_splitscreen > 1;
 	patch_t *localpatch[3] = { kp_nodraw, kp_nodraw, kp_nodraw };
 	patch_t *localinv = kp_invincibility[((leveltime % (6*3)) / 3) + 7 + tiny];
-	patch_t *localmemer = kp_masteremerald[((leveltime % (6*3)) / 3) + 6 + tiny];
-	patch_t *localpickpocket = kp_pickpockethyu[((leveltime % (3*3)) / 3) + 9 + tiny];
-	patch_t *localtimestone = kp_timestone[((leveltime % (10*3)) / 3) + 10 + tiny];
+	patch_t *localmemer = kp_masteremerald[((leveltime % (6*3)) / 3) + 6 + (tiny ? 5 : 0) + tiny];			//SCS ADD
+	patch_t *localpickpocket = kp_pickpockethyu[((leveltime % (3*3)) / 3) + 9 + (tiny ? 2 : 0) + tiny];		//SCS ADD
+	patch_t *localtimestone = kp_timestone[((leveltime % (10*3)) / 3) + 10 + (tiny ? 9 : 0) + tiny];			//SCS ADD
 	INT32 fx = 0, fy = 0, fflags = 0, tx = 0, ty = 0;	// final coords for hud and flags...
 	const INT32 numberdisplaymin = 2;
 	skincolornum_t localcolor[3] = { static_cast<skincolornum_t>(stplyr->skincolor) };
@@ -3520,8 +3537,12 @@ static void K_DrawKartPositionNum(UINT8 num)
 		fy >>= 1;
 
 		// We're putting it in the same corner as
-		// the rest of our HUD, so it needs raised.
-		fy -= (21 << FRACBITS);
+		// the rest of our HUD, so it needs to be raised.
+		//fy -= (21 << FRACBITS);
+		if (cv_toggle_position_number.value == 1)			//SCS ADD
+			fy -= (31 << FRACBITS);
+		else			
+			fy -= (29 << FRACBITS);							//SCS EDIT - moving up to accomodate the new mini-speedometer
 	}
 
 	if (trans > 0)
@@ -5372,6 +5393,7 @@ static void RR_drawRingCounterOnPlayer(
 	INT32 fy = 0;
 	const INT32 bailbarlength = (r_splitscreen > 1 ? 10 : 20);					//SCS ADD
 	INT32 bailbar = 0;															//SCS ADD
+	UINT16 digitcolor;															//SCS ADD
 
 	const boolean DRAW_SPEEDO_ON_PLAYER = (cv_kartspeedometer.value && cv_speedometeronplayer.value);
 	const boolean DRAW_EXP_ON_PLAYER = cv_exponplayer.value == 1;
@@ -5628,12 +5650,21 @@ static void RR_drawRingCounterOnPlayer(
 		K_GetKartSpeedometerNumbers(speedometer_numbers);
 		// int ringtext_x = ((stplyr->hudrings < 0) ? RINGC_X+29+0 : RINGC_X+23+3) + 10;
 		int ringtext_x = RINGC_X - 42;
+		
+		if ((cv_reducevfx.value) ? leveltime/10 & 1 : leveltime/5 & 1)
+			digitcolor = (K_TripwirePassConditions(stplyr) != TRIPWIRE_NONE) ? SKINCOLOR_SAPPHIRE : SKINCOLOR_GREY;
+		else
+			digitcolor = K_PlayerCanPunt(stplyr) ? SKINCOLOR_YELLOW	: SKINCOLOR_GREY;
 
 		using srb2::Draw;
-		V_DrawScaledPatch(ringtext_x+7, fy, ringcounterflags, kp_facenum[speedometer_numbers[0]]);
+		/*V_DrawScaledPatch(ringtext_x+7, fy, ringcounterflags, kp_facenum[speedometer_numbers[0]]);
 		V_DrawScaledPatch(ringtext_x+13, fy, ringcounterflags, kp_facenum[speedometer_numbers[1]]);
 		V_DrawScaledPatch(ringtext_x+19, fy, ringcounterflags, kp_facenum[speedometer_numbers[2]]);
-		V_DrawScaledPatch(ringtext_x+29, fy, ringcounterflags, kp_speedometerlabel[K_GetKartSpeedometerLabel()]);
+		V_DrawScaledPatch(ringtext_x+29, fy, ringcounterflags, kp_speedometerlabel[K_GetKartSpeedometerLabel()]);*/
+		V_DrawMappedPatch(ringtext_x+7, fy, ringcounterflags, kp_spdnum[speedometer_numbers[0]], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(digitcolor), GTC_CACHE));			//SCS ADD - Colorized speedometer numbers!
+		V_DrawMappedPatch(ringtext_x+13, fy, ringcounterflags, kp_spdnum[speedometer_numbers[1]], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(digitcolor), GTC_CACHE));
+		V_DrawMappedPatch(ringtext_x+19, fy, ringcounterflags, kp_spdnum[speedometer_numbers[2]], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(digitcolor), GTC_CACHE));
+		V_DrawMappedPatch(ringtext_x+29, fy, ringcounterflags, kp_speedometerlabel[K_GetKartSpeedometerLabel()], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(digitcolor), GTC_CACHE));
 		
 		if (stplyr->inkblotchtimer >= 10 || (stplyr->inkblotchtimer && stplyr->inkblotchtimer < 10 && leveltime % 2 == 0))			//SCS ADD - want it to flicker when about to disappear
 		{
@@ -5965,6 +5996,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 	INT32 ringx = 0, fy = 0, lives_y = 0;										//SCS - RADIO
 	const INT32 bailbarlength = (r_splitscreen > 1 ? 10 : 20);					//SCS ADD
 	INT32 bailbar = 0;															//SCS ADD
+	UINT16 digitcolor;															//SCS ADD
 
 	const boolean DRAW_MINI_HUD_DETAILS = cv_hud_compact.value == 1 && r_splitscreen == 0;		//SCS - RADIO START
 	const boolean DRAW_RINGS_ON_PLAYER = cv_ringsonplayer.value == 1;
@@ -6165,9 +6197,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 						if (hr + bariterator < -10)
 						{
 							if (stplyr->timestonefrozen)	
-							{
 								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_MINT), GTC_CACHE));
-							}
 							else
 								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_CRIMSON), GTC_CACHE));
 							
@@ -6175,9 +6205,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 						else
 						{
 							if (stplyr->timestonefrozen)	
-							{
 								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
-							}
 							else
 								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_RASPBERRY), GTC_CACHE));
 							
@@ -6190,9 +6218,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 						if (hr + bariterator < 0)
 						{
 							if (stplyr->timestonefrozen)	
-							{
 								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
-							}
 							else
 								V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_RASPBERRY), GTC_CACHE));
 							
@@ -6225,9 +6251,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 							else
 							{
 								if (stplyr->timestonefrozen)	
-								{
 									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
-								}
 								else
 									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_YELLOW), GTC_CACHE));
 								
@@ -6240,9 +6264,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 							if (hr - bariterator > 0)
 							{
 								if (stplyr->timestonefrozen)	
-								{
 									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREEN), GTC_CACHE));
-								}
 								else
 									V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_YELLOW), GTC_CACHE));
 								
@@ -6254,9 +6276,8 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 						}
 					}
 					else
-					{
 						V_DrawMappedPatch(fr+12+bariterator-1, fy+1-1, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbar[1], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_GREY), GTC_CACHE));
-					}
+
 				}
 			}
 			
@@ -6609,12 +6630,21 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 			K_GetKartSpeedometerNumbers(speedometer_numbers);
 			// int ringtext_x = ((stplyr->hudrings < 0) ? RINGC_X+29+0 : RINGC_X+23+3) + 10;
 			int ringtext_x = RINGC_X - 42;
+			
+			if ((cv_reducevfx.value) ? leveltime/10 & 1 : leveltime/5 & 1)
+				digitcolor = (K_TripwirePassConditions(stplyr) != TRIPWIRE_NONE) ? SKINCOLOR_SAPPHIRE : SKINCOLOR_GREY;
+			else
+				digitcolor = K_PlayerCanPunt(stplyr) ? SKINCOLOR_YELLOW	: SKINCOLOR_GREY;
 
 			using srb2::Draw;
-			V_DrawScaledPatch(ringtext_x+7, fy, ringcounterflags, kp_facenum[speedometer_numbers[0]]);
+			/*V_DrawScaledPatch(ringtext_x+7, fy, ringcounterflags, kp_facenum[speedometer_numbers[0]]);
 			V_DrawScaledPatch(ringtext_x+13, fy, ringcounterflags, kp_facenum[speedometer_numbers[1]]);
 			V_DrawScaledPatch(ringtext_x+19, fy, ringcounterflags, kp_facenum[speedometer_numbers[2]]);
-			V_DrawScaledPatch(ringtext_x+29, fy, ringcounterflags, kp_speedometerlabel[K_GetKartSpeedometerLabel()]);
+			V_DrawScaledPatch(ringtext_x+29, fy, ringcounterflags, kp_speedometerlabel[K_GetKartSpeedometerLabel()]);*/
+			V_DrawMappedPatch(ringtext_x+7, fy, ringcounterflags, kp_spdnum[speedometer_numbers[0]], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(digitcolor), GTC_CACHE));			//SCS ADD - Colorized speedometer numbers!
+			V_DrawMappedPatch(ringtext_x+13, fy, ringcounterflags, kp_spdnum[speedometer_numbers[1]], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(digitcolor), GTC_CACHE));
+			V_DrawMappedPatch(ringtext_x+19, fy, ringcounterflags, kp_spdnum[speedometer_numbers[2]], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(digitcolor), GTC_CACHE));
+			V_DrawMappedPatch(ringtext_x+29, fy, ringcounterflags, kp_speedometerlabel[K_GetKartSpeedometerLabel()], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(digitcolor), GTC_CACHE));
 			
 			if (stplyr->inkblotchtimer >= 10 || (stplyr->inkblotchtimer && stplyr->inkblotchtimer < 10 && leveltime % 2 == 0))			//SCS ADD - want it to flicker when about to disappear
 			{
@@ -6849,11 +6879,13 @@ static void K_drawKartSpeedometer(boolean gametypeinfoshown)
 	UINT8 numbers[3];
 	INT32 splitflags = V_SNAPTOBOTTOM|V_SNAPTOLEFT|V_SPLITSCREEN;
 	//INT32 fy = LAPS_Y-14;													//SCS - RADIO
+	skincolornum_t digitcolor;												//SCS ADD
+	UINT8 *digitmap = NULL;													//SCS ADD
 
 	// Radio
 	boolean isBattle = false;																						//SCS - RADIO START
 	INT32 SPEEDC_X = LAPS_X;
-	INT32 speedometerFlags = V_HUDTRANS|V_SLIDEIN|splitflags;
+	
 
 	boolean showbluespheres = (gametyperules & GTR_SPHERES);
 	const boolean DRAW_MINI_HUD_DETAILS = cv_hud_compact.value == 1 && r_splitscreen == 0;
@@ -6864,6 +6896,21 @@ static void K_drawKartSpeedometer(boolean gametypeinfoshown)
 	const boolean EXP_ON_PLAYER = (cv_exponplayer.value == 1 && NOT_BATTLE_OR_LIVES) && !drawinglaps;
 
 	INT32 fy = LAPS_Y-14;
+	
+	if (r_splitscreen > 1)						//SCS ADD - Splitscreen stuff
+	{
+		if (R_GetViewNumber() & 1)
+		{
+			SPEEDC_X = LAPS2_X+12;
+			fy = LAPS2_Y-10;
+			splitflags = V_SNAPTORIGHT|V_SNAPTOBOTTOM|V_SPLITSCREEN;			
+		}
+		else
+			fy = LAPS_Y-10;
+
+	}
+	
+	INT32 speedometerFlags = V_HUDTRANS|V_SLIDEIN|splitflags;			//SCS EDIT - RADIO, moving this down here for splitscreen stuff
 
 	/**
 	 * radio
@@ -6879,18 +6926,25 @@ static void K_drawKartSpeedometer(boolean gametypeinfoshown)
 	 * No Rings, No lives? fy = LAPS_Y + 10
 	 * No laps, no exp? fy = LAPS_Y + 20
 	 */
-	if (DRAW_MINI_HUD_DETAILS) {
+	if (DRAW_MINI_HUD_DETAILS) 
+	{
 		fy = LAPS_Y - 2;
-		if (RINGS_ON_PLAYER) {
+		if (RINGS_ON_PLAYER) 
+		{
 			fy = LAPS_Y + 10;
-			if (EXP_ON_PLAYER) {
+			if (EXP_ON_PLAYER) 
+			{
 				fy = LAPS_Y + 20;
 			}
 		}
-	} else {
-		if (RINGS_ON_PLAYER) {
+	} 
+	else 
+	{
+		if (RINGS_ON_PLAYER && r_splitscreen == 0)		//SCS EDIT 
+		{
 			fy = LAPS_Y;
-			if (EXP_ON_PLAYER) {
+			if (EXP_ON_PLAYER) 
+			{
 				fy = LAPS_Y + 14;
 			}
 		}
@@ -6987,23 +7041,49 @@ static void K_drawKartSpeedometer(boolean gametypeinfoshown)
 		}
 	}																					//SCS - RADIO END
 
+
+	if ((cv_reducevfx.value) ? leveltime/8 & 1 : leveltime/5 & 1)
+		digitcolor = (K_TripwirePassConditions(stplyr) != TRIPWIRE_NONE) ? SKINCOLOR_SAPPHIRE : SKINCOLOR_GREY;
+	else
+		digitcolor = K_PlayerCanPunt(stplyr) ? SKINCOLOR_YELLOW	: SKINCOLOR_GREY;
+	
+	digitmap = R_GetTranslationColormap(TC_RAINBOW, digitcolor, GTC_CACHE);
+
 	/*using srb2::Draw;
 	Draw(LAPS_X+7, fy+1).flags(V_HUDTRANS|V_SLIDEIN|splitflags).align(Draw::Align::kCenter).width(42).small_sticker();
 	V_DrawScaledPatch(LAPS_X+7, fy, V_HUDTRANS|V_SLIDEIN|splitflags, kp_facenum[numbers[0]]);
 	V_DrawScaledPatch(LAPS_X+13, fy, V_HUDTRANS|V_SLIDEIN|splitflags, kp_facenum[numbers[1]]);
 	V_DrawScaledPatch(LAPS_X+19, fy, V_HUDTRANS|V_SLIDEIN|splitflags, kp_facenum[numbers[2]]);
 	V_DrawScaledPatch(LAPS_X+29, fy, V_HUDTRANS|V_SLIDEIN|splitflags, kp_speedometerlabel[labeln]);*/
-	using srb2::Draw;
-	Draw(SPEEDC_X+7, fy+1).flags(speedometerFlags).align(Draw::Align::kCenter).width(42).small_sticker();
-	V_DrawScaledPatch(SPEEDC_X+7, fy, speedometerFlags, kp_facenum[numbers[0]]);
-	V_DrawScaledPatch(SPEEDC_X+13, fy, speedometerFlags, kp_facenum[numbers[1]]);
-	V_DrawScaledPatch(SPEEDC_X+19, fy, speedometerFlags, kp_facenum[numbers[2]]);
-	V_DrawScaledPatch(SPEEDC_X+29, fy, speedometerFlags, kp_speedometerlabel[labeln]);
+	//using srb2::Draw;
+	//Draw(SPEEDC_X+7, fy+1).flags(speedometerFlags).align(Draw::Align::kCenter).width(42).small_sticker();
+	//V_DrawScaledPatch(SPEEDC_X+7, fy, speedometerFlags, kp_facenum[numbers[0]]);
+	//V_DrawScaledPatch(SPEEDC_X+13, fy, speedometerFlags, kp_facenum[numbers[1]]);
+	//V_DrawScaledPatch(SPEEDC_X+19, fy, speedometerFlags, kp_facenum[numbers[2]]);
+	//V_DrawScaledPatch(SPEEDC_X+29, fy, speedometerFlags, kp_speedometerlabel[labeln]);
 	
-	if (stplyr->inkblotchtimer >= 10 || (stplyr->inkblotchtimer && stplyr->inkblotchtimer < 10 && leveltime % 2 == 0))			//SCS ADD - want it to flicker when about to disappear
+	if (r_splitscreen > 1)
 	{
-		//V_DrawScaledPatch(LAPS_X-7, fy-15, V_HUDTRANS|V_SLIDEIN|splitflags, kp_inkblotches[2]);
-		V_DrawScaledPatch(SPEEDC_X-7, fy-15, speedometerFlags, kp_inkblotches[2]);
+		using srb2::Draw;
+		Draw(SPEEDC_X-1, fy+1).flags(speedometerFlags).align(Draw::Align::kCenter).width(30).small_sticker();
+		Draw row = Draw(SPEEDC_X-1, fy).flags(V_HUDTRANS|V_SLIDEIN|splitflags).font(Draw::Font::kPing).colormap(digitmap);
+		row.text("{:03}", abs(numbers[0]*100 + numbers[1]*10 + numbers[2]));
+		V_DrawMappedPatch(SPEEDC_X+12, fy, speedometerFlags, kp_smallspeedometerlabel[labeln], digitmap);		
+	}
+	else
+	{
+		using srb2::Draw;
+		Draw(SPEEDC_X+7, fy+1).flags(speedometerFlags).align(Draw::Align::kCenter).width(42).small_sticker();
+		V_DrawMappedPatch(SPEEDC_X+7, fy, speedometerFlags, kp_spdnum[numbers[0]], digitmap);			//SCS ADD - Colorized speedometer numbers!
+		V_DrawMappedPatch(SPEEDC_X+13, fy, speedometerFlags, kp_spdnum[numbers[1]], digitmap);
+		V_DrawMappedPatch(SPEEDC_X+19, fy, speedometerFlags, kp_spdnum[numbers[2]], digitmap);
+		V_DrawMappedPatch(SPEEDC_X+29, fy, speedometerFlags, kp_speedometerlabel[labeln], digitmap);
+		
+		if (stplyr->inkblotchtimer >= 10 || (stplyr->inkblotchtimer && stplyr->inkblotchtimer < 10 && leveltime % 2 == 0))			//SCS ADD - want it to flicker when about to disappear
+		{
+			//V_DrawScaledPatch(LAPS_X-7, fy-15, V_HUDTRANS|V_SLIDEIN|splitflags, kp_inkblotches[2]);
+			V_DrawScaledPatch(SPEEDC_X-7, fy-15, speedometerFlags, kp_inkblotches[2]);
+		}		
 	}
 
 	/*
@@ -9151,7 +9231,8 @@ static void K_drawKartStartBulbs(void)
 	if (r_splitscreen >= 1)
 	{
 		spacing /= 2;
-		starty /= 3;
+		starty /= 5;		//SCS EDIT - Going from 3 to 5
+		starty *= 2;		//SCS ADD - Then multiply by 2. The POSITION graphic is no longer cut off on the top!
 
 		if (r_splitscreen > 1)
 		{
@@ -9540,6 +9621,8 @@ static void K_drawInput(void)
 {
 	UINT8 viewnum = R_GetViewNumber();
 	boolean freecam = camera[viewnum].freecam;	//disable some hud elements w/ freecam
+	
+	if (r_splitscreen > 0) return;		//SCS - Can I just...disable this for now? It only shows player 1's input anyway, right? And in 4P splitscreen it's like, off screen at the bottom right. It just looks bad.
 
 	// Radio
 	isDrawingInput = false;				//SCS - RADIO
@@ -10805,7 +10888,8 @@ void K_drawKartHUD(void)
 			}
 
 			// Draw the speedometer and/or accessibility icons
-			if (cv_kartspeedometer.value && !r_splitscreen && (LUA_HudEnabled(hud_speedometer)))
+			//if (cv_kartspeedometer.value && !r_splitscreen && (LUA_HudEnabled(hud_speedometer)))
+			if (cv_kartspeedometer.value && (LUA_HudEnabled(hud_speedometer)))							//SCS EDIT - Gonna draw it in splitscreen now
 			{
 				K_drawKartSpeedometer(gametypeinfoshown);
 			}

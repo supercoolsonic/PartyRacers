@@ -1715,7 +1715,7 @@ static void K_BotItemNormShield(const player_t *player, ticcmd_t *cmd)
 			if (target->mo == NULL || P_MobjWasRemoved(target->mo)
 				|| player == target || target->spectator
 				|| G_SameTeam(player, target)
-				|| target->flashing || player->growshrinktimer > 0 || player->invincibilitytimer > 0)		//disregard smaller players with guns - they can't do anything
+				|| target->flashing || player->growshrinktimer < 0 || player->invincibilitytimer > 0)		//disregard smaller players with guns - they can't do anything
 			{
 				continue;
 			}
@@ -2290,8 +2290,10 @@ void K_BotItemUsage(const player_t *player, ticcmd_t *cmd, INT16 turnamt)
 						K_BotItemLandmine(player, cmd, turnamt);
 						break;
 					case KITEM_PICKPOCKETHYU:														//SCS ADD
-						//K_BotItemPickpocket(player, cmd);
-						K_BotItemLandmine(player, cmd, turnamt);			//Temp
+						if (player->itemamount == 1)
+							K_BotItemPickpocket(player, cmd);
+						else
+							K_BotItemLandmine(player, cmd, turnamt);
 						break;
 					case KITEM_BALLHOG:
 						K_BotItemBallhog(player, cmd);

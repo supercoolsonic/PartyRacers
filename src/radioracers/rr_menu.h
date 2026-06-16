@@ -33,6 +33,40 @@ void RadioFunMenu_Init(void);
 void RadioAccessibilityMenu_Init(void);
 void RadioHudfeedMenu_Init(void);
 
+// Bookmarks
+void RRM_DrawCharacterBookmarks(void);
+void RRM_BookmarkTick(void);
+void RRM_BookmarkInit(void);
+boolean RRM_BookmarkHandler(INT32 choice);
+boolean RRM_BookmarkQuit(void);
+void RRM_BookmarkSelect(INT32 choice);
+
+typedef struct
+{
+    tic_t follower_tics;
+    UINT8 follower_frame;
+    state_t *follower_state;
+} bookmark_menu_follower_anim_t;
+
+typedef enum
+{
+    BMENU_STAGE_BROWSING = 0,
+    BMENU_STAGE_BOOKMARKED,
+    BMENU_STAGE_OVERWRITTEN,
+    BMENU_STAGE_APPLIED_BOOKMARK
+} bookmark_menu_stage_t;
+
+extern struct bookmarkmenu_s
+{
+    bookmark_menu_follower_anim_t current_follower;
+    bookmark_menu_follower_anim_t preview_follower;
+    tic_t follower_timer;
+    tic_t stage_timer;
+    size_t current_page;
+    boolean show_info;
+    UINT8 stage;
+} bookmarkmenu;
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

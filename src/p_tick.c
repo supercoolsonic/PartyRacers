@@ -1249,8 +1249,10 @@ void P_Ticker(boolean run)
 	{
 		K_TickDialogue();
 		K_TickMessages();
-		RR_ridersFinishTick();	//SCS - RADIO
-		RR_TickHudFeed();		//SCS - RADIO
+		if (!dedicated) {				//SCS - RADIO
+			RR_ridersFinishTick();
+			RR_TickHudFeed();
+		}
 	}
 
 	if (run)

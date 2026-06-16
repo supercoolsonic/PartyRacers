@@ -9,17 +9,24 @@
 /// \file radioracers/rr_setup.cpp
 /// \brief HUD setup stuff
 
+#include <cctype>
+#include <string.h>
 #include <vector>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <iostream>
 #include <fstream>
+#include <fmt/format.h>
 
 #include "../rr_hud.h"
 #include "../rr_demo.h"
 #include "../rr_setup.h"
+#include "../rr_bookmarks.h"
 #include "../../d_main.h"
+#include "../../deh_soc.h"
+#include "../../r_skins.h"
+#include "../../k_color.h"
 #include "../../w_wad.h"
 #include "../../z_zone.h"
 #include "../../r_defs.h"
@@ -27,6 +34,7 @@
 #include "../../deh_tables.h"
 #include "../../command.h"
 #include "../../s_sound.h"
+#include "../../core/string.h"
 
 static const char* EMOTE_FRAME_NAME = "FRAME";
 static const char* EMOTE_ATLAS_FRAME_NAME = "EMOATLAS";
@@ -34,6 +42,9 @@ static const char* EMOTE_ATLAS_FRAME_NAME = "EMOATLAS";
 // Music randomizing
 UINT8 radio_mapmusrng;
 UINT8 radio_maxrandompositionmus = 0;
+
+// Bookmarks
+boolean bookmarks_processed = false;
 
 
 std::vector<std::string> OLD_RING_STATES = {
@@ -65,6 +76,7 @@ static const uint32_t OLD_RING_INTEGER = 0x524E474F;
 boolean found_radioracers = false;
 boolean found_radioracers_plus = false;
 boolean radioracers_usemuteicons = false;
+boolean radioracers_usebookmarkicons = false;
 boolean radioracers_usehakiencore = false;
 boolean radioracers_useendkey = false;
 boolean radioracers_usehudfeed = false;
@@ -806,6 +818,12 @@ void RR_AddAllEmotes(UINT16 wadnum)
     }
 }
 
+void RR_RefreshBookmarks(void)
+{
+    if (char_bookmarks.empty())
+        return;
+}
+
 void RR_InitEmotes(void) {
     AddInGameEmotes();
     
@@ -1087,11 +1105,134 @@ void RR_resetRadioFakeNetCvars(void)
 	cv_battle_toggle_emerald_on_minimap.enablefornetgames = false;
 }
 
+// Bookmarks
+void RR_SaveBookmarks(void) {
+    if (!bookmarks_processed)
+        return;
+    const char *filepath = va("%s" PATHSEP "%s", srb2home, RADIO_BOOKMARKS_FILE);
+
+    std::ofstream out(filepath);
+
+    if (!out.is_open()) {
+        return;
+    }
+
+    // Save the bookmark values as string representations instead
+    for (const auto& b: char_bookmarks) {
+        // skin;skincolor;follower;followercolor
+        // eg: knuckles;Red;Hint Orb;Jawz
+        out << fmt::format(
+            "{};{};{};{}\n",
+            b.skin_name,
+            b.skincolor_name,
+            b.follower_name,
+            b.followercolor_name
+        );
+        CONS_Printf("Saved BOOKMARK '%s %s %s %s'\n", b.skin_name, b.skincolor_name,
+            b.follower_name,
+            b.followercolor_name);
+    }
+
+    out.close();
+}
+
+/** Populate the bookmarks array by reading the bookmarks file.
+  * Validation will happen later.
+  * \sa RR_VerifyBookmarks
+  */
+void RR_LoadBookmarks(void) {
+    const char *filepath = va("%s" PATHSEP "%s", srb2home, RADIO_BOOKMARKS_FILE);
+    std::ifstream file(filepath);
+    if (!file) {
+        bookmarks_processed = true;
+        return;
+    }
+
+    std::string line;
+
+    // skin;skincolor;follower;followercolor
+    // eg: knuckles;Red;Hint Orb;Jawz
+    auto split_token = [](const std::string& s, size_t &index) {
+        size_t end = s.find(";", index);
+        std::string token = s.substr(index, end - index);
+        index = (end == std::string::npos) ? end : end + 1;
+        return token;
+    };
+    
+    while (std::getline(file, line)) {
+        if (line.empty())
+            continue;
+
+        if (char_bookmarks.size() + 1 > MAX_BOOKMARKS) {
+            CONS_Printf("Capped at %d bookmarks.\n", MAX_BOOKMARKS);
+            break;
+        }
+
+        size_t index = 0;
+
+        // Love lambdas
+        std::string char_name = split_token(line, index);
+        std::string char_colour = split_token(line, index);
+        std::string follower_name = split_token(line, index);
+        std::string follower_colour = split_token(line, index);
+
+        CONS_Printf("Adding %s %s %s %s\n", char_name.c_str(), char_colour.c_str(), follower_name.c_str(), follower_colour.c_str());
+        bool skincolor_valid = false, followercolor_valid = false;
+
+        INT32 char_skin = -1, follower_skin = -1;
+        UINT16 char_skincolor = 0, follower_skincolor = 0;
+
+        // There has to be at least a skin in the bookmark
+        bool skin_present = char_name != "";
+        bool follower_present = follower_name != "";
+        bool skincolor_present = char_colour != "";
+        bool followercolor_present = follower_colour != "";
+
+        // Empty default
+        characterbookmark_t bookmark_child = {
+            -1,
+            0,
+            -1,
+            0,
+        };
+
+        // Hate user validation
+        characterbookmarkparent_t bookmark = {
+            skin_present,
+            false,
+            skincolor_present,
+            false,
+            follower_present,
+            false,
+            followercolor_present,
+            false,
+            bookmark_child,
+        };
+
+        strlcpy(bookmark.skin_name, char_name.c_str(), SKINNAMESIZE+1);
+        strlcpy(bookmark.skincolor_name, char_colour.c_str(), MAXCOLORNAME+1);
+
+        if (follower_present) {
+            strlcpy(bookmark.follower_name, follower_name.c_str(), SKINNAMESIZE+1);
+            strlcpy(bookmark.followercolor_name, follower_colour.c_str(), MAXCOLORNAME+1);
+        }
+
+        char_bookmarks.emplace_back(bookmark);
+        CONS_Printf("Added BOOKMARK '%s'\n", line.c_str());
+    }
+
+    file.close();
+
+    bookmarks_processed = true;
+}
+
 /** Initialize anything relating to RadioRacers */
 void RR_Init(void) {
     if (dedicated)
         return;
-        
+
+    // Commands
+    RR_InitBookmarkCommands();
 #ifndef ENABLE_RADIO_DEMOS
     RR_InitDemoCommands();
 #endif
@@ -1130,6 +1271,10 @@ void RR_Init(void) {
         if (W_LumpExists("M_ICOMUT") && W_LumpExists("M_ICOMU2")) {
             radioracers_usemuteicons = true;
         }
+		
+        if (W_LumpExists("M_ICOBKM") && W_LumpExists("M_ICOBK2")) {
+            radioracers_usebookmarkicons = true;
+        }
     
         // The haki mode thing - this is just Sky Sanctuary's encore palette
         if(W_LumpExists("GRAYENCR")) {
@@ -1161,5 +1306,10 @@ void RR_Init(void) {
     RR_LoadMostUsedEmotes();
     RR_LoadFavouriteEmotes();
     RR_InitEmotes();
+	
+    // Any bookmarks?
+    CONS_Printf("RADIO: Loading bookmarks.\n");
+    RR_LoadBookmarks();
+    CONS_Printf("RADIO: Added %d bookmarks.\n", char_bookmarks.size());
 
 }

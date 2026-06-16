@@ -159,7 +159,10 @@ static menuitem_t OPTIONS_RadioRacersHudfeed[] =
 		NULL, {.cvar = &cv_hudfeed_show_amps}, 0, 0},
 		
 	{IT_STRING | IT_CVAR, "Show Shrink Hits?", "Show Shrink hits in the feed?",									//SCS ADD
-		NULL, {.cvar = &cv_hudfeed_toggle_shrink}, 0, 0}
+		NULL, {.cvar = &cv_hudfeed_toggle_shrink}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Show Spring Hits?", "Show Spring hits in the feed?",									//SCS ADD
+		NULL, {.cvar = &cv_hudfeed_toggle_spring}, 0, 0}
 };
 
 void RadioHudfeedMenu_Init(void)
@@ -283,9 +286,6 @@ static menuitem_t OPTIONS_RadioRacersAccessibility[] =
 	{IT_STRING | IT_CVAR, "Observation Haki", "Apply a grayscale filter to the level. \x82(Disabled in netgames.)",
 		NULL, {.cvar = &cv_applyhaki}, 0, 0},
 
-	{IT_STRING | IT_CVAR, "Obvious Voltage", "Re-colour your voltage aura depending on your driftcharge.",
-		NULL, {.cvar = &cv_obvious_voltage}, 0, 0},
-
 	{IT_STRING | IT_CVAR, "Precise Countdown", "Show a more precise countdown, accompanied with a little bar.",
 		NULL, {.cvar = &cv_precise_countdown}, 0, 0},
 
@@ -294,9 +294,21 @@ static menuitem_t OPTIONS_RadioRacersAccessibility[] =
 
 	{IT_STRING | IT_CVAR, "Dangerous Player Checks", "Draw warning symbols to the side of the HUD for any incoming danger.",
 		NULL, {.cvar = &cv_show_dangerous_player_check}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Invert Anti-Gravity Cam", "Flips the camera upside-down when driving upside-down.",
+		NULL, {.cvar = &cv_flipcam}, 0, 0},
+		
+	{IT_SPACE | IT_NOTHING, NULL,  NULL,
+		NULL, {NULL}, 0, 0},
 
+	{IT_HEADER, "Obvious Mechanics", NULL,
+		NULL, {NULL}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Obvious Voltage", "Re-colour your voltage aura depending on your driftcharge.",
+		NULL, {.cvar = &cv_obvious_voltage}, 0, 0},
+		
 	{IT_STRING | IT_CVAR, "Obvious Tripwires", "Draw color-coded tripwires to indicate whether you can pass through or not.",
-		NULL, {.cvar = &cv_obvious_tripwire}, 0, 0},
+		NULL, {.cvar = &cv_obvious_tripwire}, 0, 0},		
 
 	{IT_SPACE | IT_NOTHING, NULL,  NULL,
 		NULL, {NULL}, 0, 0},

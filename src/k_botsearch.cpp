@@ -486,6 +486,8 @@ static BlockItReturn_t K_FindObjectsForNudging(mobj_t *thing)
 		case MT_XSNAPLASTSHOT:							//SCS ADD
 		case MT_XSNAPLASTSHOTSHRINK:					//SCS ADD
 		case MT_INKBUBBLE:								//SCS ADD
+		case MT_MINIHYUDORO:							//SCS ADD
+		case MT_PPOCKETHYUDORO:							//SCS ADD
 			K_AddDodgeObject(thing, side, 20);
 			break;
 		case MT_SHRINK_GUN:

@@ -11,6 +11,7 @@
 /// \file  k_menudraw.c
 /// \brief SRB2Kart's menu drawer functions
 
+#include "radioracers/rr_setup.h"	//SCS - RADIO
 #ifdef __GNUC__
 #include <unistd.h>
 #endif
@@ -6963,6 +6964,10 @@ void M_DrawPause(void)
 					);
 					if (i == itemOn)
 						colormap = yellowmap;
+				}
+				else if (i == itemOn && i == mpause_bookmarks && radioracers_usebookmarkicons) // Radio
+				{
+					pp = W_CachePatchName("M_ICOBK2", PU_CACHE);
 				}
 				else
 				{

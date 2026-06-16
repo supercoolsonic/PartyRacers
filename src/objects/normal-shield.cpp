@@ -57,7 +57,8 @@ struct Visual : Mobj
 		}
 
 		move_origin(shield()->pos());
-		scale(3 * shield()->follow()->scale() / 2);
+		//CONS_Printf("Boost charge is at %d\n", shield()->follow()->player->normalshieldboostcharge);
+		scale((3 * shield()->follow()->scale()) / (2+(shield()->follow()->player->normalshieldboostcharge/15)));
 		//dispoffset = state()->num() == S_THNB1 ? -1 : 1;
 
 		/*if (shield()->player()->lightningcharge)

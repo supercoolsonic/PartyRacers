@@ -51,6 +51,7 @@ extern consvar_t cv_gingeritemtimersbiggertext;      // Draw the timer text in a
 extern consvar_t cv_obvious_tripwire;               // Replace default tripwire texture with more obvious graphics
 extern consvar_t cv_obvious_voltage;                // Re-colour voltage VFX with same colour as drift spark
 extern consvar_t cv_precise_countdown;              // Show a little bar below starting countdown to better time your approach
+extern consvar_t cv_flipcam;						//Inverts camera when driving upside-down, like in SRB2 Kart				//SCS ADD
 
 // Battle
 extern consvar_t cv_customemeraldhud;    // Alternate Emerald display for Battle Mode
@@ -130,6 +131,7 @@ extern consvar_t cv_hudfeed_show_grades; // Show grades in the feed?
 extern consvar_t cv_hudfeed_show_snipes; // Show snipes (SEGA!) in the feed?
 extern consvar_t cv_hudfeed_show_amps; // Show the amps in the feed?
 extern consvar_t cv_hudfeed_toggle_shrink; // Show Shrink hits in the feed?			//SCS ADD
+extern consvar_t cv_hudfeed_toggle_spring; // Show Spring hits in the feed?			//SCS ADD
 
 // HUD -- Battle
 extern consvar_t cv_battle_toggle_emerald_on_minimap; 

@@ -5575,12 +5575,12 @@ static void HWR_DrawSkyBackground(player_t *player)
 		HWR_SetTransformAiming(&dometransform, player, false);
 		dometransform.angley = (float)((viewangle-ANGLE_270)>>ANGLETOFINESHIFT)*(360.0f/(float)FINEANGLES);
 
-		if (*type == postimg_flip)
+		if (*type == postimg_flip || *type == postimg_mirrorflip)			//SCS EDIT
 			dometransform.flip = true;
 		else
 			dometransform.flip = false;
 
-		if (*type == postimg_mirror)
+		if (*type == postimg_mirror || *type == postimg_mirrorflip)			//SCS EDIT
 			dometransform.mirror = true;
 		else
 			dometransform.mirror = false;
@@ -5854,12 +5854,12 @@ static void HWR_RenderViewpoint(player_t *player, boolean drawSkyTexture, boolea
 	gl_viewludsin = FIXED_TO_FLOAT(FINECOSINE(gl_aimingangle>>ANGLETOFINESHIFT));
 	gl_viewludcos = FIXED_TO_FLOAT(-FINESINE(gl_aimingangle>>ANGLETOFINESHIFT));
 
-	if (*type == postimg_flip)
+	if (*type == postimg_flip || *type == postimg_mirrorflip)	//SCS EDIT
 		atransform.flip = true;
 	else
 		atransform.flip = false;
 
-	if (*type == postimg_mirror)
+	if (*type == postimg_mirror || *type == postimg_mirrorflip)	//SCS EDIT
 		atransform.mirror = true;
 	else
 		atransform.mirror = false;

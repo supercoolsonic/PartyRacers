@@ -2604,7 +2604,7 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, UINT8 damaget
 		target->z += P_MobjFlip(target)*20*target->scale;
 	}
 	
-	if (target->type == MT_PPOCKETHYUDORO)				//SCS ADD
+	if (target != NULL && target->type == MT_PPOCKETHYUDORO)				//SCS ADD
 	{
 		if (target->target != NULL)
 		{

@@ -568,6 +568,7 @@ consvar_t cv_hudfeed_show_grades = Player("hudfeed_show_grades", "Yes").yes_no()
 consvar_t cv_hudfeed_show_snipes = Player("hudfeed_show_snipes", "Yes").yes_no().radio();
 consvar_t cv_hudfeed_show_amps = Player("hudfeed_show_amps", "Yes").yes_no().radio();
 consvar_t cv_hudfeed_toggle_shrink = Player("hudfeed_toggle_shrink", "Yes").yes_no().radio();			//SCS ADD
+consvar_t cv_hudfeed_toggle_spring = Player("hudfeed_toggle_spring", "No").yes_no().radio();			//SCS ADD
 consvar_t cv_hudfeed_position = Player("hudfeedposition", "Top-Middle").values({
 	{0, "Default"},
 	{1, "Top-Middle"},
@@ -577,6 +578,8 @@ consvar_t cv_hudfeed_position = Player("hudfeedposition", "Top-Middle").values({
 
 // Tripwire
 consvar_t cv_obvious_tripwire = Player("obvioustripwire", "On").on_off().onchange_noinit(RR_ObviousTripwire_OnChange).radio();
+
+consvar_t cv_flipcam = Player("flipcam", "Off").on_off().radio();				//SCS ADD
 
 // Voltage
 consvar_t cv_obvious_voltage = Player("obviousvoltage", "On").on_off().radio();

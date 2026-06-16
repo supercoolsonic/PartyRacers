@@ -3804,8 +3804,8 @@ void VID_DisplayRHIPostimg(void)
 		{
 			source = hw_state->software_screen_renderer->screen();
 			indexed = true;
-			vflip = postimgtype[i] == postimg_flip;
-			mirror = postimgtype[i] == postimg_mirror;
+			vflip = postimgtype[i] == postimg_flip || postimgtype[i] == postimg_mirrorflip;			//SCS EDIT
+			mirror = postimgtype[i] == postimg_mirror  || postimgtype[i] == postimg_mirrorflip;		//SCS EDIT
 		}
 		else
 		{

@@ -588,6 +588,7 @@ typedef enum
 	mpause_continue,
 	mpause_spectatetoggle,
 	mpause_psetup,
+	mpause_bookmarks, // RadioRacers: Character bookmarks
 	mpause_cheats,
 	mpause_options,
 
