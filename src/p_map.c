@@ -1114,6 +1114,9 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 		if (g_tm.thing->z + g_tm.thing->height < thing->z)
 			return BMIT_CONTINUE; // underneath
 		
+		if (g_tm.thing->state == &states[S_BHYUDORO_RETURNING])
+			return BMIT_CONTINUE;
+		
 		if (thing->type != MT_PLAYER)
 			return K_PickpocketCollide(g_tm.thing, thing) ? BMIT_CONTINUE : BMIT_ABORT;
 		else if (thing != NULL && thing->health > 0 && K_TryPickMeUp(g_tm.thing, thing, false))
@@ -1128,6 +1131,9 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 			return BMIT_CONTINUE; // overhead
 		if (g_tm.thing->z + g_tm.thing->height < thing->z)
 			return BMIT_CONTINUE; // underneath
+		
+		if (thing->state == &states[S_BHYUDORO_RETURNING])
+			return BMIT_CONTINUE;
 
 		if (g_tm.thing->type != MT_PLAYER)
 			return K_PickpocketCollide(thing, g_tm.thing) ? BMIT_CONTINUE : BMIT_ABORT;
