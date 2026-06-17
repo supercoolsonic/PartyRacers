@@ -616,7 +616,7 @@ static void AnimateFollowerForMenu(INT32 followerskin, bookmark_menu_follower_an
 void RRM_BookmarkTick(void) {
     bookmarkmenu.follower_timer++;
 
-    player_t* p = &players[stplyr-players];
+    player_t* p = &players[g_localplayers[0]];
     
     AnimateFollowerForMenu(p->followerskin, &bookmarkmenu.current_follower);
 
