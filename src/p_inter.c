@@ -3100,7 +3100,7 @@ static boolean P_DamageMobjCompat(mobj_t *target, mobj_t *inflictor, mobj_t *sou
 			break;
 			
 		case MT_PPOCKETHYUDORO:		//SCS ADD
-			if (target->type == MT_PPOCKETHYUDORO && target->state == &states[S_BHYUDORO_RETURNING])
+			if (target->type == MT_PPOCKETHYUDORO && (target->state == &states[S_BHYUDORO_RETURNING] || target->extravalue1 != 0))
 				return false;
 
 		default:
@@ -4043,9 +4043,6 @@ static boolean P_DamageMobjCompat(mobj_t *target, mobj_t *inflictor, mobj_t *sou
 			// Not a player, steal damage is intended to not do anything
 			return false;
 		}
-		
-		if (target->type == MT_PPOCKETHYUDORO && target->state == &states[S_BHYUDORO_RETURNING])		//SCS ADD
-			return false;
 
 		if ((target->flags & MF_BOSS) == MF_BOSS)
 		{

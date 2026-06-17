@@ -15,6 +15,7 @@
 #include <math.h>
 
 #include "../doomstat.h"
+#include "hw_defs.h"
 
 #ifdef HWRENDER
 #include "hw_glob.h"
@@ -6039,6 +6040,7 @@ void HWR_RenderPlayerView(void)
 
 		HWD.pfnSetShaderInfo(HWD_SHADERINFO_LIGHT_CONTRAST, maplighting.contrast);
 		HWD.pfnSetShaderInfo(HWD_SHADERINFO_LIGHT_BACKLIGHT, maplighting.backlight);
+		HWD.pfnSetShaderInfo(HWD_SHADERINFO_DITHEREDLIGHTING, cv_gllightdither.value);
 	}
 
 	if (viewssnum == 0) // Only do it if it's the first screen being rendered
@@ -6107,6 +6109,16 @@ void CV_glanisotropic_OnChange(void)
 	if (rendermode == render_opengl)
 		HWD.pfnSetSpecialState(HWD_SET_TEXTUREANISOTROPICMODE, cv_glanisotropicmode.value);
 }
+
+extern "C" void CV_gllightdither_OnChange(void);
+void CV_gllightdither_OnChange(void)
+{
+	if (rendermode == render_opengl) {
+		HWD.pfnSetShaderInfo(HWD_SHADERINFO_DITHEREDLIGHTING, cv_gllightdither.value);
+		HWR_CompileShaders();
+	}
+}
+
 extern "C" struct CVarList *cvlist_opengl;
 
 //added by Hurdler: console varibale that are saved

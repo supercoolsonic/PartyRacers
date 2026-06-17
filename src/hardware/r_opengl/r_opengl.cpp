@@ -599,7 +599,8 @@ typedef enum
 
 	// misc. (custom shaders)
 	gluniform_leveltime,
-
+	gluniform_scr_resolution,
+	gluniform_lightdithering_flag,
 	gluniform_max,
 } gluniform_t;
 
@@ -631,6 +632,7 @@ static float shader_light_y = 0.0f;
 static float shader_light_z = 0.0f;
 static INT32 shader_light_contrast = 0;
 static INT32 shader_light_backlight = 0;
+static INT32 shader_light_dithering = 0;
 
 // Lactozilla: Shader functions
 static boolean Shader_CompileProgram(gl_shader_t *shader, GLint i, const GLchar *vert_shader, const GLchar *frag_shader);
@@ -639,21 +641,71 @@ static void Shader_SetUniforms(FSurfaceInfo *Surface, GLRGBAFloat *poly, GLRGBAF
 
 static GLRGBAFloat shader_defaultcolor = {1.0f, 1.0f, 1.0f, 1.0f};
 
+/**
+* Modified version of Alug's modified version from SRB2Kart-Saturn (see: https://github.com/Indev450/SRB2Kart-Saturn)
+* of the 4x4 bayer libretro shader.
+*/
+// Arrayed constrctors are only supported in GLSL ES 3.00 > (see: float bayer)
+#define GLSL_DOOM_COLORMAP_DITHER \
+	"float baseValue = max(startmap * STARTMAP_FUDGE - scale * 0.5 * SCALE_FUDGE, cap);\n" \
+	"float endResolutionx = scr_resolution.x;\n" \
+	"float endResolutiony = scr_resolution.y;\n" \
+	"if (scr_resolution.x > 1280.0) {\n" \
+		"endResolutionx = scr_resolution.x * 0.5;\n" \
+	"}\n" \
+	"if (scr_resolution.y > 720.0) {\n" \
+		"endResolutiony = scr_resolution.y * 0.5;\n" \
+	"}\n" \
+	"float zFactor = clamp((z - 192.0) / (6144.0 - 192.0), 0.0, 1.0);\n" \
+	"int scaleFactor = int(mix(1.0, 8.0, zFactor));\n" \
+	"endResolutionx = endResolutionx * scaleFactor;\n" \
+	"endResolutiony = endResolutiony * scaleFactor;\n" \
+	"vec2 normalizedPosition = position * vec2(endResolutionx / scr_resolution.x, endResolutiony / scr_resolution.y);\n" \
+	"int x = int(mod(normalizedPosition.x, 4.0));\n" \
+	"int y = int(mod(normalizedPosition.y, 4.0));\n" \
+	"int bayerIdx = y*4+x;\n" \
+    "float bayer;\n" \
+    "if      (bayerIdx ==  0) bayer =  0.0;\n" \
+    "else if (bayerIdx ==  1) bayer =  8.0;\n" \
+    "else if (bayerIdx ==  2) bayer =  2.0;\n" \
+    "else if (bayerIdx ==  3) bayer = 10.0;\n" \
+    "else if (bayerIdx ==  4) bayer = 12.0;\n" \
+    "else if (bayerIdx ==  5) bayer =  4.0;\n" \
+    "else if (bayerIdx ==  6) bayer = 14.0;\n" \
+    "else if (bayerIdx ==  7) bayer =  6.0;\n" \
+    "else if (bayerIdx ==  8) bayer =  3.0;\n" \
+    "else if (bayerIdx ==  9) bayer = 11.0;\n" \
+    "else if (bayerIdx == 10) bayer =  1.0;\n" \
+    "else if (bayerIdx == 11) bayer =  9.0;\n" \
+    "else if (bayerIdx == 12) bayer = 15.0;\n" \
+    "else if (bayerIdx == 13) bayer =  7.0;\n" \
+    "else if (bayerIdx == 14) bayer = 13.0;\n" \
+    "else                	 bayer =  5.0;\n" \
+	"float threshold = (1.0 - pow(zFactor, 2.0)) * (bayer / 16.0);\n" \
+	"return mix(baseValue + threshold - 0.5 / 16.0, baseValue, zFactor);\n"
+	
 #define GLSL_DOOM_COLORMAP \
-	"float R_DoomColormap(float light, float z)\n" \
+	"uniform vec2 scr_resolution;\n" \
+	"uniform bool lightdithering_flag;\n" \
+	"float R_DoomColormap(float light, float z, vec2 position)\n" \
 	"{\n" \
 		"float lightnum = clamp(light / 17.0, 0.0, 15.0);\n" \
 		"float lightz = clamp(z / 16.0, 0.0, 127.0);\n" \
 		"float startmap = (15.0 - lightnum) * 4.0;\n" \
 		"float scale = 160.0 / (lightz + 1.0);\n" \
-		"return startmap - scale * 0.5;\n" \
+		"float cap = (155.0 - light) * 0.26;\n" \
+		"if (lightdithering_flag) {\n" \
+			GLSL_DOOM_COLORMAP_DITHER \
+		"} else {\n" \
+			"return startmap - scale * 0.5;\n" \
+		"}\n" \
 	"}\n"
 
 #define GLSL_DOOM_LIGHT_EQUATION \
 	"float R_DoomLightingEquation(float light)\n" \
 	"{\n" \
 		"float z = gl_FragCoord.z / gl_FragCoord.w;\n" \
-		"float colormap = floor(R_DoomColormap(light, z)) + 0.5;\n" \
+		"float colormap = floor(R_DoomColormap(light, z, gl_FragCoord.xy)) + 0.5;\n" \
 		"return clamp(colormap, 0.0, 31.0) / 32.0;\n" \
 	"}\n"
 
@@ -753,6 +805,13 @@ static GLRGBAFloat shader_defaultcolor = {1.0f, 1.0f, 1.0f, 1.0f};
 // ==================
 //  Fragment shaders
 // ==================
+#define GLSL_FLOOR_FUDGES \
+	"#define STARTMAP_FUDGE 1.06\n" \
+	"#define SCALE_FUDGE 1.15\n"
+
+#define GLSL_WALL_FUDGES \
+	"#define STARTMAP_FUDGE 1.05\n" \
+	"#define SCALE_FUDGE 2.2\n"
 
 //
 // Generic fragment shader
@@ -778,6 +837,7 @@ static GLRGBAFloat shader_defaultcolor = {1.0f, 1.0f, 1.0f, 1.0f};
 	"uniform float lighting;\n" \
 	"uniform float fade_start;\n" \
 	"uniform float fade_end;\n" \
+	GLSL_FLOOR_FUDGES \
 	GLSL_DOOM_COLORMAP \
 	GLSL_DOOM_LIGHT_EQUATION \
 	"void main(void) {\n" \
@@ -803,6 +863,7 @@ static GLRGBAFloat shader_defaultcolor = {1.0f, 1.0f, 1.0f, 1.0f};
 	"uniform vec4 fade_color;\n" \
 	"uniform float fade_start;\n" \
 	"uniform float fade_end;\n" \
+	GLSL_FLOOR_FUDGES \
 	GLSL_DOOM_COLORMAP \
 	GLSL_DOOM_LIGHT_EQUATION \
 	"void main(void) {\n" \
@@ -840,6 +901,7 @@ static GLRGBAFloat shader_defaultcolor = {1.0f, 1.0f, 1.0f, 1.0f};
 	"const float amp = 0.025;\n" \
 	"const float speed = 2.0;\n" \
 	"const float pi = 3.14159;\n" \
+	GLSL_FLOOR_FUDGES \
 	GLSL_DOOM_COLORMAP \
 	GLSL_DOOM_LIGHT_EQUATION \
 	"void main(void) {\n" \
@@ -871,6 +933,7 @@ static GLRGBAFloat shader_defaultcolor = {1.0f, 1.0f, 1.0f, 1.0f};
 	"uniform float lighting;\n" \
 	"uniform float fade_start;\n" \
 	"uniform float fade_end;\n" \
+	GLSL_FLOOR_FUDGES \
 	GLSL_DOOM_COLORMAP \
 	GLSL_DOOM_LIGHT_EQUATION \
 	"void main(void) {\n" \
@@ -1077,6 +1140,9 @@ EXPORT void HWRAPI(SetShaderInfo) (hwdshaderinfo_t info, INT32 value)
 			break;
 		case HWD_SHADERINFO_LIGHT_BACKLIGHT:
 			shader_light_backlight = value;
+			break;
+		case HWD_SHADERINFO_DITHEREDLIGHTING:
+			shader_light_dithering = value;
 			break;
 		default:
 			break;
@@ -2233,6 +2299,10 @@ static void Shader_SetUniforms(FSurfaceInfo *Surface, GLRGBAFloat *poly, GLRGBAF
 		}
 
 		UNIFORM_1(shader->uniforms[gluniform_leveltime], ((float)shader_leveltime) / TICRATE, pglUniform1f);
+		UNIFORM_2(shader->uniforms[gluniform_scr_resolution], (float)vid.width, (float)vid.height, pglUniform2f);
+
+		// Light Dithering
+		UNIFORM_1(shader->uniforms[gluniform_lightdithering_flag], shader_light_dithering, pglUniform1i);
 
 		#undef UNIFORM_1
 		#undef UNIFORM_2
@@ -2339,6 +2409,8 @@ static boolean Shader_CompileProgram(gl_shader_t *shader, GLint i, const GLchar 
 
 	// misc. (custom shaders)
 	shader->uniforms[gluniform_leveltime] = GETUNI("leveltime");
+	shader->uniforms[gluniform_scr_resolution] = GETUNI("scr_resolution");
+	shader->uniforms[gluniform_lightdithering_flag] = GETUNI("lightdithering_flag");
 
 #undef GETUNI
 

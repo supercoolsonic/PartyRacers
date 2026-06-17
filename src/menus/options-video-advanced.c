@@ -87,6 +87,9 @@ menuitem_t OPTIONS_VideoAdvanced[] =
 
 	{IT_STRING | IT_CVAR, "Anisotropic", "Lower values will improve performance at a minor quality loss.",
 		NULL, {.cvar = &cv_glanisotropicmode}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Dithered Lighting", "Should shader lighting be dithered?",
+		NULL, {.cvar = &cv_gllightdither}, 0, 0},
 
 	{IT_SPACE | IT_NOTHING, NULL,  NULL,
 		NULL, {NULL}, 0, 0},
