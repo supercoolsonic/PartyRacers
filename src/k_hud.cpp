@@ -2806,6 +2806,9 @@ static void K_drawBackupItem(void)
 
 	if (stplyr->backupitemamount <= 0)
 		return;
+	
+	if (stplyr->exiting)				//SCS ADD
+		return;
 
 	switch (stplyr->backupitemtype)
 	{

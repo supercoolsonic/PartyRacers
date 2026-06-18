@@ -9754,7 +9754,7 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 					else
 						mobj->color = SKINCOLOR_GREY;
 								
-					if (cv_toggle_ribbon_signposts.value && mobj->target->player->rings >= 20)
+					if (cv_toggle_ribbon_signposts.value && (mobj->target->player->rings + mobj->target->player->superring) >= 20)
 					{
 						mobj_t *ribbon = P_SpawnMobjFromMobj(mobj, 0, 0, 0, MT_SIGNPOSTRIBBON);
 									
