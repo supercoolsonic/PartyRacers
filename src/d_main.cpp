@@ -120,7 +120,7 @@ extern "C" consvar_t cv_lua_profile, cv_menuframeskip;
 #define ASSET_HASH_CHARS_PK3					"5c8c34c5623acf984e3f654da4509126"
 #define ASSET_HASH_FOLLOWERS_PK3				"4b61428e5f2ec806de398de8a5fba5f0"
 //#define ASSET_HASH_MAPS_PK3						"fba4799a2df28d9dec21b5ccb6f1c2f7"//"97ded03bb428f32e55fbf1df7b1dd6e9" //SCS - Gotta edit this too now since Joypolis breaks with more than 16 players.
-#define ASSET_HASH_MAPS_PK3						"423f43ba68867d96c0376275d973be93"
+#define ASSET_HASH_MAPS_PK3						"8b88efd2ce4f8a052e88201ace451fe1"
 #define ASSET_HASH_UNLOCKS_PK3					"a4de35ba9f83829ced44dfc1316ba33e"
 #define ASSET_HASH_STAFFGHOSTS_PK3				"54078aba0e42bfee54640a94c295dd65"
 #define ASSET_HASH_SHADERS_PK3					"bc0b47744d457956db2ee9ea00f59eff"
