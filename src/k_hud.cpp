@@ -2734,36 +2734,46 @@ static void K_drawKartItem(void)
 		*/
 
 		if (bf >= 0 && bf < numframes)
-			// V_DrawScaledPatch(fx-xo, fy-yo, V_HUDTRANS|V_SLIDEIN|fflags|flip, kp_flameshieldmeter_bg[bf][offset]);
-
-			V_DrawFixedPatch(							//SCS - RADIO START
-				((fx-xo)<<FRACBITS), 
-				((fy-yo)<<FRACBITS), 
-				baseHudScale, flameMeterFlags,
-				kp_flameshieldmeter_bg[bf][offset], 0	//SCS - RADIO END
-			);
+			if (offset)																										//SCS ADD
+				V_DrawScaledPatch(fx-xo, fy-yo, V_HUDTRANS|V_SLIDEIN|fflags|flip, kp_flameshieldmeter_bg[bf][offset]);
+			else
+			{
+				V_DrawFixedPatch(							//SCS - RADIO START
+					((fx-xo)<<FRACBITS), 
+					((fy-yo)<<FRACBITS), 
+					baseHudScale, flameMeterFlags,
+					kp_flameshieldmeter_bg[bf][offset], 0	//SCS - RADIO END
+				);
+			}
 
 		if (ff >= 0 && ff < numframes && stplyr->flamemeter > 0)
 		{
 			if ((stplyr->flamemeter > flamemax) && (leveltime & 1))
 			{
 				UINT8 *fsflash = R_GetTranslationColormap(TC_BLINK, SKINCOLOR_WHITE, GTC_CACHE);
-				// V_DrawMappedPatch(fx-xo, fy-yo, V_HUDTRANS|V_SLIDEIN|fflags|flip, kp_flameshieldmeter[ff][offset], fsflash);
-
-				V_DrawFixedPatch(														//SCS - RADIO START
-					((fx-xo)<<FRACBITS), ((fy-yo)<<FRACBITS), 
-					baseHudScale, flameMeterFlags,
-					kp_flameshieldmeter[ff][offset], fsflash
-				);																		//SCS - RADIO END
+				if (offset)
+					V_DrawMappedPatch(fx-xo, fy-yo, V_HUDTRANS|V_SLIDEIN|fflags|flip, kp_flameshieldmeter[ff][offset], fsflash);
+				else
+				{
+					V_DrawFixedPatch(														//SCS - RADIO START
+						((fx-xo)<<FRACBITS), ((fy-yo)<<FRACBITS), 
+						baseHudScale, flameMeterFlags,
+						kp_flameshieldmeter[ff][offset], fsflash
+					);																		//SCS - RADIO END
+				}
 			}
 			else
 			{
-				// V_DrawScaledPatch(fx-xo, fy-yo, V_HUDTRANS|V_SLIDEIN|fflags|flip, kp_flameshieldmeter[ff][offset]);
-				V_DrawFixedPatch(														//SCS - RADIO START
-					((fx-xo)<<FRACBITS), ((fy-yo)<<FRACBITS), 
-					baseHudScale, flameMeterFlags,
-					kp_flameshieldmeter[ff][offset], 0
-				);																		//SCS - RADIO END
+				if (offset)
+					V_DrawScaledPatch(fx-xo, fy-yo, V_HUDTRANS|V_SLIDEIN|fflags|flip, kp_flameshieldmeter[ff][offset]);
+				else
+				{
+					V_DrawFixedPatch(														//SCS - RADIO START
+						((fx-xo)<<FRACBITS), ((fy-yo)<<FRACBITS), 
+						baseHudScale, flameMeterFlags,
+						kp_flameshieldmeter[ff][offset], 0
+					);																		//SCS - RADIO END
+				}
 			}
 		}
 	}
@@ -9624,8 +9634,6 @@ static void K_drawInput(void)
 {
 	UINT8 viewnum = R_GetViewNumber();
 	boolean freecam = camera[viewnum].freecam;	//disable some hud elements w/ freecam
-	
-	if (r_splitscreen > 0) return;		//SCS - Can I just...disable this for now? It only shows player 1's input anyway, right? And in 4P splitscreen it's like, off screen at the bottom right. It just looks bad.
 
 	// Radio
 	isDrawingInput = false;				//SCS - RADIO
@@ -9642,8 +9650,8 @@ static void K_drawInput(void)
 	INT32 def[4][3] = {
 		{247, 156, V_SNAPTOBOTTOM | V_SNAPTORIGHT}, // 1p
 		{247, 56, V_SNAPTOBOTTOM | V_SNAPTORIGHT}, // 2p
-		{6, 52, V_SNAPTOBOTTOM | V_SNAPTOLEFT}, // 4p left
-		{282 - BASEVIDWIDTH/2, 52, V_SNAPTOBOTTOM | V_SNAPTORIGHT}, // 4p right
+		{-2, 22, V_SNAPTOBOTTOM | V_SNAPTOLEFT}, // 4p left									//SCS EDIT
+		{290 - BASEVIDWIDTH/2, 22, V_SNAPTOBOTTOM | V_SNAPTORIGHT}, // 4p right				//SCS EDIT
 	};
 	INT32 k = r_splitscreen <= 1 ? r_splitscreen : 2 + (viewnum & 1);
 	INT32 flags = def[k][2] | V_SPLITSCREEN;
@@ -9655,11 +9663,17 @@ static void K_drawInput(void)
 	}
 	mode += (r_splitscreen > 1);
 
-	if (cv_inputdisplaytogglesize.value) {
+	if (cv_inputdisplaytogglesize.value && r_splitscreen <= 1) {		//SCS EDIT - Don't allow large versions to display in 3P/4P splitscreen
 		mode += 1;
+		
 		def[k][0] = 290;
-		def[k][1] = 178;
-	}																	//SCS - RADIO START
+	
+		if (r_splitscreen < 1)											//SCS ADD - Fixing positioning of input when mini and in 2P splitscreen
+			def[k][1] = 178;
+		else															
+			def[k][1] = 78;		
+
+	}																	//SCS - RADIO END
 	bool local = !demo.playback && P_IsMachineLocalPlayer(stplyr);
 	fixed_t slide = K_GetDialogueSlide(FRACUNIT);
 	INT32 tallySlide = []() -> INT32

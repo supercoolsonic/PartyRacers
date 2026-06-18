@@ -537,14 +537,14 @@ void SCR_DisplayTicRate(void)
 	const boolean isActuallyDrawingInput = isDrawingInput && cv_inputdisplaytogglesize.value;	//SCS - RADIO START?
 	const boolean isDrawingPing = isPingDrawn && cv_hud_displaypingbesideticrate.value && r_splitscreen == 0;
 
-	if (isDrawingPing)
+	if (r_splitscreen <= 1 && isDrawingPing)			//SCS EDIT - don't shift position in 3P/4P splitscreen
 	{
 		x = 297;
 		// if (isDrawingInput)
 		// 	x -= 10;
 	}
 	
-	if (isActuallyDrawingInput)
+	if (r_splitscreen <= 1 && isActuallyDrawingInput)
 	{
 		x -= (isDrawingPing) ? 28 : 27;
 	}																							//SCS - RADIO END?
@@ -607,7 +607,7 @@ void SCR_DisplayLocalPing(void)
 		dispy = 189;
 		dispx = 298;
 
-		if (isDrawingInput && cv_inputdisplaytogglesize.value)
+		if (r_splitscreen <= 1 && isDrawingInput && cv_inputdisplaytogglesize.value)		//SCS EDIT - Don't shift position when in 3P/4P splitscreen
 			dispx = 270;
 	}
 
