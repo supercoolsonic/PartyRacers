@@ -4692,7 +4692,7 @@ static void P_SetupSignObject(mobj_t *sign, mobj_t *pmo, boolean error, UINT16 s
 	sign->color = signcolor;																//SCS ADD
 	
 	
-	if (cv_toggle_ribbon_signposts.value && (pmo->player->rings + pmo->player->superring) >= 20)						//SCS ADD
+	if (cv_toggle_ribbon_signposts.value && (pmo->player->rings + pmo->player->superringdisplay) >= 20)						//SCS ADD
 	{
 		ribbon = P_SpawnMobjFromMobj(sign, 0, 0, 0, MT_SIGNPOSTRIBBON);
 		

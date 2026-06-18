@@ -5011,7 +5011,8 @@ void K_CheckpointCrossAward(player_t *player)
 	if (!player->cangrabitems && ((netgame && player->gradingpointnum >= cv_toggle_checkpointitemnum_net.value) || !netgame && player->gradingpointnum >= cv_toggle_checkpointitemnum.value)) //SCS EDIT - Can modify how many checkpoints are needed to make item boxes appear
 		player->cangrabitems = 1;
 
-	K_AwardPlayerRings(player, (player->bot ? 20 : 10), true);
+	if (player->laps <= numlaps)											//SCS TEST
+		K_AwardPlayerRings(player, (player->bot ? 20 : 10), true);
 
 	// Update Duel scoring.
 	player_t *leader = K_CheckpointLeader();

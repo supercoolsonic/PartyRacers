@@ -492,7 +492,7 @@ static menuitem_t OPTIONS_RadioRacersFun2[] =														//SCS ADD
 	{IT_STRING | IT_CVAR, "Checkpoint Items Number", "How many checkpoints are needed to make item boxes appear? \x82(Offline only.)",
 		NULL, {.cvar = &cv_toggle_checkpointitemnum}, 0, 0},	
 	
-	{IT_STRING | IT_CVAR, "Randomized Item Capsules", "Item (Not Ring) Capsules in races will have randomized content. (\x82(Offline only.)",
+	{IT_STRING | IT_CVAR, "Randomized Item Capsules", "Item (Not Ring) Capsules in races will have randomized content. \x82(Offline only.)",
 		NULL, {.cvar = &cv_randomizeitemcapsules}, 0, 0},
 		
 	{IT_STRING | IT_CVAR, "Mini-Ranking Shaking", "Toggle whether the player icons in the mini-ranking shake when they take damage.",
