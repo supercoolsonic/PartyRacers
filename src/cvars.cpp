@@ -569,6 +569,7 @@ consvar_t cv_hudfeed_show_snipes = Player("hudfeed_show_snipes", "Yes").yes_no()
 consvar_t cv_hudfeed_show_amps = Player("hudfeed_show_amps", "Yes").yes_no().radio();
 consvar_t cv_hudfeed_toggle_shrink = Player("hudfeed_toggle_shrink", "Yes").yes_no().radio();			//SCS ADD
 consvar_t cv_hudfeed_toggle_spring = Player("hudfeed_toggle_spring", "No").yes_no().radio();			//SCS ADD
+consvar_t cv_hudfeed_toggle_ringsting = Player("hudfeed_toggle_ringsting", "No").yes_no().radio();		//SCS ADD
 consvar_t cv_hudfeed_position = Player("hudfeedposition", "Top-Middle").values({
 	{0, "Default"},
 	{1, "Top-Middle"},

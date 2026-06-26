@@ -421,16 +421,9 @@ static void M_HandleBookmarkDelete(void)
     RR_VerifyBookmarks();
 }
 
-static void M_HandleBookmarkApply(void)
+static void M_BookmarkApply(void)
 {
-    if (bookmarkmenu.stage != BMENU_STAGE_BROWSING)
-        return;
-
     characterbookmarkparent_t *bookmark_parent = FetchSelectedBookmarkParent();
-    if (IsBookmarkUnusable(bookmark_parent)) {
-        S_StartSound(NULL, sfx_s3k7b); 
-        return;
-    }
 
     characterbookmark_t *bookmark = &bookmark_parent->bookmark;
     
@@ -473,6 +466,22 @@ static void M_HandleBookmarkApply(void)
 
     S_StartSound(NULL, skins[bookmark->skin]->soundsid[S_sfx[sfx_kattk2].skinsound]);
     S_StartSound(NULL, sfx_s3k63);
+	
+    // Handled in the tick handler, see M_BookmarkApply
+    bookmarkmenu.selected = false;
+}
+
+static void M_HandleBookmarkApply(void)
+{
+    if (bookmarkmenu.stage != BMENU_STAGE_BROWSING)
+        return;
+
+    if (IsBookmarkUnusable(FetchSelectedBookmarkParent())) {
+        S_StartSound(NULL, sfx_s3k7b); 
+        return;
+    }
+
+    bookmarkmenu.selected = true;
 }
 
 boolean RRM_BookmarkHandler(INT32 choice) {
@@ -627,6 +636,11 @@ void RRM_BookmarkTick(void) {
             AnimateFollowerForMenu(
         selected_bookmark->bookmark.follower, &bookmarkmenu.preview_follower);
         }
+    }
+	
+    // Player has applied a bookmark
+    if (bookmarkmenu.selected) {
+        M_BookmarkApply();
     }
 
     if (bookmarkmenu.stage != BMENU_STAGE_BROWSING) {

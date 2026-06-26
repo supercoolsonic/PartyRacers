@@ -706,6 +706,8 @@ static ItemConfigForFeedUpdate getItemConfigForFeedAttackUpdate(playerattacks_t 
             };
 		case ATTACK_PANCAKE:					//SCS ADD
 			return {"RRISPANK", 26, 22};
+		case ATTACK_RINGSTING:					//SCS ADD
+			return {"RRISRSTG", 16, 16};
 		case ATTACK_DEATH:					//SCS ADD
 			return {"RRISDEATH", 26, 22};
         case ATTACK_BUBBLESHIELD_TRAP:

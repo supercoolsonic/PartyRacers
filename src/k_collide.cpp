@@ -2136,6 +2136,10 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 				// CONS_Printf("T2 SFS\n");
 			}
 			stung = true;
+			
+			if (cv_hudfeed_toggle_ringsting.value)										//SCS ADD
+				RR_PushPlayerInteractionToFeed(t1, t2, ATTACK_RINGSTING, 0);
+			
 		}
 
 		P_PlayerRingBurst(t2->player, 1);

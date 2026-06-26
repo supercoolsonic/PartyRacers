@@ -132,6 +132,7 @@ extern consvar_t cv_hudfeed_show_snipes; // Show snipes (SEGA!) in the feed?
 extern consvar_t cv_hudfeed_show_amps; // Show the amps in the feed?
 extern consvar_t cv_hudfeed_toggle_shrink; // Show Shrink hits in the feed?			//SCS ADD
 extern consvar_t cv_hudfeed_toggle_spring; // Show Spring hits in the feed?			//SCS ADD
+extern consvar_t cv_hudfeed_toggle_ringsting; //Show Ring Sting hits in the feed?	//SCS ADD
 
 // HUD -- Battle
 extern consvar_t cv_battle_toggle_emerald_on_minimap; 

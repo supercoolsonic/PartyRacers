@@ -162,7 +162,10 @@ static menuitem_t OPTIONS_RadioRacersHudfeed[] =
 		NULL, {.cvar = &cv_hudfeed_toggle_shrink}, 0, 0},
 		
 	{IT_STRING | IT_CVAR, "Show Spring Hits?", "Show Spring hits in the feed?",									//SCS ADD
-		NULL, {.cvar = &cv_hudfeed_toggle_spring}, 0, 0}
+		NULL, {.cvar = &cv_hudfeed_toggle_spring}, 0, 0},
+
+	{IT_STRING | IT_CVAR, "Show Ring Sting Hits?", "Show Ring Sting hits in the feed?",							//SCS ADD
+		NULL, {.cvar = &cv_hudfeed_toggle_ringsting}, 0, 0}
 };
 
 void RadioHudfeedMenu_Init(void)
