@@ -69,22 +69,24 @@ typedef LPVOID (WINAPI *p_MapViewOfFile) (HANDLE, DWORD, DWORD, DWORD, SIZE_T);
 
 #ifdef HAVE_SDL
 #define _MATH_DEFINES_DEFINED
-#include "SDL.h"
-
-#ifdef HAVE_TTF
-#include "i_ttf.h"
-#endif
+#include <SDL3/SDL.h>
 
 #ifdef _MSC_VER
 #pragma warning(default : 4214 4244)
 #endif
 
-#include "SDL_cpuinfo.h"
+#include <SDL3/SDL_cpuinfo.h>
 #define HAVE_SDLCPUINFO
 
 #if defined (__unix__) || defined(__APPLE__) || (defined (UNIXCOMMON) && !defined (__HAIKU__))
 #if defined (__linux__)
 #include <sys/vfs.h>
+#elif defined(__APPLE__)
+#include <sys/param.h>
+#include <sys/mount.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#include <mach/mach.h>
 #else
 #include <sys/param.h>
 #include <sys/mount.h>
@@ -217,8 +219,8 @@ static std::thread::id g_main_thread_id;
 */
 SDLJoyInfo_t JoyInfo[MAXSPLITSCREENPLAYERS];
 
-SDL_bool consolevent = SDL_FALSE;
-SDL_bool framebuffer = SDL_FALSE;
+bool consolevent = false;
+bool framebuffer = false;
 
 UINT8 keyboard_started = false;
 boolean g_in_exiting_signal_handler = false;
@@ -650,7 +652,7 @@ FUNCNORETURN static ATTRNORETURN void quit_handler(int num)
 
 #ifdef HAVE_TERMIOS
 // TERMIOS console code from Quake3: thank you!
-SDL_bool stdin_active = SDL_TRUE;
+bool stdin_active = true;
 
 typedef struct
 {
@@ -756,7 +758,7 @@ static void I_ShutdownConsole(void)
 	if (consolevent)
 	{
 		I_OutputMsg("Shutdown tty console\n");
-		consolevent = SDL_FALSE;
+		consolevent = false;
 		tcsetattr (STDIN_FILENO, TCSADRAIN, &tty_tc);
 	}
 }
@@ -771,18 +773,18 @@ static void I_StartupConsole(void)
 	signal(SIGTTIN, SIG_IGN);
 	signal(SIGTTOU, SIG_IGN);
 
-	consolevent = static_cast<SDL_bool>(!M_CheckParm("-noconsole"));
-	framebuffer = static_cast<SDL_bool>(M_CheckParm("-framebuffer"));
+	consolevent = static_cast<bool>(!M_CheckParm("-noconsole"));
+	framebuffer = static_cast<bool>(M_CheckParm("-framebuffer"));
 
 	if (framebuffer)
-		consolevent = SDL_FALSE;
+		consolevent = false;
 
 	if (!consolevent) return;
 
 	if (isatty(STDIN_FILENO)!=1)
 	{
 		I_OutputMsg("stdin is not a tty, tty console mode failed\n");
-		consolevent = SDL_FALSE;
+		consolevent = false;
 		return;
 	}
 	memset(&tty_con, 0x00, sizeof(tty_con));
@@ -960,7 +962,7 @@ static void I_StartupConsole(void)
 	if (gotConsole)
 	{
 		SetConsoleTitleA("Dr. Robotnik's Ring Racers Console");
-		consolevent = SDL_TRUE;
+		consolevent = true;
 	}
 
 	//Let get the real console HANDLE, because Mingw's Bash is bad!
@@ -985,15 +987,15 @@ void I_GetConsoleEvents(void){}
 static inline void I_StartupConsole(void)
 {
 #ifdef _DEBUG
-	consolevent = M_CheckParm("-noconsole") > 0 ? SDL_FALSE : SDL_TRUE;
+		consolevent = M_CheckParm("-noconsole") > 0 ? false : true;
 #else
-	consolevent = M_CheckParm("-console") > 0 ? SDL_TRUE : SDL_FALSE;
+		consolevent = M_CheckParm("-console") > 0 ? true : false;
 #endif
 
-	framebuffer = M_CheckParm("-framebuffer") > 0 ? SDL_TRUE : SDL_FALSE;
+	framebuffer = M_CheckParm("-framebuffer") > 0 ? true : false;
 
 	if (framebuffer)
-		consolevent = SDL_FALSE;
+		consolevent = false;
 }
 static inline void I_ShutdownConsole(void){}
 #endif
@@ -1066,11 +1068,6 @@ void I_OutputMsg(const char *fmt, ...)
 	va_start(argptr,fmt);
 	vsprintf(txt, fmt, argptr);
 	va_end(argptr);
-
-#ifdef HAVE_TTF
-	if (TTF_WasInit()) I_TTFDrawText(currentfont, solid, DEFAULTFONTFGR, DEFAULTFONTFGG, DEFAULTFONTFGB,  DEFAULTFONTFGA,
-	DEFAULTFONTBGR, DEFAULTFONTBGG, DEFAULTFONTBGB, DEFAULTFONTBGA, txt);
-#endif
 
 #if defined (_WIN32) && defined (_MSC_VER)
 	OutputDebugStringA(txt);
@@ -1209,21 +1206,12 @@ I_CursedWindowMovement (int xd, int yd)
 
 boolean I_HasOpenURL()
 {
-	#if (SDL_VERSION_ATLEAST(2, 0, 14))
 		return true;
-	#else
-		return false;
-	#endif
 }
 
 void I_OpenURL(const char *data)
 {
-	#if (SDL_VERSION_ATLEAST(2, 0, 14))
 		SDL_OpenURL(data);
-	#else
-		(void)data;
-		return;
-	#endif
 }
 
 //
@@ -1255,48 +1243,36 @@ void I_JoyScale4(void)
 
 void I_SetGamepadPlayerIndex(INT32 device_id, INT32 player)
 {
-#if !(SDL_VERSION_ATLEAST(2,0,12))
-	(void)device_id;
-	(void)player;
-#else
 	I_Assert(device_id > 0); // Gamepad devices are always ID 1 or higher
 	I_Assert(player >= 0 && player < MAXSPLITSCREENPLAYERS);
 
-	SDL_GameController *controller = SDL_GameControllerFromInstanceID(device_id - 1);
+	SDL_Gamepad *controller = SDL_GetGamepadFromID(device_id - 1);
 	if (controller == NULL)
 	{
 		return;
 	}
 
-	SDL_GameControllerSetPlayerIndex(controller, player);
-#endif
+	SDL_SetGamepadPlayerIndex(controller, player);
 }
 
 void I_SetGamepadIndicatorColor(INT32 device_id, UINT8 red, UINT8 green, UINT8 blue)
 {
-#if !(SDL_VERSION_ATLEAST(2,0,14))
-	(void)device_id;
-	(void)red;
-	(void)green;
-	(void)blue;
-#else
 	I_Assert(device_id > 0); // Gamepad devices are always ID 1 or higher
 
-	SDL_GameController *controller = SDL_GameControllerFromInstanceID(device_id - 1);
+	SDL_Gamepad *controller = SDL_GetGamepadFromID(device_id - 1);
 	if (controller == NULL)
 	{
 		return;
 	}
 
-	SDL_GameControllerSetLED(controller, red, green, blue);
-#endif
+	SDL_SetGamepadLED(controller, red, green, blue);
 }
 
 void I_GetGamepadGuid(INT32 device_id, char *out, int out_len)
 {
-	SDL_GameController *controller;
+	SDL_Gamepad *controller;
 	SDL_Joystick *joystick;
-	SDL_JoystickGUID guid;
+	SDL_GUID guid;
 
 	I_Assert(device_id > 0);
 	I_Assert(out != NULL);
@@ -1308,26 +1284,26 @@ void I_GetGamepadGuid(INT32 device_id, char *out, int out_len)
 		return;
 	}
 
-	controller = SDL_GameControllerFromInstanceID(device_id - 1);
+	controller = SDL_GetGamepadFromID(device_id - 1);
 	if (controller == NULL)
 	{
 		out[0] = 0;
 		return;
 	}
-	joystick = SDL_GameControllerGetJoystick(controller);
+	joystick = SDL_GetGamepadJoystick(controller);
 	if (joystick == NULL)
 	{
 		out[0] = 0;
 		return;
 	}
 
-	guid = SDL_JoystickGetGUID(joystick);
-	SDL_JoystickGetGUIDString(guid, out, out_len);
+	guid = SDL_GetJoystickGUID(joystick);
+	SDL_GUIDToString(guid, out, out_len);
 }
 
 void I_GetGamepadName(INT32 device_id, char *out, int out_len)
 {
-	SDL_GameController *controller;
+	SDL_Gamepad *controller;
 	const char *name;
 	int name_len;
 
@@ -1335,14 +1311,14 @@ void I_GetGamepadName(INT32 device_id, char *out, int out_len)
 	I_Assert(out != NULL);
 	I_Assert(out_len > 0);
 
-	controller = SDL_GameControllerFromInstanceID(device_id - 1);
+	controller = SDL_GetGamepadFromID(device_id - 1);
 	if (controller == NULL)
 	{
 		out[0] = 0;
 		return;
 	}
 
-	name = SDL_GameControllerName(controller);
+	name = SDL_GetGamepadName(controller);
 	name_len = strlen(name) + 1;
 	memcpy(out, name, out_len < name_len ? out_len : name_len);
 	out[out_len - 1] = 0;
@@ -1350,40 +1326,28 @@ void I_GetGamepadName(INT32 device_id, char *out, int out_len)
 
 void I_GamepadRumble(INT32 device_id, UINT16 low_strength, UINT16 high_strength)
 {
-#if !(SDL_VERSION_ATLEAST(2,0,9))
-	(void)device_id;
-	(void)low_strength;
-	(void)high_strength;
-#else
 	I_Assert(device_id > 0); // Gamepad devices are always ID 1 or higher
 
-	SDL_GameController *controller = SDL_GameControllerFromInstanceID(device_id - 1);
+	SDL_Gamepad *controller = SDL_GetGamepadFromID(device_id - 1);
 	if (controller == NULL)
 	{
 		return;
 	}
 
-	SDL_GameControllerRumble(controller, low_strength, high_strength, 0);
-#endif
+	SDL_RumbleGamepad(controller, low_strength, high_strength, 0);
 }
 
 void I_GamepadRumbleTriggers(INT32 device_id, UINT16 left_strength, UINT16 right_strength)
 {
-#if !(SDL_VERSION_ATLEAST(2,0,14))
-	(void)device_id;
-	(void)left_strength;
-	(void)right_strength;
-#else
 	I_Assert(device_id > 0); // Gamepad devices are always ID 1 or higher
 
-	SDL_GameController *controller = SDL_GameControllerFromInstanceID(device_id - 1);
+	SDL_Gamepad *controller = SDL_GetGamepadFromID(device_id - 1);
 	if (controller == NULL)
 	{
 		return;
 	}
 
-	SDL_GameControllerRumbleTriggers(controller, left_strength, right_strength, 0);
-#endif
+	SDL_RumbleGamepadTriggers(controller, left_strength, right_strength, 0);
 }
 
 //
@@ -1397,16 +1361,16 @@ void I_StartupInput(void)
 	{
 		char dbpath[1024];
 		sprintf(dbpath, "%s" PATHSEP "gamecontrollerdb.txt", srb2path);
-		SDL_GameControllerAddMappingsFromFile(dbpath);
+		SDL_AddGamepadMappingsFromFile(dbpath);
 	}
 
 	{
 		char dbpath[1024];
 		sprintf(dbpath, "%s" PATHSEP "gamecontrollerdb_user.txt", srb2home);
-		SDL_GameControllerAddMappingsFromFile(dbpath);
+		SDL_AddGamepadMappingsFromFile(dbpath);
 	}
 
-	if (SDL_WasInit(SDL_INIT_GAMECONTROLLER))
+	if (SDL_WasInit(SDL_INIT_GAMEPAD))
 	{
 		return;
 	}
@@ -1419,7 +1383,7 @@ void I_StartupInput(void)
 
 	CONS_Printf("I_StartupInput()...\n");
 
-	if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) == -1)
+	if (!SDL_InitSubSystem(SDL_INIT_GAMEPAD))
 	{
 		CONS_Printf(M_GetText("Couldn't initialize game controllers: %s\n"), SDL_GetError());
 		return;
@@ -1434,10 +1398,10 @@ static void I_ShutdownInput(void)
 	// The game code is now responsible for resetting its internal state based on ev_gamepad_device_removed events.
 	// In practice, Input should never be shutdown and restarted during runtime.
 
-	if (SDL_WasInit(SDL_INIT_GAMECONTROLLER) == SDL_INIT_GAMECONTROLLER)
+	if (SDL_WasInit(SDL_INIT_GAMEPAD) == SDL_INIT_GAMEPAD)
 	{
 		CONS_Printf("Shutting down gamecontroller system\n");
-		SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER);
+		SDL_QuitSubSystem(SDL_INIT_GAMEPAD);
 		I_OutputMsg("I_Joystick: SDL's Game Controller system has been shutdown\n");
 	}
 
@@ -1453,7 +1417,12 @@ INT32 I_NumJoys(void)
 {
 	INT32 numjoy = 0;
 	if (SDL_WasInit(SDL_INIT_JOYSTICK) == SDL_INIT_JOYSTICK)
-		numjoy = SDL_NumJoysticks();
+	{
+		int count = 0;
+		SDL_JoystickID *joysticks = SDL_GetJoysticks(&count);
+		numjoy = count;
+		if (joysticks) SDL_free(joysticks);
+	}
 	return numjoy;
 }
 
@@ -1472,13 +1441,13 @@ const char *I_GetJoyName(INT32 joyindex)
 	}
 
 	// joyindex corresponds to the open joystick *instance* ID, not the joystick number
-	joystick = SDL_JoystickFromInstanceID(joyindex);
+	joystick = SDL_GetJoystickFromID(joyindex);
 	if (joystick == NULL)
 	{
 		return joyname;
 	}
 
-	tempname = SDL_JoystickNameForIndex(joyindex);
+	tempname = SDL_GetJoystickName(joystick);
 	if (tempname)
 	{
 		strncpy(joyname, tempname, 254);
@@ -1811,10 +1780,8 @@ static void I_Fork(void)
 
 INT32 I_StartupSystem(void)
 {
-	SDL_version SDLcompiled;
-	SDL_version SDLlinked;
-	SDL_VERSION(&SDLcompiled)
-	SDL_GetVersion(&SDLlinked);
+	Uint32 SDLcompiled = SDL_VERSION;
+	Uint32 SDLlinked = SDL_GetVersion();
 	I_StartupConsole();
 #ifdef NEWSIGNALHANDLER
 	// This is useful when debugging. It lets GDB attach to
@@ -1830,15 +1797,15 @@ INT32 I_StartupSystem(void)
 #endif
 	I_RegisterSignals();
 	I_OutputMsg("Compiled for SDL version: %d.%d.%d\n",
-	 SDLcompiled.major, SDLcompiled.minor, SDLcompiled.patch);
+	 SDL_VERSIONNUM_MAJOR(SDLcompiled), SDL_VERSIONNUM_MINOR(SDLcompiled), SDL_VERSIONNUM_MICRO(SDLcompiled));
 	I_OutputMsg("Linked with SDL version: %d.%d.%d\n",
-	 SDLlinked.major, SDLlinked.minor, SDLlinked.patch);
+	 SDL_VERSIONNUM_MAJOR(SDLlinked), SDL_VERSIONNUM_MINOR(SDLlinked), SDL_VERSIONNUM_MICRO(SDLlinked));
 
 #if (SDL_VERSION_ATLEAST(2, 0, 18))
 	SDL_SetHint(SDL_HINT_APP_NAME, "Dr. Robotnik's Ring Racers");
 #endif
 
-	if (SDL_Init(0) < 0)
+	if (!SDL_Init(0))
 		I_Error("Dr. Robotnik's Ring Racers: SDL System Error: %s", SDL_GetError()); //Alam: Oh no....
 #ifndef NOMUMBLE
 	I_SetupMumble();
@@ -1851,12 +1818,12 @@ INT32 I_StartupSystem(void)
 //
 FUNCNORETURN void ATTRNORETURN I_Quit(void)
 {
-	static SDL_bool quiting = SDL_FALSE;
+	static bool quiting = false;
 
 	/* prevent recursive I_Quit() */
 	if (quiting) goto death;
-	SDL_ShowCursor(SDL_TRUE);
-	quiting = SDL_FALSE;
+	SDL_ShowCursor();
+	quiting = false;
 	M_SaveConfig(NULL); //save game config, cvars..
 	M_SaveJoinedIPs();
 
@@ -2382,7 +2349,15 @@ static const char *locateWad(void)
 
 	I_OutputMsg("RINGRACERSWADDIR");
 	// does RINGRACERSWADDIR exist?
-	if (((envstr = I_GetEnv("RINGRACERSWADDIR")) != NULL) && isWadPathOk(envstr))
+
+#ifdef DEVELOP
+	if ((envstr = I_GetEnv("DEVELOPRRWADDIR")) == NULL)
+#endif
+	{
+		envstr = I_GetEnv("RINGRACERSWADDIR");
+	}
+
+	if ((envstr != NULL) && isWadPathOk(envstr))
 		return envstr;
 
 #ifndef NOCWD
@@ -2543,7 +2518,7 @@ static long get_entry(const char* name, const char* buf)
 #endif
 
 // quick fix for compil
-UINT32 I_GetFreeMem(UINT32 *total)
+UINT64 I_GetFreeMem(UINT64 *total)
 {
 #ifdef FREEBSD
 	struct vmmeter sum;
@@ -2557,14 +2532,14 @@ UINT32 I_GetFreeMem(UINT32 *total)
 	if ((kd = kvm_open(NULL, NULL, NULL, O_RDONLY, "kvm_open")) == NULL)
 	{
 		if (total)
-			*total = 0L;
+			*total = 0;
 		return 0;
 	}
 	if (kvm_nlist(kd, namelist) != 0)
 	{
 		kvm_close (kd);
 		if (total)
-			*total = 0L;
+			*total = 0;
 		return 0;
 	}
 	if (kvm_read(kd, namelist[X_SUM].n_value, &sum,
@@ -2572,33 +2547,33 @@ UINT32 I_GetFreeMem(UINT32 *total)
 	{
 		kvm_close(kd);
 		if (total)
-			*total = 0L;
+			*total = 0;
 		return 0;
 	}
 	kvm_close(kd);
 
 	if (total)
-		*total = sum.v_page_count * sum.v_page_size;
-	return sum.v_free_count * sum.v_page_size;
+		*total = (UINT64)sum.v_page_count * sum.v_page_size;
+	return (UINT64)sum.v_free_count * sum.v_page_size;
 #elif defined (SOLARIS)
 	/* Just guess */
 	if (total)
 		*total = 32 << 20;
 	return 32 << 20;
 #elif defined (_WIN32)
-	MEMORYSTATUS info;
+	MEMORYSTATUSEX info;
 
-	info.dwLength = sizeof (MEMORYSTATUS);
-	GlobalMemoryStatus( &info );
+	info.dwLength = sizeof (MEMORYSTATUSEX);
+	GlobalMemoryStatusEx( &info );
 	if (total)
-		*total = (UINT32)info.dwTotalPhys;
-	return (UINT32)info.dwAvailPhys;
+		*total = (UINT64)info.ullTotalPhys;
+	return (UINT64)info.ullAvailPhys;
 #elif defined (__linux__)
 	/* Linux */
 	char buf[1024];
 	char *memTag;
-	UINT32 freeKBytes;
-	UINT32 totalKBytes;
+	UINT64 freeKBytes;
+	UINT64 totalKBytes;
 	INT32 n;
 	INT32 meminfo_fd = -1;
 	long Cached;
@@ -2615,7 +2590,7 @@ UINT32 I_GetFreeMem(UINT32 *total)
 	{
 		// Error
 		if (total)
-			*total = 0L;
+			*total = 0;
 		return 0;
 	}
 
@@ -2624,12 +2599,12 @@ UINT32 I_GetFreeMem(UINT32 *total)
 	{
 		// Error
 		if (total)
-			*total = 0L;
+			*total = 0;
 		return 0;
 	}
 
 	memTag += sizeof (MEMTOTAL);
-	totalKBytes = atoi(memTag);
+	totalKBytes = strtoul(memTag, NULL, 10);
 
 	if ((memTag = strstr(buf, MEMAVAILABLE)) == NULL)
 	{
@@ -2643,7 +2618,7 @@ UINT32 I_GetFreeMem(UINT32 *total)
 		{
 			// Error
 			if (total)
-				*total = 0L;
+				*total = 0;
 			return 0;
 		}
 		freeKBytes = MemAvailable;
@@ -2651,12 +2626,40 @@ UINT32 I_GetFreeMem(UINT32 *total)
 	else
 	{
 		memTag += sizeof (MEMAVAILABLE);
-		freeKBytes = atoi(memTag);
+		freeKBytes = strtoul(memTag, NULL, 10);
 	}
 
 	if (total)
 		*total = totalKBytes << 10;
 	return freeKBytes << 10;
+#elif defined(__APPLE__)
+	/* macOS */
+	mach_port_t host = mach_host_self();
+	kern_return_t kr;
+	mach_msg_type_number_t count;
+	vm_size_t v_page_size;
+	struct vm_statistics64 vm_stats;
+	uint64_t total_mem, free_mem;
+	size_t size;
+
+	size = sizeof(total_mem);
+	if (sysctlbyname("hw.memsize", &total_mem, &size, NULL, 0) < 0)
+		total_mem = 0;
+
+	kr = host_page_size(host, &v_page_size);
+	if (kr != KERN_SUCCESS)
+		v_page_size = 4096;
+
+	count = HOST_VM_INFO64_COUNT;
+	kr = host_statistics64(host, HOST_VM_INFO64, (host_info64_t)&vm_stats, &count);
+	if (kr == KERN_SUCCESS)
+		free_mem = (uint64_t)(vm_stats.free_count + vm_stats.inactive_count) * v_page_size;
+	else
+		free_mem = 0;
+
+	if (total)
+		*total = (UINT64)total_mem;
+	return (UINT64)free_mem;
 #else
 	// Guess 48 MB.
 	if (total)

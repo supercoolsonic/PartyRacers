@@ -163,6 +163,9 @@ static patch_t *kp_itemtimer[2];
 static patch_t *kp_itemmulsticker[2];
 static patch_t *kp_itemx;
 
+static patch_t *kp_itemlistmeter[6];		//SCS ADD
+static patch_t *kp_itemlistmetersmall[4];	//SCS ADD
+
 static patch_t *kp_sadface[3];
 static patch_t *kp_sneaker[5];			//SCS EDIT
 static patch_t *kp_rocketsneaker[3];
@@ -676,7 +679,23 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_itemmulsticker[0], "K_ITMUL");
 	HU_UpdatePatch(&kp_itemx, "K_ITX");
 	
-	//Octus Ink Blotches							//SCS ADD
+	sprintf(buffer, "K_ILISTx");								//SCS ADD START
+	for (i = 0; i < 6; i++)
+	{
+		buffer[7] = '1'+i;
+		HU_UpdatePatch(&kp_itemlistmeter[i], "%s", buffer);
+		
+	}
+	
+	sprintf(buffer, "K_ISLSTx");
+	for (i = 0; i < 4; i++)
+	{
+		buffer[7] = '1'+i;
+		HU_UpdatePatch(&kp_itemlistmetersmall[i], "%s", buffer);
+		
+	}
+	
+	//Octus Ink Blotches
 	HU_UpdatePatch(&kp_inkblotches[0], "INK_K_ISBG");
 	HU_UpdatePatch(&kp_inkblotches[1], "INK_K_ITBG");
 	HU_UpdatePatch(&kp_inkblotches[2], "INK_K_SPDMBG");
@@ -684,13 +703,11 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_inkblotches[4], "INK_RNGBACKA");
 	HU_UpdatePatch(&kp_inkblotches[5], "INK_RNGBACKB");
 	HU_UpdatePatch(&kp_inkblotches[6], "INK_SMRNGBGA");
-	HU_UpdatePatch(&kp_inkblotches[7], "INK_SMRNGBGB");
+	HU_UpdatePatch(&kp_inkblotches[7], "INK_SMRNGBGB");		//SCS ADD END
 	
 	//Pickpocket Hyudoro combo HUD					//SCS ADD
 	//HU_UpdatePatch(&kp_pickpockcombo[0], "K_PHCL");
 	//HU_UpdatePatch(&kp_pickpockcombo[1], "K_PHCS");
-	
-	
 
 	HU_UpdatePatch(&kp_ringbg[0], "K_RBBG");
 	HU_UpdatePatch(&kp_ringbg[1], "K_SBBG");
@@ -2436,10 +2453,41 @@ static void K_drawKartItem(void)
 		if (isHudTranslucencyAlreadyLow || stplyr->exiting)
 			itemBackgroundFlags = V_HUDTRANS;
 	}
+	
+	if (cv_obvious_itemreel.value == 1 && stplyr->itemRoulette.active && stplyr->itemRoulette.itemList.len > 1)		//SCS ADD START
+	{
+		SINT8 listindex = 1;
+		UINT8 ListYOffset = (offset ? 9 : (r_splitscreen == 1 ? 2 : 0));
+		
+		if (stplyr->itemRoulette.index == 0)
+			V_DrawFixedPatch(((fx - (offset ? -8 : 2))<<FRACBITS), ((fy+ListYOffset)<<FRACBITS), (shouldDrawOnPlayer && baseHudScale == FRACUNIT) ? baseHudScale : ((4*FRACUNIT)/5), itemBackgroundFlags, offset ? kp_itemlistmetersmall[2] : kp_itemlistmeter[3], 0);
+		else
+			V_DrawFixedPatch(((fx - (offset ? -10 : 0))<<FRACBITS), ((fy+ListYOffset)<<FRACBITS), (shouldDrawOnPlayer && baseHudScale == FRACUNIT) ? baseHudScale : ((4*FRACUNIT)/5), itemBackgroundFlags, offset ? kp_itemlistmetersmall[0] : kp_itemlistmeter[0], 0);
+		
+		ListYOffset = ListYOffset + (offset ? 2 : 4);
+		
+		for (listindex; listindex < stplyr->itemRoulette.itemList.len-1; listindex++)
+		{
+			if (stplyr->itemRoulette.index == listindex)
+				V_DrawFixedPatch(((fx - (offset ? -8 : 2))<<FRACBITS), ((fy+ListYOffset)<<FRACBITS), (shouldDrawOnPlayer && baseHudScale == FRACUNIT) ? baseHudScale : ((4*FRACUNIT)/5), itemBackgroundFlags, offset ? kp_itemlistmetersmall[3] : kp_itemlistmeter[4], 0);
+			else
+				V_DrawFixedPatch(((fx - (offset ? -10 : 0))<<FRACBITS), ((fy+ListYOffset)<<FRACBITS), (shouldDrawOnPlayer && baseHudScale == FRACUNIT) ? baseHudScale : ((4*FRACUNIT)/5), itemBackgroundFlags, offset ? kp_itemlistmetersmall[1] : kp_itemlistmeter[1], 0);
+			
+			ListYOffset = ListYOffset + (offset ? 2 : 3);
+		}
+		
+		if (stplyr->itemRoulette.index == (stplyr->itemRoulette.itemList.len-1))
+			V_DrawFixedPatch(((fx - (offset ? -8 : 2))<<FRACBITS), ((fy+ListYOffset)<<FRACBITS), (shouldDrawOnPlayer && baseHudScale == FRACUNIT) ? baseHudScale : ((4*FRACUNIT)/5), itemBackgroundFlags, offset ? kp_itemlistmetersmall[3] : kp_itemlistmeter[5], 0);
+		else
+			V_DrawFixedPatch(((fx - (offset ? -10 : 0))<<FRACBITS), ((fy+ListYOffset)<<FRACBITS), (shouldDrawOnPlayer && baseHudScale == FRACUNIT) ? baseHudScale : ((4*FRACUNIT)/5), itemBackgroundFlags, offset ? kp_itemlistmetersmall[1] : kp_itemlistmeter[2], 0);
+		
+	}												//SCS ADD END
+	
+	
 	V_DrawFixedPatch(
 		(fx<<FRACBITS), (fy<<FRACBITS), 
 		baseHudScale, itemBackgroundFlags,
-		localbg, 0
+		localbg, boxmap												//SCS EDIT - Why we not using boxmap anymore? This is what handles the flash when the reel loops around. Bruh. Restoring this
 	);																//SCS - RADIO END
 
 	// Need to draw these in a particular order, for sorting.
@@ -2789,7 +2837,7 @@ static void K_drawKartItem(void)
 			);
 		}
 		else
-			V_DrawMappedPatch(fx, fy, V_HUDTRANS|V_SLIDEIN|fflags, localinkblotch, boxmap);	
+			V_DrawMappedPatch(fx, fy, V_HUDTRANS|V_SLIDEIN|fflags, localinkblotch, 0);	
 		
 	}
 	

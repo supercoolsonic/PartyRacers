@@ -1949,10 +1949,7 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 			reject = false;
 		
 
-		if (i == KITEM_LIGHTNINGSHIELD && (player->mo->eflags & MFE_UNDERWATER))		//SCS ADD - don't even bother putting these in the roulette if you get an item box underwater.
-			reject = true;
-		
-		if (i == KITEM_FLAMESHIELD && (player->mo->eflags & MFE_UNDERWATER))
+		if ((i == KITEM_LIGHTNINGSHIELD || i == KITEM_FLAMESHIELD) && (player->mo->eflags & MFE_UNDERWATER))		//SCS ADD - don't even bother putting these in the roulette if you get an item box underwater.
 			reject = true;
 
 		// Before we actually apply that rejection, draw the simple odds debugger.

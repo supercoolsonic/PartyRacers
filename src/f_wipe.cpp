@@ -499,6 +499,11 @@ void F_RunWipe(UINT8 wipemode, UINT8 wipetype, boolean drawMenu, const char *col
 			}
 			rhi::Rhi* rhi = srb2::sys::get_rhi(srb2::sys::g_current_rhi);
 			hwr2::HardwareState* hw_state = srb2::sys::main_hardware_state();
+			
+			if (!rhi)
+			{
+				break;
+			}
 
 			if (reverse)
 			{

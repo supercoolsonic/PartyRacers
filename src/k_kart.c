@@ -12851,7 +12851,7 @@ void K_KartPlayerAfterThink(player_t *player)
 			if (targID == lastTargID)
 			{
 				// Increment delay.
-				if (player->abjawztargetdelay < 10)
+				if (player->abjawztargetdelay < 5)
 				{
 					player->abjawztargetdelay++;
 				}
@@ -12877,7 +12877,7 @@ void K_KartPlayerAfterThink(player_t *player)
 					}
 
 					player->lastabjawztarget = targID;
-					player->abjawztargetdelay = 5;
+					player->abjawztargetdelay = 3;
 				}
 			}
 		}
@@ -17862,6 +17862,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 							{
 								//player->inkblotchtimer = 9999;				//debug
 								K_AdjustPlayerItemAmount(player, -1);
+								player->throwdir = 0;
 								K_ThrowKartItem(player, true, MT_INKBUBBLE, -1, 0, 0);
 								K_PlayAttackTaunt(player->mo);
 								player->botvars.itemconfirm = 0;
