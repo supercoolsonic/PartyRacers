@@ -779,6 +779,8 @@ consvar_t cv_toggle_ribbon_signposts = Player("signpostribbontoggle", "Yes").yes
 consvar_t cv_toggle_sparkling_signposts = Player("signpostsparkletoggle", "Yes").yes_no().radio();
 //Random item capsules? Chaos, anyone?
 consvar_t cv_randomizeitemcapsules = Player("randomitemcapsules", "No").yes_no().radio();
+//Show a meter on the side of your item roulette wheel that shows the length of the reel, and what index it's current at inside of it
+consvar_t cv_obvious_itemreel = Player("obviousitemreels", "No").yes_no().radio();
 //Shake the mini-ranking like in Mini Ranking Plus when a player takes damage?
 consvar_t cv_toggle_minirankingshaking = Player("shakeminiranking", "No").yes_no().radio();						//SCS ADD END
 

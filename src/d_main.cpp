@@ -1763,12 +1763,13 @@ void D_SRB2Main(void)
 
 	CONS_Printf("Z_Init(): Init zone memory allocation daemon. \n");
 	Z_Init();
-	CON_SetLoadingProgress(LOADED_ZINIT);
 
 	M_NewGameDataStruct();
 
 	// Do this up here so that WADs loaded through the command line can use ExecCfg
 	COM_Init();
+	CONS_Printf("I_StartupGraphics()...\n");
+	I_StartupGraphics();
 
 	COM_AddDebugCommand("assert", Command_assert);
 #ifdef DEVELOP
@@ -1808,7 +1809,6 @@ void D_SRB2Main(void)
 
 	CONS_Printf("I_InitializeTime()...\n");
 	I_InitializeTime();
-	CON_SetLoadingProgress(LOADED_ISTARTUPTIMER);
 
 	// Make backups of some SOCcable tables.
 	P_BackupTables();
@@ -1850,8 +1850,6 @@ void D_SRB2Main(void)
 	basenummapheaders = nummapheaders;
 	basenumkartcupheaders = numkartcupheaders;
 
-	CON_SetLoadingProgress(LOADED_IWAD);
-
 	M_PasswordInit();
 
 	W_InitShaderLookup(va(spandf, srb2path, "data", "shaders.pk3"));
@@ -1859,8 +1857,6 @@ void D_SRB2Main(void)
 	//---------------------------------------------------- READY SCREEN
 	// we need to check for dedicated before initialization of some subsystems
 
-	CONS_Printf("I_StartupGraphics()...\n");
-	I_StartupGraphics();
 	I_StartDisplayUpdate();
 
 	I_StartupInput();
@@ -1878,8 +1874,6 @@ void D_SRB2Main(void)
 
 	// Do this in background; lots of number crunching
 	R_InitTranslucencyTables();
-
-	CON_SetLoadingProgress(LOADED_ISTARTUPGRAPHICS);
 
 	CONS_Printf("HU_Init()...\n");
 	HU_Init();

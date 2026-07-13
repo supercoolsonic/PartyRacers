@@ -310,11 +310,11 @@ static menuitem_t OPTIONS_RadioRacersAccessibility[] =
 	{IT_STRING | IT_CVAR, "Obvious Voltage", "Re-colour your voltage aura depending on your driftcharge.",
 		NULL, {.cvar = &cv_obvious_voltage}, 0, 0},
 		
-	{IT_STRING | IT_CVAR, "Obvious Tripwires", "Draw color-coded tripwires to indicate if you can pass through or not. \x82(N/A in splitscreen)",	//SCS EDIT
+	{IT_STRING | IT_CVAR, "Obvious Tripwires", "Draw color-coded tripwires to indicate if you can pass through. \x82(N/A in splitscreen)",	//SCS EDIT
 		NULL, {.cvar = &cv_obvious_tripwire}, 0, 0},		
 
-	{IT_SPACE | IT_NOTHING, NULL,  NULL,
-		NULL, {NULL}, 0, 0},
+	{IT_STRING | IT_CVAR, "Obvious Item Reels", "Use a meter on the side of the item reel to show the length and current index of the reel.",
+		NULL, {.cvar = &cv_obvious_itemreel}, 0, 0},
 
 	{IT_HEADER, "Item Timers", NULL,
 		NULL, {NULL}, 0, 0},

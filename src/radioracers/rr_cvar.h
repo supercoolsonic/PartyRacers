@@ -52,6 +52,7 @@ extern consvar_t cv_obvious_tripwire;               // Replace default tripwire 
 extern consvar_t cv_obvious_voltage;                // Re-colour voltage VFX with same colour as drift spark
 extern consvar_t cv_precise_countdown;              // Show a little bar below starting countdown to better time your approach
 extern consvar_t cv_flipcam;						//Inverts camera when driving upside-down, like in SRB2 Kart				//SCS ADD
+extern consvar_t cv_obvious_itemreel;				//Makes a meter appear on the side of the item roulette to show you how long your reel is, and what index it's current on in it		//SCS ADD
 
 // Battle
 extern consvar_t cv_customemeraldhud;    // Alternate Emerald display for Battle Mode
