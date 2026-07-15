@@ -4218,7 +4218,7 @@ static void K_drawKartEmeralds(void)
 		else
 		{
 			xindex = 2;
-			starty -= 15;
+			starty -= 25;//15;		//SCS EDIT - moving emeralds because speedometer is drawn now...
 			if (!(R_GetViewNumber() & 1)) // If we are P1 or P3...
 			{
 				startx = LAPS_X;
@@ -7162,8 +7162,8 @@ static void K_drawBlueSphereMeter(boolean gametypeinfoshown)
 	const UINT8 segColors[] = {73, 64, 52, 54, 55, 35, 34, 33, 202, 180, 181, 182, 164, 165, 166, 153, 152};
 	const UINT8 sphere = std::clamp(static_cast<int>(stplyr->spheres), 0, 40);
 	
-	const boolean DRAW_SPHERES_ON_PLAYER = cv_spheremeteronplayer.value == 1;				//SCS - RADIO START
-	const boolean CUSTOM_EMERALD_HUD = cv_customemeraldhud.value >= 1;
+	const boolean DRAW_SPHERES_ON_PLAYER = (cv_spheremeteronplayer.value == 1  && r_splitscreen == 0);				//SCS - RADIO START		//SCS EDIT - Why are we not making sure we're in 1P exclusively?
+	const boolean CUSTOM_EMERALD_HUD = (cv_customemeraldhud.value >= 1 && r_splitscreen == 0);		//SCS EDIT - Again, only do this in 1P
 	const boolean SHOULD_SCALE_METER = (CUSTOM_EMERALD_HUD || DRAW_SPHERES_ON_PLAYER);
 	const fixed_t SPHERE_METER_SCALE = (SHOULD_SCALE_METER) ? (4*FRACUNIT)/5 : FRACUNIT;	//SCS - RADIO END
 
@@ -7182,7 +7182,7 @@ static void K_drawBlueSphereMeter(boolean gametypeinfoshown)
 		fx = LAPS_X;
 		fy = LAPS_Y-4;
 		
-		if (DRAW_SPHERES_ON_PLAYER && r_splitscreen == 0)		//SCS - RADIO START
+		if (DRAW_SPHERES_ON_PLAYER)		//SCS - RADIO START		SCS EDIT - Don't check for splitscreen anymore here
 		{
 			vector3_t v;
 			trackingResult_t result;
@@ -7207,7 +7207,8 @@ static void K_drawBlueSphereMeter(boolean gametypeinfoshown)
 			} 
 		}
 
-		if (!SHOULD_SCALE_METER) {		//SCS - RADIO END
+		if (!SHOULD_SCALE_METER) 		//SCS - RADIO END
+		{
 			if (battleprisons)
 			{
 				if (r_splitscreen == 1)
@@ -7221,7 +7222,7 @@ static void K_drawBlueSphereMeter(boolean gametypeinfoshown)
 			}
 			else if (r_splitscreen == 1)
 			{
-				fy -= 5;
+				fy -= 3;//5;		//SCS EDIT - move slightly downward to accomodate the speedometer
 			}
 
 			if (gametypeinfoshown)
@@ -7234,8 +7235,11 @@ static void K_drawBlueSphereMeter(boolean gametypeinfoshown)
 			}
 
 			V_DrawScaledPatch(fx, fy, splitflags|flipflag, kp_spheresticker);
-		} else {																		//SCS - RADIO START
-			if (r_splitscreen == 0) {
+		} 
+		else 																		//SCS - RADIO START
+		{
+			if (r_splitscreen == 0) 
+			{
 				const INT32 new_fy = (CUSTOM_EMERALD_HUD && !DRAW_SPHERES_ON_PLAYER) ? fy-17 : fy;
 				V_DrawFixedPatch(
 					((fx)*FRACUNIT), 
@@ -10920,11 +10924,11 @@ void K_drawKartHUD(void)
 				{
 					if (!battleprisons)
 					{																		//SCS - RADIO START
-						if (cv_customemeraldhud.value >= 1 && r_splitscreen == 0) {
+						if (cv_customemeraldhud.value >= 1 && r_splitscreen == 0) 
 							RR_drawKartEmeralds();
-						} else {															//SCS - RADIO END
-						K_drawKartEmeralds();
-						}
+						else 																	//SCS - RADIO END
+							K_drawKartEmeralds();
+
 					}
 				}
 				else if (!islonesome && !K_Cooperative() && cv_toggle_position_number.value < 2)	//SCS - RADIO
@@ -11112,11 +11116,10 @@ void K_drawKartHUD(void)
 		K_drawMiniPing();
 	}
 
-	if (cv_gingeritemtimers.value) {		//SCS - RADIO START
+	if (cv_gingeritemtimers.value && r_splitscreen < 1) 		//SCS - RADIO START		SCS EDIT - Always draw the powerups outside of 1P, since item timers only draw in 1P
 		RR_DrawItemTimers();
-	} else {								//SCS - RADIO END
+	else 														//SCS - RADIO END
 		K_drawKartPowerUps();
-	}										//SCS - RADIO
 
 	if (K_DirectorIsAvailable(viewnum) == true && LUA_HudEnabled(hud_textspectator))
 	{

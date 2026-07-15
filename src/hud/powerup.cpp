@@ -92,7 +92,7 @@ void K_drawKartPowerUps(void)
 		{
 			//return Draw(x, y).font(font).align(Draw::Align::kRight).flags(V_SLIDEIN);
 			// RadioRacers
-			if (cv_poweruponbottom.value)														//SCS - RADIO START
+			if (cv_poweruponbottom.value && r_splitscreen == 0)									//SCS - RADIO START		//SCS EDIT - Only do this in 1P...
 			{
 				return Draw(x, y).font(font).align(Draw::Align::kRight)
 					.flags(V_SLIDEIN|V_SNAPTOBOTTOM)
@@ -122,7 +122,7 @@ void K_drawKartPowerUps(void)
 
 		// 3/4P
 		int x = 21;
-		int y = 47;
+		int y = 55;//47;	//SCS EDIT
 
 		int dir = 1;
 
@@ -150,7 +150,7 @@ void K_drawKartPowerUps(void)
 	for (const Icon& ico : powerup_list)
 	{
 		// RadioRacers
-		if (cv_poweruponbottom.value)															//SCS - RADIO START
+		if (cv_poweruponbottom.value && r_splitscreen == 0)										//SCS - RADIO START		//SCS EDIT - Only in 1P...
 		{
 			i.row.xy(i.spr_x, i.spr_y)
 				.colormap(static_cast<skincolornum_t>(stplyr->skincolor))
