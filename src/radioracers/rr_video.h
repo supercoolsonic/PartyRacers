@@ -9,8 +9,8 @@
 /// \file radioracers/rr_video.h
 /// \brief Video related functions, usually copies of functions from v_video.h
 
-#ifndef __RR_VIDEO__
-#define __RR_VIDEO__
+#ifndef RR_VIDEO_H
+#define RR_VIDEO_H
 
 #include "../m_cond.h"
 #include "../command.h"

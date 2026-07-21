@@ -8,8 +8,8 @@
 //-----------------------------------------------------------------------------
 /// \file radioracers/rr_setup.h
 
-#ifndef __RR_SETUP__
-#define __RR_SETUP__
+#ifndef RR_SETUP_H
+#define RR_SETUP_H
 
 #include "../doomtype.h"
 #include "../doomdef.h"

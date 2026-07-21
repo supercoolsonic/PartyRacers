@@ -9,8 +9,8 @@
 /// \file radioracers/rr_controller.h
 /// \brief Extended controller rumble events
 
-#ifndef __RR_CONTROLLER__
-#define __RR_CONTROLLER__
+#ifndef RR_CONTROLLER_H
+#define RR_CONTROLLER_H
 
 #include "../doomtype.h"    // uint16_t
 #include "../d_player.h"    // player_t

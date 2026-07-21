@@ -10,8 +10,8 @@
 /// \brief Util functions
 
 
-#ifndef __RR_UTIL__
-#define __RR_UTIL__
+#ifndef RR_UTIL_H
+#define RR_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
