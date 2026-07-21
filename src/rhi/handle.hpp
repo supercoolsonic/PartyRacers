@@ -8,8 +8,8 @@
 // See the 'LICENSE' file for more details.
 //-----------------------------------------------------------------------------
 
-#ifndef __SRB2_RHI_HANDLE_HPP__
-#define __SRB2_RHI_HANDLE_HPP__
+#ifndef SRB2_RHI_HANDLE_HPP
+#define SRB2_RHI_HANDLE_HPP
 
 #include <atomic>
 #include <cstdint>
@@ -74,9 +74,7 @@ public:
 	{
 		return handle.generation_ == generation_ && handle.id_ == id_;
 	}
-	bool operator!=(const Handle& handle) const noexcept { return !(handle == *this); }
 	bool operator==(const NullHandleType&) const noexcept { return generation_ == 0; }
-	bool operator!=(const NullHandleType&) const noexcept { return generation_ != 0; }
 
 	operator bool() const { return id_ != 0 || generation_ != 0; }
 	operator uint64_t() const { return static_cast<uint64_t>(id_) + (static_cast<uint64_t>(generation_) << 32); }
@@ -100,12 +98,6 @@ template <typename T, typename U, typename std::enable_if_t<std::is_base_of_v<T,
 inline bool operator==(const Handle<T>& lhs, const Handle<U>& rhs) noexcept
 {
 	return lhs.generation() == rhs.generation() && lhs.id() == rhs.id();
-}
-
-template <typename T, typename U, typename std::enable_if_t<std::is_base_of_v<T, U>, bool> = true>
-inline bool operator!=(const Handle<T>& lhs, const Handle<U>& rhs) noexcept
-{
-	return !(lhs == rhs);
 }
 
 template <typename T = void>
@@ -188,8 +180,6 @@ public:
 	}
 
 	bool operator==(const SlabIterator& rhs) const noexcept { return slab_ == rhs.slab_ && index_ == rhs.index_; }
-
-	bool operator!=(const SlabIterator& rhs) const noexcept { return !(*this == rhs); }
 };
 
 template <typename T>
@@ -316,4 +306,4 @@ struct hash<srb2::rhi::Handle<T>>
 
 } // namespace std
 
-#endif // __SRB2_RHI_HANDLE_HPP__
+#endif // SRB2_RHI_HANDLE_HPP

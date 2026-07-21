@@ -8,8 +8,8 @@
 // See the 'LICENSE' file for more details.
 //-----------------------------------------------------------------------------
 
-#ifndef __SRB2_CORE_STATIC_VEC_HPP__
-#define __SRB2_CORE_STATIC_VEC_HPP__
+#ifndef SRB2_CORE_STATIC_VEC_HPP
+#define SRB2_CORE_STATIC_VEC_HPP
 
 #include <array>
 #include <cstddef>
@@ -229,12 +229,6 @@ bool operator==(const srb2::StaticVec<T, L1>& lhs, const srb2::StaticVec<T, L2>&
 	return true;
 }
 
-template <typename T, size_t L1, size_t L2>
-bool operator!=(const srb2::StaticVec<T, L1>& lhs, const srb2::StaticVec<T, L2>& rhs)
-{
-	return !(lhs == rhs);
-}
-
 template <typename T, size_t Limit>
 struct std::hash<srb2::StaticVec<T, Limit>>
 {
@@ -252,4 +246,4 @@ struct std::hash<srb2::StaticVec<T, Limit>>
 	}
 };
 
-#endif // __SRB2_CORE_STATIC_VEC_HPP__
+#endif // SRB2_CORE_STATIC_VEC_HPP

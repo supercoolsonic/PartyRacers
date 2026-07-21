@@ -8,8 +8,8 @@
 // See the 'LICENSE' file for more details.
 //-----------------------------------------------------------------------------
 
-#ifndef mobj_list_view_hpp
-#define mobj_list_view_hpp
+#ifndef MOBJ_LIST_VIEW_HPP
+#define MOBJ_LIST_VIEW_HPP
 
 #include <cstddef>
 #include <iterator>
@@ -45,7 +45,6 @@ struct MobjListView
 		}
 
 		bool operator==(const Iterator& b) const { return ptr_ == b.ptr_; };
-		bool operator!=(const Iterator& b) const { return ptr_ != b.ptr_; };
 
 		reference operator*() const { return ptr_; }
 		pointer operator->() { return ptr_; }
@@ -82,4 +81,4 @@ private:
 
 }; // namespace srb2
 
-#endif/*mobj_list_view_hpp*/
+#endif/*MOBJ_LIST_VIEW_HPP*/

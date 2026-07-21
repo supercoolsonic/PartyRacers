@@ -12,8 +12,8 @@
 /// \file  s_sound.h
 /// \brief The not so system specific sound interface
 
-#ifndef __S_SOUND__
-#define __S_SOUND__
+#ifndef S_SOUND_H
+#define S_SOUND_H
 
 #include "sounds.h"
 #include "m_fixed.h"
@@ -39,8 +39,6 @@ extern consvar_t cv_voicevolume;
 
 extern consvar_t surround;
 extern consvar_t cv_numChannels;
-extern CV_PossibleValue_t soundmixingbuffersize_cons_t[];
-extern consvar_t cv_soundmixingbuffersize;
 
 extern consvar_t cv_gamedigimusic;
 

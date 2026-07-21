@@ -8,10 +8,10 @@
 // See the 'LICENSE' file for more details.
 //-----------------------------------------------------------------------------
 
-#ifndef __SRB2_AUDIO_SOURCE_HPP__
-#define __SRB2_AUDIO_SOURCE_HPP__
+#ifndef SRB2_AUDIO_SOURCE_HPP
+#define SRB2_AUDIO_SOURCE_HPP
 
-#include <tcb/span.hpp>
+#include <span>
 
 #include "sample.hpp"
 
@@ -22,7 +22,7 @@ template <size_t C>
 class Source
 {
 public:
-	virtual std::size_t generate(tcb::span<Sample<C>> buffer) = 0;
+	virtual std::size_t generate(std::span<Sample<C>> buffer) = 0;
 
 	virtual ~Source() = default;
 };
@@ -34,4 +34,4 @@ constexpr const std::size_t kSampleRate = 44100;
 
 } // namespace srb2::audio
 
-#endif // __SRB2_AUDIO_SOURCE_HPP__
+#endif // SRB2_AUDIO_SOURCE_HPP

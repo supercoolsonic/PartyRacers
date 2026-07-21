@@ -8,8 +8,8 @@
 // See the 'LICENSE' file for more details.
 //-----------------------------------------------------------------------------
 
-#ifndef __SRB2_MEDIA_AVRECORDER_HPP__
-#define __SRB2_MEDIA_AVRECORDER_HPP__
+#ifndef SRB2_MEDIA_AVRECORDER_HPP
+#define SRB2_MEDIA_AVRECORDER_HPP
 
 #include <array>
 #include <chrono>
@@ -17,8 +17,7 @@
 #include <cstdint>
 #include <memory>
 #include <optional>
-
-#include <tcb/span.hpp>
+#include <span>
 
 #include "../core/string.h"
 #include "../core/vector.hpp"
@@ -31,7 +30,7 @@ class AVRecorder
 {
 public:
 	using audio_sample_t = srb2::audio::Sample<2>;
-	using audio_buffer_t = tcb::span<const audio_sample_t>;
+	using audio_buffer_t = std::span<const audio_sample_t>;
 
 	class Impl;
 
@@ -105,4 +104,5 @@ private:
 
 }; // namespace srb2::media
 
-#endif // __SRB2_MEDIA_AVRECORDER_HPP__
+#endif // SRB2_MEDIA_AVRECORDER_HPP
+

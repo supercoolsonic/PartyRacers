@@ -8,13 +8,12 @@
 // See the 'LICENSE' file for more details.
 //-----------------------------------------------------------------------------
 
-#ifndef __SRB2_AUDIO_MUSIC_PLAYER_HPP__
-#define __SRB2_AUDIO_MUSIC_PLAYER_HPP__
+#ifndef SRB2_AUDIO_MUSIC_PLAYER_HPP
+#define SRB2_AUDIO_MUSIC_PLAYER_HPP
 
 #include <memory>
 #include <optional>
-
-#include <tcb/span.hpp>
+#include <span>
 
 #include "source.hpp"
 
@@ -33,14 +32,14 @@ class MusicPlayer final : public Source<2>
 {
 public:
 	MusicPlayer();
-	MusicPlayer(tcb::span<std::byte> data);
+	MusicPlayer(std::span<std::byte> data);
 	MusicPlayer(const MusicPlayer& rhs) = delete;
 	MusicPlayer(MusicPlayer&& rhs) noexcept;
 
 	MusicPlayer& operator=(const MusicPlayer& rhs) = delete;
 	MusicPlayer& operator=(MusicPlayer&& rhs) noexcept;
 
-	virtual std::size_t generate(tcb::span<Sample<2>> buffer) override final;
+	virtual std::size_t generate(std::span<Sample<2>> buffer) override final;
 
 	void play(bool looping);
 	void unpause();
@@ -69,4 +68,5 @@ private:
 
 } // namespace srb2::audio
 
-#endif // __SRB2_AUDIO_MUSIC_PLAYER_HPP__
+#endif // SRB2_AUDIO_MUSIC_PLAYER_HPP
+

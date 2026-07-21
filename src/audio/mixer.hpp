@@ -8,13 +8,12 @@
 // See the 'LICENSE' file for more details.
 //-----------------------------------------------------------------------------
 
-#ifndef __SRB2_AUDIO_MIXER_HPP__
-#define __SRB2_AUDIO_MIXER_HPP__
+#ifndef SRB2_AUDIO_MIXER_HPP
+#define SRB2_AUDIO_MIXER_HPP
 
 #include <memory>
+#include <span>
 #include <vector>
-
-#include <tcb/span.hpp>
 
 #include "source.hpp"
 
@@ -25,7 +24,7 @@ template <size_t C>
 class Mixer : public Source<C>
 {
 public:
-	virtual std::size_t generate(tcb::span<Sample<C>> buffer) override final;
+	virtual std::size_t generate(std::span<Sample<C>> buffer) override final;
 
 	virtual ~Mixer();
 
@@ -41,4 +40,6 @@ extern template class Mixer<2>;
 
 } // namespace srb2::audio
 
-#endif // __SRB2_AUDIO_MIXER_HPP__
+#endif // SRB2_AUDIO_MIXER_HPP
+
+

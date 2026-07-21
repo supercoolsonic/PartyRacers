@@ -8,14 +8,13 @@
 // See the 'LICENSE' file for more details.
 //-----------------------------------------------------------------------------
 
-#ifndef __SRB2_MEDIA_VIDEO_FRAME_HPP__
-#define __SRB2_MEDIA_VIDEO_FRAME_HPP__
+#ifndef SRB2_MEDIA_VIDEO_FRAME_HPP
+#define SRB2_MEDIA_VIDEO_FRAME_HPP
 
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-
-#include <tcb/span.hpp>
+#include <span>
 
 namespace srb2::media
 {
@@ -35,7 +34,7 @@ public:
 
 	struct Buffer
 	{
-		tcb::span<uint8_t> plane;
+		std::span<uint8_t> plane;
 		std::size_t row_stride; // size of each row
 	};
 
@@ -52,6 +51,8 @@ public:
 	// BufferMethod::kEncoderAllocatedRGBA8888.
 	virtual const Buffer& rgba_buffer() const = 0;
 
+	virtual ~VideoFrame() = default;
+
 protected:
 	VideoFrame(int pts) : pts_(pts) {}
 
@@ -61,4 +62,5 @@ private:
 
 }; // namespace srb2::media
 
-#endif // __SRB2_MEDIA_VIDEO_FRAME_HPP__
+#endif // SRB2_MEDIA_VIDEO_FRAME_HPP
+

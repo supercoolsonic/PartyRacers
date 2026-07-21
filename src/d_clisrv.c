@@ -26,6 +26,7 @@
 #include "d_net.h"
 #include "d_netfil.h" // fileneedednum
 #include "d_main.h"
+#include "doomtype.h"
 #include "g_game.h"
 #include "st_stuff.h"
 #include "hu_stuff.h"
@@ -7293,8 +7294,8 @@ static void KickUnverifiedPlayers(void)
 }
 
 //
-static void SendChallengeResults(void)
-{
+static void SendChallengeResults(void)															//SCS NOTE - This is the function that causes the memory corruption when MAXPLAYERS is set too high. (I was able to do 23 player games with no issues, but 24
+{																								//started causing problems. I wonder how much memory 16 players actually needs. Does it really need the full 1405/1024? Do 23 players fit in that limit?
 	int i;
 	netbuffer->packettype = PT_RESULTSALL;
 

@@ -17299,14 +17299,14 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 									if (player->pickpockethyucombo <= 0)
 										player->pickpockethyucombo = 1;
 									
-									K_AwardPlayerRings(player, (10*player->position*player->pickpockethyucombo), true);
+									K_AwardPlayerRings(player, ((10*player->position*player->pickpockethyucombo)*2)/3, true);
 									K_AdjustPlayerItemAmount(player, -1);
 									player->botvars.itemconfirm = 0;
 									player->pickpockethyucombo = 0;
 								}
 								else
 								{
-									K_SetItemOut(player); // need this to set itemscale
+									//K_SetItemOut(player); // need this to set itemscale							//removing it because it can't be thrown while using Grow???
 									mobj_t *hyuleader = K_ThrowKartItem(player, true, MT_PPOCKETHYUDORO, 0, 0, 0);
 									
 									if (hyuleader)
@@ -17321,7 +17321,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 									
 									K_AdjustPlayerItemAmount(player, -1*player->itemamount);
 									
-									K_UnsetItemOut(player);
+									//K_UnsetItemOut(player);														//very weird...
 									K_PlayAttackTaunt(player->mo);
 									
 									K_UpdateHnextList(player, false);
@@ -19414,7 +19414,7 @@ static boolean K_PickUp(player_t *player, mobj_t *picked)
 			if (picked->extravalue1 != 0)						//if we're not patrolling, we're returning to the owner. Don't pick up here
 				return false;
 		
-			if (player != picked->target)
+			if (player->mo != picked->target)
 			{
 				if (picked->state != &states[S_PPOCKET_STUNNED] && picked->state != &states[S_PPOCKET_VANISH])
 					return false;

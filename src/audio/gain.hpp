@@ -8,10 +8,10 @@
 // See the 'LICENSE' file for more details.
 //-----------------------------------------------------------------------------
 
-#ifndef __SRB2_AUDIO_GAIN_HPP__
-#define __SRB2_AUDIO_GAIN_HPP__
+#ifndef SRB2_AUDIO_GAIN_HPP
+#define SRB2_AUDIO_GAIN_HPP
 
-#include <tcb/span.hpp>
+#include <span>
 
 #include "filter.hpp"
 
@@ -22,7 +22,7 @@ template <size_t C>
 class Gain : public Filter<C, C>
 {
 public:
-	virtual std::size_t filter(tcb::span<Sample<C>> input_buffer, tcb::span<Sample<C>> buffer) override final;
+	virtual std::size_t filter(std::span<Sample<C>> input_buffer, std::span<Sample<C>> buffer) override final;
 	void gain(float new_gain);
 
 	virtual ~Gain();
@@ -33,4 +33,4 @@ private:
 };
 } // namespace srb2::audio
 
-#endif // __SRB2_AUDIO_GAIN_HPP__
+#endif // SRB2_AUDIO_GAIN_HPP

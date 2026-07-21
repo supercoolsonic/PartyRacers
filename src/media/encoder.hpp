@@ -8,13 +8,12 @@
 // See the 'LICENSE' file for more details.
 //-----------------------------------------------------------------------------
 
-#ifndef __SRB2_MEDIA_ENCODER_HPP__
-#define __SRB2_MEDIA_ENCODER_HPP__
+#ifndef SRB2_MEDIA_ENCODER_HPP
+#define SRB2_MEDIA_ENCODER_HPP
 
 #include <chrono>
 #include <cstddef>
-
-#include <tcb/span.hpp>
+#include <span>
 
 namespace srb2::media
 {
@@ -42,11 +41,12 @@ public:
 	virtual BitRate estimated_bit_rate() const = 0;
 
 protected:
-	using frame_buffer_t = tcb::span<const std::byte>;
+	using frame_buffer_t = std::span<const std::byte>;
 
 	virtual void write_frame(frame_buffer_t frame, time_unit_t timestamp, bool is_key_frame) = 0;
 };
 
 }; // namespace srb2::media
 
-#endif // __SRB2_MEDIA_ENCODER_HPP__
+#endif // SRB2_MEDIA_ENCODER_HPP
+

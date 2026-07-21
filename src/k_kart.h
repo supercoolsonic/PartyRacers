@@ -10,8 +10,8 @@
 /// \file  k_kart.h
 /// \brief SRB2kart stuff.
 
-#ifndef __K_KART__
-#define __K_KART__
+#ifndef K_KART_H
+#define K_KART_H
 
 #include "doomdef.h"
 #include "d_player.h" // Need for player_t
@@ -429,4 +429,4 @@ extern boolean localPlayerJustWavedashed;																					//SCS - RADIO END
 #endif
 
 // =========================================================================
-#endif  // __K_KART__
+#endif  // K_KART_H

@@ -8,15 +8,14 @@
 // See the 'LICENSE' file for more details.
 //-----------------------------------------------------------------------------
 
-#ifndef __SRB2_AUDIO_OGG_HPP__
-#define __SRB2_AUDIO_OGG_HPP__
+#ifndef SRB2_AUDIO_OGG_HPP
+#define SRB2_AUDIO_OGG_HPP
 
 #include <exception>
+#include <span>
 #include <vector>
 
 #include <stb_vorbis.h>
-#include <tcb/span.hpp>
-
 #include "../io/streams.hpp"
 #include "sample.hpp"
 
@@ -48,7 +47,7 @@ public:
 	Ogg() noexcept;
 
 	explicit Ogg(Vector<std::byte> data);
-	explicit Ogg(tcb::span<std::byte> data);
+	explicit Ogg(std::span<std::byte> data);
 
 	Ogg(const Ogg&) = delete;
 	Ogg(Ogg&& rhs) noexcept;
@@ -58,8 +57,8 @@ public:
 
 	~Ogg();
 
-	std::size_t get_samples(tcb::span<Sample<1>> buffer);
-	std::size_t get_samples(tcb::span<Sample<2>> buffer);
+	std::size_t get_samples(std::span<Sample<1>> buffer);
+	std::size_t get_samples(std::span<Sample<2>> buffer);
 	void seek(std::size_t sample);
 	std::size_t position() const;
 	float position_seconds() const;
@@ -83,4 +82,6 @@ inline Ogg load_ogg(I& stream)
 
 } // namespace srb2::audio
 
-#endif // __SRB2_AUDIO_OGG_HPP__
+#endif // SRB2_AUDIO_OGG_HPP
+
+
