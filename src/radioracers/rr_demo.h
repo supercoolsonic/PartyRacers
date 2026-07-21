@@ -8,8 +8,8 @@
 //-----------------------------------------------------------------------------
 /// \file radioracers/rr_demo.h
 
-#ifndef __RR_DEMO__
-#define __RR_DEMO__
+#ifndef RR_DEMO_H
+#define RR_DEMO_H
 
 #ifdef __cplusplus
 extern "C" {

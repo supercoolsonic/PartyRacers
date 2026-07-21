@@ -9,8 +9,8 @@
 /// \file radioracers/netgame/rr_votesnitch.h
 /// \brief Vote Snitching - Functions
 
-#ifndef __RR_VOTESNITCH__
-#define __RR_VOTESNITCH__
+#ifndef RR_VOTESNITCH_H
+#define RR_VOTESNITCH_H
 
 #ifdef __cplusplus
 extern "C" {

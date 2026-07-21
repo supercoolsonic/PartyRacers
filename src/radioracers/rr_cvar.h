@@ -11,8 +11,8 @@
 
 // Separating custom functionality into new header and source code files is so much cleaner.    
 
-#ifndef __RR_CVAR__
-#define __RR_CVAR__
+#ifndef RR_CVAR_H
+#define RR_CVAR_H
 
 // consvar_t
 #include "../command.h"

@@ -9,8 +9,8 @@
 /// \file radioracers/netgame/rr_bookmarks.h
 /// \brief Character bookmarks
 
-#ifndef __RR_BOOKMARKS__
-#define __RR_BOOKMARKS__
+#ifndef RR_BOOKMARKS_H
+#define RR_BOOKMARKS_H
 
 #include "../doomtype.h"
 #include "../doomdef.h"

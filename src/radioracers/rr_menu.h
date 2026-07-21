@@ -9,8 +9,8 @@
 /// \file radioracers/rr_menu.h
 /// \brief RadioRacers Menu Options
 
-#ifndef __RR_MENU__
-#define __RR_MENU__
+#ifndef RR_MENU_H
+#define RR_MENU_H
 
 #include "../k_menu.h"
 #include "../m_cond.h"

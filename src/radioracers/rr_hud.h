@@ -9,8 +9,8 @@
 /// \file radioracers/rr_hud.h
 /// \brief RadioRacers HUD Functionality
 
-#ifndef __RR_HUD__
-#define __RR_HUD__
+#ifndef RR_HUD_H
+#define RR_HUD_H
 
 #include "../k_menu.h"
 #include "../m_cond.h"
