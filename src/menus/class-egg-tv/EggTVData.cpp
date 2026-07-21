@@ -56,7 +56,8 @@ namespace
 template <class... Args>
 void print_error(fmt::format_string<Args...> format, Args&&... args)
 {
-	CONS_Alert(CONS_ERROR, "Egg TV: %s\n", fmt::format(format, args...).c_str());
+	srb2::String formatted = srb2::format(format, std::forward<Args>(args)...);
+	CONS_Alert(CONS_ERROR, "Egg TV: %s\n", formatted.c_str());
 }
 
 template <class To, class From>
@@ -383,7 +384,7 @@ void EggTVData::save_favorites() const
 	{
 		srb2::String json_string = favoritesFile_.to_json_string();
 		srb2::io::FileStream fs { favoritesPath_.generic_string(), srb2::io::FileStreamMode::kWrite };
-		srb2::io::write_exact(fs, tcb::as_bytes(tcb::span(json_string.data(), json_string.size())));
+		srb2::io::write_exact(fs, std::as_bytes(std::span(json_string.data(), json_string.size())));
 	}
 	catch (const std::exception& ex)
 	{

@@ -1,6 +1,6 @@
 /* vi: set ft=c expandtab shiftwidth=4 tabstop=4: */
-#ifndef MODP_STDINT_H_
-#define MODP_STDINT_H_
+#ifndef MODP_STDINT_H
+#define MODP_STDINT_H
 
 /**
  * \file modp_stdint.h

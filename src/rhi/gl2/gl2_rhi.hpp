@@ -8,8 +8,8 @@
 // See the 'LICENSE' file for more details.
 //-----------------------------------------------------------------------------
 
-#ifndef __SRB2_RHI_GL2_RHI_HPP__
-#define __SRB2_RHI_GL2_RHI_HPP__
+#ifndef SRB2_RHI_GL2_RHI_HPP
+#define SRB2_RHI_GL2_RHI_HPP
 
 #include <functional>
 #include <memory>
@@ -33,8 +33,6 @@ struct Gl2FramebufferKey
 	{
 		return color == rhs.color && depth_stencil == rhs.depth_stencil;
 	}
-
-	bool operator!=(const Gl2FramebufferKey& rhs) const noexcept { return !(*this == rhs); }
 };
 
 } // namespace srb2::rhi
@@ -166,13 +164,13 @@ public:
 	virtual void update_buffer(
 		Handle<Buffer> buffer,
 		uint32_t offset,
-		tcb::span<const std::byte> data
+		std::span<const std::byte> data
 	) override;
 	virtual void update_texture(
 		Handle<Texture> texture,
 		Rect region,
 		srb2::rhi::PixelFormat data_format,
-		tcb::span<const std::byte> data
+		std::span<const std::byte> data
 	) override;
 	virtual void update_texture_settings(
 		Handle<Texture> texture,
@@ -212,7 +210,7 @@ public:
 	virtual void draw(uint32_t vertex_count, uint32_t first_vertex) override;
 	virtual void draw_indexed(uint32_t index_count, uint32_t first_index) override;
 	virtual void
-	read_pixels(const Rect& rect, PixelFormat format, tcb::span<std::byte> out) override;
+	read_pixels(const Rect& rect, PixelFormat format, std::span<std::byte> out) override;
 	virtual void copy_framebuffer_to_texture(
 		Handle<Texture> dst_tex,
 		const Rect& dst_region,
@@ -229,4 +227,4 @@ public:
 
 } // namespace srb2::rhi
 
-#endif // __SRB2_RHI_GL2_RHI_HPP__
+#endif // SRB2_RHI_GL2_RHI_HPP

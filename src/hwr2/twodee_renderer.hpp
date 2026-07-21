@@ -8,8 +8,8 @@
 // See the 'LICENSE' file for more details.
 //-----------------------------------------------------------------------------
 
-#ifndef __SRB2_HWR2_PASS_TWODEE_HPP__
-#define __SRB2_HWR2_PASS_TWODEE_HPP__
+#ifndef SRB2_HWR2_PASS_TWODEE_HPP
+#define SRB2_HWR2_PASS_TWODEE_HPP
 
 #include <optional>
 #include <tuple>
@@ -33,7 +33,6 @@ struct TwodeePipelineKey
 	bool lines;
 
 	bool operator==(const TwodeePipelineKey& r) const noexcept { return !(blend != r.blend || lines != r.lines); }
-	bool operator!=(const TwodeePipelineKey& r) const noexcept { return !(*this == r); }
 };
 
 } // namespace srb2::hwr2
@@ -57,7 +56,6 @@ struct MergedTwodeeCommandFlatTexture
 	lumpnum_t lump;
 
 	bool operator==(const MergedTwodeeCommandFlatTexture& rhs) const noexcept { return lump == rhs.lump; }
-	bool operator!=(const MergedTwodeeCommandFlatTexture& rhs) const noexcept { return !(*this == rhs); }
 };
 
 struct MergedTwodeeCommand
@@ -123,4 +121,4 @@ public:
 
 } // namespace srb2::hwr2
 
-#endif // __SRB2_HWR2_PASS_TWODEE_HPP__
+#endif // SRB2_HWR2_PASS_TWODEE_HPP

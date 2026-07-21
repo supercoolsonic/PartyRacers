@@ -11,8 +11,8 @@
 /// \file  screen.h
 /// \brief Handles multiple resolutions, 8bpp/16bpp(highcolor) modes
 
-#ifndef __SCREEN_H__
-#define __SCREEN_H__
+#ifndef SCREEN_H
+#define SCREEN_H
 
 #include "command.h"
 
@@ -187,4 +187,4 @@ void SCR_DisplayMarathonInfo(void);
 } // extern "C"
 #endif
 
-#endif //__SCREEN_H__
+#endif //SCREEN_H

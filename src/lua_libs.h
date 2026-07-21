@@ -10,8 +10,8 @@
 //-----------------------------------------------------------------------------
 /// \file  lua_libs.h
 /// \brief libraries for Lua scripting
-#ifndef __LUA_LIBS_H__
-#define __LUA_LIBS_H__
+#ifndef LUA_LIBS_H
+#define LUA_LIBS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -59,10 +59,6 @@ extern lua_State *gL;
 #define META_SUBSECTOR "SUBSECTOR_T*"
 #define META_SECTOR "SECTOR_T*"
 #define META_FFLOOR "FFLOOR_T*"
-#ifdef HAVE_LUA_SEGS
-#define META_SEG "SEG_T*"
-#define META_NODE "NODE_T*"
-#endif
 #define META_SLOPE "PSLOPE_T*"
 #define META_VECTOR2 "VECTOR2_T"
 #define META_VECTOR3 "VECTOR3_T"
@@ -85,10 +81,6 @@ extern lua_State *gL;
 #define META_THINGSTRINGARGS "MAPTHING_T*STRINGARGS"
 #define META_POLYOBJVERTICES "POLYOBJ_T*VERTICES"
 #define META_POLYOBJLINES "POLYOBJ_T*LINES"
-#ifdef HAVE_LUA_SEGS
-#define META_NODEBBOX "NODE_T*BBOX"
-#define META_NODECHILDREN "NODE_T*CHILDREN"
-#endif
 
 #define META_BBOX "BOUNDING_BOX"
 
@@ -158,4 +150,4 @@ int LUA_GrandPrixLib(lua_State *L);
 } // extern "C"
 #endif
 
-#endif // __LUA_LIBS_H__
+#endif // LUA_LIBS_H

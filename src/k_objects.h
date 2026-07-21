@@ -8,8 +8,8 @@
 //-----------------------------------------------------------------------------
 
 /* object-specific code */
-#ifndef k_objects_H
-#define k_objects_H
+#ifndef K_OBJECTS_H
+#define K_OBJECTS_H
 
 #include "doomdef.h"
 #include "m_fixed.h"
@@ -562,4 +562,4 @@ void Obj_TripWireEffects(mobj_t *tripwire);								//SCS ADD
 } // extern "C"
 #endif
 
-#endif/*k_objects_H*/
+#endif/*K_OBJECTS_H*/

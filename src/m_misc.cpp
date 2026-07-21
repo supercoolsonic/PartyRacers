@@ -74,20 +74,9 @@ typedef off_t off64_t;
 #endif
 #endif
 
-#if defined(__MINGW32__) && ((__GNUC__ > 7) || (__GNUC__ == 6 && __GNUC_MINOR__ >= 3)) && (__GNUC__ < 8)
-#define PRIdS "u"
-#elif defined (_WIN32)
-// pedantic: %I is nonstandard, is it ok to assume
-// unsigned int?
-//#define PRIdS "Iu"
-#ifdef _WIN64
-#define PRIdS "lu"
-#else
-#define PRIdS "u"
-#endif
-#else
+// This used to be a whole heaping of nonsense.
+// Now %zu is standard for size_t and %zd for ssize_t.
 #define PRIdS "zu"
-#endif
 
 #ifdef HAVE_PNG
 
@@ -1458,9 +1447,9 @@ void M_StartMovie(moviemode_t mode)
 #endif
 }
 
-static void M_SaveFrame_AVRecorder(uint32_t width, uint32_t height, tcb::span<const std::byte> data);
+static void M_SaveFrame_AVRecorder(uint32_t width, uint32_t height, std::span<const std::byte> data);
 
-static void M_SaveFrame_GIF(uint32_t width, uint32_t height, tcb::span<const std::byte> data)
+static void M_SaveFrame_GIF(uint32_t width, uint32_t height, std::span<const std::byte> data)
 {
 	if (moviemode != MM_GIF)
 	{
@@ -1480,7 +1469,7 @@ static void M_SaveFrame_GIF(uint32_t width, uint32_t height, tcb::span<const std
 	GIF_frame_rgb24(width, height, reinterpret_cast<const uint8_t*>(data.data()));
 }
 
-static void M_SaveFrame_AVRecorder(uint32_t width, uint32_t height, tcb::span<const std::byte> data)
+static void M_SaveFrame_AVRecorder(uint32_t width, uint32_t height, std::span<const std::byte> data)
 {
 #ifdef SRB2_CONFIG_ENABLE_WEBM_MOVIES
 	if (M_AVRecorder_IsExpired())
@@ -1503,7 +1492,7 @@ static void M_SaveFrame_AVRecorder(uint32_t width, uint32_t height, tcb::span<co
 #endif
 }
 
-void M_SaveFrame(uint32_t width, uint32_t height, tcb::span<const std::byte> data)
+void M_SaveFrame(uint32_t width, uint32_t height, std::span<const std::byte> data)
 {
 	switch (moviemode)
 	{
@@ -1761,7 +1750,7 @@ void M_ScreenShot(void)
   *
   * \sa HWR_ScreenShot
   */
-void M_DoScreenShot(UINT32 width, UINT32 height, tcb::span<const std::byte> data)
+void M_DoScreenShot(UINT32 width, UINT32 height, std::span<const std::byte> data)
 {
 #if NUMSCREENS > 2
 	const char *freename = NULL;
@@ -1825,7 +1814,7 @@ failure:
 #endif
 }
 
-void M_SaveMapThumbnail(UINT32 width, UINT32 height, tcb::span<const std::byte> data)
+void M_SaveMapThumbnail(UINT32 width, UINT32 height, std::span<const std::byte> data)
 {
 #ifdef USE_PNG
 #if NUMSCREENS > 2

@@ -11,8 +11,8 @@
 /// \file  call-funcs.hpp
 /// \brief Action Code Script: CallFunc instructions
 
-#ifndef __SRB2_ACS_CALL_FUNCS_HPP__
-#define __SRB2_ACS_CALL_FUNCS_HPP__
+#ifndef SRB2_ACS_CALL_FUNCS_HPP
+#define SRB2_ACS_CALL_FUNCS_HPP
 
 #include "acsvm.hpp"
 

@@ -12,8 +12,8 @@
 /// \file  r_things.h
 /// \brief Rendering of moving objects, sprites
 
-#ifndef __R_THINGS__
-#define __R_THINGS__
+#ifndef R_THINGS_H
+#define R_THINGS_H
 
 #include "r_plane.h"
 #include "r_patch.h"

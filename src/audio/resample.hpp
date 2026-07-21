@@ -8,14 +8,13 @@
 // See the 'LICENSE' file for more details.
 //-----------------------------------------------------------------------------
 
-#ifndef __SRB2_AUDIO_RESAMPLE_HPP__
-#define __SRB2_AUDIO_RESAMPLE_HPP__
+#ifndef SRB2_AUDIO_RESAMPLE_HPP
+#define SRB2_AUDIO_RESAMPLE_HPP
 
 #include <cmath>
 #include <memory>
+#include <span>
 #include <vector>
-
-#include <tcb/span.hpp>
 
 #include "source.hpp"
 
@@ -31,7 +30,7 @@ public:
 	Resampler(Resampler<C>&& r);
 	virtual ~Resampler();
 
-	virtual std::size_t generate(tcb::span<Sample<C>> buffer);
+	virtual std::size_t generate(std::span<Sample<C>> buffer);
 
 	void ratio(float new_ratio);
 
@@ -63,4 +62,6 @@ extern template class Resampler<2>;
 
 } // namespace srb2::audio
 
-#endif // __SRB2_AUDIO_RESAMPLE_HPP__
+#endif // SRB2_AUDIO_RESAMPLE_HPP
+
+

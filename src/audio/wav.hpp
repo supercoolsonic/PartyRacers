@@ -8,15 +8,14 @@
 // See the 'LICENSE' file for more details.
 //-----------------------------------------------------------------------------
 
-#ifndef __SRB2_AUDIO_WAV_HPP__
-#define __SRB2_AUDIO_WAV_HPP__
+#ifndef SRB2_AUDIO_WAV_HPP
+#define SRB2_AUDIO_WAV_HPP
 
 #include <cstddef>
 #include <cstdint>
+#include <span>
 #include <type_traits>
 #include <variant>
-
-#include <tcb/span.hpp>
 
 #include "../core/vector.hpp"
 #include "../io/streams.hpp"
@@ -34,9 +33,9 @@ class Wav final
 public:
 	Wav();
 
-	explicit Wav(tcb::span<std::byte> data);
+	explicit Wav(std::span<std::byte> data);
 
-	std::size_t get_samples(std::size_t offset, tcb::span<Sample<1>> buffer) const noexcept;
+	std::size_t get_samples(std::size_t offset, std::span<Sample<1>> buffer) const noexcept;
 	std::size_t interleaved_length() const noexcept;
 	std::size_t length() const noexcept { return interleaved_length() / channels(); };
 	std::size_t channels() const noexcept { return channels_; };
@@ -52,4 +51,6 @@ inline Wav load_wav(I& stream)
 
 } // namespace srb2::audio
 
-#endif // __SRB2_AUDIO_WAV_HPP__
+#endif // SRB2_AUDIO_WAV_HPP
+
+

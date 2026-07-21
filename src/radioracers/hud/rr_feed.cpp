@@ -563,10 +563,10 @@ static ItemConfigForFeedUpdate getItemConfigForFeedDamageUpdate(mobj_t *mo) {
         case MT_BANANA_SHIELD:
             return {"RRISBANA", 18, 19};
         case MT_SPBEXPLOSION: {
-            ItemConfigForFeedUpdate spbConfig = {"RRISSPB", 21, 22, {false, true}, .y_offset = -2};
+            ItemConfigForFeedUpdate spbConfig = {.patch = "RRISSPB", .width = 21, .height = 22, .animation_config = {.animated = false, .should_flash = true}, .y_offset = -2};
             if (mo->threshold) {
                 if (mo->threshold == KITEM_EGGMAN) {
-                    spbConfig = {"RRISEGGM", 26, 16, {false, true}, .y_offset = 0};
+                    spbConfig = {.patch = "RRISEGGM", .width = 26, .height = 16, .animation_config = {.animated = false, .should_flash = true}, .y_offset = 0};
                 }
             }
             return spbConfig;
@@ -628,6 +628,7 @@ static ItemConfigForFeedUpdate getItemConfigForFeedAttackUpdate(playerattacks_t 
                 .patch = "RRISHYU",
                 .width = 21,
                 .height = 24,
+				.animation_config
                 {
                     .animated = true,
                     .animated_frames = 9,
@@ -673,6 +674,7 @@ static ItemConfigForFeedUpdate getItemConfigForFeedAttackUpdate(playerattacks_t 
                 .patch = "RRISEMR",
                 .width = 25,
                 .height = 20,
+				.animation_config
                 {
                     .animated = true,
                     .animated_frames = 6,
@@ -685,6 +687,7 @@ static ItemConfigForFeedUpdate getItemConfigForFeedAttackUpdate(playerattacks_t 
                 .patch = "RRISPCK",
                 .width = 17,
                 .height = 20,
+				.animation_config
                 {
                     .animated = true,
                     .animated_frames = 3,
@@ -697,6 +700,7 @@ static ItemConfigForFeedUpdate getItemConfigForFeedAttackUpdate(playerattacks_t 
                 .patch = "RRISPKH",
                 .width = 27,
                 .height = 26,
+				.animation_config
                 {
                     .animated = true,
                     .animated_frames = 3,
@@ -716,12 +720,13 @@ static ItemConfigForFeedUpdate getItemConfigForFeedAttackUpdate(playerattacks_t 
             // see PIT_LightningShieldAttack
             return {"RRISTHNS", 18, 18};
         case ATTACK_INVINCIBILITY:
-            return {"RRISINV", 30, 27, {true, false, 6}, .y_offset = -2};
+            return {.patch = "RRISINV", .width = 30, .height = 27, .animation_config = {.animated = true, .should_flash = false, .animated_frames = 6}, .y_offset = -2};
         case ATTACK_GROW:
             return {
                 .patch = "RRISGROW", 
                 .width = 16, 
                 .height = 21, 
+				.animation_config
                 {
                     .should_flash = true,
                     .flashing_colour = SKINCOLOR_BLUEBERRY
