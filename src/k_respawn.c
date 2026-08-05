@@ -181,7 +181,7 @@ void K_DoIngameRespawn(player_t *player)
 		RR_PushGlobalFaultEventToFeed(player);		//SCS - RADIO
 	}
 
-	if (player->rings <= -20 && !player->respawn.fromRingShooter)
+	if (player->rings <= -1*player->ringlimit && !player->respawn.fromRingShooter)
 	{
 		P_KillMobj(player->mo, NULL, NULL, DMG_INSTAKILL);
 		return;

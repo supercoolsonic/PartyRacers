@@ -140,7 +140,7 @@ boolean RR_RumbleRingCollected(const player_t *player)
         return false;
     return (
         player->mo && 
-        player->rings < 20 &&
+        player->rings < player->ringlimit &&		//SCS EDIT
         player->pickuprings > 0 && player->pickuprings > player->pickuprings-1 && player->pickuprings < player->pickuprings+1
     );
 }

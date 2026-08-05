@@ -599,8 +599,8 @@ typedef enum
 
 	// misc. (custom shaders)
 	gluniform_leveltime,
-	gluniform_scr_resolution,
-	gluniform_lightdithering_flag,
+	gluniform_scr_resolution,				//SCS RADIO
+	gluniform_lightdithering_flag,			//SCS RADIO
 	gluniform_max,
 } gluniform_t;
 
@@ -632,7 +632,7 @@ static float shader_light_y = 0.0f;
 static float shader_light_z = 0.0f;
 static INT32 shader_light_contrast = 0;
 static INT32 shader_light_backlight = 0;
-static INT32 shader_light_dithering = 0;
+static INT32 shader_light_dithering = 0;	//SCS RADIO
 
 // Lactozilla: Shader functions
 static boolean Shader_CompileProgram(gl_shader_t *shader, GLint i, const GLchar *vert_shader, const GLchar *frag_shader);
@@ -641,7 +641,7 @@ static void Shader_SetUniforms(FSurfaceInfo *Surface, GLRGBAFloat *poly, GLRGBAF
 
 static GLRGBAFloat shader_defaultcolor = {1.0f, 1.0f, 1.0f, 1.0f};
 
-/**
+/**																															//SCS RADIO START
 * Modified version of Alug's modified version from SRB2Kart-Saturn (see: https://github.com/Indev450/SRB2Kart-Saturn)
 * of the 4x4 bayer libretro shader.
 */
@@ -682,7 +682,7 @@ static GLRGBAFloat shader_defaultcolor = {1.0f, 1.0f, 1.0f, 1.0f};
     "else if (bayerIdx == 14) bayer = 13.0;\n" \
     "else                	 bayer =  5.0;\n" \
 	"float threshold = (1.0 - pow(zFactor, 2.0)) * (bayer / 16.0);\n" \
-	"return mix(baseValue + threshold - 0.5 / 16.0, baseValue, zFactor);\n"
+	"return mix(baseValue + threshold - 0.5 / 16.0, baseValue, zFactor);\n"				//SCS RADIO END
 	
 #define GLSL_DOOM_COLORMAP \
 	"uniform vec2 scr_resolution;\n" \

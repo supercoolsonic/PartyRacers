@@ -8,7 +8,6 @@ if(PkgConfig_FOUND)
 	pkg_check_modules(Vorbis_vorbisfile_PKGCONF vorbisfile)
 endif()
 
-
 find_path(Vorbis_INCLUDE_DIR
 	NAMES vorbis/codec.h
 	PATHS
@@ -62,14 +61,14 @@ if(Vorbis_FOUND)
 	set(Vorbis_INCLUDE_DIRS ${Vorbis_INCLUDE_DIR})
 	set(Vorbis_LIBRARIES ${Vorbis_LIBRARY})
 	if(NOT TARGET Vorbis::vorbis)
-	add_library(Vorbis::vorbis UNKNOWN IMPORTED)
-	set_target_properties(
-		Vorbis::vorbis
-		PROPERTIES
-		IMPORTED_LOCATION "${Vorbis_LIBRARY}"
-		INTERFACE_INCLUDE_DIRECTORIES "${Vorbis_INCLUDE_DIR}"
-	)
-endif()
+		add_library(Vorbis::vorbis UNKNOWN IMPORTED)
+		set_target_properties(
+			Vorbis::vorbis
+			PROPERTIES
+			IMPORTED_LOCATION "${Vorbis_LIBRARY}"
+			INTERFACE_INCLUDE_DIRECTORIES "${Vorbis_INCLUDE_DIR}"
+		)
+	endif()
 	if(NOT TARGET Vorbis::vorbisenc AND Vorbis_vorbisenc_FOUND)
 		add_library(Vorbis::vorbisenc UNKNOWN IMPORTED)
 		set_target_properties(

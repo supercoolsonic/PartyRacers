@@ -562,6 +562,9 @@ static void P_NetArchivePlayers(savebuffer_t *save)
 		WRITEUINT8(save->p, players[i].ringvolume);
 		WRITEUINT8(save->p, players[i].ringtransparency);
 		WRITEUINT16(save->p, players[i].ringburst);
+		WRITESINT8(save->p, players[i].ringlimit);								//SCS ADD
+		WRITESINT8(save->p, players[i].perfectcheckpointstreak);				//SCS ADD
+		WRITEUINT16(save->p, players[i].ringboxawardwindow);					//SCS ADD
 
 		WRITEUINT8(save->p, players[i].curshield);
 		WRITEUINT8(save->p, players[i].bubblecool);
@@ -616,6 +619,10 @@ static void P_NetArchivePlayers(savebuffer_t *save)
 		WRITESINT8(save->p, players[i].playerringgundelay);						//SCS ADD
 		
 		WRITEUINT16(save->p, players[i].inkblotchtimer);						//SCS ADD
+		
+		WRITEUINT16(save->p, players[i].solfirewheelstimer);					//SCS ADD
+		WRITEUINT16(save->p, players[i].orbinautchargetime);						//SCS ADD
+		WRITEFIXED(save->p, players[i].orbichargetap);							//SCS ADD
 		
 		WRITESINT8(save->p, players[i].trickspeedlevel);						//SCS ADD
 
@@ -1289,6 +1296,10 @@ static void P_NetUnArchivePlayers(savebuffer_t *save)
 		players[i].ringvolume = READUINT8(save->p);
 		players[i].ringtransparency = READUINT8(save->p);
 		players[i].ringburst = READUINT16(save->p);
+		
+		players[i].ringlimit = READSINT8(save->p);								//SCS ADD
+		players[i].perfectcheckpointstreak = READSINT8(save->p);				//SCS ADD
+		players[i].ringboxawardwindow = READUINT16(save->p);						//SCS ADD
 
 		players[i].curshield = READUINT8(save->p);
 		players[i].bubblecool = READUINT8(save->p);
@@ -1343,6 +1354,10 @@ static void P_NetUnArchivePlayers(savebuffer_t *save)
 		players[i].playerringgundelay = READSINT8(save->p);						//SCS ADD
 		
 		players[i].inkblotchtimer = READUINT16(save->p);						//SCS ADD
+		
+		players[i].solfirewheelstimer = READUINT16(save->p);					//SCS ADD
+		players[i].orbinautchargetime = READUINT16(save->p);						//SCS ADD
+		players[i].orbichargetap = READFIXED(save->p);							//SCS ADD
 		
 		players[i].trickspeedlevel = READSINT8(save->p);						//SCS ADD
 

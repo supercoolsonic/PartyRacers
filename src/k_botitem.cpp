@@ -2212,6 +2212,7 @@ void K_BotItemUsage(const player_t *player, ticcmd_t *cmd, INT16 turnamt)
 					case KITEM_SUPERRING:
 					case KITEM_SUPERJACKPOT:					//SCS ADD
 					case KITEM_WRECKINGBALL:					//SCS ADD
+					case KITEM_RINGCAPBONUS:					//SCS ADD
 						K_BotItemGenericTap(player, cmd);
 						break;
 					case KITEM_MASTEREMERALD:					//SCS ADD
@@ -2247,6 +2248,8 @@ void K_BotItemUsage(const player_t *player, ticcmd_t *cmd, INT16 turnamt)
 						K_BotItemEggmanShield(player, cmd);
 						break;
 					case KITEM_ORBINAUT:
+					case KITEM_ICEDUS:		//SCS ADD
+					case KITEM_SOL:			//SCS ADD
 						if (!(player->itemflags & IF_ITEMOUT))
 						{
 							K_BotItemGenericOrbitShield(player, cmd);
@@ -2267,6 +2270,7 @@ void K_BotItemUsage(const player_t *player, ticcmd_t *cmd, INT16 turnamt)
 						}
 						break;
 					case KITEM_ABURNERJAWZ:												//SCS ADD
+					case KITEM_SLICER:			//SCS ADD - TEMP
 						if (player->position != 1) // Hold onto this when in 1st :)
 						{
 							K_BotItemJawz(player, cmd);

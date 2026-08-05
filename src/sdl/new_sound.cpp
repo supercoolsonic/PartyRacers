@@ -302,7 +302,6 @@ void audio_callback(void* userdata, SDL_AudioStream* stream, int add, int total)
 	try
 	{
 		size_t float_len = std::min(float_buffer.size(), add / sizeof(Sample<2>));
-
 		for (size_t i = 0; i < float_len; i++)
 		{
 			float_buffer[i] = Sample<2> {0.f, 0.f};
@@ -319,12 +318,12 @@ void audio_callback(void* userdata, SDL_AudioStream* stream, int add, int total)
 		if (av_recorder)
 			av_recorder->push_audio_samples(std::span {float_buffer.data(), float_len});
 #endif
-		SDL_PutAudioStreamData(stream, float_buffer.data(), float_len * sizeof(Sample<2>));	
+		SDL_PutAudioStreamData(stream, float_buffer.data(), float_len * sizeof(Sample<2>));
 	}
 	catch (...)
 	{
 	}
-	
+
 	SDL_UnlockAudioStream(stream);
 
 	FrameMarkEnd(kAudio);
@@ -344,14 +343,13 @@ void initialize_sound()
 	desired.format = SDL_AUDIO_F32;
 	desired.channels = 2;
 	desired.freq = 44100;
-	if ((g_output_stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &desired, audio_callback, nullptr)) == 0)
 
+	if ((g_output_stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &desired, audio_callback, nullptr)) == 0)
 	{
 		CONS_Alert(CONS_ERROR, "Failed to open SDL Audio device: %s\n", SDL_GetError());
 		SDL_QuitSubSystem(SDL_INIT_AUDIO);
 		return;
 	}
-
 	SDL_ResumeAudioStreamDevice(g_output_stream);
 
 	{
@@ -1050,7 +1048,6 @@ static int microphone_opener(void* data)
 	SDL_AudioStream* stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_RECORDING, &input_desired, nullptr, nullptr);
 	if (!stream)
 	{
-		// CONS_Alert(CONS_WARNING, "Input audio device has unexpected unusable format: %s\n", SDL_GetError());
 		return 0;
 	}
 	SDL_ResumeAudioStreamDevice(stream);
@@ -1063,7 +1060,7 @@ static int microphone_opener(void* data)
 boolean I_SoundInputSetEnabled(boolean enabled)
 {
 	SDL_LockMutex(microphone_mutex);
-	
+
 	if (g_input_stream == nullptr && enabled)
 	{
 		int recording_devices = 0;
@@ -1086,7 +1083,7 @@ boolean I_SoundInputSetEnabled(boolean enabled)
 		SDL_DestroyAudioStream(g_input_stream);
 		g_input_stream = nullptr;
 	}
-	
+
 	SDL_UnlockMutex(microphone_mutex);
 
 	return enabled;

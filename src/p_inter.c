@@ -861,7 +861,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				return;
 
 			// Reached the cap, don't waste 'em!
-			if (RINGTOTAL(player) >= 20 && !player->timestonefrozen)			//SCS EDIT - You get to keep picking them up if frozen!
+			if (RINGTOTAL(player) >= player->ringlimit && !player->timestonefrozen)			//SCS EDIT - You get to keep picking them up if frozen!
 				return;
 
 			special->momx = special->momy = special->momz = 0;
@@ -1198,6 +1198,14 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 
 		case MT_GGZICEDUST:
 		{
+			if (special->target != NULL && special->target == toucher)	//SCS ADD - Icedus Crystals shouldn't freeze yourself if you drive into your own
+				return;
+			else if (special->tracer != NULL && special->tracer != toucher)	//SCS ADD - Icedus Crystals should only freeze the player that touched the crystal
+				return;
+				
+			if (special->target && toucher->player)							//SCS ADD - pitblame for Icedus crystals
+				toucher->player->pitblame = special->target->player - players;
+			
 			Obj_IceDustCollide(special, toucher);
 			return;
 		}
@@ -1927,7 +1935,9 @@ void P_UpdateRemovedOrbital(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 					K_AdjustPlayerItemAmount(target->target->player, -1);
 			}
 			else if ((target->type == MT_ORBINAUT_SHIELD && target->target->player->itemtype == KITEM_ORBINAUT) // orbit items
-				|| (target->type == MT_JAWZ_SHIELD && target->target->player->itemtype == KITEM_JAWZ))
+				|| (target->type == MT_JAWZ_SHIELD && target->target->player->itemtype == KITEM_JAWZ)
+				|| (target->type == MT_ICEDUSCRYSTAL_SHIELD && target->target->player->itemtype == KITEM_ICEDUS)	//SCS ADD
+				|| (target->type == MT_SOLFIRE_SHIELD && target->target->player->itemtype == KITEM_SOL))			//SCS ADD
 			{
 				if (target->target->player->itemamount)
 					K_AdjustPlayerItemAmount(target->target->player, -1);
@@ -1969,6 +1979,9 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, UINT8 damaget
 		 || target->type == MT_EGGMANITEM || target->type == MT_EGGMANITEM_SHIELD
 		 || target->type == MT_BALLHOG || target->type == MT_SPB
 		 || target->type == MT_GACHABOM || target->type == MT_GHZBALL || target->type == MT_AFTERBURNER_JAWZ 		//SCS ADD
+		 || target->type == MT_ICEDUSCRYSTAL || target->type == MT_ICEDUSCRYSTAL_SHIELD								//SCS ADD
+		 || target->type == MT_SOLFIRE || target->type == MT_SOLFIRE_SHIELD											//SCS ADD
+		 || target->type == MT_SLICERCLAW																			//SCS ADD
 		 || target->type == MT_KART_LEFTOVER)) // kart dead items
 		target->flags |= MF_NOGRAVITY; // Don't drop Tails 03-08-2000
 	else
@@ -2320,7 +2333,7 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, UINT8 damaget
 						break;
 					}
 					
-					if (target->threshold == HYUCAPSULE_RING)							//SCS ADD - Pickpocket
+					if (target->threshold == HYUCAPSULE_RING)							//SCS ADD START - Pickpocket
 					{
 						K_AwardPlayerRings(player, target->movecount, true);
 						
@@ -2343,7 +2356,7 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, UINT8 damaget
 						}
 							
 						break;
-					}
+					}																//SCS ADD END
 
 					// special behavior for SPB capsules
 					if (target->threshold == KITEM_SPB)
@@ -2599,7 +2612,7 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, UINT8 damaget
 			break;
 	}
 
-	if ((target->type == MT_JAWZ || target->type == MT_AFTERBURNER_JAWZ || target->type == MT_JAWZ_SHIELD) && !(target->flags2 & MF2_AMBUSH))		//SCS EDIT
+	if ((target->type == MT_JAWZ || target->type == MT_AFTERBURNER_JAWZ || target->type == MT_JAWZ_SHIELD || target->type == MT_SLICERCLAW) && !(target->flags2 & MF2_AMBUSH))		//SCS EDIT
 	{
 		target->z += P_MobjFlip(target)*20*target->scale;
 	}
@@ -3887,7 +3900,7 @@ static boolean P_DamageMobjCompat(mobj_t *target, mobj_t *inflictor, mobj_t *sou
 				}
 			}
 
-			if (player->rings <= -20 || (inflictor && inflictor->type == MT_RINGGUNBLASTMAX))		//SCS EDIT
+			if (player->rings <= -1*player->ringlimit || (inflictor && inflictor->type == MT_RINGGUNBLASTMAX))		//SCS EDIT
 			{
 				if (!player->timestonefrozen)			//SCS ADD - Time Stone buff, protects you from -20 death
 					player->markedfordeath = true;
@@ -4195,7 +4208,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, INT32 da
 			break;
 		case MT_CDUFO:
 			// Make it possible to pick them up during race
-			if (inflictor->type == MT_ORBINAUT_SHIELD || inflictor->type == MT_JAWZ_SHIELD)
+			if (inflictor->type == MT_ORBINAUT_SHIELD || inflictor->type == MT_JAWZ_SHIELD || inflictor->type == MT_ICEDUSCRYSTAL_SHIELD || inflictor->type == MT_SOLFIRE_SHIELD)	//SCS EDIT
 				return false;
 			break;
 
@@ -5008,7 +5021,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, INT32 da
 				}
 			}
 
-			if (player->rings <= -20 || (inflictor && inflictor-> type == MT_RINGGUNBLASTMAX))		//SCS EDIT
+			if (player->rings <= -1*player->ringlimit || (inflictor && inflictor-> type == MT_RINGGUNBLASTMAX))		//SCS EDIT
 			{
 				if (!player->timestonefrozen)			//SCS ADD - Time Stone buff, protects you from -20 death
 					player->markedfordeath = true;
@@ -5038,7 +5051,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, INT32 da
 			}
 
 			// Downgrade orbital items.
-			if (inflictor && !P_MobjWasRemoved(inflictor) && (inflictor->type == MT_ORBINAUT_SHIELD || inflictor->type == MT_JAWZ_SHIELD))
+			if (inflictor && !P_MobjWasRemoved(inflictor) && (inflictor->type == MT_ORBINAUT_SHIELD || inflictor->type == MT_JAWZ_SHIELD))		//ICEDUS_SHIELD SOLFIRE_SHIELD		//todo - figure out how these will be "downgraded" if someone bumps into them
 			{
 				type = DMG_WHUMBLE;
 				downgraded = true;
@@ -5327,8 +5340,8 @@ void P_PlayerRingBurst(player_t *player, INT32 num_rings)
 		return;
 
 	// 20 is the maximum number of rings that can be taken from you at once - half the span of your counter
-	if (num_rings > 20)
-		num_rings = 20;
+	if (num_rings > player->ringlimit)	//SCS EDIT
+		num_rings = player->ringlimit;	//SCS EDIT
 	else if (num_rings <= 0)
 		return;
 

@@ -2468,6 +2468,7 @@ void G_PlayerReborn(INT32 player, boolean betweenmaps)
 	{
 		rings = 10; // Never mind, people love serious POSITION
 	}
+		
 
 	saveroundconditions = false;
 
@@ -2689,6 +2690,8 @@ void G_PlayerReborn(INT32 player, boolean betweenmaps)
 	p->botvars.rival = botrival;
 	p->botvars.foe = botfoe;
 	p->xtralife = xtralife;
+	p->ringlimit = 20;			//SCS ADD
+	p->perfectcheckpointstreak = 0;		//SCS ADD
 
 	p->finalized = finalized;
 	
@@ -4917,7 +4920,7 @@ static void G_DoCompleted(void)
 				INT32 ringtotal = player->hudrings;
 				if (ringtotal > 0 && grandprixinfo.eventmode != GPEVENT_SPECIAL)
 				{
-					if (ringtotal > 20)
+					if (ringtotal > 20)					//SCS NOTE - In GP, the max rings you can get per race remains at 20
 						ringtotal = 20;
 					player->totalring += ringtotal;
 					grandprixinfo.rank.rings += ringtotal;

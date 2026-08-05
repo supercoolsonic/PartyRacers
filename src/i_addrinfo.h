@@ -10,8 +10,8 @@
 /// \file  i_addrinfo.h
 /// \brief getaddrinfo stub
 
-#ifndef I_ADDRINFO
-#define I_ADDRINFO
+#ifndef I_ADDRINFO_H
+#define I_ADDRINFO_H
 
 #ifdef __cplusplus
 extern "C" {

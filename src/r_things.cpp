@@ -3880,16 +3880,17 @@ boolean R_ThingVisible (mobj_t *thing)
 			// Duel hazards
 			case MT_DUELBOMB:
 			case MT_LANDMINE:
-			case MT_PRESSUREMINE:	//SCS ADD
+			case MT_PRESSUREMINE:		//SCS ADD
 			case MT_SSMINE:
 			case MT_SSMINE_SHIELD:
 			case MT_MINERADIUS:
 			case MT_POGOSPRING:
-			case MT_YOGOSPRING:		//SCS ADD
-			case MT_BOGOSPRING:		//SCS ADD
+			case MT_YOGOSPRING:			//SCS ADD
+			case MT_BOGOSPRING:			//SCS ADD
 			case MT_DROPTARGET:
 			case MT_HYUDORO:
-			case MT_BHYUDORO:		//SCS ADD
+			case MT_BHYUDORO:			//SCS ADD
+			case MT_ICEDUSCRYSTAL_TRAP:	//SCS ADD
 			case MT_SHADOW: // hyuu fake shadow
 			// Checkpoints
 			case MT_CHECKPOINT_END:

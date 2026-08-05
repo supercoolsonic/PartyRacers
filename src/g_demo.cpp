@@ -14,7 +14,6 @@
 
 #include <algorithm>
 #include <cstddef>
-
 #include <span>
 
 #include "doomdef.h"

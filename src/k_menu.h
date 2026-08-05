@@ -505,7 +505,9 @@ extern menuitem_t OPTIONS_Gameplay[];
 extern menu_t OPTIONS_GameplayDef;
 
 extern menuitem_t OPTIONS_GameplayItems[];
+extern menuitem_t OPTIONS_GameplayItems_Party[];		//SCS ADD
 extern menu_t OPTIONS_GameplayItemsDef;
+extern menu_t OPTIONS_GameplayItemsDef_Party;				//SCS ADD
 
 extern menuitem_t OPTIONS_Server[];
 extern menu_t OPTIONS_ServerDef;
@@ -626,6 +628,7 @@ extern consvar_t cv_dummystaff;
 
 extern INT16 itemOn; // menu item skull is on, Hack by Tails 09-18-2002
 extern INT16 skullAnimCounter; // skull animation counter
+extern boolean itemToggleGrid;	//SCS ADD 
 
 extern INT32 menuKey; // keyboard key pressed for menu
 

@@ -542,6 +542,15 @@ static ItemConfigForFeedUpdate getItemConfigForFeedDamageUpdate(mobj_t *mo) {
 			return {"RRISABJZ", 44, 24};
 		case MT_GHZBALL:
 			return {"RRISGHZB", 27, 24};
+        //case MT_ICEDUSCRYSTAL:
+        //case MT_ICEDUSCRYSTAL_SHIELD:
+			//return {"RRISICED", 19, 22};
+        case MT_SOLFIRE:
+        case MT_SOLFIRE_SHIELD:
+		case MT_SOLFIRE_TRAP:
+			return {"RRISSOLF", 20, 21};
+		case MT_SLICERCLAW:
+			return {"RRISSLIC", 25, 27};
 		case MT_MEGACHOPPER:
 			return {"RRISMCHP", 19, 17};
 		case MT_PRESSUREMINE:
@@ -712,6 +721,8 @@ static ItemConfigForFeedUpdate getItemConfigForFeedAttackUpdate(playerattacks_t 
 			return {"RRISPANK", 26, 22};
 		case ATTACK_RINGSTING:					//SCS ADD
 			return {"RRISRSTG", 16, 16};
+		case ATTACK_ICEDUS:					//SCS ADD
+			return {"RRISICED", 19, 22};
 		case ATTACK_DEATH:					//SCS ADD
 			return {"RRISDEATH", 26, 22};
         case ATTACK_BUBBLESHIELD_TRAP:

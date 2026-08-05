@@ -34,6 +34,10 @@ boolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2);		//SCS ADD
 void K_GHZBall_BalBounce(mobj_t *t1, mobj_t *t2);		//SCS ADD
 void K_GHZBall_BounceWithOther(mobj_t *t1, mobj_t *t2); //SCS ADD
 
+boolean K_IcedusSolfireCollide(mobj_t *t1, mobj_t *t2);		//SCS ADD
+
+boolean K_SlicerClawCollide(mobj_t *t1, mobj_t *t2);		//SCS ADD
+
 boolean K_PickpocketCollide(mobj_t *t1, mobj_t *t2);		//SCS ADD
 
 boolean K_MegaChopperCollide(mobj_t *t1, mobj_t *t2);		//SCS ADD
@@ -42,6 +46,7 @@ boolean K_DropTargetCollide(mobj_t *t1, mobj_t *t2);
 
 void K_LightningShieldAttack(mobj_t *actor, fixed_t size);
 void K_ArmageddonShieldAttack(mobj_t *actor, fixed_t size);		//SCS ADD
+void K_IcedusBlastAttack(mobj_t *actor, fixed_t size);			//SCS ADD
 
 boolean K_BubbleShieldCanReflect(mobj_t *t1, mobj_t *t2);
 boolean K_BubbleShieldReflect(mobj_t *t1, mobj_t *t2);

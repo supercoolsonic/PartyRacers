@@ -81,6 +81,7 @@ extern consvar_t cv_karthorns;
 extern consvar_t cv_kartbot;
 extern consvar_t cv_karteliminatelast;
 extern consvar_t cv_toggle_checkpointitemnum_net;				//SCS ADD
+extern consvar_t cv_toggle_randomcapsules_net;					//SCS ADD
 extern consvar_t cv_thunderdome;
 extern consvar_t cv_teamplay;
 extern consvar_t cv_duel;

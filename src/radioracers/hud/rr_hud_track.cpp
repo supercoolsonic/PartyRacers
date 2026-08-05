@@ -9,6 +9,7 @@
 /// \file radioracers/hud/rr_hud_track.cpp
 
 #include <math.h>
+#include <algorithm>		//SCS ADD - Needed to compile for x64 and easymode and all that
 #include <fmt/format.h>
 
 #include "../../doomstat.h" // r_splitscreen

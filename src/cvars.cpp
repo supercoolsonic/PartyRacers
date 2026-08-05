@@ -777,7 +777,9 @@ consvar_t cv_randomizeitemcapsules = Player("randomitemcapsules", "No").yes_no()
 //Show a meter on the side of your item roulette wheel that shows the length of the reel, and what index it's current at inside of it
 consvar_t cv_obvious_itemreel = Player("obviousitemreels", "No").yes_no().radio();
 //Shake the mini-ranking like in Mini Ranking Plus when a player takes damage?
-consvar_t cv_toggle_minirankingshaking = Player("shakeminiranking", "No").yes_no().radio();						//SCS ADD END
+consvar_t cv_toggle_minirankingshaking = Player("shakeminiranking", "No").yes_no().radio();
+//Should the little SPB icon on the minimap be colorized the same color of the player that threw it?
+consvar_t cv_toggle_coloredspbminimap = Player("minimapcolorspb", "No").yes_no().radio();						//SCS ADD END
 
 
 
@@ -1011,25 +1013,33 @@ consvar_t cv_items[] = {
 	UnsavedNetVar("quadorbinaut",		"On").on_off().onchange_noinit(KartItem_OnChange),
 	UnsavedNetVar("dualjawz",			"On").on_off().onchange_noinit(KartItem_OnChange),
 	UnsavedNetVar("triplegachabom",		"On").on_off().onchange_noinit(KartItem_OnChange),
-	UnsavedNetVar("decabanana",			"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("superjackpot",		"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("wreckingball",		"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("masteremerald",		"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("pickpockethyu",		"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("yogospring",			"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("timestone",			"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("bogospring",			"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("normalshield",		"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("megachopper",		"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("armashield",			"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("aburnerjawz",		"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("dualaburnerjawz",	"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("pressuremine",		"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("chameleonblaster",	"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("eggblaster",			"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("ringgun",			"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("butlerhyudoro",		"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
-	UnsavedNetVar("octus",				"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD
+	UnsavedNetVar("decabanana",			"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD START
+	UnsavedNetVar("superjackpot",		"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("wreckingball",		"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("masteremerald",		"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("pickpockethyu",		"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("yogospring",			"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("timestone",			"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("bogospring",			"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("normalshield",		"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("megachopper",		"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("armashield",			"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("aburnerjawz",		"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("dualaburnerjawz",	"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("pressuremine",		"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("chameleonblaster",	"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("eggblaster",			"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("ringgun",			"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("butlerhyudoro",		"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("octus",				"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("icedus",				"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("tripleicedus",		"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("quadicedus",			"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("slicer",				"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("sol",				"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("triplesol",			"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("quadsol",			"On").on_off().onchange_noinit(KartItem_OnChange),
+	UnsavedNetVar("ringcapbonus",		"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD END
 };
 
 consvar_t cv_kartbot = UnsavedNetVar("bots", "Off").values({
@@ -1054,7 +1064,8 @@ consvar_t cv_kartbumpers = UnsavedNetVar("battlebumpers", "3").min_max(0, 12);
 void KartEliminateLast_OnChange(void);
 consvar_t cv_karteliminatelast = NetVar("eliminatelast", "Yes").yes_no().onchange(KartEliminateLast_OnChange);
 
-consvar_t cv_toggle_checkpointitemnum_net = NetVar("numcheckpointsforitemboxesonline", "1").min_max(0, 99);		//SCS ADD
+consvar_t cv_toggle_checkpointitemnum_net = UnsavedNetVar("numcheckpointsforitemboxesonline", "1").min_max(0, 99);		//SCS ADD
+consvar_t cv_toggle_randomcapsules_net = UnsavedNetVar("randomizeitemcapsules", "No").yes_no();						//SCS ADD
 
 void KartEncore_OnChange(void);
 consvar_t cv_kartencore = UnsavedNetVar("encore", "Auto").values({{-1, "Auto"}, {0, "Off"}, {1, "On"}}).onchange_noinit(KartEncore_OnChange);

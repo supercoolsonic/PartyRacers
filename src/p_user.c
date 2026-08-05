@@ -465,10 +465,10 @@ INT32 P_GivePlayerRings(player_t *player, INT32 num_rings)
 	}
 
 	test = player->rings + num_rings;
-	if (test > 20) // Caps at 20 rings, sorry!
-		num_rings -= (test-20);
-	else if (test < -20) // Chaotix ring debt!
-		num_rings -= (test+20);
+	if (test > player->ringlimit) // Caps at 20 rings, sorry!		//SCS EDIT - Pfft, yeah right... lmao
+		num_rings -= (test-player->ringlimit);						//SCS EDIT
+	else if (test < -1*player->ringlimit) // Chaotix ring debt!		//SCS EDIT
+		num_rings -= (test+player->ringlimit);						//SCS EDIT
 
 	player->rings += num_rings;
 
@@ -1295,7 +1295,7 @@ void P_DoPlayerExit(player_t *player, pflags_t flags)
 	{
 		if (P_IsDisplayPlayer(player))
 			S_StartSound(NULL, sfx_s3kb0);
-		player->rings = max(20, player->rings + 20);
+		player->rings = max(player->ringlimit, player->rings + 20);		//SCS EDIT
 	}
 
 	extern boolean blockreset;
@@ -1341,8 +1341,8 @@ void P_DoPlayerExit(player_t *player, pflags_t flags)
 		if (!(gametyperules & GTR_SPHERES))
 		{
 			player->hudrings = RINGTOTAL(player);
-			if (player->hudrings > 20)
-				player->hudrings = 20;
+			if (player->hudrings > player->ringlimit)		//SCS EDIT
+				player->hudrings = player->ringlimit;		//SCS EDIT
 
 			if (grandprixinfo.gp == true
 				&& grandprixinfo.eventmode != GPEVENT_SPECIAL
@@ -1869,20 +1869,23 @@ static void P_DoBubbleBreath(player_t *player)
 	fixed_t z = player->mo->z;
 	mobj_t *bubble = NULL;
 
-	if (!(player->mo->eflags & MFE_UNDERWATER) || player->spectator || player->curshield == KSHIELD_BUBBLE)
+	if (!(player->mo->eflags & MFE_UNDERWATER) || player->spectator || player->curshield == KSHIELD_BUBBLE || player->icecube.frozen)	//SCS EDIT - Being frozen underwater means no air bubbles lol
 		return;
 
-#if 0
+#if 1										//SCS EDIT - fun feature, why disable?
 	if (player->charflags & SF_MACHINE)
 	{
 		if (P_RandomChance(PR_BUBBLE, FRACUNIT/5))
 		{
-			fixed_t r = player->mo->radius>>FRACBITS;
+			fixed_t r = (player->mo->radius/7)>>FRACBITS;		//SCS EDIT - gotta divide this here otherwise sparks don't show up...
 			x += (P_RandomRange(PR_BUBBLE, r, -r)<<FRACBITS);
 			y += (P_RandomRange(PR_BUBBLE, r, -r)<<FRACBITS);
 			z += (P_RandomKey(PR_BUBBLE, player->mo->height>>FRACBITS)<<FRACBITS);
 			bubble = P_SpawnMobj(x, y, z, MT_WATERZAP);
-			S_StartSound(bubble, sfx_beelec);
+			
+			if (bubble)								//SCS ADD - just in case...
+				S_StartSound(bubble, sfx_beelec);
+
 		}
 	}
 	else

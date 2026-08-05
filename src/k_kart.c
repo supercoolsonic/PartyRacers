@@ -681,6 +681,14 @@ SINT8 K_ItemResultToType(SINT8 getitem)
 				
 			case KRITEM_DUALABURNERJAWZ:	//SCS ADD
 				return KITEM_ABURNERJAWZ;
+				
+			case KRITEM_TRIPLEICEDUS:		//SCS ADD
+			case KRITEM_QUADICEDUS:
+				return KITEM_ICEDUS;
+				
+			case KRITEM_TRIPLESOL:		//SCS ADD
+			case KRITEM_QUADSOL:
+				return KITEM_SOL;
 
 			default:
 				I_Error("Bad item cooldown redirect for result %d\n", getitem);
@@ -703,9 +711,13 @@ UINT8 K_ItemResultToAmount(SINT8 getitem, const itemroulette_t *roulette)
 		case KRITEM_TRIPLEBANANA:
 		case KRITEM_TRIPLEORBINAUT:
 		case KRITEM_TRIPLEGACHABOM:
+		case KRITEM_TRIPLEICEDUS:	//SCS ADD
+		case KRITEM_TRIPLESOL:		//SCS ADD
 			return 3;
 
 		case KRITEM_QUADORBINAUT:
+		case KRITEM_QUADICEDUS:		//SCS ADD
+		case KRITEM_QUADSOL:		//SCS ADD
 			return 4;
 
 		case KITEM_BALLHOG: // Not a special result, but has a special amount
@@ -4850,11 +4862,11 @@ void K_AwardPlayerRings(player_t *player, UINT16 rings, boolean overload)
 			RINGTOTAL(player) + (player->superring);
 
 		/* capped at 20 rings */
-		if ((totalrings + rings) > 20)
+		if ((totalrings + rings) > player->ringlimit)	//SCS EDIT
 		{
-			if (totalrings >= 20)
+			if (totalrings >= player->ringlimit)		//SCS EDIT
 				return; // woah dont let that go negative buster
-			rings = (20 - totalrings);
+			rings = (player->ringlimit - totalrings);	//SCS EDIT
 		}
 	}
 
@@ -5008,8 +5020,13 @@ void K_CheckpointCrossAward(player_t *player)
 	player->gradingpointnum++;
 	player->exp = K_GetEXP(player);
 	//CONS_Printf("player: %s factor: %.2f exp: %d\n", player_names[player-players], FIXED_TO_FLOAT(player->gradingfactor), player->exp);
-	if (!player->cangrabitems && ((netgame && player->gradingpointnum >= cv_toggle_checkpointitemnum_net.value) || !netgame && player->gradingpointnum >= cv_toggle_checkpointitemnum.value)) //SCS EDIT - Can modify how many checkpoints are needed to make item boxes appear
+	if (!player->cangrabitems && ((netgame && player->gradingpointnum >= cv_toggle_checkpointitemnum_net.value) || (!netgame && player->gradingpointnum >= cv_toggle_checkpointitemnum.value))) //SCS EDIT - Can modify how many checkpoints are needed to make item boxes appear
 		player->cangrabitems = 1;
+		
+	if (player->rings >= player->ringlimit)		//SCS ADD START
+		player->perfectcheckpointstreak++;
+	else
+		player->perfectcheckpointstreak = 0;	//SCS ADD END
 
 	if (player->laps <= numlaps)											//SCS TEST
 		K_AwardPlayerRings(player, (player->bot ? 20 : 10), true);
@@ -5419,8 +5436,9 @@ static boolean K_IsScaledItem(mobj_t *mobj)
 		(mobj->type == MT_ORBINAUT || mobj->type == MT_JAWZ || mobj->type == MT_GACHABOM || mobj->type == MT_STONESHOE
 		|| mobj->type == MT_BANANA || mobj->type == MT_EGGMANITEM || mobj->type == MT_BALLHOG
 		|| mobj->type == MT_SSMINE || mobj->type == MT_LANDMINE || mobj->type == MT_SINK
-		|| mobj->type == MT_GARDENTOP || mobj->type == MT_DROPTARGET || mobj->type == MT_GHZBALL || mobj->type == MT_MEGACHOPPER 	//SCS EDIT
-		|| mobj->type == MT_AFTERBURNER_JAWZ || mobj->type == MT_PRESSUREMINE || mobj->type == MT_PLAYER);							//SCS EDIT
+		|| mobj->type == MT_GARDENTOP || mobj->type == MT_DROPTARGET || mobj->type == MT_GHZBALL || mobj->type == MT_MEGACHOPPER 				//SCS EDIT
+		|| mobj->type == MT_ICEDUSCRYSTAL || mobj->type == MT_ICEDUSCRYSTAL_TRAP || mobj->type == MT_SOLFIRE || mobj->type == MT_SOLFIRE_TRAP	//SCS ADD
+		|| mobj->type == MT_SLICERCLAW || mobj->type == MT_AFTERBURNER_JAWZ || mobj->type == MT_PRESSUREMINE || mobj->type == MT_PLAYER);		//SCS EDIT
 }
 
 
@@ -5547,15 +5565,21 @@ void K_StumblePlayer(player_t *player)
 {
 	P_ResetPlayer(player);
 
-#if 0
-	// Single, medium bounce
-	player->tumbleBounces = TUMBLEBOUNCES;
-	player->tumbleHeight = 30;
-#else
-	// Two small bounces
-	player->tumbleBounces = TUMBLEBOUNCES-1;
-	player->tumbleHeight = 20;
-#endif
+//#if 0									//SCS EDIT - Enabling this. Why not have some variety?
+	if (player->kartweight <= 5)		//SCS ADD - Let's make it weight dependent!
+	{
+		// Single, medium bounce
+		player->tumbleBounces = TUMBLEBOUNCES;
+		player->tumbleHeight = 30;
+	}
+//#else
+	else
+	{
+		// Two small bounces
+		player->tumbleBounces = TUMBLEBOUNCES-1;
+		player->tumbleHeight = 20;
+	}
+//#endif
 
 	player->pflags &= ~PF_TUMBLESOUND;
 	S_StartSound(player->mo, sfx_s3k9b);
@@ -6715,6 +6739,15 @@ static mobj_t *K_SpawnKartMissile(mobj_t *source, mobjtype_t type, angle_t an, I
 			break;
 		case MT_GHZBALL:										//SCS ADD
 			Obj_WreckingBallThrown_Pre(th, finalspeed, dir);
+			break;
+		case MT_ICEDUSCRYSTAL:									//SCS ADD
+			Obj_IcedusCrystalThrown(th, finalspeed, dir);
+			break;
+		case MT_SOLFIRE:										//SCS ADD
+			Obj_SolFireThrown(th, finalspeed, dir);
+			break;
+		case MT_SLICERCLAW:										//SCS ADD
+			Obj_SlicerThrown(th, finalspeed, dir);
 			break;
 		default:
 			break;
@@ -8469,7 +8502,7 @@ static void K_ThrowLandMine(player_t *player)
 	throwmo->movecount = 0; // above player
 }
 
-static void K_ThrowPressureMine(player_t *player)
+static void K_ThrowPressureMine(player_t *player)	//SCS ADD
 {
 	mobj_t *pressureMine;
 	mobj_t *throwmo;
@@ -8490,6 +8523,40 @@ static void K_ThrowPressureMine(player_t *player)
 
 	pressureMine->momz = (30 * mapobjectscale * P_MobjFlip(player->mo)) + player->mo->momz;
 	pressureMine->color = player->skincolor;
+
+	throwmo = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height/2, MT_FIREDITEM);
+	P_SetTarget(&throwmo->target, player->mo);
+	// Ditto:
+	if (player->mo->eflags & MFE_VERTICALFLIP)
+	{
+		throwmo->z -= player->mo->height;
+		throwmo->eflags |= MFE_VERTICALFLIP;
+	}
+
+	throwmo->movecount = 0; // above player
+}
+
+static void K_ThrowIcedusTrap(player_t *player)	//SCS ADD
+{
+	mobj_t *iceCrystal;
+	mobj_t *throwmo;
+
+	iceCrystal = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height/2, MT_ICEDUSCRYSTAL_TRAP);
+	K_FlipFromObjectNoInterp(iceCrystal, player->mo);
+	iceCrystal->threshold = 10;
+
+	if (iceCrystal->info->seesound)
+		S_StartSound(player->mo, iceCrystal->info->seesound);
+
+	P_SetTarget(&iceCrystal->target, player->mo);
+
+	P_SetScale(iceCrystal, (iceCrystal->destscale = K_ItemScaleForPlayer(player)));
+	//CONS_Printf("landMine->scale is %f, player scale is %f\n", ((double)landMine->destscale)/mapobjectscale, ((double)player->mo->destscale)/mapobjectscale);
+
+	iceCrystal->angle = player->mo->angle;
+
+	iceCrystal->momz = (30 * mapobjectscale * P_MobjFlip(player->mo)) + player->mo->momz;
+	iceCrystal->color = player->skincolor;
 
 	throwmo = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height/2, MT_FIREDITEM);
 	P_SetTarget(&throwmo->target, player->mo);
@@ -8785,6 +8852,14 @@ void K_DropHnextList(player_t *player)
 				orbit = false;
 				type = MT_EGGMANITEM;
 				break;
+			case MT_ICEDUSCRYSTAL_SHIELD:	//SCS ADD
+				orbit = true;
+				type = MT_ICEDUSCRYSTAL_TRAP;
+				break;
+			case MT_SOLFIRE_SHIELD:			//SCS ADD
+				orbit = true;
+				type = MT_SOLFIRE;
+				break;
 			// intentionally do nothing
 			case MT_ROCKETSNEAKER:
 			case MT_SINK_SHIELD:
@@ -8868,7 +8943,7 @@ void K_DropHnextList(player_t *player)
 				dropwork->flags &= ~(MF_NOCLIP|MF_NOCLIPTHING);
 			}
 
-			if (type == MT_ORBINAUT)
+			if (type == MT_ORBINAUT || type == MT_ICEDUSCRYSTAL || type == MT_SOLFIRE)		//SCS EDIT
 			{
 				Obj_OrbinautDrop(dropwork);
 			}
@@ -8928,7 +9003,14 @@ void K_DropHnextList(player_t *player)
 			dropwork->cvmem = 1;
 
 		P_RemoveMobj(work);
+		
+		if (player->orbinautchargetime && (dropwork->type == MT_SOLFIRE || dropwork->type == MT_ICEDUSCRYSTAL_TRAP))	//SCS ADD - I don't want the flames or ice flying out when doing the Sol boost or Icedus Freeze
+			P_RemoveMobj(dropwork);
+			
 	}
+	
+	player->orbinautchargetime = 0;
+	player->orbichargetap = false;
 
 	// we need this here too because this is done in afterthink - pointers are cleaned up at the START of each tic...
 	P_SetTarget(&player->mo->hnext, NULL);
@@ -9370,7 +9452,7 @@ static void K_MoveHeldObjects(player_t *player)
 {
 	fixed_t finalscale = INT32_MAX;
 
-	if (!player->mo)
+	if (!player || !player->mo)	//SCS EDIT
 		return;
 
 	if (!player->mo->hnext)
@@ -9416,8 +9498,19 @@ static void K_MoveHeldObjects(player_t *player)
 	{
 		case MT_ORBINAUT_SHIELD: // Kart orbit items
 		case MT_JAWZ_SHIELD:
+		case MT_ICEDUSCRYSTAL_SHIELD:	//SCS ADD
+		case MT_SOLFIRE_SHIELD:			//SCS ADD
 			{
 				Obj_OrbinautJawzMoveHeld(player);
+				
+				if (player->mo->hnext && player->mo->hnext->type == MT_SOLFIRE_SHIELD)	//SCS ADD (Sols instantly die in water)
+				{
+					if (!P_MobjWasRemoved(player->mo->hnext) && (player->mo->eflags & MFE_UNDERWATER))
+					{
+						P_RemoveMobj(player->mo->hnext);
+						//K_DropHnextList(player);
+					}
+				}
 				break;
 			}
 		case MT_BANANA_SHIELD: // Kart trailing items
@@ -9802,9 +9895,11 @@ static void K_UpdateEngineSounds(player_t *player)
 	}
 
 	class = R_GetEngineClass(player->kartspeed, player->kartweight, 0); // there are no unique sounds for ENGINECLASS_J
+	
+	INT32 engineval = (leveltime % 8);		//SCS ADD - fixing unisgned, int comparison below
 
-#if 0
-	if ((leveltime % 8) != ((player-players) % 8)) // Per-player offset, to make engines sound distinct!
+#if 1												//SCS EDIT - ...And WHY was this disabled?
+	if (engineval != ((player-players) % 8)) // Per-player offset, to make engines sound distinct!	//SCS EDIT
 #else
 	if (leveltime % 8)
 #endif
@@ -10875,10 +10970,10 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 		player->wipeoutslow = 0;
 	}
 
-	if (player->rings > 20)
-		player->rings = 20;
-	else if (player->rings < -20)
-		player->rings = -20;
+	if (player->rings > player->ringlimit)					//SCS EDIT
+		player->rings = player->ringlimit;					//SCS EDIT
+	else if (player->rings < -1*player->ringlimit)			//SCS EDIT
+		player->rings = -1*player->ringlimit;				//SCS EDIT
 	
 	if (player->timestonefrozen && player->rings != player->timestonefrozenringamount)	//SCS ADD
 		player->rings = player->timestonefrozenringamount;
@@ -11370,7 +11465,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 			if (player->baildrop) //Kiiiiiillll yoooouuuuuu
 			{
 				player->invincibilitytimer = 0;
-				player->rings = -20;
+				player->rings = -1*player->ringlimit;
 				player->masteremeraldinvincibility = false;
 				player->usedmasteremeraldduringringboxaward = false;
 				P_KillMobj(player->mo, NULL, NULL, DMG_NORMAL);			
@@ -11384,7 +11479,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 					{
 						player->invincibilitytimer = 0;
 						player->usedmasteremeraldduringringboxaward = false;
-						player->rings = -20;
+						player->rings = -1*player->ringlimit;
 						player->stunned = BAILSTUN;
 						K_DefensiveOverdrive(player);
 					}
@@ -11489,7 +11584,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 			S_StartSound(pmo, sfx_gshad);
 		}
 
-		player->rings = -20;
+		player->rings = -1*player->ringlimit;	//SCS EDIT
 
 		player->baildrop--;
 		if (player->baildrop == 0)
@@ -11498,7 +11593,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 
 	if (player->bailhitlag && !player->mo->hitlag) // do the ring reduction and set boost as soon as we leave hitlag
 	{
-		UINT32 debtrings = 20;
+		UINT32 debtrings = player->ringlimit;	//SCS EDIT
 		if (player->rings < 0)
 		{
 			debtrings += player->rings;
@@ -11514,7 +11609,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 
 		// CONS_Printf("R=%d SR=%d PR=%d DR=%d TR=%d\n", player->rings, player->superring, player->pickuprings, debtrings, totalrings);
 
-		player->rings = -20;
+		player->rings = -1*player->ringlimit;	//SCS EDIT
 		
 		if (!player->timestonefrozen)			//SCS ADD
 			player->superring = 0;
@@ -11554,7 +11649,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 		if ((player->itemRoulette.active && player->itemRoulette.eggman) || player->eggmanexplode > 0)
 		{
 			player->eggmanexplode = 1;
-			player->rings = -20;
+			player->rings = -1*player->ringlimit; //SCS EDIT
 		}
 			
 		if (player->itemRoulette.active)
@@ -11581,6 +11676,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 		player->armageddonshieldboosttimer = 0; //SCS ADD
 		player->gunfiredelay = 0;				//SCS ADD
 		player->gunusagetimer = 0;				//SCS ADD
+		player->solfirewheelstimer = 0;			//SCS ADD
 		player->megachopper = NULL;
 
 		/*
@@ -11877,7 +11973,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 			
 		if (player->baildrop) //Kiiiiiillll yoooouuuuuu
 		{
-			player->rings = -20;
+			player->rings = -1*player->ringlimit;
 			player->armageddonshieldboosttimer = 0;
 			player->armageddonshieldboostdelay = 0;
 			P_KillMobj(player->mo, NULL, NULL, DMG_NORMAL);			
@@ -11903,6 +11999,9 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 	
 	if (player->megachopperdelaytime)
 		player->megachopperdelaytime--;
+	
+	if (player->ringboxawardwindow != 0 && player->itemtype != KITEM_RINGCAPBONUS)
+		player->ringboxawardwindow = 0;
 	
 	if (player->gunusagetimer > 0)		
 	{
@@ -11934,6 +12033,31 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 			player->inkblotchtimer = 1;
 		
 		player->inkblotchtimer--;
+	}
+	
+	if (player->mo->health > 0 && player->solfirewheelstimer > 0 && onground && !player->icecube.frozen)
+	{
+		mobj_t *wheelfire = NULL;
+		
+		if (player->solfirewheelstimer % 2 == 0)
+		{
+			wheelfire = P_SpawnMobj(player->mo->x + (P_RandomRange(PR_FUZZ, -8, 8)*mapobjectscale), player->mo->y + (P_RandomRange(PR_FUZZ, -8, 8)*mapobjectscale), player->mo->z, MT_SOLFIRE_TRAP);
+			
+			if (wheelfire != NULL)
+			{
+				//CONS_Printf("We're lighting fires!\n");
+				P_SetTarget(&wheelfire->target, player->mo);
+				P_InstaScale(wheelfire, player->mo->scale);
+				wheelfire->momx = 0;
+				wheelfire->momy = 0;
+				wheelfire->momz = 0;
+				S_StartSound(player->mo, sfx_s3k4f);
+				S_StartSound(player->mo, sfx_s3k4f);
+				//wheelfire->fuse = 30;
+			}
+
+		}
+		player->solfirewheelstimer--;
 	}
 
 	if (player->playerringgundelay)
@@ -12143,13 +12267,19 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 			player->tiregrease -= toDegrease;
 	}
 
-	if (player->spinouttimer || player->tumbleBounces)
+	if (player->spinouttimer || player->tumbleBounces || player->icecube.frozen)			//SCS ADD - let's make icecubes not count as in-control too, mostly for Icedus pitblames
 	{
 		if (player->ballhogcharge)
 			player->ballhogcharge = 0;
 		
 		if (player->normalshieldboostcharge)			//SCS ADD
 			player->normalshieldboostcharge = 0;
+			
+		if (player->orbinautchargetime || player->orbichargetap)
+		{
+			player->orbinautchargetime = 0;
+			player->orbichargetap = false;
+		}
 
 		if (player->progressivethrust < MAXCOMBOTIME)
 			player->progressivethrust++;
@@ -12474,6 +12604,11 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 				K_AdjustPlayerItemAmount(player, -1);
 			
 		}
+		else if (player->solfirewheelstimer)
+		{
+			player->solfirewheelstimer = 0;
+		}
+		
 		if (player->inkblotchtimer)
 			player->inkblotchtimer = 1;				//SCS ADD END	
 		
@@ -14619,11 +14754,13 @@ void K_StripItems(player_t *player)
 	player->curshield = KSHIELD_NONE;
 	player->bananadrag = 0;
 	player->ballhogcharge = 0;
-	player->normalshieldboostcharge = 0;		//SCS ADD
-	player->megachoppertimer = 0;				//SCS ADD
-	player->playerringgunpower = 0;				//SCS ADD
-	player->playerringgundelay = 0;				//SCS ADD
-	player->megachopperdelaytime = 0;			//SCS ADD
+	player->normalshieldboostcharge = 0;		//SCS ADD START
+	player->orbinautchargetime = 0;	
+	player->megachoppertimer = 0;
+	player->playerringgunpower = 0;	
+	player->playerringgundelay = 0;	
+	player->megachopperdelaytime = 0;
+	player->ringboxawardwindow = 0;				//SCS ADD END
 	
 	if (!player->bailhitlag)	//only drop the timestone effects if we AREN'T bailing
 	{
@@ -14680,11 +14817,13 @@ void K_StripItemsExceptBackup(player_t *player)
 	player->curshield = KSHIELD_NONE;
 	player->bananadrag = 0;
 	player->ballhogcharge = 0;
-	player->normalshieldboostcharge = 0;		//SCS ADD
-	player->megachoppertimer = 0;				//SCS ADD
-	player->playerringgunpower = 0;				//SCS ADD
-	player->playerringgundelay = 0;				//SCS ADD
-	player->megachopperdelaytime = 0;			//SCS ADD
+	player->normalshieldboostcharge = 0;		//SCS ADD START
+	player->orbinautchargetime = 0;	
+	player->megachoppertimer = 0;
+	player->playerringgunpower = 0;	
+	player->playerringgundelay = 0;
+	player->megachopperdelaytime = 0;
+	player->ringboxawardwindow = 0;				//SCS ADD END
 	
 	if (!player->bailhitlag)	//only drop the timestone effects if we AREN'T bailing
 	{
@@ -15383,6 +15522,29 @@ UINT8 GetTotalInGameRacers(void)
 	return numplayers;
 }
 
+void K_SpawnRingCapIncreaseMessage(player_t *player)	//SCS ADD
+{
+	mobj_t *pt;
+
+	if (!player || !player->mo)
+		return;
+
+	if (player->exiting)
+		return;
+
+	pt = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_RINGCAPINCREASE);
+	P_SetTarget(&pt->target, player->mo);
+	pt->color = player->skincolor;
+	
+	if (r_splitscreen > 1)
+		pt->destscale = 2*pt->scale;		
+	else
+		pt->destscale = (3*pt->scale)/2;
+
+	if (encoremode)
+		pt->renderflags ^= RF_HORIZONTALFLIP;
+}
+
 boolean K_FastFallBounce(player_t *player)
 {
 	// Handle fastfall bounce.
@@ -16040,7 +16202,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 			{
 				if ((leveltime%(INSTAWHIP_RINGDRAINEVERY)) == 0 && !(gametyperules & GTR_SPHERES))
 				{
-					if (player->rings > -20 && P_IsDisplayPlayer(player))
+					if (player->rings > -1*player->ringlimit && P_IsDisplayPlayer(player))	//SCS EDIT
 						S_StartSound(player->mo, sfx_antiri);
 					player->rings--;
 					
@@ -17868,6 +18030,321 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 								player->botvars.itemconfirm = 0;
 							}
 							break;
+						case KITEM_ICEDUS:
+							if (NO_HYUDORO)
+							{
+								if (player->orbinautchargetime && !(cmd->buttons & BT_ATTACK))
+									player->orbichargetap = false;
+								
+							}
+							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
+							{
+								angle_t newangle;
+								INT32 moloop;
+								mobj_t *mo = NULL;
+								mobj_t *prev = player->mo;
+
+								//K_PlayAttackTaunt(player->mo);
+								K_SetItemOut(player);
+								S_StartSound(player->mo, sfx_s3k3a);
+								S_StartSound(player->mo, sfx_cdfm68);
+
+								for (moloop = 0; moloop < player->itemamount; moloop++)
+								{
+									newangle = (player->mo->angle + ANGLE_157h) + FixedAngle(((360 / player->itemamount) * moloop) << FRACBITS) + ANGLE_90;
+									mo = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_ICEDUSCRYSTAL_SHIELD);
+									if (!mo)
+									{
+										K_SetPlayerItemAmount(player, moloop);
+										break;
+									}
+									mo->flags |= MF_NOCLIPTHING;
+									mo->angle = newangle;
+									mo->threshold = 10;
+									mo->movecount = player->itemamount;
+									mo->movedir = mo->lastlook = moloop+1;
+									mo->color = player->skincolor;
+									mo->cusval = player->itemscale;
+									P_SetTarget(&mo->target, player->mo);
+									P_SetTarget(&mo->hprev, prev);
+									P_SetTarget(&prev->hnext, mo);
+									prev = mo;
+								}
+								player->botvars.itemconfirm = 0;
+								player->orbichargetap = true;
+							}
+							else if ((gametyperules & GTR_CIRCUIT) && player->orbichargetap && player->orbinautchargetime < (40 + 15*min(player->itemamount, 6))) //Disable this ability in Battle
+							{
+								angle_t an;
+								mobj_t *snomo;
+								int i = 0;
+								fixed_t sx;
+								fixed_t sy;
+								
+								if (player->orbinautchargetime == 25)			//We do 25 instead of 0 here so the player doesn't ALWAYS hear it when they initially bring out the crystals.
+									S_StartSound(player->mo, sfx_mbs55);
+								else if (player->orbinautchargetime == ((40 + 15*min(player->itemamount, 6))-15) && player->itemamount >= 4)
+									S_StartSound(player->mo, sfx_cdfm60);
+						
+								player->orbinautchargetime++;
+
+								if (player->orbinautchargetime >= (40 + 15*player->itemamount))
+								{
+									mobj_t *bigsnow = P_SpawnMobj(
+										//player->mo,
+										player->mo->x,
+										player->mo->y,
+										player->mo->z,
+										MT_THOK
+									);
+									
+									if (bigsnow)
+									{
+										P_InstaScale(bigsnow, player->mo->scale*5*min(player->itemamount, 6));
+										P_SetMobjState(bigsnow, S_ICEDUSEXPLOSION);
+									}
+									
+									for (i=0; i<15; i++)
+									{
+										an = ANGLE_22h;
+										sx = player->mo->x + FixedMul(player->mo->scale*((180 + 30)*min(player->itemamount, 6)), FINECOSINE((an*i)>>ANGLETOFINESHIFT));
+										sy = player->mo->y + FixedMul(player->mo->scale*((180 + 30)*min(player->itemamount, 6)), FINESINE((an*i)>>ANGLETOFINESHIFT));
+										snomo = P_SpawnMobj(sx, sy, player->mo->z, MT_THOK);
+										snomo->angle = an*i;
+										snomo->extravalue1 = ((180 + 30)*min(player->itemamount, 6));	// Used to know whether we should teleport by radius or something.
+										snomo->scale = player->mo->scale*3;
+										//P_SetTarget(&mo->target, player->mo); //Don't follow the player
+										P_SetMobjState(snomo, S_ICEDUSSNOWFLAKE);
+									}
+									
+									S_StopSoundByID(player->mo, sfx_mbs55);
+									S_StopSoundByID(player->mo, sfx_cdfm60);
+									S_StartSound(player->mo, sfx_mbs6e);
+									S_StartSound(player->mo, sfx_cdfm63);
+									
+									if (player->itemamount >= 4)
+										S_StartSound(player->mo, sfx_telept);
+									
+									K_IcedusBlastAttack(player->mo, ((180 + 30) * FRACUNIT)*player->itemamount);
+									K_DropHnextList(player);
+									K_PlayBoostTaunt(player->mo);
+									//K_SetPlayerItemAmount(player, 0);
+									player->botvars.itemconfirm = 0;
+									player->orbinautchargetime = 0;
+									player->orbichargetap = false;
+								}
+							}
+							else if (player->itemflags & IF_ITEMOUT && NO_HYUDORO)
+							{
+								player->orbinautchargetime = max(player->orbinautchargetime--, 0);
+								
+								if (ATTACK_IS_DOWN)
+								{
+									S_StopSoundByID(player->mo, sfx_mbs55);
+									S_StopSoundByID(player->mo, sfx_cdfm60);
+									player->orbichargetap = false;
+									
+									if (player->throwdir >= 0)
+									{
+										mobj_t *mo = NULL;
+										
+										K_AdjustPlayerItemAmount(player, -1);
+										mo = K_ThrowKartItem(player, true, MT_ICEDUSCRYSTAL, 1, 0, 0);
+										
+										if (mo != NULL)
+											P_SetTarget(&mo->target, player->mo);	//Manually set the target here so that players can't freeze themselves
+										
+										K_PlayAttackTaunt(player->mo);
+										K_UpdateHnextList(player, false);
+										player->botvars.itemconfirm = 0;
+									}
+									else
+									{
+										K_AdjustPlayerItemAmount(player, -1);
+										K_ThrowIcedusTrap(player);
+										K_PlayAttackTaunt(player->mo);
+										K_UpdateHnextList(player, false);
+										player->botvars.itemconfirm = 0;
+									}
+								}
+							}
+							break;
+						case KITEM_SLICER:
+							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
+							{
+								mobj_t *mo = NULL;
+								
+								K_AdjustPlayerItemAmount(player, -1);
+								K_SetItemOut(player);
+								K_ThrowKartItem(player, true, MT_SLICERCLAW, 1, 0, 0);
+								
+								if (mo != NULL)
+								{
+									P_SetTarget(&mo->target, player->mo);
+									mo->extravalue1 = 10;					//timer for when it can deal damage
+								}
+								
+								K_UnsetItemOut(player);
+								K_PlayAttackTaunt(player->mo);
+								//K_UpdateHnextList(player, false);
+								player->botvars.itemconfirm = 0;
+							}
+							break;
+						case KITEM_SOL:
+							if (NO_HYUDORO)
+							{
+								if (player->orbinautchargetime && !(cmd->buttons & BT_ATTACK))
+									player->orbichargetap = false;
+
+								//if (player->orbinautchargetime == 0 && ATTACK_IS_DOWN)
+									//player->orbichargetap = false;
+								
+							}
+							//boolean realcharge = (cmd->buttons & BT_ATTACK) && (player->itemflags & IF_ITEMOUT);
+						
+							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
+							{
+								angle_t newangle;
+								INT32 moloop;
+								mobj_t *mo = NULL;
+								mobj_t *prev = player->mo;
+
+								//K_PlayAttackTaunt(player->mo);
+								K_SetItemOut(player);
+								S_StartSound(player->mo, sfx_s3k3a);
+								S_StartSound(player->mo, sfx_s233);
+								
+								player->orbinautchargetime = 0;
+								player->orbichargetap = false;
+
+								for (moloop = 0; moloop < player->itemamount; moloop++)
+								{
+									newangle = (player->mo->angle + ANGLE_157h) + FixedAngle(((360 / player->itemamount) * moloop) << FRACBITS) + ANGLE_90;
+									mo = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_SOLFIRE_SHIELD);
+									if (!mo)
+									{
+										K_SetPlayerItemAmount(player, moloop);
+										break;
+									}
+									mo->flags |= MF_NOCLIPTHING;
+									mo->angle = newangle;
+									mo->threshold = 10;
+									mo->movecount = player->itemamount;
+									mo->movedir = mo->lastlook = moloop+1;
+									mo->color = player->skincolor;
+									mo->cusval = player->itemscale;
+									P_SetTarget(&mo->target, player->mo);
+									P_SetTarget(&mo->hprev, prev);
+									P_SetTarget(&prev->hnext, mo);
+									prev = mo;
+								}
+								player->botvars.itemconfirm = 0;
+								player->orbichargetap = true;
+							}
+							//else if (realcharge && !player->orbichargetap && player->orbinautchargetime < 50)
+							else if ((gametyperules & GTR_CIRCUIT) && player->orbichargetap && player->orbinautchargetime < (40 + 15*player->itemamount))	//Disable this ability in Battle
+							{
+								if (player->orbinautchargetime == 25)
+									S_StartSound(player->mo, sfx_s3ka4);
+								else if (player->orbinautchargetime == ((40 + 15*player->itemamount)-15) && player->itemamount >= 4)
+									S_StartSound(player->mo, sfx_s3k9d);
+								
+								player->orbinautchargetime++;
+
+								if (player->orbinautchargetime >= (40 + 15*player->itemamount))
+								{
+									mobj_t *boomo = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_FZEROBOOM);
+									boomo->extravalue1 = 2;
+									P_SetScale(boomo, boomo->scale/3);
+									boomo->destscale = (mapobjectscale*player->mo->scale)/3;
+									boomo->fuse = 20;
+									
+									S_StopSoundByID(player->mo, sfx_s3ka4);
+									S_StopSoundByID(player->mo, sfx_s3k9d);
+									if (player->itemamount >= 4)
+										S_StartSound(player->mo, sfx_s3k54);
+									else
+										S_StartSound(player->mo, sfx_s3k43);
+									
+									P_Thrust(player->mo, player->mo->angle, (30*player->mo->scale/2)*player->itemamount);
+									P_Thrust(player->mo, K_MomentumAngle(player->mo), (30*player->mo->scale/2)*player->itemamount);
+									K_PlayBoostTaunt(player->mo);
+									K_DropHnextList(player);
+									//K_SetPlayerItemAmount(player, 0);
+									player->botvars.itemconfirm = 0;
+									player->orbinautchargetime = 0;
+									player->orbichargetap = false;
+								}
+							}
+							else if (player->itemflags & IF_ITEMOUT && NO_HYUDORO)
+							{
+								player->orbinautchargetime = max(player->orbinautchargetime--, 0);
+								
+								//if (player->orbichargetap)
+								if (ATTACK_IS_DOWN)
+								{
+									S_StopSoundByID(player->mo, sfx_s3ka4);
+									S_StopSoundByID(player->mo, sfx_s3k9d);
+									player->orbichargetap = false;
+									
+									if (player->throwdir >= 0)
+									{
+										mobj_t *mo = NULL;
+										
+										K_AdjustPlayerItemAmount(player, -1);
+										mo = K_ThrowKartItem(player, true, MT_SOLFIRE, 1, 0, 0);
+									
+										if (mo != NULL)
+											P_SetTarget(&mo->target, player->mo);	//Manually set the target here
+											
+										K_PlayAttackTaunt(player->mo);
+										K_UpdateHnextList(player, false);
+										player->botvars.itemconfirm = 0;
+									}
+									else
+									{
+										K_AdjustPlayerItemAmount(player, -1);
+										player->solfirewheelstimer = min(player->solfirewheelstimer + 60, 999);
+										K_PlayAttackTaunt(player->mo);
+										K_UpdateHnextList(player, false);
+										player->botvars.itemconfirm = 0;
+									}
+									
+									if (player->itemamount <= 0)
+										player->orbinautchargetime = 0;
+									
+								}
+							}
+							break;
+						case KITEM_RINGCAPBONUS:
+							if (player->ringboxawardwindow <= 0)
+								player->ringboxawardwindow = 180;
+						
+							if (player->ringlimit >= 50)
+							{
+								player->perfectcheckpointstreak = 0;
+								player->itemtype = KITEM_SUPERJACKPOT; //If you're lucky enough to get here during a normal race, go buy a lottery ticket
+							}
+							else
+							{
+								player->ringboxawardwindow--;
+								
+								if (player->ringboxawardwindow <= 0)
+									player->itemtype = KITEM_SUPERJACKPOT;					//You ran out of time to clain the prize
+								else if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
+								{									
+									S_StartSound(player->mo, sfx_itrolk);
+									S_StartSound(player->mo, sfx_itrolk);
+									K_SpawnRingCapIncreaseMessage(player);
+									player->ringlimit += 10;
+									K_AwardPlayerRings(player, 100, true);	//Refill you to max
+									player->perfectcheckpointstreak = 0;
+									player->ringboxawardwindow = 0;
+									K_AdjustPlayerItemAmount(player, -1);
+									player->botvars.itemconfirm = 0;
+								}
+							}
+							break;
 						case KITEM_SAD:
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO
 								&& !player->sadtimer)
@@ -18624,6 +19101,11 @@ UINT8 K_GetTimeStoneItemFrame(void)		//SCS ADD
 	return ((leveltime % (10*3)) / 3);
 }
 
+UINT8 K_RingCapBonusItemFrame(void)		//SCS ADD
+{
+	return ((leveltime % (4*3)) / 3);
+}
+
 UINT8 K_GetOrbinautItemFrame(UINT8 count)
 {
 	return min(count - 1, 3);
@@ -18642,6 +19124,16 @@ UINT8 K_GetSneakerItemFrame(UINT8 count)		//SCS ADD
 UINT8 K_GetJawzItemFrame(UINT8 count)		//SCS ADD
 {
 	return min(count - 1, 1);
+}
+
+UINT8 K_GetIcedusItemFrame(UINT8 count)		//SCS ADD
+{
+	return min(count - 1, 3);
+}
+
+UINT8 K_GetSolItemFrame(UINT8 count)		//SCS ADD
+{
+	return min(count - 1, 3);
 }
 
 boolean K_IsSPBInGame(void)
@@ -18788,7 +19280,7 @@ void K_UpdateMobjItemOverlay(mobj_t *part, SINT8 itemType, UINT8 itemCount)
 			break;
 		case KITEM_SNEAKER:
 			part->sprite = SPR_ITMS;
-			part->frame = FF_FULLBRIGHT|FF_PAPERSPRITE|K_GetSneakerItemFrame(itemCount);			//SCS ADD
+			part->frame = FF_FULLBRIGHT|FF_PAPERSPRITE|K_GetSneakerItemFrame(itemCount);		//SCS ADD
 			break;
 		case KITEM_JAWZ:
 			part->sprite = SPR_ITMJ;
@@ -18808,7 +19300,19 @@ void K_UpdateMobjItemOverlay(mobj_t *part, SINT8 itemType, UINT8 itemCount)
 			break;
 		case KITEM_TIMESTONE:
 			part->sprite = SPR_ITTS;
-			part->frame = FF_FULLBRIGHT|FF_PAPERSPRITE|K_GetTimeStoneItemFrame();		//SCS ADD
+			part->frame = FF_FULLBRIGHT|FF_PAPERSPRITE|K_GetTimeStoneItemFrame();				//SCS ADD
+			break;
+		case KITEM_ICEDUS:
+			part->sprite = SPR_ITMD;
+			part->frame = FF_FULLBRIGHT|FF_PAPERSPRITE|K_GetOrbinautItemFrame(itemCount); 		//SCS ADD
+			break;
+		case KITEM_SOL:
+			part->sprite = SPR_ITMF;
+			part->frame = FF_FULLBRIGHT|FF_PAPERSPRITE|K_GetOrbinautItemFrame(itemCount); 		//SCS ADD
+			break;
+		case KITEM_RINGCAPBONUS:
+			part->sprite = SPR_ITMP;
+			part->frame = FF_FULLBRIGHT|FF_PAPERSPRITE|K_RingCapBonusItemFrame();				//SCS ADD
 			break;
 		case KITEM_SAD:
 			part->sprite = SPR_ITEM;
@@ -19333,10 +19837,16 @@ boolean K_IsPickMeUpItem(mobjtype_t type)
 		case MT_SSMINE_SHIELD:
 		case MT_FLOATINGITEM:  // Stone Shoe
 		case MT_TOXOMISTER_POLE:
-		case MT_AFTERBURNER_JAWZ:				//SCS ADD
-		case MT_PRESSUREMINE:					//SCS ADD
-		case MT_INKBUBBLE:						//SCS ADD
-		case MT_PPOCKETHYUDORO:					//SCS ADD
+		case MT_AFTERBURNER_JAWZ:				//SCS ADD START
+		case MT_PRESSUREMINE:
+		case MT_INKBUBBLE:
+		case MT_PPOCKETHYUDORO:
+		case MT_ICEDUSCRYSTAL:
+		case MT_ICEDUSCRYSTAL_SHIELD:
+		case MT_ICEDUSCRYSTAL_TRAP:
+		case MT_SOLFIRE:
+		case MT_SOLFIRE_SHIELD:
+		case MT_SLICERCLAW:						//SCS ADD END
 			return true;
 		default:
 			return false;
@@ -19427,6 +19937,18 @@ static boolean K_PickUp(player_t *player, mobj_t *picked)
 		
 			type = KITEM_PICKPOCKETHYU;
 			amount = picked->extravalue2;
+			break;
+		case MT_ICEDUSCRYSTAL:				//SCS ADD
+		case MT_ICEDUSCRYSTAL_SHIELD:
+		case MT_ICEDUSCRYSTAL_TRAP:
+			type = KITEM_ICEDUS;
+			break;
+		case MT_SOLFIRE:					//SCS ADD
+		case MT_SOLFIRE_SHIELD:
+			type = KITEM_SOL;
+			break;
+		case MT_SLICERCLAW:					//SCS ADD
+			type = KITEM_SLICER;
 			break;
 		default:
 			type = KITEM_SAD;

@@ -200,3 +200,4 @@ void BlitPostimgScreens::transfer(Rhi& rhi)
 		screen_data_[i] = std::move(data);
 	}
 }
+

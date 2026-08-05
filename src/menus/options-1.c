@@ -175,7 +175,7 @@ void M_OptionsTick(void)
 			optionsmenu.toptx = 440;
 			optionsmenu.topty = 70+1;
 		}
-		else if (currentMenu == &OPTIONS_GameplayItemsDef)
+		else if (currentMenu == &OPTIONS_GameplayItemsDef || currentMenu == &OPTIONS_GameplayItemsDef_Party)		//SCS EDIT
 		{
 			optionsmenu.toptx = -160; // off the side of the screen
 			optionsmenu.topty = 50;

@@ -334,6 +334,10 @@ UINT8 K_GetOrbinautItemFrame(UINT8 count);
 UINT8 K_GetBananaItemFrame(UINT8 count);	//SCS ADD
 UINT8 K_GetSneakerItemFrame(UINT8 count);	//SCS ADD
 UINT8 K_GetJawzItemFrame(UINT8 count);	//SCS ADD
+UINT8 K_GetIcedusItemFrame(UINT8 count); //SCS ADD
+UINT8 K_GetSolItemFrame(UINT8 count); //SCS ADD
+UINT8 K_RingCapBonusItemFrame(void); //SCS ADD
+void K_SpawnRingCapIncreaseMessage(player_t *player); //SCS ADD
 
 UINT8 GetTotalInGameRacers(void);	//SCS ADD
 boolean K_IsSPBInGame(void);

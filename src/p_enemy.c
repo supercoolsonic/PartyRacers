@@ -3672,7 +3672,7 @@ void A_AttractChase(mobj_t *actor)
 				actor->tracer->player && actor->tracer->health
 				&& ((gametyperules & GTR_SPHERES)
 					|| (actor->tracer->player->curshield == KSHIELD_LIGHTNING
-					&& RINGTOTAL(actor->tracer->player) < 20
+					&& RINGTOTAL(actor->tracer->player) < actor->tracer->player->ringlimit		//SCS EDIT
 					&& !(actor->tracer->player->pflags & PF_RINGLOCK)))
 				//&& P_CheckSight(actor, actor->tracer)
 				)

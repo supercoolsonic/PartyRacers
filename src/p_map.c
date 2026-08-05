@@ -1064,9 +1064,13 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 		|| g_tm.thing->type == MT_BATTLECAPSULE
 		|| g_tm.thing->type == MT_KART_LEFTOVER
 		|| g_tm.thing->type == MT_TOXOMISTER_POLE
-		|| g_tm.thing->type == MT_GHZBALL				//SCS ADD
-		|| g_tm.thing->type == MT_AFTERBURNER_JAWZ		//SCS ADD
-		|| g_tm.thing->type == MT_PRESSUREMINE			//SCS ADD
+		|| g_tm.thing->type == MT_GHZBALL				//SCS ADD START
+		|| g_tm.thing->type == MT_AFTERBURNER_JAWZ
+		|| g_tm.thing->type == MT_PRESSUREMINE
+		|| g_tm.thing->type == MT_ICEDUSCRYSTAL
+		|| g_tm.thing->type == MT_ICEDUSCRYSTAL_TRAP
+		|| g_tm.thing->type == MT_SOLFIRE
+		|| g_tm.thing->type == MT_SLICERCLAW			//SCS ADD END
 		|| (g_tm.thing->type == MT_PLAYER)))
 	{
 		// see if it went over / under
@@ -1086,9 +1090,13 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 		|| thing->type == MT_BATTLECAPSULE
 		|| thing->type == MT_KART_LEFTOVER
 		|| thing->type == MT_TOXOMISTER_POLE
-		|| thing->type == MT_GHZBALL			//SCS ADD
-		|| thing->type == MT_AFTERBURNER_JAWZ	//SCS ADD
-		|| thing->type == MT_PRESSUREMINE		//SCS ADD
+		|| thing->type == MT_GHZBALL				//SCS ADD START
+		|| thing->type == MT_AFTERBURNER_JAWZ
+		|| thing->type == MT_PRESSUREMINE
+		|| thing->type == MT_ICEDUSCRYSTAL
+		|| thing->type == MT_ICEDUSCRYSTAL_TRAP
+		|| thing->type == MT_SOLFIRE
+		|| thing->type == MT_SLICERCLAW				//SCS ADD END
 		|| (thing->type == MT_PLAYER)))
 	{
 		// see if it went over / under
@@ -1271,6 +1279,50 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 
 		return K_RingGunBlastMaxCollide(thing, g_tm.thing) ? BMIT_CONTINUE : BMIT_ABORT;
 	}
+	
+	if (g_tm.thing->type == MT_ICEDUSCRYSTAL || g_tm.thing->type == MT_ICEDUSCRYSTAL_SHIELD || g_tm.thing->type == MT_ICEDUSCRYSTAL_TRAP 
+	|| g_tm.thing->type == MT_SOLFIRE || g_tm.thing->type == MT_SOLFIRE_SHIELD || g_tm.thing->type == MT_SOLFIRE_TRAP)
+	{
+		// see if it went over / under
+		if (g_tm.thing->z > thing->z + thing->height)
+			return BMIT_CONTINUE; // overhead
+		if (g_tm.thing->z + g_tm.thing->height < thing->z)
+			return BMIT_CONTINUE; // underneath
+
+		return K_IcedusSolfireCollide(g_tm.thing, thing) ? BMIT_CONTINUE : BMIT_ABORT;
+	}
+	else if (thing->type == MT_ICEDUSCRYSTAL || thing->type == MT_ICEDUSCRYSTAL_SHIELD || thing->type == MT_ICEDUSCRYSTAL_TRAP 
+	|| thing->type == MT_SOLFIRE || thing->type == MT_SOLFIRE_SHIELD || thing->type == MT_SOLFIRE_TRAP)
+	{
+		// see if it went over / under
+		if (g_tm.thing->z > thing->z + thing->height)
+			return BMIT_CONTINUE; // overhead
+		if (g_tm.thing->z + g_tm.thing->height < thing->z)
+			return BMIT_CONTINUE; // underneath
+
+		return K_IcedusSolfireCollide(thing, g_tm.thing) ? BMIT_CONTINUE : BMIT_ABORT;
+	}
+	
+	if (g_tm.thing->type == MT_SLICERCLAW)
+	{
+		// see if it went over / under
+		if (g_tm.thing->z > thing->z + thing->height)
+			return BMIT_CONTINUE; // overhead
+		if (g_tm.thing->z + g_tm.thing->height < thing->z)
+			return BMIT_CONTINUE; // underneath
+
+		return K_SlicerClawCollide(g_tm.thing, thing) ? BMIT_CONTINUE : BMIT_ABORT;
+	}
+	else if (thing->type == MT_SLICERCLAW)
+	{
+		// see if it went over / under
+		if (g_tm.thing->z > thing->z + thing->height)
+			return BMIT_CONTINUE; // overhead
+		if (g_tm.thing->z + g_tm.thing->height < thing->z)
+			return BMIT_CONTINUE; // underneath
+
+		return K_SlicerClawCollide(thing, g_tm.thing) ? BMIT_CONTINUE : BMIT_ABORT;
+	}	
 	
 	if (g_tm.thing->type == MT_MEGACHOPPER)
 	{

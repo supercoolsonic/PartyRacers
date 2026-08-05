@@ -203,7 +203,6 @@ void Dummygpdifficulty_OnChange(void)
 
 	PLAY_RaceDifficulty[drace_gpdifficulty].tooltip = tooltip;
 }
-
 void DummyKartSpeed_OnChange(void);
 void DummyKartSpeed_OnChange(void)
 {

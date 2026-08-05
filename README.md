@@ -14,7 +14,7 @@ Updated for version 2.4.
 
 ## Features
 
--18 new items, original and returning from Xitem mods from SRB2Kart.
+-22 new items, original and returning from Xitem mods from SRB2Kart.
 
 
 <img src="./party/readme/DRPR_CheckerDemo.gif" width="500">
@@ -46,7 +46,7 @@ There's a lot more... Check out the changelog included with the assets for a ful
 
 ## Disclaimers
 * Online is largely untested. Any issues can be reported here, and anyone willing to assist with issues regarding it are welcome to share their findings and/or solutions. Netcoding isn't my strongest area of expertise.
-* Battle mode is also thus untested, as a direct result.
+* Battle mode is also largely untested, as a direct result.
 
 ## How To Use
 
@@ -99,6 +99,10 @@ Pressure Mine: sprites by ArtoMeister
 
 Original Lethal Landmine mod here: https://mb.srb2.org/addons/lethal-landmine-a-mine-reskin.6291/
 
+
+Sol, Icedus, Slicer HUD icons by Sieggy
+
+
 Custom Sprites for Double Banana, Triple Banana, Quad Banana, Double Sneakers, Triple Sneakers, and Dual Jawz by Spee, Jin, and Momphi, originally used in Sunflower's Garden/Saturn/Blankart. Small modifications by me.
 
 Saturn Build here: https://github.com/Indev450/SRB2Kart-Saturn
@@ -107,3 +111,6 @@ Blankart Build here: https://codeberg.org/NepDisk/blankart
 
 Signpost ribbon from Expanded Signposts mod for SRB2Kart.
 Original Expanded Signposts mode here: https://mb.srb2.org/addons/expanded-signposts.4968/
+
+
+Help with getting 32-player online stable: Pura/mileswolfgang

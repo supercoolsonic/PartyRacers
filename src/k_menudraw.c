@@ -409,7 +409,7 @@ static void M_DrawMenuParty(void)
 	
 	const INT32 partyflags = IS_WEIRD_RES() ? V_SNAPTOBOTTOM|V_SNAPTOLEFT : 0;		//SCS - RADIO
 
-	if (setup_numplayers == 0 || currentMenu == &PLAY_CharSelectDef || currentMenu == &OPTIONS_GameplayItemsDef || currentMenu == &MISC_ChallengesDef)
+	if (setup_numplayers == 0 || currentMenu == &PLAY_CharSelectDef || currentMenu == &OPTIONS_GameplayItemsDef || currentMenu == &OPTIONS_GameplayItemsDef_Party || currentMenu == &MISC_ChallengesDef)		//SCS EDIT
 	{
 		return;
 	}
@@ -6530,8 +6530,10 @@ void M_DrawItemToggles(void)
 	memset(black, 16, 256);
 
 	const INT32 edges = 8;
-	const INT32 height = 5;					//SCS EDIT - was 4
-	const INT32 spacing = 26;				//SCS EDIT - was 35
+	const INT32 height = 4;
+	//const INT32 height = 5;
+	const INT32 spacing = 35;
+	//const INT32 spacing = 26;
 	const INT32 column = itemOn/height;
 	const INT32 row = itemOn%height;
 	INT32 leftdraw, rightdraw, totaldraw;
@@ -6569,7 +6571,7 @@ void M_DrawItemToggles(void)
 	patch_t *ismul = W_CachePatchName("K_ISMUL", PU_CACHE);
 	patch_t *isstrk = W_CachePatchName("K_ISSTRK", PU_CACHE);
 	
-	x -= 8;		//SCS ADD
+	//x -= 8;		//SCS ADD
 
 	for (i = leftdraw; i <= rightdraw; i++)
 	{
@@ -6693,7 +6695,7 @@ void M_DrawItemToggles(void)
 	INT32 w = K_DrawGameControl(
 		x, y, 0,
 		va(
-			"<c_animated> Toggle All %s<white>   <r_animated> Frantic Mode: %s",
+			"<l_animated> Change Grid   <c_animated> Toggle All %s<white>   <r_animated> Frantic Mode: %s",			//SCS EDIT
 			cv_thunderdome.value ? "<yellow>(Ring Box Mode) " : "<gold>(Item Box Mode)",
 			cv_kartfrantic.value ? "<red> On" : "<gray>Off"
 		),
