@@ -54,6 +54,7 @@ menu_t *restoreMenu = NULL;
 
 INT16 itemOn = 0; // menu item skull is on, Hack by Tails 09-18-2002
 INT16 skullAnimCounter = 8; // skull animation counter
+boolean itemToggleGrid = false;	//SCS ADD
 struct menutransition_s menutransition; // Menu transition properties
 
 INT32 menuKey = -1; // keyboard key pressed for menu

@@ -40,9 +40,9 @@ typedef UINT (WINAPI *p_timeEndPeriod) (UINT);
 typedef HANDLE (WINAPI *p_OpenFileMappingA) (DWORD, BOOL, LPCSTR);
 typedef LPVOID (WINAPI *p_MapViewOfFile) (HANDLE, DWORD, DWORD, DWORD, SIZE_T);
 
-#if defined(_WIN32) && !defined(__GNUC__)
+#if defined(_WIN32) && (!defined(__GNUC__) || defined(__MINGW64__) || defined(__clang__))
 #define USE_DBGHELP
-#include <DbgHelp.h>
+#include <dbghelp.h>
 #endif
 
 #endif
@@ -550,10 +550,10 @@ static void I_ReportSignal(int num, int coredumped, void* tracefromcpptrace)
 	I_ShowErrorMessageBox(sigmsg,
 #if defined (UNIXBACKTRACE)
 		true
-#elif defined (_WIN32) && defined (__GNUC__)
-		!M_CheckParm("-noexchndl")
 #elif defined (USE_DBGHELP)
 		true
+#elif defined (_WIN32) && defined (__GNUC__)
+		!M_CheckParm("-noexchndl")
 #else
 		false
 #endif
@@ -603,7 +603,7 @@ static LONG WriteMinidumpExceptionFilter(PEXCEPTION_POINTERS ExceptionInfo)
 	if (result == FALSE)
 	{
 		CloseHandle(outfile);
-		DeleteFileA("ringracers_minidump.dmp");
+		DeleteFileA(outfilename);
 		goto exit;
 	}
 
@@ -1801,9 +1801,7 @@ INT32 I_StartupSystem(void)
 	I_OutputMsg("Linked with SDL version: %d.%d.%d\n",
 	 SDL_VERSIONNUM_MAJOR(SDLlinked), SDL_VERSIONNUM_MINOR(SDLlinked), SDL_VERSIONNUM_MICRO(SDLlinked));
 
-#if (SDL_VERSION_ATLEAST(2, 0, 18))
 	SDL_SetHint(SDL_HINT_APP_NAME, "Dr. Robotnik's Ring Racers");
-#endif
 
 	if (!SDL_Init(0))
 		I_Error("Dr. Robotnik's Ring Racers: SDL System Error: %s", SDL_GetError()); //Alam: Oh no....
@@ -2517,7 +2515,6 @@ static long get_entry(const char* name, const char* buf)
 }
 #endif
 
-// quick fix for compil
 UINT64 I_GetFreeMem(UINT64 *total)
 {
 #ifdef FREEBSD

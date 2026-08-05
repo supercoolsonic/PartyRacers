@@ -38,9 +38,10 @@ const std::vector start_boost_patches = {"DBOSA5", "DBOSB5", "DBOSC5"};
 const std::vector drift_patches = {"DRIFC3C7", "DRIFD3D7", "DRIFA3A7"};
 const std::vector stun_patches = {"STUNA3A7", "STUNB3B7", "STUNC3C7", "STUND3D7", "STUNE3E7"};
 const std::vector voltage_patches = {"TRC3B0", "TRC3C0", "TRC3D0", "TRC3E0", "TRC3F0"};
-const std::vector spindash_patches = {"SPNDSH1", "SPNDSH2", "SPNDSH3", "SPNDSH4"};					//SCS ADD
-const std::vector stackedboost_patches = {"DRSP1", "DRSP2"};										//SCS ADD
-const std::vector wipeout_patches = {"DIZZA0", "DIZZB0", "DIZZC0", "DIZZD0"};						//SCS ADD
+const std::vector spindash_patches = {"SPNDSH1", "SPNDSH2", "SPNDSH3", "SPNDSH4"};					//SCS ADD START
+const std::vector stackedboost_patches = {"DRSP1", "DRSP2"};
+const std::vector wipeout_patches = {"DIZZA0", "DIZZB0", "DIZZC0", "DIZZD0"};
+const std::vector solfirewheel_patches = {"SFWHEEL1", "SFWHEEL2"};									//SCS ADD END
 
 // STRUCTS
 
@@ -119,6 +120,14 @@ std::vector<ItemTimer> getTimers(void) {
 	
 	// Octus Ink
     timers.push_back({stplyr->inkblotchtimer, "INKTAO"});										//SCS ADD
+	
+	// Sol Wheel Fire
+    timers.push_back({											//SCS ADD
+        stplyr->solfirewheelstimer, 
+        solfirewheel_patches[leveltime % solfirewheel_patches.size()],
+        0.4,
+        {6, 7}
+    });
 
     // Drift charge
     

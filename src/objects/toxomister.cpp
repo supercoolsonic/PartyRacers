@@ -277,6 +277,7 @@ struct Cloud : Mobj
 
 	bool tick()
 	{
+		//return true;
 		if (Mobj::valid(follow()))
 			return tick_follow();
 
@@ -285,7 +286,7 @@ struct Cloud : Mobj
 
 	bool tick_follow()
 	{
-		if (!Mobj::valid(follow()))
+		if (!Mobj::valid(follow()) || !Mobj::valid(target()))
 		{
 			remove();
 			return false;
@@ -302,7 +303,7 @@ struct Cloud : Mobj
 			remove();
 			return false;
 		}
-
+//bleeeheeeblahhhh
 		move_origin(follow()->pos());
 		momx = 0;
 		momy = 0;
@@ -311,8 +312,9 @@ struct Cloud : Mobj
 		bob_in_place(this, 8, 64);
 		voice_loop(sfx_s3kcfl);
 
-		if (leveltime % (TICRATE/3) == 0 && follow()->player->rings > -20) // toxomister ring drain
+		if (leveltime % (TICRATE/3) == 0 && follow()->player->rings > (-1*follow()->player->ringlimit)) // toxomister ring drain		//SCS EDIT
 		{
+			//follow()->player->rings--;
 			follow()->player->rings--;
 			K_DefensiveOverdrive(follow()->player);
 			S_StartSound(follow()->player->mo, sfx_antiri);
@@ -325,7 +327,7 @@ struct Cloud : Mobj
 
 		if (fuse < kMaxFuse && (kMaxFuse - fuse) % 20 == 0 && Mobj::valid(target()) && target()->player && follow()->player)
 		{
-			//K_SpawnAmps(target()->player, K_PvPAmpReward(3, target()->player, follow()->player), this);		//Amp reward was changed from 3 to 2 in RC6. SCS - Maybe consider putting it back? This REALLY wasn't overpowered...
+			K_SpawnAmps(target()->player, K_PvPAmpReward(3, target()->player, follow()->player), this);		//Amp reward was changed from 3 to 2 in RC6. SCS - Maybe consider putting it back? This REALLY wasn't overpowered...
 			UINT8 toxicAmps = K_PvPAmpReward(3, target()->player, follow()->player);							//SCS - RADIO START
 			K_SpawnAmps(target()->player, toxicAmps, this);
 			// Radio
@@ -369,7 +371,7 @@ struct Cloud : Mobj
 
 	bool touch(Mobj* toucher)
 	{
-		if (toucher == target())
+		if (!toucher || toucher == target())	//SCS EDIT
 			return false;
 
 		if (K_PuntCollide(this, toucher))

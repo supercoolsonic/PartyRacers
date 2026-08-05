@@ -194,7 +194,6 @@ static const struct {
 	{META_SUBSECTOR,    "subsector_t"},
 	{META_SECTOR,       "sector_t"},
 	{META_FFLOOR,       "ffloor_t"},
-
 	{META_SLOPE,        "slope_t"},
 	{META_VECTOR2,      "vector2_t"},
 	{META_VECTOR3,      "vector3_t"},
@@ -219,7 +218,6 @@ static const struct {
 
 	{META_THINGARGS,     "mapthing.args"},
 	{META_THINGSTRINGARGS, "mapthing.stringargs"},
-
 	{META_BBOX,         "bbox"},
 
 	{META_PATCH,        "patch_t"},
@@ -256,6 +254,7 @@ static const struct {
 	{META_GPRANKLEVEL,	  			"gprank_level_t"},
 	{META_GPRANKLEVELPERPLAYER,	    "gprank_level_perplayer_t"},
 	{META_ROUNDENTRY,	    		"roundentry_t"},
+
 	{NULL,              NULL}
 };
 
@@ -4073,6 +4072,7 @@ static int lib_kDefensiveOverdrive(lua_State *L)
 	lua_pushboolean(L, K_DefensiveOverdrive(player));
 	return 1;
 }
+
 
 static int lib_kDoInstashield(lua_State *L)
 {

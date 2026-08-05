@@ -40,4 +40,4 @@ typedef unsigned char bool;
 #endif
 
 #endif /* _WIN32 */
-#endif /* MODP_STDINT_H_ */
+#endif /* MODP_STDINT_H */

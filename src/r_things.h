@@ -334,4 +334,4 @@ FUNCMATH FUNCINLINE static ATTRINLINE UINT8 R_Char2Rotation(char cn)
 } // extern "C"
 #endif
 
-#endif //__R_THINGS__
+#endif //R_THINGS_H

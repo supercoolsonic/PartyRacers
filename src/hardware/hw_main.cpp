@@ -6040,7 +6040,7 @@ void HWR_RenderPlayerView(void)
 
 		HWD.pfnSetShaderInfo(HWD_SHADERINFO_LIGHT_CONTRAST, maplighting.contrast);
 		HWD.pfnSetShaderInfo(HWD_SHADERINFO_LIGHT_BACKLIGHT, maplighting.backlight);
-		HWD.pfnSetShaderInfo(HWD_SHADERINFO_DITHEREDLIGHTING, cv_gllightdither.value);
+		HWD.pfnSetShaderInfo(HWD_SHADERINFO_DITHEREDLIGHTING, cv_gllightdither.value);			//SCS RADIO
 	}
 
 	if (viewssnum == 0) // Only do it if it's the first screen being rendered
@@ -6110,14 +6110,14 @@ void CV_glanisotropic_OnChange(void)
 		HWD.pfnSetSpecialState(HWD_SET_TEXTUREANISOTROPICMODE, cv_glanisotropicmode.value);
 }
 
-extern "C" void CV_gllightdither_OnChange(void);
+extern "C" void CV_gllightdither_OnChange(void);											//SCS RADIO START
 void CV_gllightdither_OnChange(void)
 {
 	if (rendermode == render_opengl) {
 		HWD.pfnSetShaderInfo(HWD_SHADERINFO_DITHEREDLIGHTING, cv_gllightdither.value);
 		HWR_CompileShaders();
 	}
-}
+}																							//SCS RADIO END
 
 extern "C" struct CVarList *cvlist_opengl;
 

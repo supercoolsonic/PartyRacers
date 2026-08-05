@@ -201,7 +201,11 @@ Run this macro, then #undef FOREACH afterward
 	FOREACH (EGGBLASTER,	39),\
 	FOREACH (RINGGUN,		40),\
 	FOREACH (BUTLERHYU,		41),\
-	FOREACH (OCTUS,		42)
+	FOREACH (OCTUS,			42),\
+	FOREACH (ICEDUS,		43),\
+	FOREACH (SLICER,		44),\
+	FOREACH (SOL,			45),\
+	FOREACH (RINGCAPBONUS,	46)
 
 
 typedef enum
@@ -220,8 +224,12 @@ typedef enum
 	KRITEM_QUADORBINAUT,
 	KRITEM_DUALJAWZ,
 	KRITEM_TRIPLEGACHABOM,
-	KRITEM_DECABANANA,				//SCS ADD
-	KRITEM_DUALABURNERJAWZ,			//SCS ADD
+	KRITEM_DECABANANA,				//SCS ADD START
+	KRITEM_DUALABURNERJAWZ,
+	KRITEM_TRIPLEICEDUS,
+	KRITEM_QUADICEDUS,
+	KRITEM_TRIPLESOL,
+	KRITEM_QUADSOL,					//SCS ADD END
 
 	NUMKARTRESULTS,
 
@@ -858,6 +866,10 @@ struct player_t
 	UINT8 ringvolume;		// When consuming lots of rings, lower the sound a little.
 	UINT8 ringtransparency; 	// When consuming lots of rings, fade out the rings again.
 	UINT16 ringburst;		// Queued number of rings to lose after hitlag ends
+	
+	SINT8 ringlimit;		//SCS ADD - Max number of rings a player can have, both positive and negative
+	SINT8 perfectcheckpointstreak;	//SCS ADD - number of checkpoints in a row that the player has crossed with maxed out rings
+	UINT16 ringboxawardwindow;	//SCS ADD - Timer to claim the Ring Bonus Box if you obtain one. When it depletes, it becomes a Super Jackpot. Allows the player to not be forced to increase their ring limit if they don't want to.
 
 	UINT8 curshield;	// see kartshields_t
 	UINT8 bubblecool;	// Bubble Shield use cooldown
@@ -921,6 +933,10 @@ struct player_t
 	SINT8 playerringgundelay;	//SCS ADD
 	
 	UINT16 inkblotchtimer;		//SCS ADD
+	
+	UINT16 solfirewheelstimer;	//SCS ADD
+	UINT16 orbinautchargetime;	//SCS ADD
+	boolean orbichargetap;		//SCS ADD
 	
 	SINT8 trickspeedlevel;		//SCS ADD
 	

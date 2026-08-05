@@ -211,6 +211,7 @@ void Music_Flip(void);
 // Keeps ACS music remapping from playing havoc after a map.
 void Music_TuneReset(void);
 
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

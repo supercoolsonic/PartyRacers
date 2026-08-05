@@ -22,6 +22,9 @@ menuitem_t OPTIONS_Gameplay[] =
 
 	{IT_STRING | IT_CVAR, "Frantic Items", "Stronger comebacks, even with low EXP. (Not recommended for even matches!)",
 		NULL, {.cvar = &cv_kartfrantic}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Random Item Capsules", "Randomize contents of item (not ring) capsules. \x82(Netgames only.)",
+		NULL, {.cvar = &cv_toggle_randomcapsules_net}, 0, 0},
 
 	{IT_HEADER, "Race...", NULL,
 		NULL, {NULL}, 0, 0},

@@ -209,3 +209,4 @@ void M_AVRecorder_DrawFrameRate(void)
 	g_av_recorder->draw_statistics();
 }
 
+

@@ -203,11 +203,7 @@ static const srb2::HashMap<INT32, char> saturntypeF = {
 };
 
 // Saturn Type G - 8BitDo M30 (non-Xbox)
-
-
 // Cannot be disambiguated.
-
-
 static const srb2::HashMap<INT32, char> saturntypeG = {
 	{nc_a, sb_a},
 	{nc_b, sb_b},

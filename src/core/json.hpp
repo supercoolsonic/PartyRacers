@@ -531,3 +531,4 @@ extern template class HashMap<String, srb2::JsonValue>;
 
 #endif // SRB2_CORE_JSON_HPP
 
+

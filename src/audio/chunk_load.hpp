@@ -26,3 +26,4 @@ std::optional<SoundChunk> try_load_chunk(std::span<std::byte> data);
 } // namespace srb2::audio
 
 #endif // SRB2_AUDIO_CHUNK_LOAD_HPP
+

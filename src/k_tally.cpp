@@ -418,6 +418,10 @@ void level_tally_t::Init(player_t *player)
 			if (player->hudrings > 0) // Don't count negative rings
 			{
 				rings = player->hudrings;
+				
+				if (rings > 20)	//SCS ADD - don't count above 20 here
+					rings = 20;
+					
 			}
 		}
 

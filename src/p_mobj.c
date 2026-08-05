@@ -1262,6 +1262,7 @@ fixed_t P_GetMobjGravity(mobj_t *mo)
 			case MT_SSMINE:
 			case MT_LANDMINE:
 			case MT_PRESSUREMINE:			//SCS ADD
+			case MT_ICEDUSCRYSTAL_TRAP:		//SCS ADD
 			case MT_DROPTARGET:
 			case MT_SINK:
 			case MT_EMERALD:
@@ -1892,6 +1893,7 @@ boolean P_XYMovement(mobj_t *mo)
 							/*FALLTHRU*/
 						case MT_JAWZ:
 						case MT_AFTERBURNER_JAWZ:		//SCS ADD
+						case MT_SLICERCLAW:				//SCS ADD
 							if (mo->health == 1)
 							{
 								// This Item Damage
@@ -1901,6 +1903,12 @@ boolean P_XYMovement(mobj_t *mo)
 								P_SetObjectMomZ(mo, 24*FRACUNIT, false);
 								P_InstaThrust(mo, R_PointToAngle2(mo->x, mo->y, mo->x + xmove, mo->y + ymove)+ANGLE_90, 16*FRACUNIT);
 							}
+							else			//SCS ADD START
+							{
+								S_StartSound(mo, sfx_s3k9e);	//Should only ever play for the slicer claw 
+								mo->health--;
+								mo->threshold = 0;
+							}				//SCS ADD END
 							break;
 							
 						case MT_PPOCKETHYUDORO:
@@ -3394,6 +3402,12 @@ void P_MobjCheckWater(mobj_t *mobj)
 	fixed_t bot2 = P_GetSectorFloorZAt(sector, mobj->x, mobj->y);
 	pslope_t *topslope = NULL;
 	pslope_t *bottomslope = NULL;
+	
+	if (!P_MobjWasRemoved(mobj) && (mobj->type == MT_SOLFIRE || mobj->type == MT_SOLFIRE_SHIELD) && (mobj->eflags & MFE_UNDERWATER))	//SCS ADD
+	{
+		P_RemoveMobj(mobj);
+		return;
+	}
 
 	// Default if no water exists.
 	mobj->watertop = mobj->waterbottom = mobj->z - 1000*FRACUNIT;
@@ -4530,6 +4544,26 @@ static void P_RefreshItemCapsuleParts(mobj_t *mobj)
 				if (mobj->movecount - 1 > K_GetOrbinautItemFrame(mobj->movecount))
 					count = mobj->movecount;
 				break;
+			case KITEM_JAWZ:
+				if (mobj->movecount - 1 > K_GetJawzItemFrame(mobj->movecount))	//SCS ADD
+					count = mobj->movecount;
+				break;
+			case KITEM_BANANA:
+				if (mobj->movecount - 1 > K_GetBananaItemFrame(mobj->movecount))	//SCS ADD
+					count = mobj->movecount;
+				break;
+			case KITEM_SNEAKER:
+				if (mobj->movecount - 1 > K_GetSneakerItemFrame(mobj->movecount))	//SCS ADD
+					count = mobj->movecount;
+				break;
+			case KITEM_ICEDUS:
+				if (mobj->movecount - 1 > K_GetIcedusItemFrame(mobj->movecount))	//SCS ADD
+					count = mobj->movecount;
+				break;
+			case KITEM_SOL:
+				if (mobj->movecount - 1 > K_GetSolItemFrame(mobj->movecount))	//SCS ADD
+					count = mobj->movecount;
+				break;
 			case KCAPSULE_RING:
 				// always display the number, and multiply it by 5
 				if (mobj->flags2 & MF2_STRONGBOX)
@@ -5368,15 +5402,21 @@ boolean P_IsKartItem(INT32 type)
 		case MT_SINK:
 		case MT_GACHABOM:
 		case MT_TOXOMISTER_POLE:
-		case MT_GHZBALL:					//SCS ADD
-		case MT_YOGOSPRING:					//SCS ADD
-		case MT_BOGOSPRING:					//SCS ADD
-		case MT_MEGACHOPPER:				//SCS ADD
-		case MT_AFTERBURNER_JAWZ:			//SCS ADD
-		case MT_PRESSUREMINE:				//SCS ADD
-		case MT_BHYUDORO:					//SCS ADD
-		case MT_INKBUBBLE:					//SCS ADD
-		case MT_PPOCKETHYUDORO:				//SCS ADD
+		case MT_GHZBALL:					//SCS ADD START
+		case MT_YOGOSPRING:
+		case MT_BOGOSPRING:	
+		case MT_MEGACHOPPER:
+		case MT_AFTERBURNER_JAWZ:
+		case MT_PRESSUREMINE:
+		case MT_BHYUDORO:
+		case MT_INKBUBBLE:
+		case MT_PPOCKETHYUDORO:
+		case MT_ICEDUSCRYSTAL:
+		case MT_ICEDUSCRYSTAL_SHIELD:
+		case MT_ICEDUSCRYSTAL_TRAP:
+		case MT_SOLFIRE:
+		case MT_SOLFIRE_SHIELD:
+		case MT_SLICERCLAW:					//SCS ADD END
 			return true;
 
 		default:
@@ -5404,13 +5444,17 @@ boolean P_IsKartFieldItem(INT32 type)
 		case MT_DUELBOMB:
 		case MT_GACHABOM:
 		case MT_TOXOMISTER_POLE:
-		case MT_GHZBALL:					//SCS ADD
-		case MT_YOGOSPRING:					//SCS ADD
-		case MT_BOGOSPRING:					//SCS ADD
-		case MT_AFTERBURNER_JAWZ:			//SCS ADD
-		case MT_PRESSUREMINE:				//SCS ADD
-		case MT_INKBUBBLE:					//SCS ADD
-		case MT_PPOCKETHYUDORO:				//SCS ADD
+		case MT_GHZBALL:					//SCS ADD START
+		case MT_YOGOSPRING:
+		case MT_BOGOSPRING:
+		case MT_AFTERBURNER_JAWZ:
+		case MT_PRESSUREMINE:
+		case MT_INKBUBBLE:
+		case MT_PPOCKETHYUDORO:
+		case MT_ICEDUSCRYSTAL:
+		case MT_ICEDUSCRYSTAL_TRAP:
+		case MT_SOLFIRE:
+		case MT_SLICERCLAW:					//SCS ADD END
 			return true;
 
 		default:
@@ -5446,16 +5490,22 @@ boolean P_IsRelinkItem(INT32 type)
 		case MT_GACHABOM:
 		case MT_TOXOMISTER_POLE:
 		case MT_FLOATINGITEM:  // Stone Shoe Trap
-		case MT_GHZBALL: 							//SCS ADD
-		case MT_YOGOSPRING:							//SCS ADD
-		case MT_BOGOSPRING:							//SCS ADD
-		case MT_MEGACHOPPER:						//SCS ADD
-		case MT_AFTERBURNER_JAWZ:					//SCS ADD
-		case MT_PRESSUREMINE:						//SCS ADD
-		case MT_BHYUDORO_CENTER:					//SCS ADD
-		case MT_INKBUBBLE:							//SCS ADD
-		case MT_MINIHYUDORO:						//SCS ADD
-		case MT_PPOCKETHYUDORO:						//SCS ADD
+		case MT_GHZBALL: 							//SCS ADD START
+		case MT_YOGOSPRING:
+		case MT_BOGOSPRING:
+		case MT_MEGACHOPPER:
+		case MT_AFTERBURNER_JAWZ:
+		case MT_PRESSUREMINE:
+		case MT_BHYUDORO_CENTER:
+		case MT_INKBUBBLE:
+		case MT_MINIHYUDORO:
+		case MT_PPOCKETHYUDORO:
+		case MT_ICEDUSCRYSTAL:
+		case MT_ICEDUSCRYSTAL_SHIELD:
+		case MT_ICEDUSCRYSTAL_TRAP:
+		case MT_SOLFIRE:
+		case MT_SOLFIRE_SHIELD:
+		case MT_SLICERCLAW:							//SCS ADD END
 			return true;
 
 		default:
@@ -6191,6 +6241,8 @@ static void P_MobjSceneryThink(mobj_t *mobj)
 	case MT_BANANA_SHIELD:
 	case MT_SSMINE_SHIELD:
 	case MT_EGGMANITEM_SHIELD:
+	case MT_ICEDUSCRYSTAL_SHIELD:	//SCS ADD
+	case MT_SOLFIRE_SHIELD:			//SCS ADD
 	case MT_SINK_SHIELD:
 		if ((mobj->health > 0
 			&& (!mobj->target || !mobj->target->player || mobj->target->health <= 0 || mobj->target->player->spectator))
@@ -6981,6 +7033,8 @@ static boolean P_MobjDeadThink(mobj_t *mobj)
 	{
 	case MT_PLAYER:
 		/// \todo Have the player's dead body completely finish its animation even if they've already respawned.
+		if (mobj->player->solfirewheelstimer)
+			mobj->player->solfirewheelstimer = 0;
 		
 		if (mobj->player->itemtype == KITEM_PICKPOCKETHYU)		//SCS ADD
 		{
@@ -7035,6 +7089,9 @@ static boolean P_MobjDeadThink(mobj_t *mobj)
 	case MT_EGGMANITEM:
 	case MT_LANDMINE:
 	case MT_PRESSUREMINE:					//SCS ADD
+	case MT_ICEDUSCRYSTAL:					//SCS ADD
+	case MT_ICEDUSCRYSTAL_TRAP:				//SCS ADD
+	case MT_SOLFIRE:						//SCS ADD
 	//case MT_DROPTARGET:
 	case MT_SPB:
 	case MT_GACHABOM:
@@ -7049,12 +7106,15 @@ static boolean P_MobjDeadThink(mobj_t *mobj)
 	case MT_ORBINAUT_SHIELD:
 	case MT_BANANA_SHIELD:
 	case MT_EGGMANITEM_SHIELD:
+	case MT_ICEDUSCRYSTAL_SHIELD:			//SCS ADD
+	case MT_SOLFIRE_SHIELD:					//SCS ADD
 		mobj->renderflags ^= RF_DONTDRAW;
 		break;
 	case MT_JAWZ:
 	case MT_GHZBALL:						//SCS ADD
 	case MT_MEGACHOPPER:					//SCS ADD
 	case MT_AFTERBURNER_JAWZ:				//SCS ADD
+	case MT_SLICERCLAW:						//SCS ADD
 		if (P_IsObjectOnGround(mobj))
 			P_SetMobjState(mobj, mobj->info->xdeathstate);
 		/* FALLTHRU */
@@ -7531,6 +7591,24 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 	case MT_ORBINAUT:
 	{
 		Obj_OrbinautThink(mobj);
+		P_MobjCheckWater(mobj);
+		break;
+	}
+	case MT_ICEDUSCRYSTAL:			//SCS ADD
+	{
+		Obj_IcedusThink(mobj);
+		P_MobjCheckWater(mobj);
+		break;
+	}
+	case MT_SOLFIRE:				//SCS ADD
+	{
+		Obj_SolFireThink(mobj);
+		P_MobjCheckWater(mobj);
+		break;
+	}
+	case MT_SLICERCLAW:				//SCS ADD
+	{
+		Obj_SlicerThink(mobj);
 		P_MobjCheckWater(mobj);
 		break;
 	}
@@ -8725,6 +8803,7 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 		K_MatchGenericExtraFlags(mobj, mobj->target);
 		break;
 	case MT_BATTLEPOINT:
+	case MT_RINGCAPINCREASE:			//SCS ADD
 		if (!mobj->target || P_MobjWasRemoved(mobj->target))
 		{
 			P_RemoveMobj(mobj);
@@ -9740,7 +9819,7 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 			{
 				if (mobj->extravalue2 == NULL)								//SCS ADD START - Trying to get the Dynamite Derby sign to not be green, and have ribbons
 				{
-					if (cv_toggle_colorized_signposts.value)
+					if (!netgame && cv_toggle_colorized_signposts.value)
 					{
 						if (mobj->target->player->position == 1)
 							mobj->color = SKINCOLOR_MUSTARD;
@@ -9754,7 +9833,7 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 					else
 						mobj->color = SKINCOLOR_GREY;
 								
-					if (cv_toggle_ribbon_signposts.value && (mobj->target->player->rings + mobj->target->player->superringdisplay) >= 20)
+					if (!netgame && cv_toggle_ribbon_signposts.value && (mobj->target->player->rings + mobj->target->player->superringdisplay) >= 20) //No, we're not accounting for more than 20 here.
 					{
 						mobj_t *ribbon = P_SpawnMobjFromMobj(mobj, 0, 0, 0, MT_SIGNPOSTRIBBON);
 									
@@ -9864,7 +9943,7 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 					mobj->angle += ANGLE_11hh;
 			}
 			
-			if (cv_toggle_sparkling_signposts.value && mobj->target->player->exp == EXP_TARGET)													//SCS ADD
+			if (!netgame && cv_toggle_sparkling_signposts.value && mobj->target->player->exp == EXP_TARGET)													//SCS ADD
 			{
 				P_SpawnMobj(
 						mobj->x + (P_RandomRange(PR_DECORATION, -((mobj->radius*3)/FRACUNIT), ((mobj->radius*3)/FRACUNIT))*FRACUNIT),
@@ -9965,7 +10044,7 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 				{
 					//if (mobj->extravalue2 == NULL)
 					//{
-						if (cv_toggle_colorized_signposts.value)
+						if (!netgame && cv_toggle_colorized_signposts.value)
 						{
 							if (mobj->target->player->position == 1)
 								cur->color = SKINCOLOR_MUSTARD;
@@ -11795,6 +11874,11 @@ static void P_DefaultMobjShadowScale(mobj_t *thing)
 		case MT_BANANA:
 		case MT_ORBINAUT:
 		case MT_ORBINAUT_SHIELD:
+		case MT_ICEDUSCRYSTAL:					//SCS ADD
+		case MT_ICEDUSCRYSTAL_SHIELD:			//SCS ADD
+		case MT_ICEDUSCRYSTAL_TRAP:				//SCS ADD
+		case MT_SOLFIRE:						//SCS ADD
+		case MT_SOLFIRE_SHIELD:					//SCS ADD
 		case MT_JAWZ:
 		case MT_JAWZ_SHIELD:
 		case MT_SSMINE:
@@ -11811,6 +11895,7 @@ static void P_DefaultMobjShadowScale(mobj_t *thing)
 		case MT_BALLOON:
 		case MT_AFTERBURNER_JAWZ:				//SCS ADD
 		case MT_PRESSUREMINE:					//SCS ADD
+		case MT_SLICERCLAW:						//SCS ADD
 			thing->shadowscale = 3*FRACUNIT/2;
 			break;
 		case MT_BANANA_SHIELD:
@@ -14794,7 +14879,7 @@ static boolean P_SetupSpawnedMapThing(mapthing_t *mthing, mobj_t *mobj)
 		// Parameter = extra items (x5 for rings)
 		mobj->movecount += mthing->thing_args[1];
 		
-		if (!netgame && cv_randomizeitemcapsules.value == 1 && mobj->threshold != KCAPSULE_RING && mobj->threshold != HYUCAPSULE_RING)
+		if (((!netgame && cv_randomizeitemcapsules.value == 1) || (netgame && cv_toggle_randomcapsules_net.value == 1)) && mobj->threshold != KCAPSULE_RING && mobj->threshold != HYUCAPSULE_RING)
 		{
 			mobj->threshold = P_RandomRange(PR_ITEM_SPAWNER, 1, NUMKARTITEMS - 1);													//SCS TESTING RANDOM ITEM CAPSULES IDEA
 	
@@ -14827,6 +14912,8 @@ static boolean P_SetupSpawnedMapThing(mapthing_t *mthing, mobj_t *mobj)
 				case KITEM_DROPTARGET:
 				case KITEM_PRESSUREMINE:
 				case KITEM_OCTUS:
+				case KITEM_ICEDUS:
+				case KITEM_SOL:
 					randitemamtmax = 4;
 				break;
 				case KITEM_SPB:
@@ -14842,6 +14929,8 @@ static boolean P_SetupSpawnedMapThing(mapthing_t *mthing, mobj_t *mobj)
 				case KITEM_NORMALSHIELD:
 				case KITEM_ARMASHIELD:
 				case KITEM_CHAMBLASTER:
+				case KITEM_SLICER:
+				case KITEM_RINGCAPBONUS:
 					randitemamtmax = 1;
 				break;
 				default:

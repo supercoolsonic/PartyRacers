@@ -124,7 +124,7 @@ boolean K_BananaBallhogCollide(mobj_t *t1, mobj_t *t2)
 		|| t2->type == MT_ORBINAUT || t2->type == MT_ORBINAUT_SHIELD
 		|| t2->type == MT_JAWZ || t2->type == MT_JAWZ_SHIELD
 		|| t2->type == MT_BALLHOG || t2->type == MT_GACHABOM
-		|| t2->type == MT_AFTERBURNER_JAWZ)							//SCS ADD
+		|| t2->type == MT_AFTERBURNER_JAWZ || t2->type == MT_SLICERCLAW)			//SCS ADD
 	{
 		// Other Item Damage
 		angle_t bounceangle = K_GetCollideAngle(t1, t2);
@@ -144,6 +144,16 @@ boolean K_BananaBallhogCollide(mobj_t *t1, mobj_t *t2)
 		damageitem = true;
 		// Bomb death
 		P_KillMobj(t2, t1, t1, DMG_NORMAL);
+	}
+	else if (t2->type == MT_SOLFIRE || t2->type == MT_SOLFIRE_SHIELD || t2->type == MT_ICEDUSCRYSTAL || t2->type == MT_ICEDUSCRYSTAL_SHIELD || t2->type == MT_ICEDUSCRYSTAL_TRAP)	//SCS ADD
+	{
+		damageitem = true;
+		// Bomb death
+		P_KillMobj(t2, t1, t1, DMG_NORMAL);
+	}
+	else if (t2->type == MT_SOLFIRE_TRAP)	//SCS ADD
+	{
+		//do nothing
 	}
 	else if (t2->flags & MF_SHOOTABLE && t2->type != MT_MINIHYUDORO && t2->type != MT_PPOCKETHYUDORO)
 	{
@@ -432,7 +442,8 @@ boolean K_MineCollide(mobj_t *t1, mobj_t *t2)
 	}
 	else if (t2->type == MT_ORBINAUT || t2->type == MT_JAWZ
 		|| t2->type == MT_ORBINAUT_SHIELD || t2->type == MT_JAWZ_SHIELD
-		|| t2->type == MT_GACHABOM || t2->type == MT_AFTERBURNER_JAWZ)					//SCS ADD
+		|| t2->type == MT_GACHABOM || t2->type == MT_AFTERBURNER_JAWZ		//SCS ADD
+		|| t2->type == MT_SLICERCLAW)										//SCS ADD
 	{
 		// Bomb death
 		angle_t bounceangle = K_GetCollideAngle(t1, t2);
@@ -445,6 +456,12 @@ boolean K_MineCollide(mobj_t *t1, mobj_t *t2)
 
 		P_SetObjectMomZ(t2, 24*FRACUNIT, false);
 		P_InstaThrust(t2, bounceangle, 16*FRACUNIT);
+	}
+	else if (t2->type == MT_SOLFIRE || t2->type == MT_SOLFIRE_SHIELD || t2->type == MT_SOLFIRE_TRAP || t2->type == MT_ICEDUSCRYSTAL || t2->type == MT_ICEDUSCRYSTAL_SHIELD || t2->type == MT_ICEDUSCRYSTAL_TRAP)	//SCS ADD
+	{
+		P_KillMobj(t1, t2, t2, DMG_NORMAL);
+		// Bomb death
+		P_DamageMobj(t2, t1, t1->target, 1, DMG_NORMAL);
 	}
 	else if (t2->flags & MF_SHOOTABLE && t2->type != MT_MINIHYUDORO && t2->type != MT_PPOCKETHYUDORO)
 	{
@@ -520,7 +537,7 @@ boolean K_LandMineCollide(mobj_t *t1, mobj_t *t2)
 		|| t2->type == MT_ORBINAUT || t2->type == MT_ORBINAUT_SHIELD
 		|| t2->type == MT_JAWZ || t2->type == MT_JAWZ_SHIELD
 		|| t2->type == MT_BALLHOG || t2->type == MT_GACHABOM
-		|| t2->type == MT_AFTERBURNER_JAWZ)						//SCS ADD
+		|| t2->type == MT_AFTERBURNER_JAWZ || t2->type == MT_SLICERCLAW)			//SCS ADD
 	{
 		// Other Item Damage
 		angle_t bounceangle = K_GetCollideAngle(t1, t2);
@@ -549,6 +566,12 @@ boolean K_LandMineCollide(mobj_t *t1, mobj_t *t2)
 		P_KillMobj(t1, t2, t2, DMG_NORMAL);
 	}
 	else if (t2->type == MT_SSMINE_SHIELD || t2->type == MT_SSMINE || t2->type == MT_LANDMINE || t2->type == MT_PRESSUREMINE)		//SCS EDIT
+	{
+		P_KillMobj(t1, t2, t2, DMG_NORMAL);
+		// Bomb death
+		P_KillMobj(t2, t1, t1, DMG_NORMAL);
+	}
+	else if (t2->type == MT_SOLFIRE || t2->type == MT_SOLFIRE_SHIELD || t2->type == MT_SOLFIRE_TRAP || t2->type == MT_ICEDUSCRYSTAL || t2->type == MT_ICEDUSCRYSTAL_SHIELD || t2->type == MT_ICEDUSCRYSTAL_TRAP)	//SCS ADD
 	{
 		P_KillMobj(t1, t2, t2, DMG_NORMAL);
 		// Bomb death
@@ -652,6 +675,102 @@ void K_GHZBall_BallBounce(mobj_t *t1, mobj_t *t2)			//SCS ADD
 	}	
 }
 
+boolean K_IcedusSolfireCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
+{
+	if (t1->type == MT_ICEDUSCRYSTAL_TRAP && t1->target != NULL && t1->target == t2 && P_IsObjectOnGround(t1))
+		goto PickUp;
+	
+	if (((t1->target == t2) || (!(t2->flags & (MF_ENEMY|MF_BOSS)) && (t1->target == t2->target))) && (t1->threshold > 0 || (t2->type != MT_PLAYER && t2->threshold > 0)))
+		return true;
+
+	if (t1->health <= 0 || t2->health <= 0)
+		return true;
+
+PickUp:
+	if (K_TryPickMeUp(t1, t2, false))
+		return true;
+
+
+	if ((t1->type == MT_ICEDUSCRYSTAL || t1->type == MT_ICEDUSCRYSTAL_SHIELD || t1->type == MT_ICEDUSCRYSTAL_TRAP) && t2->player)
+	{
+		if (t2->player->icecube.frozen)	// (we do a frozen check here to prevent frozen players from eating all the crystals at once from a shield)
+			return true;
+		
+		else if (t2->player->curshield != KSHIELD_NONE 	//Yes, ALL shields block it, like in S3K
+		//|| t2->player->icecube.frozen 
+		|| t2->player->flashing 
+		|| t2->player->growshrinktimer > 0 
+		|| t2->player->invincibilitytimer 
+		|| t2->player->hyudorotimer)
+		{
+			P_KillMobj(t1, t2, t2, DMG_NORMAL);
+			return true;
+		}
+			
+		UINT8 IcedusAmps = K_PvPAmpReward(10, t1->target->player, t2->player);
+		K_SpawnAmps(t1->target->player, IcedusAmps, t1);
+
+		RR_PushPlayerInteractionToFeed(t1->target, t2, ATTACK_ICEDUS, IcedusAmps);
+		
+		K_TryHurtSoundExchange(t2, t1->target);
+		
+		mobj_t *wind = P_SpawnMobjFromMobj(t2, 0, 0, 0, MT_GGZICEDUST);
+		
+		if (wind != NULL)
+		{
+			wind->target = t1->target;
+			wind->tracer = t2;
+		}
+		S_StartSound(t2, sfx_s3k80);
+		P_KillMobj(t1, t2, t2, DMG_NORMAL);
+	}
+	else if ((t1->type == MT_SOLFIRE || t1->type == MT_SOLFIRE_SHIELD || t1->type == MT_SOLFIRE_TRAP) && t2->player)
+	{
+		if (t2->player->curshield == KSHIELD_FLAME)	//This one, tho, you'll need a Flame Shield
+			return true;
+		
+		if ((t1->target && t1->target != t2) || !t1->target)
+		{
+			P_DamageMobj(t2, t1, t1->target, 1, DMG_EXPLODE);
+			P_KillMobj(t1, t2, t2, DMG_NORMAL);
+			S_StartSound(t2, sfx_s3k70);
+		}
+	}
+	else if (((t1->type == MT_ICEDUSCRYSTAL || t1->type == MT_ICEDUSCRYSTAL_SHIELD || t1->type == MT_ICEDUSCRYSTAL_TRAP) && (t2->type == MT_SOLFIRE || t2->type == MT_SOLFIRE_SHIELD || t2->type == MT_SOLFIRE_TRAP)) ||
+	((t1->type == MT_SOLFIRE || t1->type == MT_SOLFIRE_SHIELD || t1->type == MT_SOLFIRE_TRAP) && (t2->type == MT_ICEDUSCRYSTAL || t2->type == MT_ICEDUSCRYSTAL_SHIELD || t2->type == MT_ICEDUSCRYSTAL_TRAP)))
+	{
+		P_KillMobj(t1, t2, t2, DMG_NORMAL);
+		P_KillMobj(t2, t1, t1, DMG_NORMAL);
+	}
+
+	return true;
+}
+
+boolean K_SlicerClawCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
+{
+	if (((t1->target == t2) || (!(t2->flags & (MF_ENEMY|MF_BOSS)) && (t1->target == t2->target))) && (t1->threshold > 0 || (t2->type != MT_PLAYER && t2->threshold > 0)))
+		return true;
+
+	if (t1->health <= 0 || t2->health <= 0)
+		return true;
+		
+	//CONS_Printf("Collided!\n");
+
+	if (K_TryPickMeUp(t1, t2, false))
+		return true;
+	
+	if (t1->extravalue1 > 0)	//timer to prevent stunlocks
+		return true;
+
+	if (t2->player)
+	{
+		P_DamageMobj(t2, t1, t1->target, 1, DMG_NORMAL);
+		t1->extravalue1 = 10;	//reset damage timer
+	}
+
+	return true;
+}
+
 boolean K_PickpocketCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 {
 	if (((t1->target == t2) || (!(t2->flags & (MF_ENEMY|MF_BOSS)) && (t1->target == t2->target))) && (t1->threshold > 0 || (t2->type != MT_PLAYER && t2->threshold > 0)))
@@ -674,7 +793,7 @@ boolean K_PickpocketCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 		|| t2->type == MT_JAWZ || t2->type == MT_JAWZ_SHIELD
 		|| t2->type == MT_BALLHOG || t2->type == MT_GACHABOM
 		|| t2->type == MT_AFTERBURNER_JAWZ || t2->type == MT_GHZBALL
-		|| t2->type == MT_GARDENTOP)
+		|| t2->type == MT_GARDENTOP || t2->type == MT_SLICERCLAW)
 	{
 		if (t2->eflags & MFE_VERTICALFLIP)
 			t2->z -= t2->height;
@@ -720,6 +839,10 @@ boolean K_PickpocketCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 	else if (t2->type == MT_SSMINE_SHIELD || t2->type == MT_SSMINE || t2->type == MT_LANDMINE || t2->type == MT_PRESSUREMINE)
 	{
 		//Do nothing lol
+	}
+	else if (t2->type == MT_SOLFIRE || t2->type == MT_SOLFIRE_SHIELD || t2->type == MT_ICEDUSCRYSTAL || t2->type == MT_ICEDUSCRYSTAL_SHIELD)
+	{
+		//Also do nothing lol
 	}
 	else if (t2->flags & MF_SHOOTABLE)
 	{
@@ -808,7 +931,7 @@ boolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 		|| t2->type == MT_ORBINAUT || t2->type == MT_ORBINAUT_SHIELD
 		|| t2->type == MT_JAWZ || t2->type == MT_JAWZ_SHIELD
 		|| t2->type == MT_BALLHOG || t2->type == MT_GACHABOM
-		|| t2->type == MT_AFTERBURNER_JAWZ)
+		|| t2->type == MT_AFTERBURNER_JAWZ || t2->type == MT_SLICERCLAW)
 	{
 		if (t2->type == MT_BANANA || t2->type == MT_BANANA_SHIELD) //Speeds it up?
 		{
@@ -850,6 +973,14 @@ boolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 		{
 			t1->reactiontime = t2->hitlag;
 		}
+	}
+	else if (t2->type == MT_SOLFIRE || t2->type == MT_ICEDUSCRYSTAL || t2->type == MT_ICEDUSCRYSTAL_TRAP)
+	{
+		P_KillMobj(t2, t1, t1, DMG_NORMAL);	//Instantly destroyed lol
+	}
+	else if (t2->type == MT_SOLFIRE_SHIELD || t2->type == MT_ICEDUSCRYSTAL_SHIELD)
+	{
+		P_RemoveMobj(t2);
 	}
 	else if (t2->type == MT_GHZBALL)
 	{
@@ -976,10 +1107,10 @@ boolean K_MegaChopperCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 		
 		t2->player->rings = (t2->player->rings - 10);
 		
-		if (t2->player->rings < -20)
+		if (t2->player->rings < -1*t2->player->ringlimit)	//SCS EDIT
 		{
 			t2->player->invincibilitytimer = 0;
-			t2->player->rings = -20;
+			t2->player->rings = -1*t2->player->ringlimit;	//SCS EDIT
 			t2->player->masteremeraldinvincibility = false;
 			t2->player->usedmasteremeraldduringringboxaward = false;
 			P_KillMobj(t2->player->mo, NULL, NULL, DMG_NORMAL);					
@@ -1241,7 +1372,121 @@ boolean K_DropTargetCollide(mobj_t *t1, mobj_t *t2)
 	return true;
 }
 
-static mobj_t *BlastSource;												//SCS ADD START
+static mobj_t *IceSource;												//SCS ADD START
+static fixed_t IceDist;
+
+static inline BlockItReturn_t PIT_IcedusBlastAttack(mobj_t *thing)
+{
+	if (IceSource == NULL || P_MobjWasRemoved(IceSource))
+	{
+		// Invalid?
+		return BMIT_ABORT;
+	}
+
+	if (thing == NULL || P_MobjWasRemoved(thing))
+	{
+		// Invalid?
+		return BMIT_ABORT;
+	}
+
+	if (thing == IceSource)
+	{
+		// Don't explode yourself!!
+		return BMIT_CONTINUE;
+	}
+
+	if (thing->health <= 0)
+	{
+		// Dead
+		return BMIT_CONTINUE;
+	}
+
+	if (thing->type != MT_SPB)
+	{
+		if (!(thing->flags & MF_SHOOTABLE) || (thing->flags & MF_SCENERY))
+		{
+			// Not shootable
+			return BMIT_CONTINUE;
+		}
+	}
+
+	if (thing->player && thing->player->spectator)
+	{
+		// Spectator
+		return BMIT_CONTINUE;
+	}
+
+	if (P_AproxDistance(thing->x - IceSource->x, thing->y - IceSource->y) > IceDist + thing->radius)
+	{
+		// Too far away
+		return BMIT_CONTINUE;
+	}
+
+	// see if it went over / under
+	if (IceSource->z - IceDist > thing->z + thing->height)
+		return BMIT_CONTINUE; // overhead
+	if (IceSource->z + IceSource->height + IceDist < thing->z)
+		return BMIT_CONTINUE; // underneath
+
+#if 0
+	if (P_CheckSight(IceSource, thing) == false)
+	{
+		// Not in sight
+		return BMIT_CONTINUE;
+	}
+#endif
+	if (thing->player)
+	{
+		if (thing->player->curshield == KSHIELD_FLAME
+		|| thing->player->icecube.frozen 
+		|| thing->player->flashing 
+		|| thing->player->growshrinktimer > 0 
+		|| thing->player->invincibilitytimer 
+		|| thing->player->hyudorotimer)
+			return BMIT_CONTINUE;
+			
+		//P_DamageMobj(thing, IceSource, IceSource, 1, DMG_EXPLODE|DMG_CANTHURTSELF|DMG_WOMBO);
+		mobj_t *wind = P_SpawnMobjFromMobj(thing, 0, 0, 0, MT_GGZICEDUST);
+			
+		if (wind != NULL)
+		{
+			wind->target = IceSource;
+			wind->tracer = thing;
+		}
+		
+		if (IceSource->player)
+		{
+			UINT8 IcedusAmps = K_PvPAmpReward(10, IceSource->player, thing->player);
+			K_SpawnAmps(IceSource->player, IcedusAmps, IceSource);
+			
+			RR_PushPlayerInteractionToFeed(IceSource, thing, ATTACK_ICEDUS, 5);
+		}
+	}
+
+	return BMIT_CONTINUE;
+}
+
+void K_IcedusBlastAttack(mobj_t *actor, fixed_t size)
+{
+	INT32 bx, by, xl, xh, yl, yh;
+
+	IceDist = FixedMul(size, actor->scale);
+	IceSource = actor;
+
+	// Use blockmap to check for nearby shootables
+	yh = (unsigned)(actor->y + IceDist - bmaporgy)>>MAPBLOCKSHIFT;
+	yl = (unsigned)(actor->y - IceDist - bmaporgy)>>MAPBLOCKSHIFT;
+	xh = (unsigned)(actor->x + IceDist - bmaporgx)>>MAPBLOCKSHIFT;
+	xl = (unsigned)(actor->x - IceDist - bmaporgx)>>MAPBLOCKSHIFT;
+
+	BMBOUNDFIX (xl, xh, yl, yh);
+
+	for (by = yl; by <= yh; by++)
+		for (bx = xl; bx <= xh; bx++)
+			P_BlockThingsIterator(bx, by, PIT_IcedusBlastAttack);
+}
+
+static mobj_t *BlastSource;
 static fixed_t BlastDist;
 
 static inline BlockItReturn_t PIT_ArmageddonShieldAttack(mobj_t *thing)
@@ -1429,16 +1674,20 @@ boolean K_BubbleShieldCanReflect(mobj_t *t1, mobj_t *t2)
 		|| t2->type == MT_SSMINE || t2->type == MT_LANDMINE || t2->type == MT_SINK
 		|| t2->type == MT_GARDENTOP
 		|| t2->type == MT_DROPTARGET
-		|| t2->type == MT_GHZBALL				//SCS ADD
-		|| t2->type == MT_AFTERBURNER_JAWZ		//SCS ADD
-		|| t2->type == MT_PRESSUREMINE			//SCS ADD
-		|| t2->type == MT_XSNAPSHOT				//SCS ADD
-		|| t2->type == MT_XSNAPLASTSHOT			//SCS ADD
-		|| t2->type == MT_RINGGUNBLASTSTRONG	//SCS ADD
-		|| t2->type == MT_RINGGUNBLASTMAX		//SCS ADD
-		|| t2->type == MT_RINGGUNLARGESHOT		//SCS ADD
-		|| t2->type == MT_RINGGUNNORMALSHOT		//SCS ADD
-		|| t2->type == MT_RINGGUNMINISHOT		//SCS ADD
+		|| t2->type == MT_GHZBALL				//SCS ADD START
+		|| t2->type == MT_AFTERBURNER_JAWZ
+		|| t2->type == MT_PRESSUREMINE
+		|| t2->type == MT_XSNAPSHOT	
+		|| t2->type == MT_XSNAPLASTSHOT
+		|| t2->type == MT_RINGGUNBLASTSTRONG
+		|| t2->type == MT_RINGGUNBLASTMAX
+		|| t2->type == MT_RINGGUNLARGESHOT
+		|| t2->type == MT_RINGGUNNORMALSHOT
+		|| t2->type == MT_RINGGUNMINISHOT
+		|| t2->type == MT_SOLFIRE
+		|| t2->type == MT_ICEDUSCRYSTAL
+		|| t2->type == MT_ICEDUSCRYSTAL_TRAP
+		|| t2->type == MT_SLICERCLAW			//SCS ADD END
 		|| t2->type == MT_KART_LEFTOVER
 		|| (t2->type == MT_PLAYER && t1->target != t2));
 }
@@ -2128,16 +2377,16 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 
 		if (RINGTOTAL(t2->player) <= 0 && t2->player->ringboostinprogress == 0 && t2->health == 1 && !(t2->player->pflags2 & PF2_UNSTINGABLE))
 		{
-			P_DamageMobj(t2, t1, t1, 1, DMG_STING|DMG_WOMBO);
+			stung = P_DamageMobj(t2, t1, t1, 1, DMG_STING|DMG_WOMBO);	//SCS EDIT - verify we actually got the sting
 			// CONS_Printf("T2 stung\n");
 			if (!damagedpresting)
 			{
 				t2->player->pflags2 |= PF2_SAMEFRAMESTUNG;
 				// CONS_Printf("T2 SFS\n");
 			}
-			stung = true;
+			//stung = true;
 			
-			if (cv_hudfeed_toggle_ringsting.value)										//SCS ADD
+			if (cv_hudfeed_toggle_ringsting.value && stung)										//SCS ADD
 				RR_PushPlayerInteractionToFeed(t1, t2, ATTACK_RINGSTING, 0);
 			
 		}

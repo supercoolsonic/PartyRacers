@@ -57,12 +57,12 @@ static void M_GonerHandStrain(INT32 ch)
 
 static void M_GonerPhotosensitivity(INT32 ch)
 {
-	//if (ch == MA_YES)
-	//{
-		//CV_StealthSet(&cv_reducevfx, "Yes");
-		//CV_StealthSet(&cv_screenshake, "Off");
-		//CV_StealthSet(&cv_tilting, "Off");
-	//}
+	// if (ch == MA_YES)
+	// {
+	// 	CV_StealthSet(&cv_reducevfx, "Yes");
+	// 	CV_StealthSet(&cv_screenshake, "Off");
+	// 	CV_StealthSet(&cv_tilting, "Off");
+	// }
 
 #ifdef HANDSTRAIN
 	M_StartMessage("Hand strain warning",

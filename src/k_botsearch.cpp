@@ -479,15 +479,21 @@ static BlockItReturn_t K_FindObjectsForNudging(mobj_t *thing)
 		case MT_DUELBOMB:
 		case MT_GACHABOM:
 		case MT_SPECIALSTAGEBOMB:
-		case MT_GHZBALL:								//SCS ADD
-		case MT_AFTERBURNER_JAWZ:						//SCS ADD
-		case MT_PRESSUREMINE:							//SCS ADD
-		case MT_XSNAPSHOT:								//SCS ADD
-		case MT_XSNAPLASTSHOT:							//SCS ADD
-		case MT_XSNAPLASTSHOTSHRINK:					//SCS ADD
-		case MT_INKBUBBLE:								//SCS ADD
-		case MT_MINIHYUDORO:							//SCS ADD
-		case MT_PPOCKETHYUDORO:							//SCS ADD
+		case MT_GHZBALL:								//SCS ADD START
+		case MT_AFTERBURNER_JAWZ:
+		case MT_PRESSUREMINE:
+		case MT_XSNAPSHOT:
+		case MT_XSNAPLASTSHOT:
+		case MT_XSNAPLASTSHOTSHRINK:
+		case MT_INKBUBBLE:
+		case MT_MINIHYUDORO:
+		case MT_PPOCKETHYUDORO:	
+		case MT_ICEDUSCRYSTAL:
+		case MT_ICEDUSCRYSTAL_SHIELD:
+		case MT_SOLFIRE:
+		case MT_SOLFIRE_SHIELD:
+		case MT_SOLFIRE_TRAP:
+		case MT_SLICERCLAW:								//SCS ADD END
 			K_AddDodgeObject(thing, side, 20);
 			break;
 		case MT_SHRINK_GUN:
@@ -550,7 +556,7 @@ static BlockItReturn_t K_FindObjectsForNudging(mobj_t *thing)
 				break;
 			}
 
-			if ((RINGTOTAL(g_nudgeSearch.botmo->player) < 20
+			if ((RINGTOTAL(g_nudgeSearch.botmo->player) < 20							//SCS NOTE - Not gonna bother with ringlimit here
 				&& P_CanPickupItem(g_nudgeSearch.botmo->player, PICKUP_RINGORSPHERE))
 				&& !thing->extravalue1
 				&& (g_nudgeSearch.botmo->player->itemtype != KITEM_LIGHTNINGSHIELD))

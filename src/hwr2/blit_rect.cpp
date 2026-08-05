@@ -245,3 +245,4 @@ void BlitRectPass::graphics(Rhi& rhi)
 	rhi.draw_indexed(6, 0);
 }
 
+

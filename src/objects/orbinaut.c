@@ -162,6 +162,166 @@ void Obj_OrbinautThink(mobj_t *th)
 	}
 }
 
+void Obj_IcedusThink(mobj_t *th)						//SCS ADD
+{
+	boolean grounded = P_IsObjectOnGround(th);
+
+	if (th->fuse > 0 && th->fuse <= TICRATE)
+	{
+		th->renderflags ^= RF_DONTDRAW;
+	}
+
+	if (orbinaut_flags(th) & ORBI_DROPPED)
+	{
+		if (grounded && (th->flags & MF_NOCLIPTHING))
+		{
+			th->momx = 1;
+			th->momy = 0;
+			//th->frame = 3;
+			S_StartSound(th, th->info->activesound);
+			th->flags &= ~MF_NOCLIPTHING;
+		}
+
+		return;
+	}
+
+	if (orbinaut_flags(th) & ORBI_TRAIL)
+	{
+		mobj_t *ghost = NULL;
+
+		ghost = P_SpawnGhostMobj(th);
+		ghost->colorized = true; // already has color!
+	}
+
+	if (grounded == false && !(orbinaut_flags(th) & ORBI_DROPPED))	//we only want it to move when thrown forward
+	{
+		fixed_t finalspeed = orbinaut_speed(th);
+		const fixed_t currentspeed = R_PointToDist2(0, 0, th->momx, th->momy);
+		fixed_t thrustamount = 0;
+		fixed_t frictionsafety = (th->friction == 0) ? 1 : th->friction;
+
+		/*if (th->health <= 5)		//We don't slow down until we hit something
+		{
+			INT32 i;
+			for (i = 5; i >= th->health; i--)
+			{
+				finalspeed = FixedMul(finalspeed, FRACUNIT-FRACUNIT/4);
+			}
+		}*/
+
+		//if (currentspeed >= finalspeed)
+		//{
+			// Thrust as if you were at top speed, slow down naturally
+			thrustamount = FixedDiv(finalspeed, frictionsafety) - finalspeed;
+		//}
+		/*else
+		{
+			const fixed_t beatfriction = FixedDiv(currentspeed, frictionsafety) - currentspeed;
+			// Thrust to immediately get to top speed
+			thrustamount = beatfriction + FixedDiv(finalspeed - currentspeed, frictionsafety);
+		}*/
+
+		P_Thrust(th, th->angle, thrustamount);
+	}
+
+	/* todo: UDMFify
+	if (P_MobjTouchingSectorSpecialFlag(th, ?))
+	{
+		K_DoPogoSpring(th, 0, 1);
+	}
+	*/
+
+	if (orbinaut_selfdelay(th) > 0)
+	{
+		orbinaut_selfdelay(th)--;
+	}
+
+	/*if (leveltime % 6 == 0)
+	{
+		S_StartSound(th, th->info->activesound);
+	}*/
+}
+
+void Obj_SolFireThink(mobj_t *th)						//SCS ADD
+{
+	boolean grounded = P_IsObjectOnGround(th);
+
+	if (th->fuse > 0 && th->fuse <= TICRATE)
+	{
+		th->renderflags ^= RF_DONTDRAW;
+	}
+
+	if (orbinaut_flags(th) & ORBI_DROPPED)
+	{
+		if (grounded && (th->flags & MF_NOCLIPTHING))
+		{
+			th->momx = 1;
+			th->momy = 0;
+			//th->frame = 3;
+			S_StartSound(th, th->info->activesound);
+			th->flags &= ~MF_NOCLIPTHING;
+		}
+
+		return;
+	}
+
+	if (orbinaut_flags(th) & ORBI_TRAIL)
+	{
+		mobj_t *ghost = NULL;
+
+		ghost = P_SpawnGhostMobj(th);
+		ghost->colorized = true; // already has color!
+	}
+
+	if (grounded == false && !(orbinaut_flags(th) & ORBI_DROPPED))	//we only want it to move when thrown forward
+	{
+		fixed_t finalspeed = orbinaut_speed(th);
+		const fixed_t currentspeed = R_PointToDist2(0, 0, th->momx, th->momy);
+		fixed_t thrustamount = 0;
+		fixed_t frictionsafety = (th->friction == 0) ? 1 : th->friction;
+
+		/*if (th->health <= 5)		//We don't slow down until we hit something
+		{
+			INT32 i;
+			for (i = 5; i >= th->health; i--)
+			{
+				finalspeed = FixedMul(finalspeed, FRACUNIT-FRACUNIT/4);
+			}
+		}*/
+
+		//if (currentspeed >= finalspeed)
+		//{
+			// Thrust as if you were at top speed, slow down naturally
+			thrustamount = FixedDiv(finalspeed, frictionsafety) - finalspeed;
+		//}
+		/*else
+		{
+			const fixed_t beatfriction = FixedDiv(currentspeed, frictionsafety) - currentspeed;
+			// Thrust to immediately get to top speed
+			thrustamount = beatfriction + FixedDiv(finalspeed - currentspeed, frictionsafety);
+		}*/
+
+		P_Thrust(th, th->angle, thrustamount);
+	}
+
+	/* todo: UDMFify
+	if (P_MobjTouchingSectorSpecialFlag(th, ?))
+	{
+		K_DoPogoSpring(th, 0, 1);
+	}
+	*/
+
+	if (orbinaut_selfdelay(th) > 0)
+	{
+		orbinaut_selfdelay(th)--;
+	}
+
+	/*if (leveltime % 6 == 0)
+	{
+		S_StartSound(th, th->info->activesound);
+	}*/
+}
+
 boolean Obj_OrbinautJawzCollide(mobj_t *t1, mobj_t *t2)
 {
 	boolean damageitem = false;
@@ -245,7 +405,7 @@ boolean Obj_OrbinautJawzCollide(mobj_t *t1, mobj_t *t2)
 
 		damageitem = true;
 	}
-	else if (t2->type == MT_SSMINE_SHIELD || t2->type == MT_SSMINE || t2->type == MT_LANDMINE || t2->type == MT_PRESSUREMINE)		//SCS EDIT
+	else if (t2->type == MT_SSMINE_SHIELD || t2->type == MT_SSMINE || t2->type == MT_LANDMINE || t2->type == MT_PRESSUREMINE || t2->type == MT_ICEDUSCRYSTAL_TRAP)		//SCS EDIT
 	{
 		damageitem = true;
 		// Bomb death
@@ -354,6 +514,62 @@ void Obj_OrbinautThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir)
 	}
 }
 
+void Obj_SolFireThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir)						//SCS ADD
+{
+	orbinaut_flags(th) = 0;
+
+	if (orbinaut_owner(th) != NULL && P_MobjWasRemoved(orbinaut_owner(th)) == false
+		&& orbinaut_owner(th)->player != NULL)
+	{
+		th->color = orbinaut_owner(th)->player->skincolor;
+
+		//const boolean ownerwaterrun = K_WaterRun(orbinaut_owner(th)); //Shouldn't be needed. Sols and Icedus should have anti-grav
+
+		if (dir >= 0)
+		{
+			// The owner can run on water, so we should too!
+			orbinaut_flags(th) |= ORBI_WATERSKI;
+		}
+	}
+	else
+	{
+		th->color = SKINCOLOR_RED;
+	}
+
+	th->fuse = RR_PROJECTILE_FUSE;
+	orbinaut_speed(th) = finalSpeed;
+
+	//orbinaut_flags(th) |= ORBI_TRAIL;
+}
+
+void Obj_IcedusCrystalThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir)						//SCS ADD
+{
+	orbinaut_flags(th) = 0;
+
+	if (orbinaut_owner(th) != NULL && P_MobjWasRemoved(orbinaut_owner(th)) == false
+		&& orbinaut_owner(th)->player != NULL)
+	{
+		th->color = orbinaut_owner(th)->player->skincolor;
+
+		//const boolean ownerwaterrun = K_WaterRun(orbinaut_owner(th)); //Shouldn't be needed. Sols and Icedus should have anti-grav
+
+		if (dir >= 0)
+		{
+			// The owner can run on water, so we should too!
+			orbinaut_flags(th) |= ORBI_WATERSKI;
+		}
+	}
+	else
+	{
+		th->color = SKINCOLOR_BLUE;
+	}
+
+	th->fuse = RR_PROJECTILE_FUSE;
+	orbinaut_speed(th) = finalSpeed;
+
+	//orbinaut_flags(th) |= ORBI_TRAIL;
+}
+
 void Obj_GachaBomThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir)
 {
 	Obj_OrbinautThrown(th, finalSpeed, dir);
@@ -396,7 +612,7 @@ void Obj_OrbinautJawzMoveHeld(player_t *player)
 		cur->color = player->skincolor;
 
 		cur->angle -= ANGLE_90;
-		cur->angle += FixedAngle(speed) / 3;
+		cur->angle += (FixedAngle(speed) / 3) * ((player->orbinautchargetime/2)+1);	//SCS EDIT
 
 		if (orbinaut_shield_dist(cur) < radius)
 		{

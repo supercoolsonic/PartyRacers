@@ -834,7 +834,7 @@ static void M_MenuQueueStopSend(INT32 ch)
 	(void)ch;
 
 	memset(&menuqueue, 0, sizeof(struct menuqueue));
-	
+
 	menuqueue.clearing = false;
 }
 
@@ -914,13 +914,13 @@ void M_CupQueueHandler(cupheader_t *cup)
 	UINT8 bonusmodulo = max(1, (cup->numlevels+1)/(cup->numbonus+1));
 	UINT16 cupLevelNum;
 	INT32 gtcheck;
-	
+
 	// We shouldn't get to this point while there's rounds queued, but if we do, get outta there.
 	if (roundqueue.size)
 	{
 		return;
 	}
-	
+
 	menuqueue.size = 0;
 
 	// Levels are added to the queue in the following pattern.
@@ -931,7 +931,7 @@ void M_CupQueueHandler(cupheader_t *cup)
 	while (levelindex < cup->numlevels)
 	{
 		memset(menuqueue.entries+menuqueue.size, 0, sizeof(roundentry_t));
-		
+
 		// Fill like two or three Race maps.
 		for (i = 0; i < bonusmodulo; i++)
 		{
@@ -942,7 +942,7 @@ void M_CupQueueHandler(cupheader_t *cup)
 				// Just skip the map if it's invalid.
 				continue;
 			}
-			
+
 			if ((mapheaderinfo[cupLevelNum]->typeoflevel & TOL_RACE) == TOL_RACE)
 			{
 				gtcheck = GT_RACE;
@@ -955,7 +955,7 @@ void M_CupQueueHandler(cupheader_t *cup)
 			menuqueue.entries[menuqueue.size].mapnum = cupLevelNum;
 			menuqueue.entries[menuqueue.size].gametype = gtcheck;
 			menuqueue.entries[menuqueue.size].encore = (cv_kartencore.value == 1);
-			
+
 			menuqueue.size++;
 
 			levelindex++;
@@ -984,7 +984,7 @@ void M_CupQueueHandler(cupheader_t *cup)
 				menuqueue.entries[menuqueue.size].mapnum = cupLevelNum;
 				menuqueue.entries[menuqueue.size].gametype = gtcheck;
 				menuqueue.entries[menuqueue.size].encore = (cv_kartencore.value == 1);
-				
+
 				menuqueue.size++;
 			}
 
@@ -1094,7 +1094,7 @@ static void M_MenuQueueResponse(INT32 ch)
 void M_LevelConfirmHandler(void)
 {
 	// Starting immediately OR importing queue
-	
+
 	while ((menuqueue.size + roundqueue.size) > ROUNDQUEUE_MAX)
 			menuqueue.size--;
 
@@ -1137,7 +1137,6 @@ static void M_ClearQueueResponse(INT32 ch)
 
 	if (!netgame)
 		memset(&roundqueue, 0, sizeof(struct roundqueue));
-
 	if (netgame && (roundqueue.size != 0))
 	{
 		menuqueue.clearing = true;
@@ -1184,6 +1183,7 @@ void M_ClearQueueHandler(void)
 		);
 	}
 }
+
 void M_LevelSelectHandler(INT32 choice)
 {
 	const UINT8 pid = 0;
@@ -1294,7 +1294,7 @@ void M_LevelSelectTick(void)
 		else
 			menuqueue.cupqueue = false;
 	}
-	
+
 	if (!menuqueue.sending)
 		return;
 

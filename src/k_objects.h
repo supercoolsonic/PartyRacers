@@ -79,6 +79,14 @@ void Obj_OrbinautJawzMoveHeld(player_t *player);
 boolean Obj_GachaBomWasTossed(mobj_t *th);
 void Obj_OrbinautDrop(mobj_t *th);
 boolean Obj_OrbinautCanRunOnWater(mobj_t *th);
+void Obj_SolFireThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir);		//SCS ADD
+void Obj_IcedusCrystalThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir);	//SCS ADD
+void Obj_IcedusThink(mobj_t *th);											//SCS ADD
+void Obj_SolFireThink(mobj_t *th);											//SCS ADD
+
+/* Slicer */							//SCS ADD
+void Obj_SlicerThink(mobj_t *th);
+void Obj_SlicerThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir);
 
 /* Jawz */
 void Obj_JawzThink(mobj_t *th);

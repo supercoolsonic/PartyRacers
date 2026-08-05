@@ -192,25 +192,28 @@ static patch_t *kp_gardentop[3];
 static patch_t *kp_gachabom[3];
 static patch_t *kp_stoneshoe[3];
 static patch_t *kp_toxomister[3];
-static patch_t *kp_sjackpot[3];			//SCS ADD
-static patch_t *kp_wreckball[3];		//SCS ADD
-static patch_t *kp_masteremerald[18];	//SCS ADD
-static patch_t *kp_pickpockethyu[15];	//SCS ADD
-static patch_t *kp_yellowspogospring[3];//SCS ADD
-static patch_t *kp_bluepogospring[3];	//SCS ADD
-static patch_t *kp_timestone[30];		//SCS ADD
-static patch_t *kp_normalshield[3];		//SCS ADD
-static patch_t *kp_megachopper[3];		//SCS ADD
-static patch_t *kp_armashield[3];		//SCS ADD
-static patch_t *kp_aburnerjawz[3];		//SCS ADD
-static patch_t *kp_pressuremine[3];		//SCS ADD
-static patch_t *kp_chamblaster[3];		//SCS ADD
-static patch_t *kp_eggblaster[3];		//SCS ADD
-static patch_t *kp_ringgun[3];			//SCS ADD
-static patch_t *kp_butlerhyu[3];		//SCS ADD
-static patch_t *kp_octus[3];			//SCS ADD
-static patch_t *kp_inkblotches[8];		//SCS ADD
-//static patch_t *kp_pickpockcombo[2];	//SCS ADD
+static patch_t *kp_sjackpot[3];			//SCS ADD START
+static patch_t *kp_wreckball[3];
+static patch_t *kp_masteremerald[18];
+static patch_t *kp_pickpockethyu[15];
+static patch_t *kp_yellowspogospring[3];
+static patch_t *kp_bluepogospring[3];
+static patch_t *kp_timestone[30];
+static patch_t *kp_normalshield[3];
+static patch_t *kp_megachopper[3];
+static patch_t *kp_armashield[3];
+static patch_t *kp_aburnerjawz[3];
+static patch_t *kp_pressuremine[3];
+static patch_t *kp_chamblaster[3];
+static patch_t *kp_eggblaster[3];
+static patch_t *kp_ringgun[3];
+static patch_t *kp_butlerhyu[3];
+static patch_t *kp_octus[3];
+static patch_t *kp_inkblotches[8];
+static patch_t *kp_icedus[6];
+static patch_t *kp_slicer[3];
+static patch_t *kp_sol[6];
+static patch_t *kp_ringbonus[12];	//SCS ADD END
 static patch_t *kp_bar[4];
 static patch_t *kp_doublebar[4];
 static patch_t *kp_triplebar[4];
@@ -800,6 +803,7 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_ringgun[0], "K_ITXSNP");			//SCS ADD
 	HU_UpdatePatch(&kp_butlerhyu[0], "K_ITHYUB");			//SCS ADD
 	HU_UpdatePatch(&kp_octus[0], "K_ITTAKN");			//SCS ADD
+	HU_UpdatePatch(&kp_slicer[0], "K_ITSLIC");			//SCS ADD
 	HU_UpdatePatch(&kp_bar[0], "K_RBBAR");
 	HU_UpdatePatch(&kp_doublebar[0], "K_RBBAR2");
 	HU_UpdatePatch(&kp_triplebar[0], "K_RBBAR3");
@@ -807,6 +811,19 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_seven[0], "K_RBSEV");
 	HU_UpdatePatch(&kp_jackpot[0], "K_RBJACK");
 	
+	sprintf(buffer, "K_ITICEx");					//SCS ADD
+	for (i = 0; i < 4; i++)
+	{
+		buffer[7] = '1'+i;
+		HU_UpdatePatch(&kp_icedus[i], "%s", buffer);
+	}
+	
+	sprintf(buffer, "K_ITSOLx");					//SCS ADD
+	for (i = 0; i < 4; i++)
+	{
+		buffer[7] = '1'+i;
+		HU_UpdatePatch(&kp_sol[i], "%s", buffer);
+	}
 
 	HU_UpdatePatch(&kp_ringemeralds[0], "K_REME1");	//SCS ADD
 	HU_UpdatePatch(&kp_ringemeralds[1], "K_REME2");	//SCS ADD
@@ -823,6 +840,13 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_ringemeraldssmall[4], "K_REMS5");	//SCS ADD
 	HU_UpdatePatch(&kp_ringemeraldssmall[5], "K_REMS6");	//SCS ADD
 	HU_UpdatePatch(&kp_ringemeraldssmall[6], "K_REMS7");	//SCS ADD
+	
+	sprintf(buffer, "K_ITBONx");							//SCS ADD
+	for (i = 0; i < 4; i++)
+	{
+		buffer[7] = '1'+i;
+		HU_UpdatePatch(&kp_ringbonus[i], "%s", buffer);
+	}
 
 	sprintf(buffer, "FSMFGxxx");
 	for (i = 0; i < FLAMESHIELD_MAX; i++)
@@ -901,6 +925,14 @@ void K_LoadKartHUDGraphics(void)
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_timestone[i+10], "%s", buffer);
 	}
+	
+	sprintf(buffer, "K_ISBONx");							//SCS ADD
+	for (i = 0; i < 4; i++)
+	{
+		buffer[7] = '1'+i;
+		HU_UpdatePatch(&kp_ringbonus[i+4], "%s", buffer);
+	}
+	
 	HU_UpdatePatch(&kp_timestone[19], "K_ISTSN10");
 	HU_UpdatePatch(&kp_normalshield[1], "K_ISSHLD");		//SCS ADD
 	HU_UpdatePatch(&kp_megachopper[1], "K_ISMCHP");			//SCS ADD
@@ -912,6 +944,9 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_ringgun[1], "K_ISXSNP");				//SCS ADD
 	HU_UpdatePatch(&kp_butlerhyu[1], "K_ISHYUB");			//SCS ADD
 	HU_UpdatePatch(&kp_octus[1], "K_ISTAKN");				//SCS ADD
+	HU_UpdatePatch(&kp_icedus[4], "K_ISICED");				//SCS ADD
+	HU_UpdatePatch(&kp_slicer[1], "K_ISSLIC");				//SCS ADD
+	HU_UpdatePatch(&kp_sol[4], "K_ISSOLF");					//SCS ADD
 	HU_UpdatePatch(&kp_bar[1], "K_SBBAR");
 	HU_UpdatePatch(&kp_doublebar[1], "K_SBBAR2");
 	HU_UpdatePatch(&kp_triplebar[1], "K_SBBAR3");
@@ -1009,17 +1044,28 @@ void K_LoadKartHUDGraphics(void)
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_timestone[i+20], "%s", buffer);
 	}
+
+	sprintf(buffer, "K_ISPYBONx");							//SCS ADD
+	for (i = 0; i < 4; i++)
+	{
+		buffer[7] = '1'+i;
+		HU_UpdatePatch(&kp_ringbonus[i+8], "%s", buffer);
+	}	
+	
 	HU_UpdatePatch(&kp_timestone[29], "ISPYSTN10");
-	HU_UpdatePatch(&kp_normalshield[2], "ISPYSHLD");			//SCS ADD
-	HU_UpdatePatch(&kp_megachopper[2], "ISPYMCHP");			//SCS ADD
-	HU_UpdatePatch(&kp_armashield[2], "ISPYARMA");			//SCS ADD
-	HU_UpdatePatch(&kp_aburnerjawz[2], "ISPYABJZ");			//SCS ADD
-	HU_UpdatePatch(&kp_pressuremine[2], "ISPYPRMN");			//SCS ADD
-	HU_UpdatePatch(&kp_chamblaster[2], "ISPYCBLR");			//SCS ADD
-	HU_UpdatePatch(&kp_eggblaster[2], "ISPYXEGB");			//SCS ADD
+	HU_UpdatePatch(&kp_normalshield[2], "ISPYSHLD");	//SCS ADD
+	HU_UpdatePatch(&kp_megachopper[2], "ISPYMCHP");		//SCS ADD
+	HU_UpdatePatch(&kp_armashield[2], "ISPYARMA");		//SCS ADD
+	HU_UpdatePatch(&kp_aburnerjawz[2], "ISPYABJZ");		//SCS ADD
+	HU_UpdatePatch(&kp_pressuremine[2], "ISPYPRMN");	//SCS ADD
+	HU_UpdatePatch(&kp_chamblaster[2], "ISPYCBLR");		//SCS ADD
+	HU_UpdatePatch(&kp_eggblaster[2], "ISPYXEGB");		//SCS ADD
 	HU_UpdatePatch(&kp_ringgun[2], "ISPYXSNP");			//SCS ADD
-	HU_UpdatePatch(&kp_butlerhyu[2], "ISPYHYUB");			//SCS ADD
+	HU_UpdatePatch(&kp_butlerhyu[2], "ISPYHYUB");		//SCS ADD
 	HU_UpdatePatch(&kp_octus[2], "ISPYTAKN");			//SCS ADD
+	HU_UpdatePatch(&kp_icedus[5], "ISPYICED");			//SCS ADD
+	HU_UpdatePatch(&kp_slicer[2], "ISPYSLIC");			//SCS ADD
+	HU_UpdatePatch(&kp_sol[5], "ISPYSOLF");				//SCS ADD
 
 	// CHECK indicators
 	sprintf(buffer, "K_CHECKx");
@@ -1480,6 +1526,22 @@ const char *K_GetItemPatch(UINT8 item, boolean tiny)
 			return (tiny ? "K_ISHYUB" : "K_ITHYUB");
 		case KITEM_OCTUS:									//SCS ADD
 			return (tiny ? "K_ISTAKN" : "K_ITTAKN");
+		case KITEM_ICEDUS:									//SCS ADD
+			return (tiny ? "K_ISICED" : "K_ITICE1");
+		case KITEM_SLICER:									//SCS ADD
+			return (tiny ? "K_ISSLIC" : "K_ITSLIC");
+		case KITEM_SOL:										//SCS ADD
+			return (tiny ? "K_ISSOLF" : "K_ITSOL1");
+		case KRITEM_TRIPLEICEDUS:							//SCS ADD
+			return (tiny ? "K_ISICED" : "K_ITICE3");
+		case KRITEM_QUADICEDUS:								//SCS ADD
+			return (tiny ? "K_ISICED" : "K_ITICE4");
+		case KRITEM_TRIPLESOL:								//SCS ADD
+			return (tiny ? "K_ISSOLF" : "K_ITSOL3");
+		case KRITEM_QUADSOL:								//SCS ADD
+			return (tiny ? "K_ISSOLF" : "K_ITSOL4");
+		case KITEM_RINGCAPBONUS:							//SCS ADD
+			return (tiny ? "K_ISBON1" : "K_ITBON1");
 		default:
 			return (tiny ? "K_ISSAD" : "K_ITSAD");
 	}
@@ -1515,23 +1577,27 @@ static patch_t *K_GetCachedItemPatch(INT32 item, UINT8 offset)
 		kp_gachabom,
 		kp_stoneshoe,
 		kp_toxomister,
-		kp_sjackpot,			//SCS ADD
-		kp_wreckball,			//SCS ADD
-		kp_masteremerald,		//SCS ADD
-		kp_pickpockethyu,		//SCS ADD
-		kp_yellowspogospring,	//SCS ADD
-		kp_timestone,			//SCS ADD
-		kp_bluepogospring,		//SCS ADD
-		kp_normalshield,		//SCS ADD
-		kp_megachopper,			//SCS ADD
-		kp_armashield,			//SCS ADD
-		kp_aburnerjawz,			//SCS ADD
-		kp_pressuremine,		//SCS ADD
-		kp_chamblaster,			//SCS ADD
-		kp_eggblaster,			//SCS ADD
-		kp_ringgun,				//SCS ADD
-		kp_butlerhyu,			//SCS ADD
-		kp_octus				//SCS ADD
+		kp_sjackpot,			//SCS ADD START
+		kp_wreckball,
+		kp_masteremerald,
+		kp_pickpockethyu,
+		kp_yellowspogospring,
+		kp_timestone,
+		kp_bluepogospring,
+		kp_normalshield,
+		kp_megachopper,
+		kp_armashield,
+		kp_aburnerjawz,
+		kp_pressuremine,
+		kp_chamblaster,
+		kp_eggblaster,
+		kp_ringgun,
+		kp_butlerhyu,
+		kp_octus,
+		kp_icedus,
+		kp_slicer,
+		kp_sol,
+		kp_ringbonus			//SCS ADD END
 	};
 
 	if (item == KITEM_SAD || (item > KITEM_NONE && item < NUMKARTITEMS))
@@ -1574,6 +1640,18 @@ patch_t *K_GetSmallStaticCachedItemPatch(kartitems_t item)
 			
 		case KITEM_JAWZ:			//SCS ADD
 			offset = 2;
+			break;
+			
+		case KITEM_ICEDUS:			//SCS ADD
+			offset = 4;
+			break;
+			
+		case KITEM_SOL:			//SCS ADD
+			offset = 4;
+			break;
+			
+		case KITEM_RINGCAPBONUS:	//SCS ADD
+			offset = 4;
 			break;
 
 		default:
@@ -2050,11 +2128,18 @@ static void K_drawKartItem(void)
 	patch_t *localinkblotch = ((offset) ? kp_inkblotches[0] : kp_inkblotches[1]);		//SCS ADD
 	//patch_t *localhyucombo = ((offset) ? kp_pickpockcombo[1] : kp_pickpockcombo[0]);	//SCS ADD
 	patch_t *localinv = ((offset) ? kp_invincibility[((leveltime % (6*3)) / 3) + 7] : kp_invincibility[(leveltime % (7*3)) / 3]);
-	patch_t *localmemer = ((offset) ? kp_masteremerald[((leveltime % (6*3)) / 3) + 6] : kp_masteremerald[(leveltime % (6*3)) / 3]);
-	patch_t *localpickpocket = ((offset) ? kp_pickpockethyu[((leveltime % (3*3)) / 3) + 9] : kp_pickpockethyu[(leveltime % (9*3)) / 3]);
-	patch_t *localtimestone = ((offset) ? kp_timestone[((leveltime % (10*3)) / 3) + 10] : kp_timestone[(leveltime % (10*3)) / 3]);
+	patch_t *localmemer = ((offset) ? kp_masteremerald[((leveltime % (6*3)) / 3) + 6] : kp_masteremerald[(leveltime % (6*3)) / 3]);				//SCS ADD
+	patch_t *localpickpocket = ((offset) ? kp_pickpockethyu[((leveltime % (3*3)) / 3) + 9] : kp_pickpockethyu[(leveltime % (9*3)) / 3]);		//SCS ADD
+	patch_t *localtimestone = ((offset) ? kp_timestone[((leveltime % (10*3)) / 3) + 10] : kp_timestone[(leveltime % (10*3)) / 3]);				//SCS ADD
+	patch_t *localringbonus = ((offset) ? kp_ringbonus[((leveltime % (4*3)) / 3) + 4] : kp_ringbonus[(leveltime % (4*3)) / 3]);				//SCS ADD
 	INT32 fx = 0, fy = 0, fflags = 0;	// final coords for hud and flags...
-	const INT32 numberdisplaymin = (!offset && (stplyr->itemtype == KITEM_ORBINAUT || stplyr->itemtype == KITEM_BANANA) ? 5 : !offset && stplyr->itemtype == KITEM_SNEAKER ? 4 : !offset && stplyr->itemtype == KITEM_JAWZ ? 3 : 2);		//SCS EDIT
+	
+	const INT32 numberdisplaymin = (!offset && (stplyr->itemtype == KITEM_ORBINAUT 
+	|| stplyr->itemtype == KITEM_BANANA 
+	|| stplyr->itemtype == KITEM_ICEDUS 
+	|| stplyr->itemtype == KITEM_SOL) 
+	? 5 : !offset && stplyr->itemtype == KITEM_SNEAKER ? 4 : !offset && stplyr->itemtype == KITEM_JAWZ ? 3 : 2);		//SCS EDIT
+	
 	INT32 itembar = 0;
 	INT32 maxl = 0; // itembar's normal highest value
 	const INT32 barlength = (offset ? 12 : 26);
@@ -2110,11 +2195,28 @@ static void K_drawKartItem(void)
 				case KITEM_TIMESTONE:
 					localpatch[i] = localtimestone;			//SCS ADD
 					localamt[i] = amt;
-					break;							
+					break;
+					
+				case KITEM_RINGCAPBONUS:
+					localpatch[i] = localringbonus;			//SCS ADD
+					localamt[i] = amt;
+					break;	
 				
 				case KITEM_ORBINAUT:
 					localpatch[i] = kp_orbinaut[(offset ? 4 : std::min(amt-1, 3))];
 					if (amt > 4 || offset)	//SCS EDIT - Fixing this so the amounts show in 3P/4P splitscreen no matter what, since there aren't unique icons for the items there.
+						localamt[i] = amt;
+					break;
+					
+				case KITEM_ICEDUS:		//SCS ADD
+					localpatch[i] = kp_icedus[(offset ? 4 : std::min(amt-1, 3))];
+					if (amt > 4 || offset)
+						localamt[i] = amt;
+					break;
+					
+				case KITEM_SOL:			//SCS ADD
+					localpatch[i] = kp_sol[(offset ? 4 : std::min(amt-1, 3))];
+					if (amt > 4 || offset)
 						localamt[i] = amt;
 					break;
 					
@@ -2251,6 +2353,15 @@ static void K_drawKartItem(void)
 			localpatch[1] = kp_timestone[offset ? 10 : 0];
 			flashOnOne = true;
 		}
+		else if (stplyr->ringboxawardwindow > 1)	//SCS ADD
+		{
+			itembar = stplyr->ringboxawardwindow;
+			maxl = (180 - barlength);
+			
+			//localpatch[1] = kp_ringbonus[offset ? 4 : 0];
+			localpatch[1] = localringbonus;
+			flashOnOne = false;
+		}
 		else if (stplyr->sadtimer > 0)
 		{
 			localpatch[1] = kp_sadface[offset];
@@ -2286,9 +2397,22 @@ static void K_drawKartItem(void)
 					localpatch[1] = localtimestone;				//SCS ADD
 					localbg = kp_itembg[offset+1];
 					break;
+					
+				case KITEM_RINGCAPBONUS:
+					localpatch[1] = localringbonus;				//SCS ADD
+					localbg = kp_itembg[offset+1];
+					break;
 
 				case KITEM_ORBINAUT:
 					localpatch[1] = kp_orbinaut[(offset ? 4 : std::min(stplyr->itemamount-1, 3))];
+					break;
+					
+				case KITEM_ICEDUS:								//SCS ADD
+					localpatch[1] = kp_icedus[(offset ? 4 : std::min(stplyr->itemamount-1, 3))];
+					break;
+					
+				case KITEM_SOL:									//SCS ADD
+					localpatch[1] = kp_sol[(offset ? 4 : std::min(stplyr->itemamount-1, 3))];
 					break;
 					
 				case KITEM_BANANA:
@@ -2857,6 +2981,7 @@ static void K_drawBackupItem(void)
 	patch_t *localmemer = kp_masteremerald[((leveltime % (6*3)) / 3) + 6 + (tiny ? 5 : 0) + tiny];			//SCS ADD
 	patch_t *localpickpocket = kp_pickpockethyu[((leveltime % (3*3)) / 3) + 9 + (tiny ? 2 : 0) + tiny];		//SCS ADD
 	patch_t *localtimestone = kp_timestone[((leveltime % (10*3)) / 3) + 10 + (tiny ? 9 : 0) + tiny];			//SCS ADD
+	patch_t *localringbonus = kp_ringbonus[((leveltime % (4*3)) / 3) + 4 + (tiny ? 8 : 0) + tiny];			//SCS ADD
 	INT32 fx = 0, fy = 0, fflags = 0, tx = 0, ty = 0;	// final coords for hud and flags...
 	const INT32 numberdisplaymin = 2;
 	skincolornum_t localcolor[3] = { static_cast<skincolornum_t>(stplyr->skincolor) };
@@ -2885,9 +3010,21 @@ static void K_drawBackupItem(void)
 		case KITEM_TIMESTONE:
 			localpatch[1] = localtimestone;		//SCS ADD
 			break;
+			
+		case KITEM_RINGCAPBONUS:
+			localpatch[1] = localringbonus;		//SCS ADD
+			break;
 
 		case KITEM_ORBINAUT:
 			localpatch[1] = kp_orbinaut[tiny+4];
+			break;
+			
+		case KITEM_ICEDUS:
+			localpatch[1] = kp_icedus[tiny+4];		//SCS ADD
+			break;
+			
+		case KITEM_SOL:
+			localpatch[1] = kp_sol[tiny+4];			//SCS ADD
 			break;
 			
 		case KITEM_BANANA:
@@ -5536,7 +5673,7 @@ static void RR_drawRingCounterOnPlayer(
 
 	if (cv_ringcountertype.value == 1)																												//SCS ADD START
 	{
-		if (hr < -20)
+		if (hr < -1*stplyr->ringlimit)
 		{
 			bailbar = abs(hr);
 			const INT32 fill = ((bailbar*bailbarlength)/(180-bailbarlength));
@@ -5840,7 +5977,7 @@ static void RR_handleRingCounterLogicMini(
 		
 		if (cv_ringcountertype.value == 1)
 		{
-			if (hr < -20)																								//SCS ADD START
+			if (hr < -1*stplyr->ringlimit)																								//SCS ADD START
 			{
 				bailbar = abs(hr);
 				const INT32 fill = ((bailbar*bailbarlength)/(100-bailbarlength));
@@ -6119,7 +6256,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 		ringmap = R_GetTranslationColormap(TC_RAINBOW, SKINCOLOR_BLUEBERRY, GTC_CACHE);
 		colorring = true;
 	}
-	else if (stplyr->hudrings >= 20) // Maxed out
+	else if (stplyr->hudrings >= stplyr->ringlimit) // Maxed out		//SCS EDIT
 		ringmap = R_GetTranslationColormap(TC_RAINBOW, SKINCOLOR_YELLOW, GTC_CACHE);
 
 	if (stplyr->karthud[khud_ringframe] > RINGANIM_FLIPFRAME)
@@ -6230,7 +6367,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 		
 		if (cv_ringcountertype.value == 1)
 		{
-			if (hr < -20)																								//SCS ADD START
+			if (hr < -1*stplyr->ringlimit)																								//SCS ADD START
 			{
 				bailbar = abs(hr);
 				const INT32 fill = ((bailbar*bailbarlength)/(100-bailbarlength));
@@ -6521,7 +6658,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 		
 		if (cv_ringcountertype.value == 1)
 		{
-			if (hr < -20)																								//SCS ADD START
+			if (hr < -1*stplyr->ringlimit)																								//SCS ADD START
 			{
 				bailbar = abs(hr);
 				const INT32 fill = ((bailbar*bailbarlength)/(180-bailbarlength));
@@ -7838,10 +7975,28 @@ static void K_DrawNameTagItemSpy(INT32 x, INT32 y, player_t *p, INT32 flags)
 				box.patch(kp_timestone[((leveltime % (10*3)) / 3) + (tiny ? 20 : 10)]);		//SCS ADD
 				break;			
 			}
+			
+			case KITEM_RINGCAPBONUS:
+			{
+				box.patch(kp_ringbonus[((leveltime % (4*3)) / 3) + (tiny ? 8 : 4)]);		//SCS ADD
+				break;			
+			}
 
 			case KITEM_ORBINAUT:
 			{
 				box.patch(kp_orbinaut[4 + tiny]);
+				break;
+			}
+			
+			case KITEM_ICEDUS:
+			{
+				box.patch(kp_icedus[4 + tiny]);			//SCS ADD
+				break;
+			}
+			
+			case KITEM_SOL:
+			{
+				box.patch(kp_sol[4 + tiny]);			//SCS ADD
 				break;
 			}
 			
@@ -8924,10 +9079,10 @@ static void K_drawKartMinimap(void)
 		{
 			case MT_SPB:
 				workingPic = kp_spbminimap;
-#if 0
-				if (mobj->target && !P_MobjWasRemoved(mobj->target) && mobj->target->player && mobj->target->player->skincolor)
+#if 1																																									//SCS EDIT
+				if (cv_toggle_coloredspbminimap.value && mobj->target && !P_MobjWasRemoved(mobj->target) && mobj->target->player && mobj->target->player->skincolor)	//SCS EDIT
 				{
-					colormap = R_GetTranslationColormap(TC_RAINBOW, mobj->target->player->skincolor, GTC_CACHE);
+					colormap = R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(mobj->target->player->skincolor), GTC_CACHE); 							//SCS ADD - Needed static cast here
 				}
 				else
 #endif

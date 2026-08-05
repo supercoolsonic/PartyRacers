@@ -501,6 +501,9 @@ static menuitem_t OPTIONS_RadioRacersFun2[] =														//SCS ADD
 	{IT_STRING | IT_CVAR, "Mini-Ranking Shaking", "Toggle whether the player icons in the mini-ranking shake when they take damage.",
 		NULL, {.cvar = &cv_toggle_minirankingshaking}, 0, 0},
 		
+	{IT_STRING | IT_CVAR, "Minimap Colorized SPB", "Should the SPB icon on the minimap tint the color of the player who threw it?",
+		NULL, {.cvar = &cv_toggle_coloredspbminimap}, 0, 0},
+		
 };
 
 static menu_t OPTIONS_RadioRacersFunDef2 = {

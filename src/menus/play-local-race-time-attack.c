@@ -298,6 +298,7 @@ void CV_SPBAttackChanged(void)
 		if (!gpath)
 			return;
 
+
 		active = false;
 		PLAY_TimeAttack[ta_guest].status = IT_DISABLED;
 		PLAY_TimeAttack[ta_replay].status = IT_DISABLED;
