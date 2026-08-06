@@ -129,7 +129,7 @@ static patch_t *kp_ringmeter[2];				//SCS ADD
 static patch_t *kp_ringmeterbail[2];			//SCS ADD
 static patch_t *kp_ringmeterbar[2];				//SCS ADD
 
-static patch_t *kp_speedometersticker;
+//static patch_t *kp_speedometersticker;	//SCS EDIT - not using, so don't load into memory pls! Thanks!
 static patch_t *kp_speedometerlabel[4];
 static patch_t *kp_smallspeedometerlabel[4];	//SCS ADD
 
@@ -626,7 +626,7 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_ringmeterbar[1], "RMETBS");			//SCS ADD END
 
 	// Speedometer
-	HU_UpdatePatch(&kp_speedometersticker, "K_SPDMBG");
+	//HU_UpdatePatch(&kp_speedometersticker, "K_SPDMBG");	//SCS EDIT - not using so don't load into memory pls! Thanks!
 
 	sprintf(buffer, "K_SPDMLx");
 	for (i = 0; i < 4; i++)
