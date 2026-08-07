@@ -789,15 +789,16 @@ consvar_t cv_toggle_race_standings = Player("racestandingstoggle", "On").on_off(
 consvar_t cv_showexponsplit = Player("showexponsplit", "On").on_off().radio();
 
 // Chat emotes
+
 consvar_t cv_chat_emotes = Player("chat_emotes", "On").on_off().onchange(RR_ChatEmotes_OnChange).radio();
 consvar_t cv_chat_emotes_animated = Player("chat_emotes_animate", "On").on_off().radio();
 consvar_t cv_chat_emotes_button = Player("chat_emotes_button", "On").on_off().radio();
-consvar_t cv_chat_emotes_preview = Player("chat_emotes_input_preview", "On").on_off().radio();
+consvar_t cv_chat_emotes_preview = Player("chat_emotes_input_preview", "On").on_off().radio();/*
 consvar_t cv_chat_emotes_sort = Player("chat_emotes_sort", "Alphabetical").values({
 	{0, "Alphabetical"},
 	{1, "Most Used"},
 	{2, "Favourites"}
-}).onchange(RR_ChatEmoteSort_OnChange).radio();
+}).onchange(RR_ChatEmoteSort_OnChange).radio();*/
 
 // Server
 consvar_t cv_lastknownserver = Player("lastknownserver", "").dont_save().radio();

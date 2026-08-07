@@ -1295,7 +1295,7 @@ void D_ClearState(void)
 	wipegamestate = GS_NULL;
 	
 	// RADIO:
-	RR_CleanupEmoteFrames();				//SCS - RADIO START
+	//RR_CleanupEmoteFrames();				//SCS - RADIO START
 	RR_ClearHudFeed();						//SCS - RADIO END
 
 	demo.waitingfortally = false;

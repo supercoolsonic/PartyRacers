@@ -72,9 +72,6 @@ find_package(PNG REQUIRED)
 find_package(SDL3 CONFIG REQUIRED)
 find_package(CURL REQUIRED)
 find_package(Opus REQUIRED)
-if(WIN32)
-	find_package(cpptrace CONFIG REQUIRED)
-endif()
 
 if (SRB2_CONFIG_ENABLE_WEBM_MOVIES)
 	find_package(YUV REQUIRED)
@@ -196,6 +193,10 @@ check_symbol_exists(strlcat "string.h" HAVE_STRLCAT)
 check_symbol_exists(strlcpy "string.h" HAVE_STRLCPY)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/src/config.h")
+
+if(MSVC OR CMAKE_CXX_LINK_EXECUTABLE MATCHES "lld-link\\.exe")
+	target_link_options(SRB2SDL2 PRIVATE /MANIFEST:NO)
+endif()
 
 # Strip debug sections
 find_program(CMAKE_OBJCOPY objcopy)

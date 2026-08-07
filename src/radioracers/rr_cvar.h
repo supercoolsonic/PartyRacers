@@ -113,7 +113,7 @@ extern consvar_t cv_chat_emotes;                    // Self-explanatory
 extern consvar_t cv_chat_emotes_animated;           // Should emotes animate?
 extern consvar_t cv_chat_emotes_button;             // Toggle the END key button
 extern consvar_t cv_chat_emotes_preview;            // Toggle emotes previewing in the chat input
-extern consvar_t cv_chat_emotes_sort;               // Toggle sorting function in the emote menu
+//extern consvar_t cv_chat_emotes_sort;               // Toggle sorting function in the emote menu
 extern consvar_t cv_driftsparkrate_size; // Toggle spark rate pulse size when drifting (Thank you Callmore xxxxx)
 extern consvar_t cv_toggle_nametags; // Toggle nametags
 extern consvar_t cv_toggle_position_number; // Toggle position number

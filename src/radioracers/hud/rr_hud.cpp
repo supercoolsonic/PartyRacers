@@ -35,8 +35,10 @@
 #define LAPS_X 9				
 #define LAPS_Y (BASEVIDHEIGHT - 29)
 
-int chat_log_offset[CHAT_BUFSIZE];
-int chat_mini_log_offset[8];
+//int chat_log_offset[CHAT_BUFSIZE];
+srb2::String chat_log_offset[CHAT_BUFSIZE];
+//int chat_mini_log_offset[8];
+srb2::String chat_mini_log_offset[8];
 
 /**
  * Battle HUD
@@ -289,12 +291,12 @@ void RR_DoChatStuff(chat_box_parameters_t parameters) {
 
     // Is the player trying to quick-select an emote?
     if (is_emote_preview_on) {
-		RR_DrawChatEmotePreview(chatx, (y-1) + (typelines*charheight), boxw);
+		//RR_DrawChatEmotePreview(chatx, (y-1) + (typelines*charheight), boxw);
 	}
 
     // Is the player trying to select an emote from the menu?
 	if (is_emote_menu_on) {
-		RR_DrawChatEmoteMenu(chatx + boxw + 4, (y-1) + (typelines*charheight));
+		//RR_DrawChatEmoteMenu(chatx + boxw + 4, (y-1) + (typelines*charheight));
 	} else {
         if(cv_chat_emotes.value && cv_chat_emotes_button.value) {
             const INT32 endkey_x = chatx + boxw + 4;

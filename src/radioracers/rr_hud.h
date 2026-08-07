@@ -290,8 +290,8 @@ typedef struct
 /**
  * Chat HUD
  */
-extern int chat_log_offset[CHAT_BUFSIZE];
-extern int chat_mini_log_offset[8];
+//extern int chat_log_offset[CHAT_BUFSIZE];
+//extern int chat_mini_log_offset[8];
 extern int hu_radio_tick;
 extern void RR_DoChatStuff(chat_box_parameters_t parameters);
 // Tally
