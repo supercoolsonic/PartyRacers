@@ -1674,11 +1674,21 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 		}
 	}
 
-	fixed_t largegamescaler = max((roulette->playing*2)/3, 2) * 8 + 110 - player->position; // Spread out item odds in large games for a less insane experience.			//SCS EDIT - new formula to push some items forward a little bit in non-frantic races
+	fixed_t largegamescaler = (max((min(roulette->playing, 24)*7)/8, 2) * 14 + 112) - player->position; //SCS ADD - new formula to push some items forward a little bit in non-frantic races
 
 	//fixed_t largegamescaler = roulette->playing * 11 + 115; // Spread out item odds in large games for a less insane experience.
 	if (roulette->playing <= 8)	//SCS ADD - trying out different formulas for different amount of players. <= 8, try an almost vanilla formula.
-		largegamescaler = roulette->playing * 8 + 112 - (player->position*2);
+		largegamescaler = ((roulette->playing*2) * 12 + 112) - (player->position*2);
+		
+	largegamescaler = (largegamescaler * K_GetNumWaypoints())/(((K_GetNumWaypoints()*3)/2)+1);	//SCS TESTING...
+	largegamescaler = min(232, largegamescaler);
+	largegamescaler = max(140, largegamescaler);
+	
+	/*if (!player->bot)
+	{
+		CONS_Printf("Our waypoint number is %d\n", K_GetNumWaypoints());
+		CONS_Printf("Our scaler is %d\n", largegamescaler);
+	}*/
 	
 	if (franticitems)
 		largegamescaler = 100; // Except in Frantic, where you know what you're getting
@@ -1691,6 +1701,8 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 	boolean filterweakitems = false; // strip unusually weak items from reel?				//SCS EDIT - Changing this to false to fix funky item odds - Eggmark wasn't appearing outside of 1st, Quad Orbi was cannabalizing Triple Orbi, etc.
 	UINT8 reelsize = 15; // How many items to attempt to add in prepass?
 	UINT32 humanscaler = 250; // Scaler that converts "useodds" style distances in odds tables to raw distances. Affects general item distance scale.
+	
+
 
 	// == ARE THESE ITEMS ALLOWED?
 	// We have a fuckton of rules about when items are allowed to show up,

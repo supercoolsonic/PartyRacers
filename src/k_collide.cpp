@@ -998,7 +998,7 @@ boolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 	{
 		P_SpawnMobj(t2->x/2 + t1->x/2, t2->y/2 + t1->y/2, t2->z/2 + t1->z/2, MT_ITEMCLASH);
 		
-		Obj_WreckingBallDeath(t1);
+		//Obj_WreckingBallDeath(t1);
 		P_KillMobj(t1, t2, t2, DMG_NORMAL);
 		P_KillMobj(t2, t1, t1, DMG_NORMAL);		
 	}

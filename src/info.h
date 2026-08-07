@@ -1363,6 +1363,7 @@ typedef enum sprite
 	SPR_VIEW,
 	
 	SPR_GHZB,	//SCS ADD
+	SPR_GHZD,
 	SPR_GHZR,
 	SPR_GFBC,
 	

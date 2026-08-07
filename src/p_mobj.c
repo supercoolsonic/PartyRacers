@@ -1899,8 +1899,16 @@ boolean P_XYMovement(mobj_t *mo)
 								// This Item Damage
 								S_StartSound(mo, mo->info->deathsound);
 								P_KillMobj(mo, NULL, NULL, DMG_NORMAL);
-
-								P_SetObjectMomZ(mo, 24*FRACUNIT, false);
+								
+								if (mo->type != MT_GHZBALL)						//SCS ADD - stop flipping the ball so high up into the air!
+									P_SetObjectMomZ(mo, 24*FRACUNIT, false);
+								else											//SCS ADD - it needs to be in the air for the death anim to play
+								{
+									P_SetObjectMomZ(mo, 3*FRACUNIT, false);
+									mo->momx = 0;
+									mo->momy = 0;
+								}
+								
 								P_InstaThrust(mo, R_PointToAngle2(mo->x, mo->y, mo->x + xmove, mo->y + ymove)+ANGLE_90, 16*FRACUNIT);
 							}
 							else			//SCS ADD START
@@ -12723,11 +12731,11 @@ void P_RemoveMobj(mobj_t *mobj)
 			Obj_AncientGearRemoved(mobj);
 			break;
 		}
-		case MT_GHZBALL:						//SCS ADD
+		/*case MT_GHZBALL:						//SCS ADD
 		{
 			Obj_WreckingBallDeath(mobj);
 			break;
-		}
+		}*/
 		case MT_RINGGUNBLASTMAX:				//SCS ADD
 		{
 			K_SpawnMineExplosion(mobj, mobj->color, 4);

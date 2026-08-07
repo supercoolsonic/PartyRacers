@@ -776,7 +776,8 @@ award_immediately (mobj_t *hyu)
 			{
 				//CONS_Printf("We're giving back: %d\n", hyu->extravalue2);
 				
-				if (hyu->target->player->itemtype == KITEM_PICKPOCKETHYU || (hyu->target->player->itemtype == KITEM_NONE && !hyu->target->player->itemRoulette.active))		//Going back into player's item slots
+				if (hyu->target->player->itemtype == KITEM_PICKPOCKETHYU || (hyu->target->player->itemtype == KITEM_NONE && !hyu->target->player->itemRoulette.active
+				&& !player->megachoppertimer && !player->timestonefrozen))		//Going back into player's item slots
 				{
 					hyu->target->player->itemtype = KITEM_PICKPOCKETHYU;
 					K_AdjustPlayerItemAmount(hyu->target->player, hyu->extravalue2);
