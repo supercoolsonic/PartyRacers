@@ -98,6 +98,14 @@ void Obj_WreckingBallDeath(mobj_t *th)
 		chunk->scale = th->scale/2;
 		chunk->fuse = 350;
 	}
+	
+	/*mobj_t* splitball = P_SpawnMobj(th->x, th->y, th->z, MT_THOK);
+	
+	if (splitball)
+	{
+		P_SetMobjState(splitball, S_GHZBALLDEATHANIM);
+		splitball->scale = th->scale;
+	}*/
 }
 
 void Obj_WreckingBallThink(mobj_t *th)
@@ -282,7 +290,7 @@ void Obj_WreckingBallThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir)
 	if (wreckingball_owner(th) != NULL && P_MobjWasRemoved(wreckingball_owner(th)) == false
 		&& wreckingball_owner(th)->player != NULL)
 	{
-		th->color = wreckingball_owner(th)->player->skincolor;
+		//th->color = wreckingball_owner(th)->player->skincolor;
 
 		const mobj_t *owner = wreckingball_owner(th);
 		const ffloor_t *rover = P_IsObjectFlipped(owner) ? owner->ceilingrover : owner->floorrover;
@@ -293,10 +301,10 @@ void Obj_WreckingBallThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir)
 			wreckingball_flags(th) |= WBALL_WATERSKI;
 		}
 	}
-	else
-	{
-		th->color = SKINCOLOR_GREY;
-	}
+	//else
+	//{
+		//th->color = SKINCOLOR_GREY;
+	//}
 
 	th->fuse = RR_PROJECTILE_FUSE;
 	wreckingball_speed(th) = finalSpeed;

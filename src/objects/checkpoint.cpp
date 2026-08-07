@@ -713,6 +713,11 @@ void Obj_CrossCheckpoints(player_t* player, fixed_t old_x, fixed_t old_y)
 	S_StartSound(player->mo, sfx_s3k63);
 
 	player->checkpointId = chk->id();
+	
+	
+	//K_SpawnAmps(player, 100*(D_NumPlayersInRace() - player->position)/50, static_cast<mobj_t*>(chk));					Originally, you'd get Amps by crossing checkpoints - this is the original code for that
+	//K_SpawnAmps(player, 100*(D_NumPlayersInRace() - player->position)/50, static_cast<mobj_t*>(chk->other()));		Was gonna turn it into a feature, but it may be best as a mod instead - SCS
+	
 
 	UINT16 oldexp = player->exp;
 

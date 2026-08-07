@@ -8103,6 +8103,86 @@ static void K_FlameDashLeftoverSmoke(mobj_t *src)
 	}
 }
 
+#if 0
+static void K_DoHyudoroSteal(player_t *player)		//SCS RESTORE - I mean, is it coming back? No, lmao. Is it funny? Kinda. Could it be used for something? Maybe...
+{
+	INT32 i, numplayers = 0;
+	INT32 playerswappable[MAXPLAYERS];
+	INT32 stealplayer = -1; // The player that's getting stolen from
+	INT32 prandom = 0;
+	boolean sink = P_RandomChance(FRACUNIT/64);
+	INT32 hyu = hyudorotime;
+
+	if (gametype == GT_RACE)
+		hyu *= 2; // double in race
+
+	for (i = 0; i < MAXPLAYERS; i++)
+	{
+		if (playeringame[i] && players[i].mo && players[i].mo->health > 0 && players[i].playerstate == PST_LIVE
+			&& player != &players[i] && !players[i].exiting && !players[i].spectator // Player in-game
+
+			// Can steal from this player
+			&& (gametype == GT_RACE //&& players[i].position < player->position)
+			|| ((gametyperules & GTR_BUMPERS) && players[i].bumpers > 0))
+
+			// Has an item
+			&& (players[i].itemtype
+			&& players[i].itemamount
+			&& !(players[i].pflags & PF_ITEMOUT)))
+		{
+			playerswappable[numplayers] = i;
+			numplayers++;
+		}
+	}
+
+	prandom = P_RandomFixed();
+	S_StartSound(player->mo, sfx_s3k92);
+
+	if (sink && numplayers > 0 && cv_kitchensink.value) // BEHOLD THE KITCHEN SINK
+	{
+		player->hyudorotimer = hyu;
+		player->stealingtimer = stealtime;
+
+		player->itemtype = KITEM_KITCHENSINK;
+		player->itemamount = 1;
+		K_UnsetItemOut(player);
+		return;
+	}
+	else if ((gametype == GT_RACE && player->position == 1) || numplayers == 0) // No-one can be stolen from? Oh well...
+	{
+		player->hyudorotimer = hyu;
+		player->stealingtimer = stealtime;
+		return;
+	}
+	else if (numplayers == 1) // With just 2 players, we just need to set the other player to be the one to steal from
+	{
+		stealplayer = playerswappable[numplayers-1];
+	}
+	else if (numplayers > 1) // We need to choose between the available candidates for the 2nd player
+	{
+		stealplayer = playerswappable[prandom%(numplayers-1)];
+	}
+
+	if (stealplayer > -1) // Now here's where we do the stealing, has to be done here because we still know the player we're stealing from
+	{
+		player->hyudorotimer = hyu;
+		player->stealingtimer = stealtime;
+		players[stealplayer].stealingtimer = -stealtime;
+
+		player->itemtype = players[stealplayer].itemtype;
+		player->itemamount = players[stealplayer].itemamount;
+		K_UnsetItemOut(player);
+
+		players[stealplayer].itemtype = KITEM_NONE;
+		players[stealplayer].itemamount = 0;
+		K_UnsetItemOut(&players[stealplayer]);
+
+		if (P_IsDisplayPlayer(&players[stealplayer]) && !r_splitscreen)
+			S_StartSound(NULL, sfx_s3k92);
+	}
+}
+#endif
+
 void K_DoSneaker(player_t *player, INT32 type)
 {
 

@@ -1978,7 +1978,7 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, UINT8 damaget
 		 || target->type == MT_DROPTARGET || target->type == MT_DROPTARGET_SHIELD
 		 || target->type == MT_EGGMANITEM || target->type == MT_EGGMANITEM_SHIELD
 		 || target->type == MT_BALLHOG || target->type == MT_SPB
-		 || target->type == MT_GACHABOM || target->type == MT_GHZBALL || target->type == MT_AFTERBURNER_JAWZ 		//SCS ADD
+		 || target->type == MT_GACHABOM || target->type == MT_AFTERBURNER_JAWZ 		//SCS ADD
 		 || target->type == MT_ICEDUSCRYSTAL || target->type == MT_ICEDUSCRYSTAL_SHIELD								//SCS ADD
 		 || target->type == MT_SOLFIRE || target->type == MT_SOLFIRE_SHIELD											//SCS ADD
 		 || target->type == MT_SLICERCLAW																			//SCS ADD
@@ -5051,7 +5051,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, INT32 da
 			}
 
 			// Downgrade orbital items.
-			if (inflictor && !P_MobjWasRemoved(inflictor) && (inflictor->type == MT_ORBINAUT_SHIELD || inflictor->type == MT_JAWZ_SHIELD))		//ICEDUS_SHIELD SOLFIRE_SHIELD		//todo - figure out how these will be "downgraded" if someone bumps into them
+			if (inflictor && !P_MobjWasRemoved(inflictor) && (inflictor->type == MT_ORBINAUT_SHIELD || inflictor->type == MT_JAWZ_SHIELD))
 			{
 				type = DMG_WHUMBLE;
 				downgraded = true;

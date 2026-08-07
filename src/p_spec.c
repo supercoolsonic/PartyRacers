@@ -2174,6 +2174,9 @@ static void K_HandleLapIncrement(player_t *player)
 					UINT16 oldexp = player->exp;
 					K_CheckpointCrossAward(player);
 					K_UpdatePowerLevels(player, player->gradingpointnum, false);
+					
+					//if (player->laps <= numlaps)																		Originally, you'd get Amps every lap - this is the original code for that
+						//K_SpawnAmps(player, 10*(D_NumPlayersInRace() - player->position), player->mo);				Was gonna turn it into a feature, but it may be best as a mod instead - SCS
 
 					if (player->exp > oldexp)
 					{
