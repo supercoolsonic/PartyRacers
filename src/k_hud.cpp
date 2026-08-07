@@ -384,7 +384,7 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_timeoutsticker, "K_STTOUT");
 
 	// Pre-start countdown bulbs
-	sprintf(buffer, "K_BULBxx");
+	snprintf(buffer, sizeof(buffer), "K_BULBxx");
 	for (i = 0; i < 15; i++)
 	{
 		buffer[6] = '0'+((i+1)/10);
@@ -392,7 +392,7 @@ void K_LoadKartHUDGraphics(void)
 		HU_UpdatePatch(&kp_prestartbulb[i], "%s", buffer);
 	}
 
-	sprintf(buffer, "K_SBLBxx");
+	snprintf(buffer, sizeof(buffer), "K_SBLBxx");
 	for (i = 0; i < 15; i++)
 	{
 		buffer[6] = '0'+((i+1)/10);
@@ -461,7 +461,7 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_racefinish[5], "K_2PFINB");
 
 	// Position numbers
-	sprintf(buffer, "KRNKxyz");
+	snprintf(buffer, sizeof(buffer), "KRNKxyz");
 	for (i = 0; i < 10; i++)
 	{
 		buffer[6] = '0'+i;
@@ -486,7 +486,7 @@ void K_LoadKartHUDGraphics(void)
 		}
 	}
 
-	sprintf(buffer, "OPPRNKxx");
+	snprintf(buffer, sizeof(buffer), "OPPRNKxx");
 	for (i = 0; i <= MAXPLAYERS; i++)
 	{
 		buffer[6] = '0'+(i/10);
@@ -494,7 +494,7 @@ void K_LoadKartHUDGraphics(void)
 		HU_UpdatePatch(&kp_facenum[i], "%s", buffer);
 	}
 	
-	sprintf(buffer, "SPDNUMxx");				//SCS ADD
+	snprintf(buffer, sizeof(buffer), "SPDNUMxx");				//SCS ADD
 	for (i = 0; i < 10; i++)
 	{
 		buffer[6] = '0'+(i/10);
@@ -502,7 +502,7 @@ void K_LoadKartHUDGraphics(void)
 		HU_UpdatePatch(&kp_spdnum[i], "%s", buffer);
 	}
 
-	sprintf(buffer, "K_CHILIx");
+	snprintf(buffer, sizeof(buffer), "K_CHILIx");
 	for (i = 0; i < 8; i++)
 	{
 		buffer[7] = '0'+(i+1);
@@ -530,7 +530,7 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_ringsticker[0], "RNGBACKA");
 	HU_UpdatePatch(&kp_ringsticker[1], "RNGBACKB");
 
-	sprintf(buffer, "K_RINGx");
+	snprintf(buffer, sizeof(buffer), "K_RINGx");
 	for (i = 0; i < 6; i++)
 	{
 		buffer[6] = '0'+(i+1);
@@ -540,7 +540,7 @@ void K_LoadKartHUDGraphics(void)
 	// Amps
 	{
 		// Levels 1-6
-		sprintf(buffer, "b_xAMPxx");
+		snprintf(buffer, sizeof(buffer), "b_xAMPxx");
 		for (i = 0; i < 6; i++)
 		{
 			buffer[2] = '0'+i+1;
@@ -570,7 +570,7 @@ void K_LoadKartHUDGraphics(void)
 		}
 	}
 
-	sprintf(buffer, "b_OVRDxx");
+	snprintf(buffer, sizeof(buffer), "b_OVRDxx");
 	for (i = 0; i < 32; i++)
 	{
 		buffer[6] = '0'+((i) / 10);
@@ -578,7 +578,7 @@ void K_LoadKartHUDGraphics(void)
 		HU_UpdatePatch(&kp_overdrive[0][i], "%s", buffer);
 	}
 
-	sprintf(buffer, "bsOVRDxx");
+	snprintf(buffer, sizeof(buffer), "bsOVRDxx");
 	for (i = 0; i < 32; i++)
 	{
 		buffer[6] = '0'+((i) / 10);
@@ -588,7 +588,7 @@ void K_LoadKartHUDGraphics(void)
 
 	HU_UpdatePatch(&kp_ringdebtminus, "RDEBTMIN");
 
-	sprintf(buffer, "SPBRNGxx");
+	snprintf(buffer, sizeof(buffer), "SPBRNGxx");
 	for (i = 0; i < 16; i++)
 	{
 		buffer[6] = '0'+((i+1) / 10);
@@ -599,7 +599,7 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_ringstickersplit[0], "SMRNGBGA");
 	HU_UpdatePatch(&kp_ringstickersplit[1], "SMRNGBGB");
 
-	sprintf(buffer, "K_SRINGx");
+	snprintf(buffer, sizeof(buffer), "K_SRINGx");
 	for (i = 0; i < 6; i++)
 	{
 		buffer[7] = '0'+(i+1);
@@ -608,7 +608,7 @@ void K_LoadKartHUDGraphics(void)
 
 	HU_UpdatePatch(&kp_ringdebtminussmall, "SRDEBTMN");
 
-	sprintf(buffer, "SPBRGSxx");
+	snprintf(buffer, sizeof(buffer), "SPBRGSxx");
 	for (i = 0; i < 16; i++)
 	{
 		buffer[6] = '0'+((i+1) / 10);
@@ -628,14 +628,14 @@ void K_LoadKartHUDGraphics(void)
 	// Speedometer
 	//HU_UpdatePatch(&kp_speedometersticker, "K_SPDMBG");	//SCS EDIT - not using so don't load into memory pls! Thanks!
 
-	sprintf(buffer, "K_SPDMLx");
+	snprintf(buffer, sizeof(buffer), "K_SPDMLx");
 	for (i = 0; i < 4; i++)
 	{
 		buffer[7] = '0'+(i+1);
 		HU_UpdatePatch(&kp_speedometerlabel[i], "%s", buffer);
 	}
 
-	sprintf(buffer, "K_SPDMSx");									//SCS ADD
+	snprintf(buffer, sizeof(buffer), "K_SPDMSx");									//SCS ADD
 	for (i = 0; i < 4; i++)
 	{
 		buffer[7] = '0'+(i+1);
@@ -682,7 +682,7 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_itemmulsticker[0], "K_ITMUL");
 	HU_UpdatePatch(&kp_itemx, "K_ITX");
 	
-	sprintf(buffer, "K_ILISTx");								//SCS ADD START
+	snprintf(buffer, sizeof(buffer), "K_ILISTx");								//SCS ADD START
 	for (i = 0; i < 6; i++)
 	{
 		buffer[7] = '1'+i;
@@ -690,7 +690,7 @@ void K_LoadKartHUDGraphics(void)
 		
 	}
 	
-	sprintf(buffer, "K_ISLSTx");
+	snprintf(buffer, sizeof(buffer), "K_ISLSTx");
 	for (i = 0; i < 4; i++)
 	{
 		buffer[7] = '1'+i;
@@ -716,7 +716,7 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_ringbg[1], "K_SBBG");
 
 	HU_UpdatePatch(&kp_sadface[0], "K_ITSAD");
-	sprintf(buffer, "K_ITSHOx");					//SCS ADD
+	snprintf(buffer, sizeof(buffer), "K_ITSHOx");					//SCS ADD
 	for (i = 0; i < 3; i++)
 	{
 		buffer[7] = '1'+i;
@@ -725,13 +725,13 @@ void K_LoadKartHUDGraphics(void)
 	//HU_UpdatePatch(&kp_sneaker[0], "K_ITSHOE");
 	HU_UpdatePatch(&kp_rocketsneaker[0], "K_ITRSHE");
 
-	sprintf(buffer, "K_ITINVx");
+	snprintf(buffer, sizeof(buffer), "K_ITINVx");
 	for (i = 0; i < 7; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_invincibility[i], "%s", buffer);
 	}
-	sprintf(buffer, "K_ITBANx");					//SCS ADD
+	snprintf(buffer, sizeof(buffer), "K_ITBANx");					//SCS ADD
 	for (i = 0; i < 4; i++)
 	{
 		buffer[7] = '1'+i;
@@ -739,13 +739,13 @@ void K_LoadKartHUDGraphics(void)
 	}
 	//HU_UpdatePatch(&kp_banana[0], "K_ITBANA");
 	HU_UpdatePatch(&kp_eggman[0], "K_ITEGGM");
-	sprintf(buffer, "K_ITORBx");
+	snprintf(buffer, sizeof(buffer), "K_ITORBx");
 	for (i = 0; i < 4; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_orbinaut[i], "%s", buffer);
 	}
-	sprintf(buffer, "K_ITJAWx");				//SCS ADD
+	snprintf(buffer, sizeof(buffer), "K_ITJAWx");				//SCS ADD
 	for (i = 0; i < 2; i++)
 	{
 		buffer[7] = '1'+i;
@@ -770,40 +770,41 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_gachabom[0], "K_ITGBOM");
 	HU_UpdatePatch(&kp_stoneshoe[0], "K_ITSTON");
 	HU_UpdatePatch(&kp_toxomister[0], "K_ITTOX");
-	HU_UpdatePatch(&kp_sjackpot[0], "K_ITSJP");				//SCS ADD
-	HU_UpdatePatch(&kp_wreckball[0], "K_ITGHZB");			//SCS ADD
-	sprintf(buffer, "K_ITEMRx");							//SCS ADD
+	HU_UpdatePatch(&kp_sjackpot[0], "K_ITSJP");				//SCS ADD START
+	HU_UpdatePatch(&kp_wreckball[0], "K_ITGHZB");
+	
+	snprintf(buffer, sizeof(buffer), "K_ITEMRx");
 	for (i = 0; i < 6; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_masteremerald[i], "%s", buffer);
 	}
-	sprintf(buffer, "K_ITPCKx");							//SCS ADD
+	snprintf(buffer, sizeof(buffer), "K_ITPCKx");
 	for (i = 0; i < 9; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_pickpockethyu[i], "%s", buffer);
 	}
-	HU_UpdatePatch(&kp_yellowspogospring[0], "K_ITYOGO");			//SCS ADD
-	HU_UpdatePatch(&kp_bluepogospring[0], "K_ITBOGO");			//SCS ADD
-	sprintf(buffer, "K_ITTSNx");							//SCS ADD
+	HU_UpdatePatch(&kp_yellowspogospring[0], "K_ITYOGO");
+	HU_UpdatePatch(&kp_bluepogospring[0], "K_ITBOGO");
+	snprintf(buffer, sizeof(buffer), "K_ITTSNx");
 	for (i = 0; i < 9; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_timestone[i], "%s", buffer);
 	}
 	HU_UpdatePatch(&kp_timestone[9], "K_ITTSN10");
-	HU_UpdatePatch(&kp_normalshield[0], "K_ITSHLD");			//SCS ADD
-	HU_UpdatePatch(&kp_megachopper[0], "K_ITMCHP");			//SCS ADD
-	HU_UpdatePatch(&kp_armashield[0], "K_ITARMA");			//SCS ADD
-	HU_UpdatePatch(&kp_aburnerjawz[0], "K_ITABJZ");			//SCS ADD
-	HU_UpdatePatch(&kp_pressuremine[0], "K_ITPRMN");			//SCS ADD
-	HU_UpdatePatch(&kp_chamblaster[0], "K_ITCBLR");			//SCS ADD
-	HU_UpdatePatch(&kp_eggblaster[0], "K_ITXEGB");			//SCS ADD
-	HU_UpdatePatch(&kp_ringgun[0], "K_ITXSNP");			//SCS ADD
-	HU_UpdatePatch(&kp_butlerhyu[0], "K_ITHYUB");			//SCS ADD
-	HU_UpdatePatch(&kp_octus[0], "K_ITTAKN");			//SCS ADD
-	HU_UpdatePatch(&kp_slicer[0], "K_ITSLIC");			//SCS ADD
+	HU_UpdatePatch(&kp_normalshield[0], "K_ITSHLD");
+	HU_UpdatePatch(&kp_megachopper[0], "K_ITMCHP");
+	HU_UpdatePatch(&kp_armashield[0], "K_ITARMA");
+	HU_UpdatePatch(&kp_aburnerjawz[0], "K_ITABJZ");
+	HU_UpdatePatch(&kp_pressuremine[0], "K_ITPRMN");
+	HU_UpdatePatch(&kp_chamblaster[0], "K_ITCBLR");
+	HU_UpdatePatch(&kp_eggblaster[0], "K_ITXEGB");
+	HU_UpdatePatch(&kp_ringgun[0], "K_ITXSNP");
+	HU_UpdatePatch(&kp_butlerhyu[0], "K_ITHYUB");
+	HU_UpdatePatch(&kp_octus[0], "K_ITTAKN");
+	HU_UpdatePatch(&kp_slicer[0], "K_ITSLIC");			//SCS ADD END
 	HU_UpdatePatch(&kp_bar[0], "K_RBBAR");
 	HU_UpdatePatch(&kp_doublebar[0], "K_RBBAR2");
 	HU_UpdatePatch(&kp_triplebar[0], "K_RBBAR3");
@@ -811,44 +812,44 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_seven[0], "K_RBSEV");
 	HU_UpdatePatch(&kp_jackpot[0], "K_RBJACK");
 	
-	sprintf(buffer, "K_ITICEx");					//SCS ADD
+	snprintf(buffer, sizeof(buffer), "K_ITICEx");					//SCS ADD START
 	for (i = 0; i < 4; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_icedus[i], "%s", buffer);
 	}
 	
-	sprintf(buffer, "K_ITSOLx");					//SCS ADD
+	snprintf(buffer, sizeof(buffer), "K_ITSOLx");
 	for (i = 0; i < 4; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_sol[i], "%s", buffer);
 	}
 
-	HU_UpdatePatch(&kp_ringemeralds[0], "K_REME1");	//SCS ADD
-	HU_UpdatePatch(&kp_ringemeralds[1], "K_REME2");	//SCS ADD
-	HU_UpdatePatch(&kp_ringemeralds[2], "K_REME3");	//SCS ADD
-	HU_UpdatePatch(&kp_ringemeralds[3], "K_REME4");	//SCS ADD
-	HU_UpdatePatch(&kp_ringemeralds[4], "K_REME5");	//SCS ADD
-	HU_UpdatePatch(&kp_ringemeralds[5], "K_REME6");	//SCS ADD
-	HU_UpdatePatch(&kp_ringemeralds[6], "K_REME7");	//SCS ADD
+	HU_UpdatePatch(&kp_ringemeralds[0], "K_REME1");
+	HU_UpdatePatch(&kp_ringemeralds[1], "K_REME2");
+	HU_UpdatePatch(&kp_ringemeralds[2], "K_REME3");
+	HU_UpdatePatch(&kp_ringemeralds[3], "K_REME4");
+	HU_UpdatePatch(&kp_ringemeralds[4], "K_REME5");
+	HU_UpdatePatch(&kp_ringemeralds[5], "K_REME6");
+	HU_UpdatePatch(&kp_ringemeralds[6], "K_REME7");
 	
-	HU_UpdatePatch(&kp_ringemeraldssmall[0], "K_REMS1");	//SCS ADD
-	HU_UpdatePatch(&kp_ringemeraldssmall[1], "K_REMS2");	//SCS ADD
-	HU_UpdatePatch(&kp_ringemeraldssmall[2], "K_REMS3");	//SCS ADD
-	HU_UpdatePatch(&kp_ringemeraldssmall[3], "K_REMS4");	//SCS ADD
-	HU_UpdatePatch(&kp_ringemeraldssmall[4], "K_REMS5");	//SCS ADD
-	HU_UpdatePatch(&kp_ringemeraldssmall[5], "K_REMS6");	//SCS ADD
-	HU_UpdatePatch(&kp_ringemeraldssmall[6], "K_REMS7");	//SCS ADD
+	HU_UpdatePatch(&kp_ringemeraldssmall[0], "K_REMS1");
+	HU_UpdatePatch(&kp_ringemeraldssmall[1], "K_REMS2");
+	HU_UpdatePatch(&kp_ringemeraldssmall[2], "K_REMS3");
+	HU_UpdatePatch(&kp_ringemeraldssmall[3], "K_REMS4");
+	HU_UpdatePatch(&kp_ringemeraldssmall[4], "K_REMS5");
+	HU_UpdatePatch(&kp_ringemeraldssmall[5], "K_REMS6");
+	HU_UpdatePatch(&kp_ringemeraldssmall[6], "K_REMS7");
 	
-	sprintf(buffer, "K_ITBONx");							//SCS ADD
+	snprintf(buffer, sizeof(buffer), "K_ITBONx");
 	for (i = 0; i < 4; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_ringbonus[i], "%s", buffer);
-	}
+	}														//SCS ADD END
 
-	sprintf(buffer, "FSMFGxxx");
+	snprintf(buffer, sizeof(buffer), "FSMFGxxx");
 	for (i = 0; i < FLAMESHIELD_MAX; i++)
 	{
 		buffer[5] = '0'+((i+1)/100);
@@ -857,7 +858,7 @@ void K_LoadKartHUDGraphics(void)
 		HU_UpdatePatch(&kp_flameshieldmeter[i][0], "%s", buffer);
 	}
 
-	sprintf(buffer, "FSMBGxxx");
+	snprintf(buffer, sizeof(buffer), "FSMBGxxx");
 	for (i = 0; i < FLAMESHIELD_MAX; i++)
 	{
 		buffer[5] = '0'+((i+1)/100);
@@ -875,7 +876,7 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_sadface[1], "K_ISSAD");
 	HU_UpdatePatch(&kp_sneaker[3], "K_ISSHOE");			//SCS EDIT
 	HU_UpdatePatch(&kp_rocketsneaker[1], "K_ISRSHE");
-	sprintf(buffer, "K_ISINVx");
+	snprintf(buffer, sizeof(buffer), "K_ISINVx");
 	for (i = 0; i < 6; i++)
 	{
 		buffer[7] = '1'+i;
@@ -903,30 +904,30 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_gachabom[1], "K_ISGBOM");
 	HU_UpdatePatch(&kp_stoneshoe[1], "K_ISSTON");
 	HU_UpdatePatch(&kp_toxomister[1], "K_ISTOX");
-	HU_UpdatePatch(&kp_sjackpot[1], "K_ISSJP");				//SCS ADD
-	HU_UpdatePatch(&kp_wreckball[1], "K_ISGHZB");			//SCS ADD
-	sprintf(buffer, "K_ISEMRx");							//SCS ADD
+	HU_UpdatePatch(&kp_sjackpot[1], "K_ISSJP");				//SCS ADD START
+	HU_UpdatePatch(&kp_wreckball[1], "K_ISGHZB");
+	snprintf(buffer, sizeof(buffer), "K_ISEMRx");
 	for (i = 0; i < 6; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_masteremerald[i+6], "%s", buffer);
 	}
-	sprintf(buffer, "K_ISPCKx");							//SCS ADD
+	snprintf(buffer, sizeof(buffer), "K_ISPCKx");
 	for (i = 0; i < 3; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_pickpockethyu[i+9], "%s", buffer);
 	}
-	HU_UpdatePatch(&kp_yellowspogospring[1], "K_ISYOGO");			//SCS ADD
-	HU_UpdatePatch(&kp_bluepogospring[1], "K_ISBOGO");			//SCS ADD
-	sprintf(buffer, "K_ISTSNx");							//SCS ADD
+	HU_UpdatePatch(&kp_yellowspogospring[1], "K_ISYOGO");
+	HU_UpdatePatch(&kp_bluepogospring[1], "K_ISBOGO");
+	snprintf(buffer, sizeof(buffer), "K_ISTSNx");
 	for (i = 0; i < 9; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_timestone[i+10], "%s", buffer);
 	}
 	
-	sprintf(buffer, "K_ISBONx");							//SCS ADD
+	snprintf(buffer, sizeof(buffer), "K_ISBONx");
 	for (i = 0; i < 4; i++)
 	{
 		buffer[7] = '1'+i;
@@ -934,19 +935,19 @@ void K_LoadKartHUDGraphics(void)
 	}
 	
 	HU_UpdatePatch(&kp_timestone[19], "K_ISTSN10");
-	HU_UpdatePatch(&kp_normalshield[1], "K_ISSHLD");		//SCS ADD
-	HU_UpdatePatch(&kp_megachopper[1], "K_ISMCHP");			//SCS ADD
-	HU_UpdatePatch(&kp_armashield[1], "K_ISARMA");			//SCS ADD
-	HU_UpdatePatch(&kp_aburnerjawz[1], "K_ISABJZ");			//SCS ADD
-	HU_UpdatePatch(&kp_pressuremine[1], "K_ISPRMN");		//SCS ADD
-	HU_UpdatePatch(&kp_chamblaster[1], "K_ISCBLR");			//SCS ADD
-	HU_UpdatePatch(&kp_eggblaster[1], "K_ISXEGB");			//SCS ADD
-	HU_UpdatePatch(&kp_ringgun[1], "K_ISXSNP");				//SCS ADD
-	HU_UpdatePatch(&kp_butlerhyu[1], "K_ISHYUB");			//SCS ADD
-	HU_UpdatePatch(&kp_octus[1], "K_ISTAKN");				//SCS ADD
-	HU_UpdatePatch(&kp_icedus[4], "K_ISICED");				//SCS ADD
-	HU_UpdatePatch(&kp_slicer[1], "K_ISSLIC");				//SCS ADD
-	HU_UpdatePatch(&kp_sol[4], "K_ISSOLF");					//SCS ADD
+	HU_UpdatePatch(&kp_normalshield[1], "K_ISSHLD");
+	HU_UpdatePatch(&kp_megachopper[1], "K_ISMCHP");
+	HU_UpdatePatch(&kp_armashield[1], "K_ISARMA");
+	HU_UpdatePatch(&kp_aburnerjawz[1], "K_ISABJZ");
+	HU_UpdatePatch(&kp_pressuremine[1], "K_ISPRMN");
+	HU_UpdatePatch(&kp_chamblaster[1], "K_ISCBLR");
+	HU_UpdatePatch(&kp_eggblaster[1], "K_ISXEGB");
+	HU_UpdatePatch(&kp_ringgun[1], "K_ISXSNP");
+	HU_UpdatePatch(&kp_butlerhyu[1], "K_ISHYUB");
+	HU_UpdatePatch(&kp_octus[1], "K_ISTAKN");
+	HU_UpdatePatch(&kp_icedus[4], "K_ISICED");
+	HU_UpdatePatch(&kp_slicer[1], "K_ISSLIC");
+	HU_UpdatePatch(&kp_sol[4], "K_ISSOLF");					//SCS ADD END
 	HU_UpdatePatch(&kp_bar[1], "K_SBBAR");
 	HU_UpdatePatch(&kp_doublebar[1], "K_SBBAR2");
 	HU_UpdatePatch(&kp_triplebar[1], "K_SBBAR3");
@@ -969,7 +970,7 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_seven[3], "K_ISPYSEVE");
 	HU_UpdatePatch(&kp_jackpot[3], "K_ISPYJACK");			//SCS ADD END
 
-	sprintf(buffer, "FSMFSxxx");
+	snprintf(buffer, sizeof(buffer), "FSMFSxxx");
 	for (i = 0; i < 120; i++)
 	{
 		buffer[5] = '0'+((i+1)/100);
@@ -978,7 +979,7 @@ void K_LoadKartHUDGraphics(void)
 		HU_UpdatePatch(&kp_flameshieldmeter[i][1], "%s", buffer);
 	}
 
-	sprintf(buffer, "FSMBS0xx");
+	snprintf(buffer, sizeof(buffer), "FSMBS0xx");
 	for (i = 0; i < 120; i++)
 	{
 		buffer[5] = '0'+((i+1)/100);
@@ -994,7 +995,7 @@ void K_LoadKartHUDGraphics(void)
 	//HU_UpdatePatch(&kp_sadface[2], "ISPYSAD");
 	HU_UpdatePatch(&kp_sneaker[4], "ISPYSHOE");			//SCS EDIT
 	HU_UpdatePatch(&kp_rocketsneaker[2], "ISPYRSHE");
-	sprintf(buffer, "ISPYINVx");
+	snprintf(buffer, sizeof(buffer), "ISPYINVx");
 	for (i = 0; i < 6; i++)
 	{
 		buffer[7] = '1'+i;
@@ -1022,30 +1023,29 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_gachabom[2], "ISPYGBOM");
 	HU_UpdatePatch(&kp_stoneshoe[2], "ISPYSTON");
 	HU_UpdatePatch(&kp_toxomister[2], "ISPYTOX");
-	HU_UpdatePatch(&kp_sjackpot[2], "ISPYSJP");				//SCS ADD
-	HU_UpdatePatch(&kp_wreckball[2], "ISPYGHZB");			//SCS ADD
-	sprintf(buffer, "ISPYEMRx");							//SCS ADD
+	HU_UpdatePatch(&kp_sjackpot[2], "ISPYSJP");				//SCS ADD START
+	HU_UpdatePatch(&kp_wreckball[2], "ISPYGHZB");
+	snprintf(buffer, sizeof(buffer), "ISPYEMRx");
 	for (i = 0; i < 6; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_masteremerald[i+12], "%s", buffer);
 	}
-	sprintf(buffer, "ISPYPCKx");							//SCS ADD
+	snprintf(buffer, sizeof(buffer), "ISPYPCKx");
 	for (i = 0; i < 3; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_pickpockethyu[i+12], "%s", buffer);
 	}
-	HU_UpdatePatch(&kp_yellowspogospring[2], "ISPYYOGO");			//SCS ADD
-	HU_UpdatePatch(&kp_bluepogospring[2], "ISPYBOGO");			//SCS ADD
-	sprintf(buffer, "ISPYSTNx");							//SCS ADD
+	HU_UpdatePatch(&kp_yellowspogospring[2], "ISPYYOGO");
+	HU_UpdatePatch(&kp_bluepogospring[2], "ISPYBOGO");
+	snprintf(buffer, sizeof(buffer), "ISPYSTNx");
 	for (i = 0; i < 9; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_timestone[i+20], "%s", buffer);
 	}
-
-	sprintf(buffer, "K_ISPYBONx");							//SCS ADD
+	snprintf(buffer, sizeof(buffer), "K_ISPYBONx");
 	for (i = 0; i < 4; i++)
 	{
 		buffer[7] = '1'+i;
@@ -1053,22 +1053,22 @@ void K_LoadKartHUDGraphics(void)
 	}	
 	
 	HU_UpdatePatch(&kp_timestone[29], "ISPYSTN10");
-	HU_UpdatePatch(&kp_normalshield[2], "ISPYSHLD");	//SCS ADD
-	HU_UpdatePatch(&kp_megachopper[2], "ISPYMCHP");		//SCS ADD
-	HU_UpdatePatch(&kp_armashield[2], "ISPYARMA");		//SCS ADD
-	HU_UpdatePatch(&kp_aburnerjawz[2], "ISPYABJZ");		//SCS ADD
-	HU_UpdatePatch(&kp_pressuremine[2], "ISPYPRMN");	//SCS ADD
-	HU_UpdatePatch(&kp_chamblaster[2], "ISPYCBLR");		//SCS ADD
-	HU_UpdatePatch(&kp_eggblaster[2], "ISPYXEGB");		//SCS ADD
-	HU_UpdatePatch(&kp_ringgun[2], "ISPYXSNP");			//SCS ADD
-	HU_UpdatePatch(&kp_butlerhyu[2], "ISPYHYUB");		//SCS ADD
-	HU_UpdatePatch(&kp_octus[2], "ISPYTAKN");			//SCS ADD
-	HU_UpdatePatch(&kp_icedus[5], "ISPYICED");			//SCS ADD
-	HU_UpdatePatch(&kp_slicer[2], "ISPYSLIC");			//SCS ADD
-	HU_UpdatePatch(&kp_sol[5], "ISPYSOLF");				//SCS ADD
+	HU_UpdatePatch(&kp_normalshield[2], "ISPYSHLD");
+	HU_UpdatePatch(&kp_megachopper[2], "ISPYMCHP");
+	HU_UpdatePatch(&kp_armashield[2], "ISPYARMA");
+	HU_UpdatePatch(&kp_aburnerjawz[2], "ISPYABJZ");
+	HU_UpdatePatch(&kp_pressuremine[2], "ISPYPRMN");
+	HU_UpdatePatch(&kp_chamblaster[2], "ISPYCBLR");
+	HU_UpdatePatch(&kp_eggblaster[2], "ISPYXEGB");
+	HU_UpdatePatch(&kp_ringgun[2], "ISPYXSNP");
+	HU_UpdatePatch(&kp_butlerhyu[2], "ISPYHYUB");
+	HU_UpdatePatch(&kp_octus[2], "ISPYTAKN");
+	HU_UpdatePatch(&kp_icedus[5], "ISPYICED");
+	HU_UpdatePatch(&kp_slicer[2], "ISPYSLIC");
+	HU_UpdatePatch(&kp_sol[5], "ISPYSOLF");				//SCS ADD END
 
 	// CHECK indicators
-	sprintf(buffer, "K_CHECKx");
+	snprintf(buffer, sizeof(buffer), "K_CHECKx");
 	for (i = 0; i < 9; i++)
 	{
 		//buffer[6] = '0'+(i / 10);
@@ -1081,7 +1081,7 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_check[11], "K_CHECKC");
 
 	// Rival indicators
-	sprintf(buffer, "K_RIVALx");
+	snprintf(buffer, sizeof(buffer), "K_RIVALx");
 	for (i = 0; i < 2; i++)
 	{
 		buffer[7] = '1'+i;
@@ -1089,7 +1089,7 @@ void K_LoadKartHUDGraphics(void)
 	}
 
 	// Rival indicators
-	sprintf(buffer, "K_SSPLxx");
+	snprintf(buffer, sizeof(buffer), "K_SSPLxx");
 	for (i = 0; i < 4; i++)
 	{
 		buffer[6] = 'A'+i;
@@ -1105,7 +1105,7 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_typdot, "K_TYPDOT");
 
 	// Eggman warning numbers
-	sprintf(buffer, "K_EGGNx");
+	snprintf(buffer, sizeof(buffer), "K_EGGNx");
 	for (i = 0; i < 6; i++)
 	{
 		buffer[6] = '0'+i;
@@ -1118,7 +1118,7 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_fpview[2], "VIEWC0E0");
 
 	// Input UI Wheel
-	sprintf(buffer, "K_WHEELx");
+	snprintf(buffer, sizeof(buffer), "K_WHEELx");
 	for (i = 0; i < 5; i++)
 	{
 		buffer[7] = '0'+i;
@@ -1126,7 +1126,7 @@ void K_LoadKartHUDGraphics(void)
 	}
 
 	// HERE COMES A NEW CHALLENGER
-	sprintf(buffer, "K_CHALxx");
+	snprintf(buffer, sizeof(buffer), "K_CHALxx");
 	for (i = 0; i < 25; i++)
 	{
 		buffer[6] = '0'+((i+1)/10);
@@ -1135,14 +1135,14 @@ void K_LoadKartHUDGraphics(void)
 	}
 
 	// Lap start animation
-	sprintf(buffer, "K_LAP0x");
+	snprintf(buffer, sizeof(buffer), "K_LAP0x");
 	for (i = 0; i < 7; i++)
 	{
 		buffer[6] = '0'+(i+1);
 		HU_UpdatePatch(&kp_lapanim_lap[i], "%s", buffer);
 	}
 
-	sprintf(buffer, "K_LAPFxx");
+	snprintf(buffer, sizeof(buffer), "K_LAPFxx");
 	for (i = 0; i < 11; i++)
 	{
 		buffer[6] = '0'+((i+1)/10);
@@ -1150,7 +1150,7 @@ void K_LoadKartHUDGraphics(void)
 		HU_UpdatePatch(&kp_lapanim_final[i], "%s", buffer);
 	}
 
-	sprintf(buffer, "K_LAPNxx");
+	snprintf(buffer, sizeof(buffer), "K_LAPNxx");
 	for (i = 0; i < 10; i++)
 	{
 		buffer[6] = '0'+i;
@@ -1161,14 +1161,14 @@ void K_LoadKartHUDGraphics(void)
 		}
 	}
 
-	sprintf(buffer, "K_LAPE0x");
+	snprintf(buffer, sizeof(buffer), "K_LAPE0x");
 	for (i = 0; i < 2; i++)
 	{
 		buffer[7] = '0'+(i+1);
 		HU_UpdatePatch(&kp_lapanim_emblem[i], "%s", buffer);
 	}
 
-	sprintf(buffer, "K_LAPH0x");
+	snprintf(buffer, sizeof(buffer), "K_LAPH0x");
 	for (i = 0; i < 3; i++)
 	{
 		buffer[7] = '0'+(i+1);
@@ -1178,14 +1178,14 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_yougotem, "YOUGOTEM");
 	HU_UpdatePatch(&kp_itemminimap, "MMAPITEM");
 
-	sprintf(buffer, "ALAGLESx");
+	snprintf(buffer, sizeof(buffer), "ALAGLESx");
 	for (i = 0; i < 10; ++i)
 	{
 		buffer[7] = '0'+i;
 		HU_UpdatePatch(&kp_alagles[i], "%s", buffer);
 	}
 
-	sprintf(buffer, "BLAGLESx");
+	snprintf(buffer, sizeof(buffer), "BLAGLESx");
 	for (i = 0; i < 6; ++i)
 	{
 		buffer[7] = '0'+i;
@@ -1202,7 +1202,7 @@ void K_LoadKartHUDGraphics(void)
 
 	//HU_UpdatePatch(&kp_trickcool[0], "K_COOL1");
 	//HU_UpdatePatch(&kp_trickcool[1], "K_COOL2");
-	HU_UpdatePatch(&kp_trickcool[0], "TRKTXT_0");		//SCS ADD
+	HU_UpdatePatch(&kp_trickcool[0], "TRKTXT_0");		//SCS ADD START
 	HU_UpdatePatch(&kp_trickcool[1], "TRKTXT_1");
 	HU_UpdatePatch(&kp_trickcool[2], "TRKTXT_2");
 	HU_UpdatePatch(&kp_trickcool[3], "TRKTXT_3");
@@ -1221,26 +1221,26 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_trickcool[16], "TRKTXTs6");
 	HU_UpdatePatch(&kp_trickcool[17], "TRKTXTs7");
 	HU_UpdatePatch(&kp_trickcool[18], "TRKTXTs8");
-	HU_UpdatePatch(&kp_trickcool[19], "TRKTXTs9");
+	HU_UpdatePatch(&kp_trickcool[19], "TRKTXTs9");		//SCS ADD END
 
 	HU_UpdatePatch(&kp_autoroulette, "A11YITEM");
 	HU_UpdatePatch(&kp_autoring, "A11YRING");
 
-	sprintf(buffer, "K_BOSB0x");
+	snprintf(buffer, sizeof(buffer), "K_BOSB0x");
 	for (i = 0; i < 8; i++)
 	{
 		buffer[7] = '0'+((i+1)%10);
 		HU_UpdatePatch(&kp_bossbar[i], "%s", buffer);
 	}
 
-	sprintf(buffer, "K_BOSR0x");
+	snprintf(buffer, sizeof(buffer), "K_BOSR0x");
 	for (i = 0; i < 4; i++)
 	{
 		buffer[7] = '0'+((i+1)%10);
 		HU_UpdatePatch(&kp_bossret[i], "%s", buffer);
 	}
 
-	sprintf(buffer, "HCAPARxx");
+	snprintf(buffer, sizeof(buffer), "HCAPARxx");
 	for (i = 0; i < 2; i++)
 	{
 		buffer[6] = 'A'+i;
@@ -1252,84 +1252,84 @@ void K_LoadKartHUDGraphics(void)
 		}
 	}
 
-	sprintf(buffer, "HUDCAPDx");
+	snprintf(buffer, sizeof(buffer), "HUDCAPDx");
 	for (i = 0; i < 2; i++)
 	{
 		buffer[7] = '0'+i;
 		HU_UpdatePatch(&kp_capsuletarget_far_text[i], "%s", buffer);
 	}
 
-	sprintf(buffer, "HUDCAPCx");
+	snprintf(buffer, sizeof(buffer), "HUDCAPCx");
 	for (i = 0; i < 2; i++)
 	{
 		buffer[7] = '0'+i;
 		HU_UpdatePatch(&kp_capsuletarget_icon[i], "%s", buffer);
 	}
 
-	sprintf(buffer, "HUDCAPBx");
+	snprintf(buffer, sizeof(buffer), "HUDCAPBx");
 	for (i = 0; i < 2; i++)
 	{
 		buffer[7] = '0'+i;
 		HU_UpdatePatch(&kp_capsuletarget_far[0][i], "%s", buffer);
 	}
 
-	sprintf(buffer, "HUDC4PBx");
+	snprintf(buffer, sizeof(buffer), "HUDC4PBx");
 	for (i = 0; i < 2; i++)
 	{
 		buffer[7] = '0'+i;
 		HU_UpdatePatch(&kp_capsuletarget_far[1][i], "%s", buffer);
 	}
 
-	sprintf(buffer, "HUDCAPAx");
+	snprintf(buffer, sizeof(buffer), "HUDCAPAx");
 	for (i = 0; i < 8; i++)
 	{
 		buffer[7] = '0'+i;
 		HU_UpdatePatch(&kp_capsuletarget_near[0][i], "%s", buffer);
 	}
 
-	sprintf(buffer, "HUDC4PAx");
+	snprintf(buffer, sizeof(buffer), "HUDC4PAx");
 	for (i = 0; i < 8; i++)
 	{
 		buffer[7] = '0'+i;
 		HU_UpdatePatch(&kp_capsuletarget_near[1][i], "%s", buffer);
 	}
 
-	sprintf(buffer, "HUDFLKAx");
+	snprintf(buffer, sizeof(buffer), "HUDFLKAx");
 	for (i = 0; i < 4; i++)
 	{
 		buffer[7] = '0'+i;
 		HU_UpdatePatch(&kp_superflickytarget[0][i], "%s", buffer);
 	}
 
-	sprintf(buffer, "H4PFLKAx");
+	snprintf(buffer, sizeof(buffer), "H4PFLKAx");
 	for (i = 0; i < 4; i++)
 	{
 		buffer[7] = '0'+i;
 		HU_UpdatePatch(&kp_superflickytarget[1][i], "%s", buffer);
 	}
 
-	sprintf(buffer, "SPCNBFAx");
+	snprintf(buffer, sizeof(buffer), "SPCNBFAx");
 	for (i = 0; i < 6; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_spraycantarget_far[0][i], "%s", buffer);
 	}
 
-	sprintf(buffer, "SPCNSFAx");
+	snprintf(buffer, sizeof(buffer), "SPCNSFAx");
 	for (i = 0; i < 6; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_spraycantarget_far[1][i], "%s", buffer);
 	}
 
-	sprintf(buffer, "SPCNBCLx");
+	snprintf(buffer, sizeof(buffer), "SPCNBCLx");
 	for (i = 0; i < 6; i++)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_spraycantarget_near[0][i], "%s", buffer);
 	}
 
-	sprintf(buffer, "SPCNSCLx");
+	snprintf(buffer, sizeof(buffer), "SPCNSCLx");
 	for (i = 0; i < 6; i++)
 	{
 		buffer[7] = '1'+i;
@@ -1412,7 +1412,7 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_duel_4over, "DUEL4_B2");
 	HU_UpdatePatch(&kp_duel_you, "DUEL_YOU");
 
-	sprintf(buffer, "DUELMBxx");
+	snprintf(buffer, sizeof(buffer), "DUELMBxx");
 	for (i = 0; i < MARGINLEVELS; i++)
 	{
 		buffer[6] = '0'+(i/10);
@@ -1491,57 +1491,57 @@ const char *K_GetItemPatch(UINT8 item, boolean tiny)
 			return (tiny ? "K_ISTOX" : "K_ITTOX");
 		case KITEM_STONESHOE:
 			return (tiny ? "K_ISSTON" : "K_ITSTON");
-		case KITEM_SUPERJACKPOT:							//SCS ADD
+		case KITEM_SUPERJACKPOT:							//SCS ADD START
 			return (tiny ? "K_ISSJP" : "K_ITSJP");
-		case KITEM_WRECKINGBALL:							//SCS ADD
+		case KITEM_WRECKINGBALL:
 			return (tiny ? "K_ISGHZB" : "K_ITGHZB");
-		case KITEM_MASTEREMERALD:							//SCS ADD
+		case KITEM_MASTEREMERALD:
 			return (tiny ? "K_ISEMR1" : "K_ITEMR1");
-		case KITEM_PICKPOCKETHYU:							//SCS ADD
+		case KITEM_PICKPOCKETHYU:
 			return (tiny ? "K_ISPCK1" : "K_ITPCK1");
-		case KITEM_YOGOSPRING:								//SCS ADD
+		case KITEM_YOGOSPRING:
 			return (tiny ? "K_ISYOGO" : "K_ITYOGO");
-		case KITEM_TIMESTONE:								//SCS ADD
+		case KITEM_TIMESTONE:
 			return (tiny ? "K_ISTSN1" : "K_ITTSN1");
-		case KITEM_BOGOSPRING:								//SCS ADD
+		case KITEM_BOGOSPRING:
 			return (tiny ? "K_ISBOGO" : "K_ITBOGO");
-		case KITEM_NORMALSHIELD:							//SCS ADD
+		case KITEM_NORMALSHIELD:
 			return (tiny ? "K_ISSHLD" : "K_ITSHLD");
-		case KITEM_MEGACHOPPER:								//SCS ADD
+		case KITEM_MEGACHOPPER:
 			return (tiny ? "K_ISMCHP" : "K_ITMCHP");
-		case KITEM_ARMASHIELD:								//SCS ADD
+		case KITEM_ARMASHIELD:
 			return (tiny ? "K_ISARMA" : "K_ITARMA");
-		case KITEM_ABURNERJAWZ:								//SCS ADD
+		case KITEM_ABURNERJAWZ:
 		case KRITEM_DUALABURNERJAWZ:		
 			return (tiny ? "K_ISABJZ" : "K_ITABJZ");
-		case KITEM_PRESSUREMINE:							//SCS ADD
+		case KITEM_PRESSUREMINE:
 			return (tiny ? "K_ISPRMN" : "K_ITPRMN");
-		case KITEM_CHAMBLASTER:								//SCS ADD
+		case KITEM_CHAMBLASTER:
 			return (tiny ? "K_ISCBLR" : "K_ITCBLR");
-		case KITEM_EGGBLASTER:								//SCS ADD
+		case KITEM_EGGBLASTER:
 			return (tiny ? "K_ISXEGB" : "K_ITXEGB");
-		case KITEM_RINGGUN:									//SCS ADD
+		case KITEM_RINGGUN:
 			return (tiny ? "K_ISXSNP" : "K_ITXSNP");
-		case KITEM_BUTLERHYU:								//SCS ADD
+		case KITEM_BUTLERHYU:
 			return (tiny ? "K_ISHYUB" : "K_ITHYUB");
-		case KITEM_OCTUS:									//SCS ADD
+		case KITEM_OCTUS:
 			return (tiny ? "K_ISTAKN" : "K_ITTAKN");
-		case KITEM_ICEDUS:									//SCS ADD
+		case KITEM_ICEDUS:
 			return (tiny ? "K_ISICED" : "K_ITICE1");
-		case KITEM_SLICER:									//SCS ADD
+		case KITEM_SLICER:
 			return (tiny ? "K_ISSLIC" : "K_ITSLIC");
-		case KITEM_SOL:										//SCS ADD
+		case KITEM_SOL:
 			return (tiny ? "K_ISSOLF" : "K_ITSOL1");
-		case KRITEM_TRIPLEICEDUS:							//SCS ADD
+		case KRITEM_TRIPLEICEDUS:
 			return (tiny ? "K_ISICED" : "K_ITICE3");
-		case KRITEM_QUADICEDUS:								//SCS ADD
+		case KRITEM_QUADICEDUS:
 			return (tiny ? "K_ISICED" : "K_ITICE4");
-		case KRITEM_TRIPLESOL:								//SCS ADD
+		case KRITEM_TRIPLESOL:
 			return (tiny ? "K_ISSOLF" : "K_ITSOL3");
-		case KRITEM_QUADSOL:								//SCS ADD
+		case KRITEM_QUADSOL:
 			return (tiny ? "K_ISSOLF" : "K_ITSOL4");
-		case KITEM_RINGCAPBONUS:							//SCS ADD
-			return (tiny ? "K_ISBON1" : "K_ITBON1");
+		case KITEM_RINGCAPBONUS:
+			return (tiny ? "K_ISBON1" : "K_ITBON1");		//SCS ADD END
 		default:
 			return (tiny ? "K_ISSAD" : "K_ITSAD");
 	}

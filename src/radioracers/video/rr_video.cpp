@@ -835,7 +835,7 @@ void V_RR_DrawStringScaled(
 				return;
 			cx = x;
 			break;
-        case '\x01':
+        case '\x01':/*
             // Emote logic
             if (cx < right) {
 				auto emote_fetch = emote_fetch_map[log_type]; 
@@ -933,7 +933,7 @@ void V_RR_DrawStringScaled(
                 }
             } else {
 				CONS_Printf("uh oh\n");
-			}
+			}*/
             break;
 		default:
 			if ((c & 0xF0) == 0x80)
@@ -1075,7 +1075,7 @@ fixed_t V_RR_StringScaledWidth(
 			case '\n':
 				cx  =   0;
 				break;
-			case '\x01':
+			case '\x01':/*
 				// Emote logic
 				if (emote_fetch_map[chat_log_type_t::CLT_MINI](chat_log_index, emote_tracker_idx) != nullptr) {
 
@@ -1087,7 +1087,7 @@ fixed_t V_RR_StringScaledWidth(
 					cx += cw;
 
 					emote_tracker_idx++;
-				}
+				}*/
 				break;
 			default:
 				if (( c & 0xF0 ) == 0x80 || c == V_STRINGDANCE)

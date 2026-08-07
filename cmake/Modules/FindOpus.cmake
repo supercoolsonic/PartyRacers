@@ -35,8 +35,7 @@ find_package_handle_standard_args(Opus
 if(Opus_FOUND)
 	set(Opus_INCLUDE_DIRS "${Opus_INCLUDE_DIR}")
 	set(Opus_LIBRARIES "${Opus_LIBRARY}")
-
-if(NOT TARGET Opus::opus)
+	if(NOT TARGET Opus::opus)
 		add_library(Opus::opus UNKNOWN IMPORTED)
 		set_target_properties(Opus::opus PROPERTIES
 			IMPORTED_LOCATION "${Opus_LIBRARY}"

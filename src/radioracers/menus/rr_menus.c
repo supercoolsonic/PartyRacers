@@ -548,14 +548,14 @@ menuitem_t OPTIONS_RadioRacersMenu[] =
 	{IT_HEADER, "Chat", NULL,
 		NULL, {NULL}, 0, 0},
 
-	{IT_STRING | IT_CVAR, "Emotes", "Show the funny emotes in the chatbox.",
+	/*{IT_STRING | IT_CVAR, "Emotes", "Show the funny emotes in the chatbox.",			//SCS - Sorry, latest chatbox backend changes on main repo completely shot and killed emotes
 		NULL, {.cvar = &cv_chat_emotes}, 0, 0},
 
 	{IT_STRING | IT_CVAR, "In-Line Previews", "Toggle in-line emote previews.",
 		NULL, {.cvar = &cv_chat_emotes_preview}, 0, 0},
 
 	{IT_STRING | IT_CVAR, "Animated Emotes", "Toggle animated emotes.",
-		NULL, {.cvar = &cv_chat_emotes_animated}, 0, 0},
+		NULL, {.cvar = &cv_chat_emotes_animated}, 0, 0},*/
 
 	{IT_STRING | IT_CVAR, "Menu Button", "Toggle the END key on the side of the chatbox.",
 		NULL, {.cvar = &cv_chat_emotes_button}, 0, 0},

@@ -150,6 +150,6 @@ void RR_ChatEmotes_OnChange(void)
     // Immediately turn off all the emote menus/preview values
     if (!cv_chat_emotes.value)
     {
-        RR_ResetAllEmoteChatInfo();
+        //RR_ResetAllEmoteChatInfo();
     }
 }

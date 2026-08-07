@@ -1319,7 +1319,7 @@ Rloadtextures (INT32 i, INT32 w)
 				// This is INTENTIONAL. Even if software can handle it, very old GL hardware will not.
 				// For the sake of a compatibility baseline, we will not allow anything larger than this.
 				char header[1024];
-				sprintf(header,
+				snprintf(header, sizeof(header),
 					"Texture patch size cannot be greater than %dx%d!\n"
 					"List of affected textures:\n",
 					sizeLimit, sizeLimit);

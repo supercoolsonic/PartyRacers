@@ -7778,6 +7778,7 @@ static boolean P_MobjRegularThink(mobj_t *mobj)
 			}
 		}
 		Obj_MegaChopperThink(mobj);
+		K_MatchFlipFlags(mobj, mobj->target);
 		break;		
 	}
 	case MT_EMERALDORBIT:					//SCS ADD

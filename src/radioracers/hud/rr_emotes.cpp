@@ -31,6 +31,8 @@
 
 // For the chat window
 int hu_radio_tick = 0;
+boolean is_emote_menu_on = false;
+/*
 
 // Emote menu
 std::string emote_menu_query;
@@ -125,7 +127,7 @@ static parse_message_results_t ParseMessageForEmotes(const char* message, int of
      *  so, message_std.find will return std::string::npos.
      *  the loop will iterate as long as it doesn't hit std::string::npos.
      */
-    for (
+    /*for (
             size_t start = message_std.find(":"); 
             start != std::string::npos; 
             start = message_std.find(":", start + 1)
@@ -145,7 +147,7 @@ static parse_message_results_t ParseMessageForEmotes(const char* message, int of
              * ('\x01' + the hypothetical width of the emote)
              */
 
-            emote_t* temp_emote = EMOTES[emote_name];
+           /* emote_t* temp_emote = EMOTES[emote_name];
             if (temp_emote->atlas_id == -1) {
                 patch_t* temp_patch = static_cast<patch_t*>(W_CachePatchNum(temp_emote->frames[0], PU_CACHE));
                 result.found_emote_patches.push_back(temp_patch);
@@ -245,7 +247,7 @@ static word_wrap_results_t word_wrap(
 /**
  * When drawing the mini chat, the original code wraps the text twice.
  * Need to perform the same functionality as word_wrap, but this is just being used for reference.
- */
+ *//*
 static word_wrap_results_t just_word_wrap(
     INT32 w, 
     fixed_t scale, 
@@ -402,7 +404,7 @@ std::unordered_map<chat_log_type_t, std::function<emote_t*(size_t, int)>> emote_
 
 /** 
  * Parts of HU_drawChatLog and HU_drawMiniChat copied over from hu_stuff.c
-*/
+*//*
 #define EMOTE_PADDING_CONST EMOTE_LINE_PADDING_INT + 1
 #define EMOTE_PADDING_CONST_TEXT EMOTE_LINE_PADDING_TEXT_INT + 1
 
@@ -634,7 +636,7 @@ INT32 RR_Parse_ChatMiniLog_For_Lines(
  * Used for the chat input window and mini log chat messages.
  * Unlike the chat log, these draw their own windows so the padding needs to be handled
  * a bit differently.
- */
+ *//*
 static void ParseMessageForChatWindow(
     UINT32 *j,
     char* msg,
@@ -706,7 +708,7 @@ static INT16 GetChatHeightPaddingForWindow(
 
     /**
      * Padding
-     */
+     *//*
     if (typelines > 1) {
         INT16 firstlineheight = 1 * charheight;
         INT32 adjusted_emotelines = emote_lines;
@@ -937,7 +939,7 @@ boolean RR_CheckChatDeleteEmoteForInput(void) {
     return true;
 }
 
-/** Chat stuff */
+/** Chat stuff *//*
 static std::string lc(const std::string &str) {
     std::string lc_str = str;
     std::transform(lc_str.begin(), lc_str.end(), lc_str.begin(), ::tolower);
@@ -1361,7 +1363,7 @@ void RR_DrawChatEmotePreview(
 
 /**
  * RADIO: Emote menu
- */
+ *//*
 
  // Depending on the sort cvar, get the sorted vector or the regular vector
  static std::vector<emote_t*>& get_emote_vector()
@@ -1564,7 +1566,7 @@ static void wrap_emote_menu(INT32 direction) {
          *      max_column = 5 + 2 = 7 
          * 
          * That puts us at the furthest right column (8-1)
-         */
+         *//*
         size_t max_column = start_column + std::min(
             static_cast<size_t>(COLUMNS - 1), 
             total_emotes_on_page > (last_valid_row * COLUMNS)
@@ -1663,7 +1665,7 @@ void RR_ToggleEmoteMenu(void)
 
 /**
  * Discord/Skype-esque menu
- */
+ *//*
 void RR_DrawChatEmoteMenu(
     INT16 x, 
     INT16 y
@@ -1776,7 +1778,7 @@ void RR_DrawChatEmoteMenu(
      * 3.2 (rounded up) = 4
      * 
      * So, that's about 4 pages max. 75 emotes for the first three pages, 5 emotes for the last page.
-     */
+     *//*
 
     size_t max_page = get_max_pages_for_emote_menu();
 
@@ -1953,3 +1955,4 @@ void RR_UpdateFavouriteEmotes(void) {
         update_emote_menu_emotes();
     }
 }
+*/
