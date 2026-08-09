@@ -298,7 +298,7 @@ static menuitem_t OPTIONS_RadioRacersAccessibility[] =
 	{IT_STRING | IT_CVAR, "Dangerous Player Checks", "Draw warning symbols to the side of the HUD for any incoming danger.",
 		NULL, {.cvar = &cv_show_dangerous_player_check}, 0, 0},
 		
-	{IT_STRING | IT_CVAR, "Invert Anti-Gravity Cam", "Flips the camera upside-down when driving upside-down.",
+	{IT_STRING | IT_CVAR, "Invert Anti-Gravity Cam", "Flips the camera upside-down when driving upside-down.",			//SCS ADD
 		NULL, {.cvar = &cv_flipcam}, 0, 0},
 		
 	{IT_SPACE | IT_NOTHING, NULL,  NULL,
@@ -503,6 +503,9 @@ static menuitem_t OPTIONS_RadioRacersFun2[] =														//SCS ADD
 		
 	{IT_STRING | IT_CVAR, "Minimap Colorized SPB", "Should the SPB icon on the minimap tint the color of the player who threw it?",
 		NULL, {.cvar = &cv_toggle_coloredspbminimap}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Garden Top Arrows", "What guidance arrows should the Garden Top show when mounted?",
+		NULL, {.cvar = &cv_toggle_gardentoparrows}, 0, 0},
 		
 };
 

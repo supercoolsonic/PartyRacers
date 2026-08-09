@@ -39,7 +39,8 @@ extern consvar_t cv_toggle_ribbon_signposts;
 extern consvar_t cv_toggle_sparkling_signposts;
 extern consvar_t cv_randomizeitemcapsules;
 extern consvar_t cv_toggle_minirankingshaking;
-extern consvar_t cv_toggle_coloredspbminimap;																						//SCS ADD END
+extern consvar_t cv_toggle_coloredspbminimap;
+extern consvar_t cv_toggle_gardentoparrows;																						//SCS ADD END
 
 // Accessibility
 extern consvar_t cv_applyhaki;                      // Observation Haki mode

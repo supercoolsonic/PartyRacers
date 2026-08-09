@@ -225,10 +225,12 @@ boolean K_EggItemCollide(mobj_t *t1, mobj_t *t2)
 		{
 			Obj_SpawnItemDebrisEffects(t1, t2);
 
-#if 0
+#if 1			//SCS EDIT - have some fun, huh?
 			// Eggbox snipe!
 			if (t1->type == MT_EGGMANITEM && t1->health > 1)
 				S_StartSound(t2, sfx_bsnipe);
+			
+			RR_PushPlayerInteractionToFeed(t1->target, t2, ATTACK_SNIPE, 0);	//SCS ADD
 #endif
 
 			if (t1->target && t1->target->player)

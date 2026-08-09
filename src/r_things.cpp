@@ -2333,6 +2333,13 @@ static void R_ProjectSprite(mobj_t *thing)
 
 	if (RR_ShouldGhostRing(thing) || RR_ShouldGhostRingboxes(thing) || RR_ShouldGhostItemCapsuleParts(thing))	//SCS - RADIO
 		trans = (RF_TRANS60 & RF_TRANSMASK) >> RF_TRANSSHIFT;													//SCS - RADIO
+		
+	else if ((RR_ShouldGhostGardenArrowTop(thing) && papersprite) || (RR_ShouldGhostGardenArrowFloor(thing) && splat))		//SCS ADD START
+	{
+		return;	//Welp, transparency doesn't work. Let's just not render it at all!
+		//CONS_Printf("We should go ghost!\n");
+		//trans = (RF_TRANS10 & RF_TRANSMASK) >> RF_TRANSSHIFT;
+	}																														//SCS ADD END
 
 	// Check if this sprite needs to be rendered like a shadow
 	shadowdraw = (!!(thing->renderflags & RF_SHADOWDRAW) && !(papersprite || splat));

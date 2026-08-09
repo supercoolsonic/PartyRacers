@@ -28,6 +28,8 @@ extern void RR_AnnounceBattleWinner(player_t *player, battle_win_type_t type);
 extern void RR_PlayCountdownJingle(INT16 timer, player_t *player);
 extern boolean RR_IsBattle(void);
 extern boolean RR_ShouldShowEmeraldsInMinimap(void);
+extern boolean RR_ShouldGhostGardenArrowTop(mobj_t *mo);			//SCS ADD
+extern boolean RR_ShouldGhostGardenArrowFloor(mobj_t *mo);			//SCS ADD
 extern boolean RR_ShouldGhostRing(mobj_t *mo);
 extern boolean RR_ShouldGhostRingboxes(mobj_t *mo);
 extern boolean RR_ShouldGhostItemCapsuleParts(mobj_t* mo);
