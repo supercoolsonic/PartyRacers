@@ -1680,9 +1680,11 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 	if (roulette->playing <= 8)	//SCS ADD - trying out different formulas for different amount of players. <= 8, try an almost vanilla formula.
 		largegamescaler = ((roulette->playing*2) * 12 + 112) - (player->position*2);
 		
-	largegamescaler = (largegamescaler * K_GetNumWaypoints())/(((K_GetNumWaypoints()*3)/2)+1);	//SCS TESTING...
-	largegamescaler = min(232, largegamescaler);
-	largegamescaler = max(140, largegamescaler);
+	largegamescaler = (largegamescaler * K_GetNumWaypoints())/(((K_GetNumWaypoints()*3)/2)+1);
+	largegamescaler = min(226, largegamescaler);
+	
+	if (roulette->playing > 2)
+		largegamescaler = max(140, largegamescaler);
 	
 	/*if (!player->bot)
 	{

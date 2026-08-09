@@ -3943,6 +3943,13 @@ static void HWR_DrawSprite(gl_vissprite_t *spr)
 					blendmode = AST_TRANSLUCENT;
 					trans = tr_trans60;
 			}																															//SCS - RADIO END
+			
+			if ((RR_ShouldGhostGardenArrowTop(spr->mobj) && R_ThingIsPaperSprite(spr->mobj)) || (RR_ShouldGhostGardenArrowFloor(spr->mobj) && splat))						//SCS ADD START
+			{
+					return;
+					//blendmode = AST_TRANSLUCENT;
+					//trans = 0;
+			}																																								//SCS ADD END
 
 			blend = HWR_SurfaceBlend(blendmode, trans, &Surf);
 
@@ -5217,7 +5224,6 @@ static void HWR_ProjectSprite(mobj_t *thing)
 			vis->colormap = R_GetTranslationColormap(TC_RAINBOW,static_cast<skincolornum_t>(static_cast<unsigned char>(sparkColor)), GTC_CACHE);
 		}																						//SCS - RADIO END
 	}
-
 	// set top/bottom coords
 	vis->gzt = gzt;
 	vis->gz = gz;

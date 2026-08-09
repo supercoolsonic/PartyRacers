@@ -74,18 +74,18 @@ static patch_t *kp_timesticker;
 static patch_t *kp_timestickerwide;
 static patch_t *kp_lapsticker;
 static patch_t *kp_lapstickerwide;
-static patch_t *kp_lapstickernarrow;
+//static patch_t *kp_lapstickernarrow;		//SCS EDIT - not using atm, so don't load pls!
 static patch_t *kp_exp[2];
 static patch_t *kp_splitlapflag;
-static patch_t *kp_bumpersticker;
-static patch_t *kp_bumperstickerwide;
+//static patch_t *kp_bumpersticker;			//SCS EDIT - not using atm, so don't load pls!
+//static patch_t *kp_bumperstickerwide;		//SCS EDIT - not using atm, so don't load pls!
 static patch_t *kp_capsulesticker;
 static patch_t *kp_capsulestickerwide;
-static patch_t *kp_karmasticker;
+//static patch_t *kp_karmasticker;			//SCS EDIT - not using atm, so don't load pls!
 static patch_t *kp_spheresticker;
 static patch_t *kp_splitspheresticker;
-static patch_t *kp_splitkarmabomb;
-static patch_t *kp_timeoutsticker;
+//static patch_t *kp_splitkarmabomb;		//SCS EDIT - not using atm, so don't load pls!
+//static patch_t *kp_timeoutsticker;		//SCS EDIT - not using atm, so don't load pls!
 
 static patch_t *kp_prestartbulb[15];
 static patch_t *kp_prestartletters[7];
@@ -147,11 +147,11 @@ static patch_t *kp_goal[2][2]; // [skull][4p]
 static patch_t *kp_goalrod[2]; // [4p]
 static patch_t *kp_goaltext1p;
 
-static patch_t *kp_battlewin;
-static patch_t *kp_battlecool;
-static patch_t *kp_battlelose;
-static patch_t *kp_battlewait;
-static patch_t *kp_battleinfo;
+//static patch_t *kp_battlewin;			//SCS EDIT - not using, so don't load into memory pls! Thanks!
+//static patch_t *kp_battlecool;		//SCS EDIT - not using, so don't load into memory pls! Thanks!
+//static patch_t *kp_battlelose;		//SCS EDIT - not using, so don't load into memory pls! Thanks!
+//static patch_t *kp_battlewait;		//SCS EDIT - not using, so don't load into memory pls! Thanks!
+//static patch_t *kp_battleinfo;		//SCS EDIT - not using, so don't load into memory pls! Thanks!
 static patch_t *kp_wanted;
 static patch_t *kp_wantedsplit;
 static patch_t *kp_wantedreticle;
@@ -232,13 +232,13 @@ static patch_t *kp_localtag[4][2];
 static patch_t *kp_talk;
 static patch_t *kp_typdot;
 
-patch_t *kp_eggnum[6];
+patch_t *kp_eggnum[11];	//SCS EDIT
 
 static patch_t *kp_flameshieldmeter[FLAMESHIELD_MAX][2];
 static patch_t *kp_flameshieldmeter_bg[FLAMESHIELD_MAX][2];
 
 static patch_t *kp_fpview[3];
-static patch_t *kp_inputwheel[5];
+//static patch_t *kp_inputwheel[5];			//SCS EDIT - not using, so don't load into memory pls! Thanks!
 
 static patch_t *kp_challenger[25];
 
@@ -251,8 +251,8 @@ static patch_t *kp_lapanim_hand[3];
 static patch_t *kp_yougotem;
 static patch_t *kp_itemminimap;
 
-static patch_t *kp_alagles[10];
-static patch_t *kp_blagles[6];
+//static patch_t *kp_alagles[10];	//SCS EDIT - not using, so don't load into memory pls! Thanks!
+//static patch_t *kp_blagles[6];	//SCS EDIT - not using, so don't load into memory pls! Thanks!
 
 static patch_t *kp_cpu[2];
 patch_t *kp_pickmeup[2];
@@ -369,19 +369,19 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_timestickerwide, "K_STTIMW");
 	HU_UpdatePatch(&kp_lapsticker, "K_STLAPS");
 	HU_UpdatePatch(&kp_lapstickerwide, "K_STLAPW");
-	HU_UpdatePatch(&kp_lapstickernarrow, "K_STLAPN");
+	//HU_UpdatePatch(&kp_lapstickernarrow, "K_STLAPN");		//SCS EDIT - not using atm, so don't load pls!
 	HU_UpdatePatch(&kp_exp[0], "K_STEXP");
 	HU_UpdatePatch(&kp_exp[1], "K_SPTEXP");
 	HU_UpdatePatch(&kp_splitlapflag, "K_SPTLAP");
-	HU_UpdatePatch(&kp_bumpersticker, "K_STBALN");
-	HU_UpdatePatch(&kp_bumperstickerwide, "K_STBALW");
+	//HU_UpdatePatch(&kp_bumpersticker, "K_STBALN");		//SCS EDIT - not using atm, so don't load pls!
+	//HU_UpdatePatch(&kp_bumperstickerwide, "K_STBALW");	//SCS EDIT - not using atm, so don't load pls!
 	HU_UpdatePatch(&kp_capsulesticker, "K_STCAPN");
 	HU_UpdatePatch(&kp_capsulestickerwide, "K_STCAPW");
-	HU_UpdatePatch(&kp_karmasticker, "K_STKARM");
+	//HU_UpdatePatch(&kp_karmasticker, "K_STKARM");			//SCS EDIT - not using atm, so don't load pls!
 	HU_UpdatePatch(&kp_spheresticker, "K_STBSMT");
 	HU_UpdatePatch(&kp_splitspheresticker, "K_SPBSMT");
-	HU_UpdatePatch(&kp_splitkarmabomb, "K_SPTKRM");
-	HU_UpdatePatch(&kp_timeoutsticker, "K_STTOUT");
+	//HU_UpdatePatch(&kp_splitkarmabomb, "K_SPTKRM");		//SCS EDIT - not using atm, so don't load pls!
+	//HU_UpdatePatch(&kp_timeoutsticker, "K_STTOUT");		//SCS EDIT - not using atm, so don't load pls!
 
 	// Pre-start countdown bulbs
 	snprintf(buffer, sizeof(buffer), "K_BULBxx");
@@ -665,11 +665,11 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_goaltext1p, "K_ST1GLC");
 
 	// Battle graphics
-	HU_UpdatePatch(&kp_battlewin, "K_BWIN");
-	HU_UpdatePatch(&kp_battlecool, "K_BCOOL");
-	HU_UpdatePatch(&kp_battlelose, "K_BLOSE");
-	HU_UpdatePatch(&kp_battlewait, "K_BWAIT");
-	HU_UpdatePatch(&kp_battleinfo, "K_BINFO");
+	//HU_UpdatePatch(&kp_battlewin, "K_BWIN");			//SCS EDIT - not using, so don't load into memory pls! Thanks!
+	//HU_UpdatePatch(&kp_battlecool, "K_BCOOL");		//SCS EDIT - not using, so don't load into memory pls! Thanks!
+	//HU_UpdatePatch(&kp_battlelose, "K_BLOSE");		//SCS EDIT - not using, so don't load into memory pls! Thanks!
+	//HU_UpdatePatch(&kp_battlewait, "K_BWAIT");		//SCS EDIT - not using, so don't load into memory pls! Thanks!
+	//HU_UpdatePatch(&kp_battleinfo, "K_BINFO");		//SCS EDIT - not using, so don't load into memory pls! Thanks!
 	HU_UpdatePatch(&kp_wanted, "K_WANTED");
 	HU_UpdatePatch(&kp_wantedsplit, "4PWANTED");
 	HU_UpdatePatch(&kp_wantedreticle, "MMAPWANT");
@@ -1045,7 +1045,7 @@ void K_LoadKartHUDGraphics(void)
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_timestone[i+20], "%s", buffer);
 	}
-	snprintf(buffer, sizeof(buffer), "K_ISPYBONx");
+	snprintf(buffer, sizeof(buffer), "ISPYBONx");
 	for (i = 0; i < 4; i++)
 	{
 		buffer[7] = '1'+i;
@@ -1106,7 +1106,7 @@ void K_LoadKartHUDGraphics(void)
 
 	// Eggman warning numbers
 	snprintf(buffer, sizeof(buffer), "K_EGGNx");
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < 10; i++)							//SCS EDIT - In case I wanna use the other digits later for something idk
 	{
 		buffer[6] = '0'+i;
 		HU_UpdatePatch(&kp_eggnum[i], "%s", buffer);
@@ -1118,12 +1118,12 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_fpview[2], "VIEWC0E0");
 
 	// Input UI Wheel
-	snprintf(buffer, sizeof(buffer), "K_WHEELx");
+	/*snprintf(buffer, sizeof(buffer), "K_WHEELx");		//SCS EDIT - not using, so don't load into memory pls! Thanks!
 	for (i = 0; i < 5; i++)
 	{
 		buffer[7] = '0'+i;
 		HU_UpdatePatch(&kp_inputwheel[i], "%s", buffer);
-	}
+	}*/
 
 	// HERE COMES A NEW CHALLENGER
 	snprintf(buffer, sizeof(buffer), "K_CHALxx");
@@ -1178,19 +1178,19 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_yougotem, "YOUGOTEM");
 	HU_UpdatePatch(&kp_itemminimap, "MMAPITEM");
 
-	snprintf(buffer, sizeof(buffer), "ALAGLESx");
+	/*snprintf(buffer, sizeof(buffer), "ALAGLESx");		//SCS EDIT - not using, so don't load into memory pls! Thanks!
 	for (i = 0; i < 10; ++i)
 	{
 		buffer[7] = '0'+i;
 		HU_UpdatePatch(&kp_alagles[i], "%s", buffer);
 	}
 
-	snprintf(buffer, sizeof(buffer), "BLAGLESx");
+	snprintf(buffer, sizeof(buffer), "BLAGLESx");		//SCS EDIT - not using, so don't load into memory pls! Thanks!
 	for (i = 0; i < 6; ++i)
 	{
 		buffer[7] = '0'+i;
 		HU_UpdatePatch(&kp_blagles[i], "%s", buffer);
-	}
+	}*/
 
 	HU_UpdatePatch(&kp_cpu[0], "K_CPU1");
 	HU_UpdatePatch(&kp_cpu[1], "K_CPU2");

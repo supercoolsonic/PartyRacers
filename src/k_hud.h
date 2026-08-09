@@ -140,7 +140,7 @@ extern patch_t *gen_button_keyleft[2];
 extern patch_t *gen_button_keyright[2];
 extern patch_t *gen_button_keycenter[2];
 
-extern patch_t *kp_eggnum[6];
+extern patch_t *kp_eggnum[11];				//SCS EDIT
 extern patch_t *kp_facenum[MAXPLAYERS+1];
 
 extern patch_t *kp_pickmeup[2];

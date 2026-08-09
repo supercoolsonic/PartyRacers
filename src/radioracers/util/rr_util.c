@@ -107,7 +107,11 @@ void RR_PlayCountdownJingle(INT16 timer, player_t *player) {
         }
     }
 }
-	
+
+static boolean isGTopArrow(mobj_t* mo)			//SCS ADD
+{
+    return (mo->type == MT_GARDENTOPARROW);
+}	
 static boolean isRing(mobj_t* mo)
 {
     return (mo->type == MT_RING || mo->type == MT_FLINGRING);
@@ -133,6 +137,20 @@ boolean RR_ShouldShowEmeraldsInMinimap(void)
     }
     return cv_battle_toggle_emerald_on_minimap.value;
 }
+
+boolean RR_ShouldGhostGardenArrowTop(mobj_t *mo)		//SCS ADD
+{
+    return isGTopArrow(mo) &&
+    !(P_MobjWasRemoved(mo)) && 
+    (cv_toggle_gardentoparrows.value == 2 || cv_toggle_gardentoparrows.value == 4);
+}		
+
+boolean RR_ShouldGhostGardenArrowFloor(mobj_t *mo)		//SCS ADD
+{
+    return isGTopArrow(mo) &&
+    !(P_MobjWasRemoved(mo)) && 
+    (cv_toggle_gardentoparrows.value == 1 || cv_toggle_gardentoparrows.value == 4);
+}		
 
 boolean RR_ShouldGhostRing(mobj_t *mo)
 {

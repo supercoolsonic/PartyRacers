@@ -18205,7 +18205,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 									if (player->itemamount >= 4)
 										S_StartSound(player->mo, sfx_telept);
 									
-									K_IcedusBlastAttack(player->mo, ((180 + 30) * FRACUNIT)*player->itemamount);
+									K_IcedusBlastAttack(player->mo, ((180 + 33) * FRACUNIT)*player->itemamount);
 									K_DropHnextList(player);
 									K_PlayBoostTaunt(player->mo);
 									//K_SetPlayerItemAmount(player, 0);
@@ -18346,8 +18346,8 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 									else
 										S_StartSound(player->mo, sfx_s3k43);
 									
-									P_Thrust(player->mo, player->mo->angle, (30*player->mo->scale/2)*player->itemamount);
-									P_Thrust(player->mo, K_MomentumAngle(player->mo), (30*player->mo->scale/2)*player->itemamount);
+									P_Thrust(player->mo, player->mo->angle, (45*player->mo->scale/2)*player->itemamount);
+									P_Thrust(player->mo, K_MomentumAngle(player->mo), (45*player->mo->scale/2)*player->itemamount);
 									K_PlayBoostTaunt(player->mo);
 									K_DropHnextList(player);
 									//K_SetPlayerItemAmount(player, 0);
@@ -18410,7 +18410,10 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 								player->ringboxawardwindow--;
 								
 								if (player->ringboxawardwindow <= 0)
+								{
+									player->perfectcheckpointstreak = 0;
 									player->itemtype = KITEM_SUPERJACKPOT;					//You ran out of time to clain the prize
+								}
 								else if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
 								{									
 									S_StartSound(player->mo, sfx_itrolk);

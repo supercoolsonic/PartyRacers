@@ -779,7 +779,14 @@ consvar_t cv_obvious_itemreel = Player("obviousitemreels", "No").yes_no().radio(
 //Shake the mini-ranking like in Mini Ranking Plus when a player takes damage?
 consvar_t cv_toggle_minirankingshaking = Player("shakeminiranking", "No").yes_no().radio();
 //Should the little SPB icon on the minimap be colorized the same color of the player that threw it?
-consvar_t cv_toggle_coloredspbminimap = Player("minimapcolorspb", "No").yes_no().radio();						//SCS ADD END
+consvar_t cv_toggle_coloredspbminimap = Player("minimapcolorspb", "No").yes_no().radio();	
+//You can change how many and which garden top guidance arrows appear!
+consvar_t cv_toggle_gardentoparrows = Player("changegardentoarrowvisibility", "overhead").values({						//SCS ADD END
+	{1, "overhead"},
+	{2, "floor"}, 
+	{3, "both"}, 
+	{4, "none"}
+}).radio();
 
 
 

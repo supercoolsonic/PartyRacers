@@ -290,9 +290,9 @@ void RR_DoChatStuff(chat_box_parameters_t parameters) {
     const INT32 charheight = parameters.charheight;
 
     // Is the player trying to quick-select an emote?
-    if (is_emote_preview_on) {
+    //if (is_emote_preview_on) {
 		//RR_DrawChatEmotePreview(chatx, (y-1) + (typelines*charheight), boxw);
-	}
+	//}
 
     // Is the player trying to select an emote from the menu?
 	if (is_emote_menu_on) {
