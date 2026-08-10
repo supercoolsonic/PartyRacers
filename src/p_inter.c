@@ -3001,7 +3001,7 @@ static void AddNullHitlag(player_t *player, tic_t oldHitlag)
 	}
 }
 
-static boolean P_FlashingException(const player_t *player, const mobj_t *inflictor)					//SCS NOTE - what this does is ignore Iframes, not prevent the screen from flashing
+static boolean P_FlashingException(const player_t *player, const mobj_t *inflictor)					//SCS NOTE - what this does is ignore Iframes, not prevent the screen from flashing (Should the mega chopper go here?)
 {
 	if (!inflictor)
 	{

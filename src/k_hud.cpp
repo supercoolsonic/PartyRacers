@@ -3215,7 +3215,7 @@ static void K_drawKartSlotMachine(void)
 	if (stplyr->karthud[khud_itemblink] && (leveltime & 1) && !cv_reducevfx.value)
 	{
 		colormode[1] = TC_BLINK;
-		localcolor[1] = SKINCOLOR_WHITE;
+		//localcolor[1] = SKINCOLOR_WHITE;								//SCS EDIT (comment out) - optimize, it's set below anyway
 
 		// This looks kinda wild with the white-background patch.
 		// RadioRacers: and that's why I'm re-enabling it				//SCS - RADIO

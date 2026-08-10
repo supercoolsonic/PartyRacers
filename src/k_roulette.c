@@ -83,22 +83,22 @@
 static UINT32 K_DynamicItemOddsRace[NUMKARTRESULTS-1][2] =
 {
 	// distance, duplication tolerance
-	{25, 7}, // sneaker
-	{48, 11}, // rocketsneaker
-	{50, 15}, // invincibility
+	{24, 7}, // sneaker
+	{43, 11}, // rocketsneaker
+	{45, 15}, // invincibility
 	{8, 4}, // banana
 	{3, 1}, // eggmark
 	{9, 4}, // orbinaut
 	{16, 4}, // jawz
 	{23, 4}, // mine
 	{1, 3}, // landmine
-	{25, 3}, // ballhog
-	{58, 6}, // selfpropelledbomb
-	{45, 7}, // grow
-	{60, 8}, // shrink
+	{24, 3}, // ballhog
+	{53, 6}, // selfpropelledbomb
+	{40, 7}, // grow
+	{55, 8}, // shrink
 	{1, 1}, // lightningshield
 	{25, 4}, // bubbleshield
-	{56, 9}, // flameshield
+	{51, 9}, // flameshield
 	{1, 2}, // hyudoro
 	{32, 3}, // pogospring
 	{30, 8}, // superring (SPECIAL! distance value specifies when this can NO LONGER appear)
@@ -113,19 +113,19 @@ static UINT32 K_DynamicItemOddsRace[NUMKARTRESULTS-1][2] =
 	{35, 6}, //masteremerald
 	{1, 2}, //pickpockethyu
 	{24, 4}, //yellowpogospring
-	{28, 3}, //timestone
+	{25, 3}, //timestone
 	{43, 1}, //bluepogospring
 	{14, 2}, //normalshield
 	{25, 4}, //megachopper
 	{29, 5}, //armashield
-	{20, 3}, //afterburnerjawz
+	{19, 3}, //afterburnerjawz
 	{12, 4}, //pressuremine
 	{24, 5}, //chameleonblaster
 	{20, 6}, //eggblaster
 	{32, 4}, //ringgun
 	{27, 7}, //butlerhyudoro
 	{15, 3}, //octus
-	{20, 3}, //icedus
+	{18, 3}, //icedus
 	{22, 4}, //slicer
 	{15, 3}, //sol										
 	{60, 1}, // ringbonus (SPECIAL) 	Becomes more accessible with each checkpoint you cross at max rings			//SCS ADD END
@@ -487,6 +487,7 @@ botItemPriority_e K_GetBotItemPriority(kartitems_t result)
 		case KITEM_GARDENTOP:
 		case KITEM_POGOSPRING:		//SCS ADD START
 		case KITEM_SUPERJACKPOT:
+		case KITEM_MEGACHOPPER:	
 		case KITEM_YOGOSPRING:
 		case KITEM_TIMESTONE:
 		case KITEM_BOGOSPRING:
@@ -522,7 +523,6 @@ botItemPriority_e K_GetBotItemPriority(kartitems_t result)
 		case KITEM_FLAMESHIELD:
 		case KITEM_WRECKINGBALL:	//SCS ADD START
 		case KITEM_NORMALSHIELD:
-		case KITEM_MEGACHOPPER:	
 		case KITEM_ABURNERJAWZ:	
 		case KITEM_PRESSUREMINE:
 		case KITEM_CHAMBLASTER:
@@ -1659,7 +1659,7 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 	// If we're too close to 1st in absolute units, crush our top-end item odds down.
 	fixed_t crowdingFirst = 0;
 	if (player->position != 1)
-		crowdingFirst = FixedRescale(K_GetUnscaledFirstDistance(player), 0, 4*DISTVAR, Easing_InCubic, FRACUNIT, 0);
+		crowdingFirst = FixedRescale(K_GetUnscaledFirstDistance(player), 0, 4*DISTVAR, Easing_InCubic, FRACUNIT, 0)/2;	//SCS EDIT - dividing by two
 
 	if ((gametyperules & GTR_CIRCUIT) && !K_Cooperative())
 	{
@@ -1674,21 +1674,21 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 		}
 	}
 
-	fixed_t largegamescaler = (max((min(roulette->playing, 24)*7)/8, 2) * 14 + 112) - player->position; //SCS ADD - new formula to push some items forward a little bit in non-frantic races
+	fixed_t largegamescaler = (max((min(roulette->playing, 24)*3)/4, 2) * 7 + 112) - (roulette->playing/player->position); //SCS ADD - new formula to push some items forward a little bit in non-frantic races
 
 	//fixed_t largegamescaler = roulette->playing * 11 + 115; // Spread out item odds in large games for a less insane experience.
 	if (roulette->playing <= 8)	//SCS ADD - trying out different formulas for different amount of players. <= 8, try an almost vanilla formula.
-		largegamescaler = ((roulette->playing*2) * 12 + 112) - (player->position*2);
+		largegamescaler = (((roulette->playing*3)/2) * 9 + 112) - ((roulette->playing/player->position)*2);
 		
-	largegamescaler = (largegamescaler * K_GetNumWaypoints())/(((K_GetNumWaypoints()*3)/2)+1);
-	largegamescaler = min(226, largegamescaler);
+	largegamescaler = (largegamescaler * K_GetNumWaypoints())/(((K_GetNumWaypoints()*2)/3)+1);
+	largegamescaler = min(335, largegamescaler);
 	
 	if (roulette->playing > 2)
-		largegamescaler = max(140, largegamescaler);
+		largegamescaler = max(240, largegamescaler);
 	
 	/*if (!player->bot)
 	{
-		CONS_Printf("Our waypoint number is %d\n", K_GetNumWaypoints());
+		CONS_Printf("Our waypoint number is %zu\n", K_GetNumWaypoints());
 		CONS_Printf("Our scaler is %d\n", largegamescaler);
 	}*/
 	
@@ -1875,7 +1875,7 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 		{
 			if (!K_IsItemSpeed(i))
 			{
-				deltas[i] = Easing_Linear(loneliness, deltas[i], deltas[i] + (4*DISTVAR));
+				deltas[i] = Easing_Linear(loneliness, deltas[i], deltas[i] + (3*DISTVAR));	//SCS EDIT
 			}
 		}
 	}
@@ -1921,9 +1921,7 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 
 		//if (!player->bot)
 			//CONS_Printf("Ring Box power is %d\n", trueringcappower);
-		
-	//eekum bookum
-		
+	
 	}																				//SCS ADD END
 	//else if (!player->bot)
 		//CONS_Printf("My current perfect checkpoint streak is %d\n", player->perfectcheckpointstreak);
@@ -1969,7 +1967,7 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 		// Conversely, if we're lonely, try not to reselect an item that wouldn't be useful to us
 		// without any players to use it on.
 		if (!K_IsItemSpeed(bestitem))
-			deltapenalty = Easing_Linear(loneliness, deltapenalty, 3*deltapenalty);
+			deltapenalty = Easing_Linear(loneliness, deltapenalty, ((3*deltapenalty)/2));	//SCS EDIT
 
 		// Draw complex odds debugger. This one breaks down all the calcs in order.
 		if (cv_kartdebugdistribution.value > 1)

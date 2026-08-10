@@ -577,7 +577,7 @@ anchor_arrow_in_front (mobj_t *arrow)				//SCS RESTORE
 	mobj_t *top = arrow_top(arrow);
 	mobj_t *rider = top_rider(top);
 	
-	if (!rider)
+	if (!rider)// || !top)
 		return;
 
 	anchor(arrow, top, rider->angle, 2 * rider->radius);
@@ -589,8 +589,8 @@ anchor_arrow_in_front (mobj_t *arrow)				//SCS RESTORE
 		arrow->angle += ANGLE_180;
 	}
 
-	if (rider->standingslope)
-		arrow->floorspriteslope = rider->standingslope;
+	//if (rider->standingslope)									//Welp, it would've cool to have this slope tilting too, but uh, this causes hard crahes and soft crashes. And I have no idea why. But honestly? It looks fine even without it	-SCS
+		//arrow->floorspriteslope = rider->standingslope;
 	
 }
 
