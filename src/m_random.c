@@ -107,7 +107,7 @@ UINT32 M_Random(void)
 /** Provides a random fixed point number. Distribution is uniform.
   * As with all M_Random functions, not synched in netgames.
   *
-  * \return A random fixed point number from [0,1].
+  * \return A random fixed point number from [0,1).
   */
 fixed_t M_RandomFixed(void)
 {
@@ -121,7 +121,7 @@ fixed_t M_RandomFixed(void)
   */
 UINT8 M_RandomByte(void)
 {
-	return (UINT8)(__external_prng_bound__(UINT8_MAX));
+	return (UINT8)(__external_prng_bound__(UINT8_MAX+1));
 }
 
 /** Provides a random integer for picking random elements from an array.
@@ -214,7 +214,7 @@ UINT32 P_RandomD(const char *rfile, INT32 rline, pr_class_t pr_class)
 
 /** Provides a random fixed point number. Distribution is uniform.
   *
-  * \return A random fixed point number from [0,1].
+  * \return A random fixed point number from [0,1).
   */
 #ifndef DEBUGRANDOM
 fixed_t P_RandomFixed(pr_class_t pr_class)
@@ -242,7 +242,7 @@ UINT8 P_RandomByteD(const char *rfile, INT32 rline, pr_class_t pr_class)
 {
 	CONS_Printf("P_RandomByte(%u) at: %sp %d\n", pr_class, rfile, rline);
 #endif
-	return (UINT8)(__internal_prng_bound__(pr_class, UINT8_MAX));
+	return (UINT8)(__internal_prng_bound__(pr_class, UINT8_MAX+1));
 }
 
 /** Provides a random integer for picking random elements from an array.
