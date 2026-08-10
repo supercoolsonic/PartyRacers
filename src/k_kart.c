@@ -4109,9 +4109,9 @@ static void K_GetKartBoostPower(player_t *player)
 	{
 		if (player->leaderpenalty < POS_DELAY_TIME + 4)
 		{
-			ADDBOOST(((player->playerringgunpower/55)*FRACUNIT/(96/GetTotalInGameRacers())),//*(player->position/GetTotalInGameRacers()*GetTotalInGameRacers()), 
-			(FRACUNIT/4 + (player->playerringgunpower/55)*FRACUNIT/(96/GetTotalInGameRacers())),//*(player->position/GetTotalInGameRacers()*GetTotalInGameRacers()), 
-			((player->playerringgunpower/55)*FRACUNIT/(96/GetTotalInGameRacers())));//*(player->position/GetTotalInGameRacers())*GetTotalInGameRacers()); // + ???% top speed, + 25 + ???% acceleration, +???% handling
+			ADDBOOST(((player->playerringgunpower/55)*FRACUNIT/(86/GetTotalInGameRacers())),//*(player->position/GetTotalInGameRacers()*GetTotalInGameRacers()), 
+			(FRACUNIT/4 + (player->playerringgunpower/55)*FRACUNIT/(86/GetTotalInGameRacers())),//*(player->position/GetTotalInGameRacers()*GetTotalInGameRacers()), 
+			((player->playerringgunpower/55)*FRACUNIT/(86/GetTotalInGameRacers())));//*(player->position/GetTotalInGameRacers())*GetTotalInGameRacers()); // + ???% top speed, + 25 + ???% acceleration, +???% handling
 		}
 		else
 		{
@@ -18182,6 +18182,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 									{
 										P_InstaScale(bigsnow, player->mo->scale*5*min(player->itemamount, 6));
 										P_SetMobjState(bigsnow, S_ICEDUSEXPLOSION);
+										K_FlipFromObject(bigsnow, player->mo);
 									}
 									
 									for (i=0; i<15; i++)
@@ -18334,10 +18335,15 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 								if (player->orbinautchargetime >= (40 + 15*player->itemamount))
 								{
 									mobj_t *boomo = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_FZEROBOOM);
-									boomo->extravalue1 = 2;
-									P_SetScale(boomo, boomo->scale/3);
-									boomo->destscale = (mapobjectscale*player->mo->scale)/3;
-									boomo->fuse = 20;
+									
+									if (boomo)
+									{
+										boomo->extravalue1 = 2;
+										P_SetScale(boomo, boomo->scale/3);
+										boomo->destscale = (mapobjectscale*player->mo->scale)/3;
+										boomo->fuse = 20;
+										K_FlipFromObject(boomo, player->mo);
+									}
 									
 									S_StopSoundByID(player->mo, sfx_s3ka4);
 									S_StopSoundByID(player->mo, sfx_s3k9d);

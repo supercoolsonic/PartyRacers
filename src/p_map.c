@@ -782,7 +782,7 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 			return BMIT_CONTINUE; // underneath
 
 		boolean hit = K_InstaWhipCollide(g_tm.thing, thing);
-		if (hit && g_tm.thing->target && !P_MobjWasRemoved(g_tm.thing->target) && g_tm.thing->target->player)
+		if (hit && g_tm.thing && g_tm.thing->target && !P_MobjWasRemoved(g_tm.thing->target) && g_tm.thing->target->player) //SCS EDIT - I got a access violation here, with a Sol maybe? Guess I'll run the validation check again...
 		{
 			player_t *attacker = g_tm.thing->target->player;
 			if (attacker->defenseLockout > PUNISHWINDOW)
