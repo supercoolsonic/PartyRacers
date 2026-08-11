@@ -26,7 +26,7 @@
 #include "../k_collide.h"
 #include "../d_player.h"
 
-fixed_t cSpd(fixed_t ang, fixed_t spd, mobj_t *th, boolean Cosine)
+fixed_t cSpd(fixed_t ang, fixed_t spd, mobj_t *th, dboolean Cosine)
 {
 	spd = FixedMul(spd, th->scale);
 	
@@ -42,8 +42,8 @@ void EM_OrbitThinker(mobj_t *th)
 	{	
 		th->frame = ((leveltime/3)%6)|FF_FULLBRIGHT;
 		mobj_t *t = th->target;
-		UINT32 offset = t->height/2;
-		UINT32 thisAng = leveltime*(ANG2);
+		uint32_t offset = t->height/2;
+		uint32_t thisAng = leveltime*(ANG2);
 		fixed_t x = cSpd(thisAng+360, (th->fuse*2)*mapobjectscale, t, true);
 		fixed_t y = cSpd(thisAng+360, (th->fuse*2)*mapobjectscale, t, false);
 		P_MoveOrigin(th, t->x+x, t->y+y, t->z + offset);

@@ -40,11 +40,11 @@ static const char* EMOTE_FRAME_NAME = "FRAME";
 static const char* EMOTE_ATLAS_FRAME_NAME = "EMOATLAS";
 
 // Music randomizing
-UINT8 radio_mapmusrng;
-UINT8 radio_maxrandompositionmus = 0;
+uint8_t radio_mapmusrng;
+uint8_t radio_maxrandompositionmus = 0;
 
 // Bookmarks
-boolean bookmarks_processed = false;
+dboolean bookmarks_processed = false;
 
 
 std::vector<std::string> OLD_RING_STATES = {
@@ -73,14 +73,14 @@ std::vector<std::string> OLD_RING_STATES = {
 static const char* OLD_RING_SPRNAME = "RNGO";
 static const uint32_t OLD_RING_INTEGER = 0x524E474F;
 
-boolean found_radioracers = false;
-boolean found_radioracers_plus = false;
-boolean radioracers_usemuteicons = false;
-boolean radioracers_usebookmarkicons = false;
-boolean radioracers_usehakiencore = false;
-boolean radioracers_useendkey = false;
-boolean radioracers_usehudfeed = false;
-boolean radioracers_usealternatetripwire = false;
+dboolean found_radioracers = false;
+dboolean found_radioracers_plus = false;
+dboolean radioracers_usemuteicons = false;
+dboolean radioracers_usebookmarkicons = false;
+dboolean radioracers_usehakiencore = false;
+dboolean radioracers_useendkey = false;
+dboolean radioracers_usehudfeed = false;
+dboolean radioracers_usealternatetripwire = false;
 
 
 const char* RADIO_BADWIRE_SHORT_TEX_NAME = "TRIPBLOW";
@@ -98,20 +98,20 @@ const char* RADIO_GOODWIRE_2X_TALL_TEX_NAME = "2RIPGDRE";
 const char* RADIO_GOODWIRE_4X_TALL_TEX_NAME = "4RIPGDRE";
 const char* RADIO_GOODWIRE_VERTICAL_TEX_NAME = "GUDVWIRE";
 
-INT32 RADIO_BADWIRE_SHORT_TEX_ID = -1;
-INT32 RADIO_BADWIRE_2X_SHORT_TEX_ID = -1;
-INT32 RADIO_BADWIRE_4X_SHORT_TEX_ID = -1;
-INT32 RADIO_BADWIRE_TALL_TEX_ID = -1;
-INT32 RADIO_BADWIRE_2X_TALL_TEX_ID = -1;
-INT32 RADIO_BADWIRE_4X_TALL_TEX_ID = -1;
-INT32 RADIO_BADWIRE_VERTICAL_TEX_ID = -1;
-INT32 RADIO_GOODWIRE_SHORT_TEX_ID = -1;
-INT32 RADIO_GOODWIRE_2X_SHORT_TEX_ID = -1;
-INT32 RADIO_GOODWIRE_4X_SHORT_TEX_ID = -1;
-INT32 RADIO_GOODWIRE_TALL_TEX_ID = -1;
-INT32 RADIO_GOODWIRE_2X_TALL_TEX_ID = -1;
-INT32 RADIO_GOODWIRE_4X_TALL_TEX_ID = -1;
-INT32 RADIO_GOODWIRE_VERTICAL_TEX_ID = -1;
+int32_t RADIO_BADWIRE_SHORT_TEX_ID = -1;
+int32_t RADIO_BADWIRE_2X_SHORT_TEX_ID = -1;
+int32_t RADIO_BADWIRE_4X_SHORT_TEX_ID = -1;
+int32_t RADIO_BADWIRE_TALL_TEX_ID = -1;
+int32_t RADIO_BADWIRE_2X_TALL_TEX_ID = -1;
+int32_t RADIO_BADWIRE_4X_TALL_TEX_ID = -1;
+int32_t RADIO_BADWIRE_VERTICAL_TEX_ID = -1;
+int32_t RADIO_GOODWIRE_SHORT_TEX_ID = -1;
+int32_t RADIO_GOODWIRE_2X_SHORT_TEX_ID = -1;
+int32_t RADIO_GOODWIRE_4X_SHORT_TEX_ID = -1;
+int32_t RADIO_GOODWIRE_TALL_TEX_ID = -1;
+int32_t RADIO_GOODWIRE_2X_TALL_TEX_ID = -1;
+int32_t RADIO_GOODWIRE_4X_TALL_TEX_ID = -1;
+int32_t RADIO_GOODWIRE_VERTICAL_TEX_ID = -1;
 
 patch_t* end_key[2];
 
@@ -218,8 +218,8 @@ static int getNextAtlasId()
     return ++ATLAS_ID;
 }
 
-static boolean hasRankToken(GradeEmoteTokens tokens) {
-    boolean found = false; 
+static dboolean hasRankToken(GradeEmoteTokens tokens) {
+    dboolean found = false; 
     for (const auto& token: tokens) {
         found = token.first == RANK;
         if (found) 
@@ -228,11 +228,11 @@ static boolean hasRankToken(GradeEmoteTokens tokens) {
     return found;
 }
 
-static boolean is_emote_already_loaded(std::string name) {
+static dboolean is_emote_already_loaded(std::string name) {
     return (!EMOTES.empty() && EMOTES.find(name) != EMOTES.end());
 }
 
-static boolean has_punctuation(const std::string& str) {
+static dboolean has_punctuation(const std::string& str) {
     for (char ch: str) {
         if (std::ispunct(static_cast<unsigned char>(ch)) && ch != '_') {
             return true;
@@ -241,7 +241,7 @@ static boolean has_punctuation(const std::string& str) {
     return false;
 }
 
-static boolean is_emote_good(std::string name) {
+static dboolean is_emote_good(std::string name) {
     // Is the name length < EMOTE_NAME_SIZE?
     if(name.length() > EMOTE_NAME_SIZE) {
         CONS_Printf("Emote '%s' is TOOOOO long, skipping.\n", name.c_str());
@@ -388,9 +388,9 @@ atlas_emote_config_t TokenizeAtlasEmotes(
 }
 
 // R_LoadSkinSprites
-static void LoadEmoteLumps(UINT16 wadnum, UINT16 *lump, UINT16 *lastlump, emote_t *rank_emote)
+static void LoadEmoteLumps(uint16_t wadnum, uint16_t *lump, uint16_t *lastlump, emote_t *rank_emote)
 {
-    UINT16 newlastlump;
+    uint16_t newlastlump;
     lumpinfo_t *lumpinfo;
     // softwarepatch_t patch;
     
@@ -406,7 +406,7 @@ static void LoadEmoteLumps(UINT16 wadnum, UINT16 *lump, UINT16 *lastlump, emote_
     if (*lastlump > wadfiles[wadnum]->numlumps)
         *lastlump = wadfiles[wadnum]->numlumps;
     
-    for (UINT16 i = *lump; i < *lastlump; i++) {
+    for (uint16_t i = *lump; i < *lastlump; i++) {
 
         // Only process lumps that match FRAME(xxx).lmp
         if(memcmp(lumpinfo[i].name, EMOTE_FRAME_NAME, 5))
@@ -424,15 +424,15 @@ static void LoadEmoteLumps(UINT16 wadnum, UINT16 *lump, UINT16 *lastlump, emote_
         wadlump <<=16;
         wadlump += i;
 
-        // INT32 width, height;
-        // INT16 topoffset, leftoffset;
+        // int32_t width, height;
+        // int16_t topoffset, leftoffset;
 
         // W_ReadLumpHeaderPwad(wadnum, i, &patch, PNG_HEADER_SIZE, 0);
 
-        // width = (INT32)(SHORT(patch.width));
-        // height = (INT32)(SHORT(patch.height));
-        // topoffset = (INT16)(SHORT(patch.topoffset));
-        // leftoffset = (INT16)(SHORT(patch.leftoffset));
+        // width = (int32_t)(SHORT(patch.width));
+        // height = (int32_t)(SHORT(patch.height));
+        // topoffset = (int16_t)(SHORT(patch.topoffset));
+        // leftoffset = (int16_t)(SHORT(patch.leftoffset));
 
         // CONS_Printf("width %d, height %d, topoffset %d, leftoffset, %d\n", width, height, topoffset, leftoffset);
 
@@ -446,9 +446,9 @@ static void LoadEmoteLumps(UINT16 wadnum, UINT16 *lump, UINT16 *lastlump, emote_
     }
 }
 
-static void LoadAtlasEmoteLump(UINT16 wadnum, UINT16 *lump, UINT16 *lastlump, emote_atlas_t *atlas)
+static void LoadAtlasEmoteLump(uint16_t wadnum, uint16_t *lump, uint16_t *lastlump, emote_atlas_t *atlas)
 {
-    UINT16 newlastlump;
+    uint16_t newlastlump;
     lumpinfo_t *lumpinfo;
 
     lumpinfo = wadfiles[wadnum]->lumpinfo;
@@ -463,7 +463,7 @@ static void LoadAtlasEmoteLump(UINT16 wadnum, UINT16 *lump, UINT16 *lastlump, em
     if (*lastlump > wadfiles[wadnum]->numlumps)
         *lastlump = wadfiles[wadnum]->numlumps;
 
-    for (UINT16 i = *lump; i < *lastlump; i++) {
+    for (uint16_t i = *lump; i < *lastlump; i++) {
 
         // Only process lumps that match EMOATLAS
         if(memcmp(lumpinfo[i].name, EMOTE_ATLAS_FRAME_NAME, 8))
@@ -613,9 +613,9 @@ static void UpdateEmotesVector(void)
     RR_UpdateEmoteUsageVector();
 }
 
-void RR_AddAtlasEmotes(UINT16 wadnum)
+void RR_AddAtlasEmotes(uint16_t wadnum)
 {
-    UINT16 lump, lastlump = 0;
+    uint16_t lump, lastlump = 0;
 
     size_t lump_size;
     emote_atlas_t* atlas = static_cast<emote_atlas_t*>(malloc(sizeof(emote_atlas_t)));
@@ -717,12 +717,12 @@ void RR_AddAtlasEmotes(UINT16 wadnum)
 /**
  * Copying R_AddSkins behaviour.
  */
-void RR_AddEmotes(UINT16 wadnum)
+void RR_AddEmotes(uint16_t wadnum)
 {
-    UINT16 lump, lastlump = 0;
+    uint16_t lump, lastlump = 0;
 
-    boolean eligible_emote = false;
-    boolean eligible_rank_emote = false;
+    dboolean eligible_emote = false;
+    dboolean eligible_rank_emote = false;
     size_t lump_size;
     
     // As long as there's an EMOTEDEF lump
@@ -808,7 +808,7 @@ void RR_AddEmotes(UINT16 wadnum)
     }
 }
 
-void RR_AddAllEmotes(UINT16 wadnum)
+void RR_AddAllEmotes(uint16_t wadnum)
 {
     RR_AddEmotes(wadnum);
     RR_AddAtlasEmotes(wadnum);
@@ -829,8 +829,8 @@ void RR_InitEmotes(void) {
     
     // C++ is so...
     for (std::size_t wadnum = 0; wadnum < numwadfiles; ++wadnum) {
-        RR_AddAtlasEmotes(static_cast<UINT16>(wadnum));
-        RR_AddEmotes(static_cast<UINT16>(wadnum));        
+        RR_AddAtlasEmotes(static_cast<uint16_t>(wadnum));
+        RR_AddEmotes(static_cast<uint16_t>(wadnum));        
     }
 
     if (!EMOTES.empty()) {
@@ -993,12 +993,12 @@ static void AddOldRings(void)
     // and then define the states manually
 }
 
-static boolean isFakeRadioNetVar(consvar_t *cvar) {
+static dboolean isFakeRadioNetVar(consvar_t *cvar) {
     if (cvar == NULL) return false;
     return (cvar->is_radio_cvar && cvar->is_fake_netcvar);
 }
 
-static boolean parseCvarValue(const char* cvar_val) {
+static dboolean parseCvarValue(const char* cvar_val) {
     if (!stricmp(cvar_val, "on") || !stricmp(cvar_val, "yes") || !stricmp(cvar_val, "true"))
         return true;
 
@@ -1045,7 +1045,7 @@ static void ParseRadioServerConfig(
         end = lines.find_first_of(delimiters, start);
         std::string cvar_value = lines.substr(start, end - start);
 
-        const boolean should_enable_feature = parseCvarValue(cvar_value.c_str());
+        const dboolean should_enable_feature = parseCvarValue(cvar_value.c_str());
 
         if (should_enable_feature) {
             radio_cvar->enablefornetgames = true;
@@ -1057,10 +1057,10 @@ static void ParseRadioServerConfig(
 }
 
 // Parse incoming addons for a custom lump to toggle Radio features
-void RR_CheckForServerConfig(UINT16 wadnum) {
-    UINT16 lump, lastlump = 0;
+void RR_CheckForServerConfig(uint16_t wadnum) {
+    uint16_t lump, lastlump = 0;
 
-    boolean found = false;
+    dboolean found = false;
     size_t lump_size;
 
     while(
@@ -1179,8 +1179,8 @@ void RR_LoadBookmarks(void) {
         CONS_Printf("Adding %s %s %s %s\n", char_name.c_str(), char_colour.c_str(), follower_name.c_str(), follower_colour.c_str());
         bool skincolor_valid = false, followercolor_valid = false;
 
-        INT32 char_skin = -1, follower_skin = -1;
-        UINT16 char_skincolor = 0, follower_skincolor = 0;
+        int32_t char_skin = -1, follower_skin = -1;
+        uint16_t char_skincolor = 0, follower_skincolor = 0;
 
         // There has to be at least a skin in the bookmark
         bool skin_present = char_name != "";

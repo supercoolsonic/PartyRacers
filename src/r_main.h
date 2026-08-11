@@ -27,8 +27,8 @@ extern "C" {
 // POV related.
 //
 extern fixed_t viewcos, viewsin;
-extern INT32 viewheight;
-extern INT32 centerx, centery;
+extern int32_t viewheight;
+extern int32_t centerx, centery;
 
 extern fixed_t centerxfrac;
 extern fixed_t centeryfrac;
@@ -46,7 +46,7 @@ extern fixed_t rendertimefrac_unpaused;
 // Evaluated delta tics for this frame (how many tics since the last frame)
 extern fixed_t renderdeltatics;
 // The current render is a new logical tic
-extern boolean renderisnewtic;
+extern dboolean renderisnewtic;
 
 //
 // Lighting LUT.
@@ -75,13 +75,13 @@ extern lighttable_t *zlight[LIGHTLEVELS][MAXLIGHTZ];
 #define NUMCOLORMAPS 32
 
 // Utility functions.
-INT32 R_PointOnSide(fixed_t x, fixed_t y, node_t *node);
-INT32 R_PointOnSegSide(fixed_t x, fixed_t y, seg_t *line);
+int32_t R_PointOnSide(fixed_t x, fixed_t y, node_t *node);
+int32_t R_PointOnSegSide(fixed_t x, fixed_t y, seg_t *line);
 angle_t R_PointToAngle(fixed_t x, fixed_t y);
 angle_t R_PointToAnglePlayer(player_t *player, fixed_t x, fixed_t y);
-angle_t R_PointToAngle64(INT64 x, INT64 y);
+angle_t R_PointToAngle64(int64_t x, int64_t y);
 angle_t R_PointToAngle2(fixed_t px2, fixed_t py2, fixed_t px1, fixed_t py1);
-angle_t R_PointToAngleEx(INT32 x2, INT32 y2, INT32 x1, INT32 y1);
+angle_t R_PointToAngleEx(int32_t x2, int32_t y2, int32_t x1, int32_t y1);
 fixed_t R_PointToDist(fixed_t x, fixed_t y);
 fixed_t R_PointToDist2(fixed_t px2, fixed_t py2, fixed_t px1, fixed_t py1);
 
@@ -89,9 +89,9 @@ fixed_t R_ScaleFromGlobalAngle(angle_t visangle);
 subsector_t *R_PointInSubsector(fixed_t x, fixed_t y);
 subsector_t *R_PointInSubsectorOrNull(fixed_t x, fixed_t y);
 
-boolean R_DoCulling(line_t *cullheight, line_t *viewcullheight, fixed_t vz, fixed_t bottomh, fixed_t toph);
+dboolean R_DoCulling(line_t *cullheight, line_t *viewcullheight, fixed_t vz, fixed_t bottomh, fixed_t toph);
 
-void R_GetRenderBlockMapDimensions(fixed_t drawdist, INT32 *xl, INT32 *xh, INT32 *yl, INT32 *yh);
+void R_GetRenderBlockMapDimensions(fixed_t drawdist, int32_t *xl, int32_t *xh, int32_t *yl, int32_t *yh);
 
 // Render stats
 
@@ -155,11 +155,11 @@ typedef enum {
 	NUM_SW_HI
 } debugrender_highlight_t;
 
-extern UINT32 debugrender_highlight;
+extern uint32_t debugrender_highlight;
 
 void R_CheckDebugHighlight(debugrender_highlight_t type);
-INT32 R_AdjustLightLevel(INT32 light);
-UINT8 R_DebugLineColor(const line_t *ld);
+int32_t R_AdjustLightLevel(int32_t light);
+uint8_t R_DebugLineColor(const line_t *ld);
 
 void Command_Debugrender_highlight(void);
 
@@ -173,10 +173,10 @@ void R_Init(void);
 
 void R_CheckViewMorph(int split);
 void R_ApplyViewMorph(int split);
-angle_t R_ViewRollAngle(const player_t *player, UINT8 viewnum);
+angle_t R_ViewRollAngle(const player_t *player, uint8_t viewnum);
 
 // just sets setsizeneeded true
-extern boolean setsizeneeded;
+extern dboolean setsizeneeded;
 void R_SetViewSize(void);
 
 // do it (sometimes explicitly called)
@@ -185,13 +185,13 @@ void R_ExecuteSetViewSize(void);
 fixed_t R_FOV(int split);
 void R_CheckFOV(void);
 
-boolean R_ShowHUD(void);
+dboolean R_ShowHUD(void);
 
 void R_SetupFrame(int split);
 void R_SkyboxFrame(int split);
 
-boolean R_ViewpointHasChasecam(player_t *player);
-boolean R_IsViewpointThirdPerson(player_t *player, boolean skybox);
+dboolean R_ViewpointHasChasecam(player_t *player);
+dboolean R_IsViewpointThirdPerson(player_t *player, dboolean skybox);
 
 // Called by D_Display.
 void R_RenderPlayerView(void);

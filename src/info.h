@@ -560,7 +560,7 @@ void A_HologramRandomTranslucency();
 void A_SSChainShatter();
 void A_GenericBumper();
 
-extern boolean actionsoverridden[NUMACTIONS];
+extern dboolean actionsoverridden[NUMACTIONS];
 
 // ratio of states to sprites to mobj types is roughly 6 : 1 : 1
 #define NUMMOBJFREESLOTS 1024
@@ -1449,7 +1449,7 @@ typedef enum sprite
 	NUMSPRITES
 } spritenum_t;
 
-// Make sure to be conscious of FF_FRAMEMASK and the fact sprite2 is stored as a UINT8 whenever you change this table.
+// Make sure to be conscious of FF_FRAMEMASK and the fact sprite2 is stored as a uint8_t whenever you change this table.
 // Currently, FF_FRAMEMASK is 0xff, or 255 - but the second half is used by FF_SPR2SUPER, so the limitation is 0x7f.
 // Since this is zero-based, there can be at most 128 different SPR2_'s without changing that.
 typedef enum playersprite
@@ -4449,11 +4449,11 @@ typedef enum state
 struct state_t
 {
 	spritenum_t sprite;
-	UINT32 frame; // we use the upper 16 bits for translucency and other shade effects
-	INT32 tics;
+	uint32_t frame; // we use the upper 16 bits for translucency and other shade effects
+	int32_t tics;
 	actionf_t action;
-	INT32 var1;
-	INT32 var2;
+	int32_t var1;
+	int32_t var2;
 	statenum_t nextstate;
 };
 
@@ -5464,15 +5464,15 @@ typedef enum mobj_type
 
 struct mobjinfo_t
 {
-	INT32 doomednum;
+	int32_t doomednum;
 	statenum_t spawnstate;
-	INT32 spawnhealth;
+	int32_t spawnhealth;
 	statenum_t seestate;
 	sfxenum_t seesound;
-	INT32 reactiontime;
+	int32_t reactiontime;
 	sfxenum_t attacksound;
 	statenum_t painstate;
-	INT32 painchance;
+	int32_t painchance;
 	sfxenum_t painsound;
 	statenum_t meleestate;
 	statenum_t missilestate;
@@ -5482,11 +5482,11 @@ struct mobjinfo_t
 	fixed_t speed;
 	fixed_t radius;
 	fixed_t height;
-	INT32 dispoffset;
-	INT32 mass;
-	INT32 damage;
+	int32_t dispoffset;
+	int32_t mass;
+	int32_t damage;
 	sfxenum_t activesound;
-	UINT32 flags;
+	uint32_t flags;
 	statenum_t raisestate;
 };
 
@@ -5496,7 +5496,7 @@ void P_PatchInfoTables(void);
 
 void P_BackupTables(void);
 
-void P_ResetData(INT32 flags);
+void P_ResetData(int32_t flags);
 
 #ifdef __cplusplus
 } // extern "C"

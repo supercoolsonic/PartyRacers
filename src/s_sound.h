@@ -62,7 +62,7 @@ extern consvar_t cv_voice_concurrentattenuation_factor;
 extern consvar_t cv_voice_concurrentattenuation_min;
 extern consvar_t cv_voice_concurrentattenuation_max;
 extern float g_local_voice_last_peak;
-extern boolean g_local_voice_detected;
+extern dboolean g_local_voice_detected;
 
 typedef int soundflags_t;
 #define SF_TOTALLYSINGLE (1) // Only play one of these sounds at a time...GLOBALLY
@@ -87,18 +87,18 @@ struct channel_t
 	const void *origin;
 
 	// initial volume of sound, which is applied after distance and direction
-	INT32 volume;
+	int32_t volume;
 
 	// handle of the sound being played
-	INT32 handle;
+	int32_t handle;
 
 };
 
 struct caption_t {
 	channel_t *c;
 	sfxinfo_t *s;
-	UINT16 t;
-	UINT8 b;
+	uint16_t t;
+	uint8_t b;
 };
 
 #define NUMCAPTIONS 8
@@ -106,7 +106,7 @@ struct caption_t {
 #define CAPTIONFADETICS 20
 
 extern caption_t closedcaptions[NUMCAPTIONS];
-void S_StartCaption(sfxenum_t sfx_id, INT32 cnum, UINT16 lifespan);
+void S_StartCaption(sfxenum_t sfx_id, int32_t cnum, uint16_t lifespan);
 void S_ResetCaptions(void);
 
 // register sound vars and commands at game startup
@@ -124,7 +124,7 @@ void S_InitSfxChannels(void);
 //
 void S_StopSounds(void);
 void S_ClearSfx(void);
-void S_InitLevelMusic(boolean reset);
+void S_InitLevelMusic(dboolean reset);
 
 //
 // Basically a W_GetNumForName that adds "ds" at the beginning of the string. Returns a lumpnum.
@@ -135,9 +135,9 @@ lumpnum_t S_GetSfxLumpNum(sfxinfo_t *sfx);
 // Sound Status
 //
 
-boolean S_SoundDisabled(void);
+dboolean S_SoundDisabled(void);
 
-boolean S_VoiceDisabled(void);
+dboolean S_VoiceDisabled(void);
 
 //
 // Start sound for thing at <origin> using <sound_id> from sounds.h
@@ -145,10 +145,10 @@ boolean S_VoiceDisabled(void);
 void S_StartSound(const void *origin, sfxenum_t sound_id);
 
 // Will start a sound at a given volume.
-void S_StartSoundAtVolume(const void *origin, sfxenum_t sound_id, INT32 volume);
+void S_StartSoundAtVolume(const void *origin, sfxenum_t sound_id, int32_t volume);
 
 // Will start a sound, but only if VFX reduce is off or the owner isn't a display player.
-void S_ReducedVFXSoundAtVolume(const void *origin, sfxenum_t sfx_id, INT32 volume, const player_t *owner);
+void S_ReducedVFXSoundAtVolume(const void *origin, sfxenum_t sfx_id, int32_t volume, const player_t *owner);
 #define S_ReducedVFXSound(a, b, c) S_ReducedVFXSoundAtVolume(a, b, 255, c)
 
 // Stop sound for thing at <origin>
@@ -158,9 +158,9 @@ void S_StopSound(void *origin);
 // Music Status
 //
 
-boolean S_DigMusicDisabled(void);
-boolean S_MusicDisabled(void);
-boolean S_MusicNotInFocus(void);
+dboolean S_DigMusicDisabled(void);
+dboolean S_MusicDisabled(void);
+dboolean S_MusicNotInFocus(void);
 
 
 #define MAXDEFTRACKS 3
@@ -168,9 +168,9 @@ boolean S_MusicNotInFocus(void);
 
 struct soundtestsequence_t
 {
-	UINT8 id;
-	UINT16 map;
-	UINT8 altref;
+	uint8_t id;
+	uint16_t map;
+	uint8_t altref;
 	musicdef_t *next;
 
 	size_t shuffleinfo;
@@ -181,17 +181,17 @@ struct soundtestsequence_t
 struct musicdef_t
 {
 	char name[MAXDEFTRACKS][7];
-	UINT32 hash[MAXDEFTRACKS];
-	boolean basenoloop[MAXDEFTRACKS];
-	UINT8 numtracks;
+	uint32_t hash[MAXDEFTRACKS];
+	dboolean basenoloop[MAXDEFTRACKS];
+	uint8_t numtracks;
 	char *title;
 	char *author;
 	char *source;
 	char *composers;
 	int volume;
 	int debug_volume;
-	boolean important;
-	boolean contentidunsafe;
+	dboolean important;
+	dboolean contentidunsafe;
 	musicdef_t *next;
 	soundtestsequence_t sequence;
 };
@@ -200,11 +200,11 @@ struct musicdef_t
 extern struct cursongcredit
 {
 	char *text;
-	UINT16 anim;
-	UINT8 trans;
+	uint16_t anim;
+	uint8_t trans;
 	fixed_t x;
 	fixed_t old_x;
-	boolean use_credits_offset;
+	dboolean use_credits_offset;
 } cursongcredit;
 
 // For menu, always appears
@@ -212,36 +212,36 @@ extern char *g_realsongcredit;
 
 extern struct soundtest
 {
-	UINT8 tune;							// Tune used for music system
+	uint8_t tune;							// Tune used for music system
 
-	boolean playing; 					// Music is playing?
-	boolean justopened;					// Menu visual assist
+	dboolean playing; 					// Music is playing?
+	dboolean justopened;					// Menu visual assist
 
-	INT32 menutick;						// Menu visual timer
+	int32_t menutick;						// Menu visual timer
 
 	musicdef_t *current;				// Current selected music definition
-	SINT8 currenttrack;					// Current selected music track for definition
+	int8_t currenttrack;					// Current selected music track for definition
 
 	soundtestsequence_t sequence;		// Sequence head
 
-	boolean autosequence;				// In auto sequence mode?
-	boolean shuffle;					// In shuffle mode;
+	dboolean autosequence;				// In auto sequence mode?
+	dboolean shuffle;					// In shuffle mode;
 } soundtest;
 
 void S_PopulateSoundTestSequence(void);
-void S_UpdateSoundTestDef(boolean reverse, boolean dotracks, boolean skipnull);
+void S_UpdateSoundTestDef(dboolean reverse, dboolean dotracks, dboolean skipnull);
 void S_SoundTestPlay(void);
 void S_SoundTestStop(void);
 void S_SoundTestTogglePause(void);
 void S_TickSoundTest(void);
-const char *S_SoundTestTune(UINT8 invert);
-boolean S_SoundTestCanSequenceFade(void);
+const char *S_SoundTestTune(uint8_t invert);
+dboolean S_SoundTestCanSequenceFade(void);
 
 extern musicdef_t *musicdefstart;
 
-void S_LoadMusicDefs(UINT16 wadnum);
+void S_LoadMusicDefs(uint16_t wadnum);
 void S_InitMusicDefs(void);
-musicdef_t *S_FindMusicDef(const char *name, UINT8 *i);
+musicdef_t *S_FindMusicDef(const char *name, uint8_t *i);
 void S_LoadMusicCredit(void);
 void S_UnloadMusicCredit(void);
 void S_ShowMusicCredit(void);
@@ -271,16 +271,16 @@ void S_UpdateVoicePositionalProperties(void);
 
 FUNCMATH fixed_t S_CalculateSoundDistance(fixed_t px1, fixed_t py1, fixed_t pz1, fixed_t px2, fixed_t py2, fixed_t pz2);
 
-INT32 S_GetSoundVolume(sfxinfo_t *sfx, INT32 volume);
+int32_t S_GetSoundVolume(sfxinfo_t *sfx, int32_t volume);
 
 void S_SetSfxVolume(void);
 void S_SetMusicVolume(void);
 void S_SetMasterVolume(void);
 void S_SetVoiceVolume(void);
 
-INT32 S_OriginPlaying(void *origin);
-INT32 S_IdPlaying(sfxenum_t id);
-INT32 S_SoundPlaying(const void *origin, sfxenum_t id);
+int32_t S_OriginPlaying(void *origin);
+int32_t S_IdPlaying(sfxenum_t id);
+int32_t S_SoundPlaying(const void *origin, sfxenum_t id);
 
 void S_StartSoundName(void *mo, const  char *soundname);
 
@@ -290,15 +290,15 @@ void S_StopSoundByNum(sfxenum_t sfxnum);
 #define S_StartAttackSound S_StartSound
 #define S_StartScreamSound S_StartSound
 
-boolean S_SoundInputIsEnabled(void);
-boolean S_SoundInputSetEnabled(boolean enabled);
-UINT32 S_SoundInputDequeueSamples(void *data, UINT32 len);
-UINT32 S_SoundInputRemainingSamples(void);
+dboolean S_SoundInputIsEnabled(void);
+dboolean S_SoundInputSetEnabled(dboolean enabled);
+uint32_t S_SoundInputDequeueSamples(void *data, uint32_t len);
+uint32_t S_SoundInputRemainingSamples(void);
 
-void S_QueueVoiceFrameFromPlayer(INT32 playernum, void *data, UINT32 len, boolean terminal);
-void S_SetPlayerVoiceActive(INT32 playernum);
-boolean S_IsPlayerVoiceActive(INT32 playernum);
-void S_ResetVoiceQueue(INT32 playernum);
+void S_QueueVoiceFrameFromPlayer(int32_t playernum, void *data, uint32_t len, dboolean terminal);
+void S_SetPlayerVoiceActive(int32_t playernum);
+dboolean S_IsPlayerVoiceActive(int32_t playernum);
+void S_ResetVoiceQueue(int32_t playernum);
 
 #ifdef __cplusplus
 } // extern "C"

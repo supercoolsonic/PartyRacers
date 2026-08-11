@@ -27,7 +27,7 @@ extern "C" {
 #define SLOT_SPACING_SPLITSCREEN (22 << FRACBITS)
 
 /*--------------------------------------------------
-	boolean K_ItemEnabled(kartitems_t item);
+	dboolean K_ItemEnabled(kartitems_t item);
 
 		Determines whenever or not an item should
 		be enabled. Accounts for situations where
@@ -40,11 +40,11 @@ extern "C" {
 		true if the item is enabled, otherwise false.
 --------------------------------------------------*/
 
-boolean K_ItemEnabled(kartitems_t item);
+dboolean K_ItemEnabled(kartitems_t item);
 
 
 /*--------------------------------------------------
-	boolean K_ItemSingularity(kartitems_t item);
+	dboolean K_ItemSingularity(kartitems_t item);
 
 		Determines whenever or not this item should
 		be using special cases to prevent more than
@@ -57,7 +57,7 @@ boolean K_ItemEnabled(kartitems_t item);
 		true to use the special rules, otherwise false.
 --------------------------------------------------*/
 
-boolean K_ItemSingularity(kartitems_t item);
+dboolean K_ItemSingularity(kartitems_t item);
 
 
 /*--------------------------------------------------
@@ -77,7 +77,7 @@ boolean K_ItemSingularity(kartitems_t item);
 botItemPriority_e K_GetBotItemPriority(kartitems_t result);
 
 /*--------------------------------------------------
-	fixed_t K_ItemOddsScale(UINT8 playerCount)
+	fixed_t K_ItemOddsScale(uint8_t playerCount)
 
 		A multiplier for odds and distances to scale
 		them with the player count.
@@ -90,10 +90,10 @@ botItemPriority_e K_GetBotItemPriority(kartitems_t result);
 		distances by.
 --------------------------------------------------*/
 
-fixed_t K_ItemOddsScale(UINT8 playerCount);
+fixed_t K_ItemOddsScale(uint8_t playerCount);
 
 /*--------------------------------------------------
-	UINT32 K_ScaleItemDistance(UINT32 distance, UINT8 numPlayers)
+	uint32_t K_ScaleItemDistance(uint32_t distance, uint8_t numPlayers)
 
 		Adjust item distance for lobby-size scaling
 		as well as Frantic Items.
@@ -106,10 +106,10 @@ fixed_t K_ItemOddsScale(UINT8 playerCount);
 		New distance after scaling.
 --------------------------------------------------*/
 
-UINT32 K_ScaleItemDistance(INT32 distance, UINT8 numPlayers);
+uint32_t K_ScaleItemDistance(int32_t distance, uint8_t numPlayers);
 
 /*--------------------------------------------------
-	UINT32 K_UndoMapScaling(UINT32 distance)
+	uint32_t K_UndoMapScaling(uint32_t distance)
 
 		Takes a raw map distance and adjusts it to
 		be in x1 scale.
@@ -121,10 +121,10 @@ UINT32 K_ScaleItemDistance(INT32 distance, UINT8 numPlayers);
 		Distance unscaled by mapobjectscale.
 --------------------------------------------------*/
 
-UINT32 K_UndoMapScaling(UINT32 distance);
+uint32_t K_UndoMapScaling(uint32_t distance);
 
 /*--------------------------------------------------
-	void K_PushToRouletteItemList(itemroulette_t *const roulette, INT32 item)
+	void K_PushToRouletteItemList(itemroulette_t *const roulette, int32_t item)
 
 		Pushes a new item to the end of the item
 		roulette's item list. Also accepts slot machine
@@ -151,7 +151,7 @@ void K_InitRoulette(itemroulette_t *const roulette);
 		N/A
 --------------------------------------------------*/
 
-void K_PushToRouletteItemList(itemroulette_t *const roulette, INT32 item);
+void K_PushToRouletteItemList(itemroulette_t *const roulette, int32_t item);
 
 /*--------------------------------------------------
 	void K_AddItemToReel(const player_t *player, itemroulette_t *const roulette, kartitems_t item)
@@ -190,7 +190,7 @@ void K_AddItemToReel(const player_t *player, itemroulette_t *const roulette, kar
 void K_CalculateRouletteSpeed(itemroulette_t *const roulette);
 
 /*--------------------------------------------------
-	INT32 K_KartGetBattleOdds(const player_t *player, itemroulette_t *const roulette, UINT8 pos, kartitems_t item);
+	int32_t K_KartGetBattleOdds(const player_t *player, itemroulette_t *const roulette, uint8_t pos, kartitems_t item);
 
 		Gets legacy item priority.
 		Currently used only for Battle monitors/spawners.
@@ -206,10 +206,10 @@ void K_CalculateRouletteSpeed(itemroulette_t *const roulette);
 		into the roulette.
 --------------------------------------------------*/
 
-INT32 K_KartGetBattleOdds(const player_t *player, UINT8 pos, kartitems_t item);
+int32_t K_KartGetBattleOdds(const player_t *player, uint8_t pos, kartitems_t item);
 
 /*--------------------------------------------------
-	void K_FillItemRoulette(player_t *player, itemroulette_t *const roulette, boolean ringbox);
+	void K_FillItemRoulette(player_t *player, itemroulette_t *const roulette, dboolean ringbox);
 
 		Entry point for roulette builder.
 		Includes Lua hooks.
@@ -224,11 +224,11 @@ INT32 K_KartGetBattleOdds(const player_t *player, UINT8 pos, kartitems_t item);
 		N/A
 --------------------------------------------------*/
 
-void K_FillItemRoulette(player_t *player, itemroulette_t *const roulette, boolean ringbox);
+void K_FillItemRoulette(player_t *player, itemroulette_t *const roulette, dboolean ringbox);
 
 
 /*--------------------------------------------------
-	void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, boolean ringbox, boolean dryrun);
+	void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, dboolean ringbox, dboolean dryrun);
 
 		Fills out the item roulette struct when it is
 		initially created. This function needs to be
@@ -246,11 +246,11 @@ void K_FillItemRoulette(player_t *player, itemroulette_t *const roulette, boolea
 		N/A
 --------------------------------------------------*/
 
-void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, boolean ringbox, boolean dryrun);
+void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, dboolean ringbox, dboolean dryrun);
 
 
 /*--------------------------------------------------
-	void K_StartItemRoulette(player_t *const player, boolean ringbox);
+	void K_StartItemRoulette(player_t *const player, dboolean ringbox);
 
 		Starts the item roulette sequence for a player.
 		This stage can only be used by gameplay, thus
@@ -264,7 +264,7 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 		N/A
 --------------------------------------------------*/
 
-void K_StartItemRoulette(player_t *const player, boolean ringbox);
+void K_StartItemRoulette(player_t *const player, dboolean ringbox);
 
 
 /*--------------------------------------------------
@@ -301,7 +301,7 @@ void K_StopRoulette(itemroulette_t *const roulette);
 
 
 /*--------------------------------------------------
-	fixed_t K_GetRouletteOffset(itemroulette_t *const roulette, fixed_t renderDelta, UINT8 fudge);
+	fixed_t K_GetRouletteOffset(itemroulette_t *const roulette, fixed_t renderDelta, uint8_t fudge);
 
 		Gets the Y offset, for use in the roulette HUD.
 		A separate function since it is used both by the
@@ -316,11 +316,11 @@ void K_StopRoulette(itemroulette_t *const roulette);
 		The Y offset when drawing the item.
 --------------------------------------------------*/
 
-fixed_t K_GetRouletteOffset(itemroulette_t *const roulette, fixed_t renderDelta, UINT8 fudge);
+fixed_t K_GetRouletteOffset(itemroulette_t *const roulette, fixed_t renderDelta, uint8_t fudge);
 
 
 /*--------------------------------------------------
-	fixed_t K_GetSlotOffset(itemroulette_t *const roulette, fixed_t renderDelta, UINT8 fudge);
+	fixed_t K_GetSlotOffset(itemroulette_t *const roulette, fixed_t renderDelta, uint8_t fudge);
 
 		Gets the Y offset, for use in the slot HUD.
 		A separate function since it is used both by the
@@ -335,7 +335,7 @@ fixed_t K_GetRouletteOffset(itemroulette_t *const roulette, fixed_t renderDelta,
 		The Y offset when drawing the item.
 --------------------------------------------------*/
 
-fixed_t K_GetSlotOffset(itemroulette_t *const roulette, fixed_t renderDelta, UINT8 fudge);
+fixed_t K_GetSlotOffset(itemroulette_t *const roulette, fixed_t renderDelta, uint8_t fudge);
 
 
 /*--------------------------------------------------
@@ -357,7 +357,7 @@ void K_KartItemRoulette(player_t *const player, ticcmd_t *cmd);
 void K_KartGetItemResult(player_t *const player, kartitems_t getitem);
 
 /*--------------------------------------------------
-	static UINT32 K_GetItemRouletteDistance(const player_t *player, UINT8 numPlayers)
+	static uint32_t K_GetItemRouletteDistance(const player_t *player, uint8_t numPlayers)
 
 		Gets a player's distance used for the item
 		roulette, including all scaling factors.
@@ -370,10 +370,10 @@ void K_KartGetItemResult(player_t *const player, kartitems_t getitem);
 		The player's finalized item distance.
 --------------------------------------------------*/
 
-UINT32 K_GetItemRouletteDistance(const player_t *player, UINT8 numPlayers);
+uint32_t K_GetItemRouletteDistance(const player_t *player, uint8_t numPlayers);
 
 /*--------------------------------------------------
-	boolean K_DenyShieldOdds(kartitems_t item)
+	dboolean K_DenyShieldOdds(kartitems_t item)
 
 		Checks if this type of shield already exists in
 		another player's inventory.
@@ -386,10 +386,10 @@ UINT32 K_GetItemRouletteDistance(const player_t *player, UINT8 numPlayers);
 		at this time.
 --------------------------------------------------*/
 
-boolean K_DenyShieldOdds(kartitems_t item);
+dboolean K_DenyShieldOdds(kartitems_t item);
 
 /*--------------------------------------------------
-	boolean K_ForcedSPB(const player_t *player, itemroulette_t *const roulette)
+	dboolean K_ForcedSPB(const player_t *player, itemroulette_t *const roulette)
 
 		Determines special conditions where we want
 		to forcefully give the player an SPB.
@@ -403,7 +403,7 @@ boolean K_DenyShieldOdds(kartitems_t item);
 		otherwise false.
 --------------------------------------------------*/
 
-boolean K_ForcedSPB(const player_t *player, itemroulette_t *const roulette);
+dboolean K_ForcedSPB(const player_t *player, itemroulette_t *const roulette);
 
 #ifdef __cplusplus
 } // extern "C"

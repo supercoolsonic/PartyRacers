@@ -32,10 +32,10 @@ static const tic_t TRANS_SHIFT_RATE = (DEATH_TIME / 10);
 
 #define MAX_GEARS 32
 
-static UINT8 numGears = 0;
-static UINT32 gearBank = 0;
-static UINT8 gearBankIndex = 0;
-static boolean allGearsCollected = false;
+static uint8_t numGears = 0;
+static uint32_t gearBank = 0;
+static uint8_t gearBankIndex = 0;
+static dboolean allGearsCollected = false;
 static player_t *collectingPlayer = NULL;
 static mobj_t *minimapGear = NULL;
 
@@ -58,7 +58,7 @@ static void UpdateAncientGearPart(mobj_t *part)
 
 void Obj_AncientGearSpawn(mobj_t *gear)
 {
-	UINT8 i;
+	uint8_t i;
 	mobj_t *part = gear;
 
 	numGears++;
@@ -237,7 +237,7 @@ void Obj_AncientGearDeadThink(mobj_t *gear)
 	gear->shadowscale = gear->spritexscale;
 }
 
-boolean Obj_AllowNextAncientGearSpawn(void)
+dboolean Obj_AllowNextAncientGearSpawn(void)
 {
 	// always allow gears spawned by objectplace
 	if (objectplacing)
@@ -295,15 +295,15 @@ player_t *Obj_GetAncientGearCollectingPlayer(void)
 	return collectingPlayer;
 }
 
-boolean Obj_AllAncientGearsCollected(void)
+dboolean Obj_AllAncientGearsCollected(void)
 {
 	return allGearsCollected;
 }
 
 mobj_t *Obj_GetAncientGearMinimapMobj(void)
 {
-	UINT8 lowestTag = UINT8_MAX;
-	UINT8 tag;
+	uint8_t lowestTag = UINT8_MAX;
+	uint8_t tag;
 	mobj_t *mobj;
 
 	// no gears in the map? nothing to display
@@ -337,7 +337,7 @@ mobj_t *Obj_GetAncientGearMinimapMobj(void)
 			continue;
 		}
 
-		tag = ((UINT8)(mobj->thing_args[0] - 1)) % MAX_GEARS; // 0 minus 1 wraps around to 31 so that untagged gears are chosen last
+		tag = ((uint8_t)(mobj->thing_args[0] - 1)) % MAX_GEARS; // 0 minus 1 wraps around to 31 so that untagged gears are chosen last
 
 		if (tag < lowestTag)
 		{

@@ -25,7 +25,7 @@ static menuitem_t MISC_WrongWarpMenu[] =
 	{IT_NOTHING, NULL, NULL, NULL, {NULL}, 0, 0},
 };
 
-void M_WrongWarp(INT32 choice)
+void M_WrongWarp(int32_t choice)
 {
 	(void)choice;
 
@@ -40,10 +40,10 @@ void M_WrongWarp(INT32 choice)
 
 static void M_WrongWarpTick(void)
 {
-	static boolean firsteggman = true;
-	static boolean antitailgate = false;
+	static dboolean firsteggman = true;
+	static dboolean antitailgate = false;
 
-	UINT8 i, j;
+	uint8_t i, j;
 
 	wrongwarp.ticker++;
 	if (wrongwarp.ticker < 2*TICRATE)
@@ -84,7 +84,7 @@ static void M_WrongWarpTick(void)
 	if (wrongwarp.ticker == 2*TICRATE)
 		return;
 
-	UINT32 rskin = 0;
+	uint32_t rskin = 0;
 
 	if (firsteggman == true)
 	{
@@ -138,7 +138,7 @@ static void M_WrongWarpTick(void)
 	antitailgate = !!(i & 1);
 }
 
-static boolean M_WrongWarpInputs(INT32 ch)
+static dboolean M_WrongWarpInputs(int32_t ch)
 {
 	(void)ch;
 
@@ -148,7 +148,7 @@ static boolean M_WrongWarpInputs(INT32 ch)
 	return false;
 }
 
-static INT32 M_WrongWarpFallingHelper(INT32 y, INT32 falltime)
+static int32_t M_WrongWarpFallingHelper(int32_t y, int32_t falltime)
 {
 	if (wrongwarp.ticker < falltime)
 	{
@@ -172,36 +172,36 @@ static INT32 M_WrongWarpFallingHelper(INT32 y, INT32 falltime)
 
 static void M_DrawWrongWarpBack(void)
 {
-	INT32 x, y;
+	int32_t x, y;
 
 	if (gamestate == GS_MENU)
 	{
 		patch_t *pat, *pat2;
-		INT32 animtimer, anim2 = 0;
+		int32_t animtimer, anim2 = 0;
 
 		pat = W_CachePatchName("TITLEBG1", PU_CACHE);
 		pat2 = W_CachePatchName("TITLEBG2", PU_CACHE);
 
-		animtimer = ((wrongwarp.ticker*5)/16) % SHORT(pat->width);
-		anim2 = SHORT(pat2->width) - (((wrongwarp.ticker*5)/16) % SHORT(pat2->width));
+		animtimer = ((wrongwarp.ticker*5)/16) % LSBF_SHORT(pat->width);
+		anim2 = LSBF_SHORT(pat2->width) - (((wrongwarp.ticker*5)/16) % LSBF_SHORT(pat2->width));
 
 		// SRB2Kart: F_DrawPatchCol is over-engineered; recoded to be less shitty and error-prone
 		V_DrawFill(0, 0, BASEVIDWIDTH, BASEVIDHEIGHT, 0);
 
-		x = -((INT32)animtimer);
+		x = -((int32_t)animtimer);
 		y = 0;
 		while (x < BASEVIDWIDTH)
 		{
 			V_DrawFixedPatch(x*FRACUNIT, y*FRACUNIT, FRACUNIT, 0, pat, NULL);
-			x += SHORT(pat->width);
+			x += LSBF_SHORT(pat->width);
 		}
 
 		x = -anim2;
-		y = BASEVIDHEIGHT - SHORT(pat2->height);
+		y = BASEVIDHEIGHT - LSBF_SHORT(pat2->height);
 		while (x < BASEVIDWIDTH)
 		{
 			V_DrawFixedPatch(x*FRACUNIT, y*FRACUNIT, FRACUNIT, 0, pat2, NULL);
-			x += SHORT(pat2->width);
+			x += LSBF_SHORT(pat2->width);
 		}
 	}
 

@@ -26,7 +26,7 @@ void Obj_HyudoroDeploy(mobj_t *master);
 void Obj_HyudoroThink(mobj_t *actor);
 void Obj_HyudoroCenterThink(mobj_t *actor);
 void Obj_HyudoroCollide(mobj_t *special, mobj_t *toucher);
-boolean Obj_HyudoroShadowZ(mobj_t *actor, fixed_t *return_z, pslope_t **return_slope);
+dboolean Obj_HyudoroShadowZ(mobj_t *actor, fixed_t *return_z, pslope_t **return_slope);
 
 /* Butler Hyudoro */			//SCS ADD
 void Obj_InitBHyudoroCenter(mobj_t *center, mobj_t *master);
@@ -44,14 +44,14 @@ mobj_t *Obj_GardenTopDestroy(player_t *player);
 void Obj_GardenTopThink(mobj_t *top);
 void Obj_GardenTopSparkThink(mobj_t *spark);
 void Obj_GardenTopArrowThink(mobj_t *arrow);
-boolean Obj_GardenTopPlayerIsGrinding(const player_t *player);
-boolean Obj_GardenTopPlayerNeedsHelp(const mobj_t *top);
+dboolean Obj_GardenTopPlayerIsGrinding(const player_t *player);
+dboolean Obj_GardenTopPlayerNeedsHelp(const mobj_t *top);
 
 /* Shrink */
 void Obj_PohbeeThinker(mobj_t *pohbee);
 void Obj_PohbeeRemoved(mobj_t *pohbee);
 void Obj_ShrinkGunRemoved(mobj_t *gun);
-boolean Obj_ShrinkLaserCollide(mobj_t *gun, mobj_t *victim);
+dboolean Obj_ShrinkLaserCollide(mobj_t *gun, mobj_t *victim);
 void Obj_CreateShrinkPohbees(player_t *owner);
 
 /* Item Debris */
@@ -72,13 +72,13 @@ mobj_t *Obj_MantaRingCreate(mobj_t *spb, mobj_t *owner, mobj_t *chase);
 
 /* Orbinaut */
 void Obj_OrbinautThink(mobj_t *th);
-boolean Obj_OrbinautJawzCollide(mobj_t *t1, mobj_t *t2);
+dboolean Obj_OrbinautJawzCollide(mobj_t *t1, mobj_t *t2);
 void Obj_OrbinautThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir);
 void Obj_GachaBomThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir);
 void Obj_OrbinautJawzMoveHeld(player_t *player);
-boolean Obj_GachaBomWasTossed(mobj_t *th);
+dboolean Obj_GachaBomWasTossed(mobj_t *th);
 void Obj_OrbinautDrop(mobj_t *th);
-boolean Obj_OrbinautCanRunOnWater(mobj_t *th);
+dboolean Obj_OrbinautCanRunOnWater(mobj_t *th);
 void Obj_SolFireThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir);		//SCS ADD
 void Obj_IcedusCrystalThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir);	//SCS ADD
 void Obj_IcedusThink(mobj_t *th);											//SCS ADD
@@ -101,35 +101,35 @@ void Obj_DuelBombInit(mobj_t *bomb);
 /* Broly Ki */
 mobj_t *Obj_SpawnBrolyKi(mobj_t *source, tic_t duration);
 mobj_t *Obj_SpawnCustomBrolyKi(mobj_t *source, tic_t duration, fixed_t start, fixed_t end);
-boolean Obj_BrolyKiThink(mobj_t *ki);
+dboolean Obj_BrolyKiThink(mobj_t *ki);
 
 /* Special Stage UFO */
 waypoint_t *K_GetSpecialUFOWaypoint(mobj_t *ufo);
 void Obj_SpecialUFOThinker(mobj_t *ufo);
-boolean Obj_SpecialUFODamage(mobj_t *ufo, mobj_t *inflictor, mobj_t *source, UINT8 damageType);
+dboolean Obj_SpecialUFODamage(mobj_t *ufo, mobj_t *inflictor, mobj_t *source, uint8_t damageType);
 void Obj_PlayerUFOCollide(mobj_t *ufo, mobj_t *other);
-boolean Obj_UFOEmeraldCollect(mobj_t *ufo, mobj_t *toucher);
+dboolean Obj_UFOEmeraldCollect(mobj_t *ufo, mobj_t *toucher);
 void Obj_UFOPieceThink(mobj_t *piece);
 void Obj_UFOPieceDead(mobj_t *piece);
 void Obj_UFOPieceRemoved(mobj_t *piece);
 mobj_t *Obj_CreateSpecialUFO(void);
-UINT32 K_GetSpecialUFODistance(void);
+uint32_t K_GetSpecialUFODistance(void);
 void Obj_UFOEmeraldThink(mobj_t *emerald);
 
 /* Monitors */
-mobj_t *Obj_SpawnMonitor(mobj_t *origin, UINT8 numItemTypes, UINT8 emerald);
+mobj_t *Obj_SpawnMonitor(mobj_t *origin, uint8_t numItemTypes, uint8_t emerald);
 void Obj_MonitorSpawnParts(mobj_t *monitor);
 void Obj_MonitorThink(mobj_t *monitor);
 void Obj_MonitorPartThink(mobj_t *part);
-fixed_t Obj_MonitorGetDamage(mobj_t *monitor, mobj_t *inflictor, UINT8 damagetype);
-void Obj_MonitorOnDamage(mobj_t *monitor, mobj_t *inflictor, INT32 damage);
+fixed_t Obj_MonitorGetDamage(mobj_t *monitor, mobj_t *inflictor, uint8_t damagetype);
+void Obj_MonitorOnDamage(mobj_t *monitor, mobj_t *inflictor, int32_t damage);
 void Obj_MonitorOnDeath(mobj_t *monitor, mobj_t *source);
 void Obj_MonitorShardThink(mobj_t *shard);
-UINT32 Obj_MonitorGetEmerald(const mobj_t *monitor);
+uint32_t Obj_MonitorGetEmerald(const mobj_t *monitor);
 void Obj_MonitorSetItemSpot(mobj_t *monitor, mobj_t *spot);
 
 /* Item Spot */
-boolean Obj_ItemSpotIsAvailable(const mobj_t *spot);
+dboolean Obj_ItemSpotIsAvailable(const mobj_t *spot);
 void Obj_ItemSpotAssignMonitor(mobj_t *spot, mobj_t *monitor);
 void Obj_ItemSpotUpdate(mobj_t *spot);
 
@@ -137,12 +137,12 @@ void Obj_ItemSpotUpdate(mobj_t *spot);
 mobj_t *Obj_FindLoopCenter(const mtag_t tag);
 void Obj_InitLoopEndpoint(mobj_t *end, mobj_t *anchor);
 void Obj_InitLoopCenter(mobj_t *center);
-void Obj_LinkLoopAnchor(mobj_t *anchor, mobj_t *center, UINT8 type);
+void Obj_LinkLoopAnchor(mobj_t *anchor, mobj_t *center, uint8_t type);
 void Obj_LoopEndpointCollide(mobj_t *special, mobj_t *toucher);
 
 /* Drop Target */
 void Obj_BeginDropTargetMorph(mobj_t *target, skincolornum_t color);
-boolean Obj_DropTargetMorphThink(mobj_t *morph);
+dboolean Obj_DropTargetMorphThink(mobj_t *morph);
 
 /* Instawhip */
 void Obj_InstaWhipThink(mobj_t *whip);
@@ -175,20 +175,20 @@ void Obj_BailThink(mobj_t *aura);
 void Obj_BailChargeThink(mobj_t *aura);
 
 /* Ring Shooter */
-boolean Obj_RingShooterThinker(mobj_t *mo);
-boolean Obj_PlayerRingShooterFreeze(const player_t *player);
+dboolean Obj_RingShooterThinker(mobj_t *mo);
+dboolean Obj_PlayerRingShooterFreeze(const player_t *player);
 void Obj_RingShooterInput(player_t *player);
 void Obj_PlayerUsedRingShooter(mobj_t *base, player_t *player);
 void Obj_RingShooterDelete(mobj_t *mo);
 void Obj_UpdateRingShooterFace(mobj_t *part);
 
 /* Follower Audience */
-void Obj_AudienceInit(mobj_t * mobj, mapthing_t *mthing, INT32 followerpick);
-void Obj_AudienceThink(mobj_t * mobj, boolean focusonplayer, boolean checkdeathpit);
+void Obj_AudienceInit(mobj_t * mobj, mapthing_t *mthing, int32_t followerpick);
+void Obj_AudienceThink(mobj_t * mobj, dboolean focusonplayer, dboolean checkdeathpit);
 
 /* Random Item Boxes */
 void Obj_RandomItemVisuals(mobj_t *mobj);
-boolean Obj_RandomItemSpawnIn(mobj_t *mobj);
+dboolean Obj_RandomItemSpawnIn(mobj_t *mobj);
 fixed_t Obj_RandomItemScale(fixed_t oldScale);
 void Obj_RandomItemSpawn(mobj_t *mobj);
 #define RINGBOX_TIME (105)
@@ -216,8 +216,8 @@ void Obj_BlockSuperFlicky(mobj_t *flicky);
 void Obj_SuperFlickyPlayerCollide(mobj_t *flicky, mobj_t *player);
 void Obj_SuperFlickyLanding(mobj_t *flicky);
 mobj_t *Obj_SuperFlickyOwner(const mobj_t *flicky);
-boolean Obj_IsSuperFlickyWhippable(const mobj_t *flicky, const mobj_t *target);
-boolean Obj_IsSuperFlickyTargettingYou(const mobj_t *flicky, mobj_t *player);
+dboolean Obj_IsSuperFlickyWhippable(const mobj_t *flicky, const mobj_t *target);
+dboolean Obj_IsSuperFlickyTargettingYou(const mobj_t *flicky, mobj_t *player);
 
 /* Battle/Power-UP UFO */
 void Obj_BattleUFOLegThink(mobj_t *leg);
@@ -227,9 +227,9 @@ void Obj_BattleUFODeath(mobj_t *ufo, mobj_t *inflictor);
 void Obj_LinkBattleUFOSpawner(mobj_t *spawner);
 void Obj_UnlinkBattleUFOSpawner(mobj_t *spawner);
 void Obj_SpawnBattleUFOFromSpawner(void);
-INT32 Obj_RandomBattleUFOSpawnerID(void);
+int32_t Obj_RandomBattleUFOSpawnerID(void);
 void Obj_BattleUFOBeamThink(mobj_t *beam);
-INT32 Obj_BattleUFOSpawnerID(const mobj_t *spawner);
+int32_t Obj_BattleUFOSpawnerID(const mobj_t *spawner);
 mobj_t *Obj_GetNextUFOSpawner(void);
 
 /* Power-Up Aura */
@@ -248,8 +248,8 @@ void Obj_DashRingSetup(mobj_t *mobj, mapthing_t *mthing);
 void Obj_RainbowDashRingThink(mobj_t *mobj);
 void Obj_DashRingTouch(mobj_t *mobj, player_t *player);
 void Obj_DashRingPlayerThink(player_t *player);
-boolean Obj_DashRingPlayerHasNoGravity(player_t *player);
-boolean Obj_DashRingIsUsableByPlayer(mobj_t *mobj, player_t *player);
+dboolean Obj_DashRingPlayerHasNoGravity(player_t *player);
+dboolean Obj_DashRingIsUsableByPlayer(mobj_t *mobj, player_t *player);
 
 /* Adventure Dash Ring */
 void Obj_AdventureAirBoosterSetup(mobj_t *mobj, mapthing_t *mthing);
@@ -269,26 +269,26 @@ void Obj_SneakerPanelSpawnerFuse(mobj_t *mobj);
 void Obj_SpawnEmeraldSparks(mobj_t *source);
 void Obj_EmeraldThink(mobj_t *emerald);
 void Obj_EmeraldFlareThink(mobj_t *flare);
-void Obj_BeginEmeraldOrbit(mobj_t *emerald, mobj_t *target, fixed_t radius, INT32 revolution_time, tic_t fuse);
+void Obj_BeginEmeraldOrbit(mobj_t *emerald, mobj_t *target, fixed_t radius, int32_t revolution_time, tic_t fuse);
 void Obj_GiveEmerald(mobj_t *emerald);
 void Obj_SetEmeraldAwardee(mobj_t *emerald, mobj_t *awardee);
-boolean Obj_EmeraldCanHUDTrack(const mobj_t *emerald);
+dboolean Obj_EmeraldCanHUDTrack(const mobj_t *emerald);
 
 /* Fake Shadow */
 mobj_t *Obj_SpawnFakeShadow(mobj_t *from);
 void Obj_FakeShadowThink(mobj_t *shadow);
-boolean Obj_FakeShadowZ(const mobj_t *shadow, fixed_t *return_z, pslope_t **return_slope);
+dboolean Obj_FakeShadowZ(const mobj_t *shadow, fixed_t *return_z, pslope_t **return_slope);
 
 /* Checkpoints */
 void Obj_LinkCheckpoint(mobj_t *end);
 void Obj_UnlinkCheckpoint(mobj_t *end);
 void Obj_CheckpointThink(mobj_t *end);
 void Obj_CrossCheckpoints(player_t *player, fixed_t old_x, fixed_t old_y);
-mobj_t *Obj_FindCheckpoint(INT32 id);
-boolean Obj_GetCheckpointRespawnPosition(const mobj_t *checkpoint, vector3_t *return_pos);
+mobj_t *Obj_FindCheckpoint(int32_t id);
+dboolean Obj_GetCheckpointRespawnPosition(const mobj_t *checkpoint, vector3_t *return_pos);
 angle_t Obj_GetCheckpointRespawnAngle(const mobj_t *checkpoint);
 void Obj_ActivateCheckpointInstantly(mobj_t* mobj);
-UINT32 Obj_GetCheckpointCount();
+uint32_t Obj_GetCheckpointCount();
 void Obj_ClearCheckpoints();
 void Obj_DeactivateCheckpoints();
 
@@ -343,7 +343,7 @@ void Obj_BallSwitchDamaged(mobj_t *mobj, mobj_t *inflictor, mobj_t *source);
 
 /* Barrier Power-Up */
 void Obj_SpawnMegaBarrier(player_t *player);
-boolean Obj_MegaBarrierThink(mobj_t *mobj);
+dboolean Obj_MegaBarrierThink(mobj_t *mobj);
 
 /* DLZ Seasaw */
 void Obj_DLZSeasawSpawn(mobj_t *mo);
@@ -359,7 +359,7 @@ void Obj_GPZSeasawCollide(mobj_t *mo, mobj_t *mo2);
 void Obj_FreezeThrusterInit(mobj_t *mobj);
 void Obj_FreezeThrusterThink(mobj_t *mobj);
 void Obj_IceDustCollide(mobj_t *t1, mobj_t *t2);
-boolean Obj_IceCubeThink(mobj_t *mobj);
+dboolean Obj_IceCubeThink(mobj_t *mobj);
 void Obj_IceCubeInput(player_t *player);
 void Obj_IceCubeBurst(player_t *player);
 void Obj_SidewaysFreezeThrusterInit(mobj_t *mobj);
@@ -376,10 +376,10 @@ void Obj_PatrolIvoBallTouch(mobj_t *special, mobj_t *toucher);
 /* SA2 Crates / Ice Cap Blocks */
 void Obj_BoxSideThink(mobj_t *mo);
 void Obj_TryCrateInit(mobj_t *mo);
-boolean Obj_TryCrateThink(mobj_t *mo);
+dboolean Obj_TryCrateThink(mobj_t *mo);
 void Obj_TryCrateTouch(mobj_t *special, mobj_t *toucher);
-boolean Obj_TryCrateDamage(mobj_t *target, mobj_t *inflictor);
-boolean Obj_SA2CrateIsMetal(mobj_t *mo);
+dboolean Obj_TryCrateDamage(mobj_t *target, mobj_t *inflictor);
+dboolean Obj_SA2CrateIsMetal(mobj_t *mo);
 
 /* Lavender Shrine Spears */
 void Obj_SpearInit(mobj_t *mo);
@@ -387,12 +387,12 @@ void Obj_SpearThink(mobj_t *mo);
 
 /* Lost Colony Fuel Canister */
 void Obj_FuelCanisterEmitterInit(mobj_t *mo);
-boolean Obj_FuelCanisterVisualThink(mobj_t *mo);
-boolean Obj_FuelCanisterEmitterThink(mobj_t *mo);
-boolean Obj_FuelCanisterThink(mobj_t *mo);
+dboolean Obj_FuelCanisterVisualThink(mobj_t *mo);
+dboolean Obj_FuelCanisterEmitterThink(mobj_t *mo);
+dboolean Obj_FuelCanisterThink(mobj_t *mo);
 void Obj_FuelCanisterTouch(mobj_t *special, mobj_t *toucher);
 void Obj_FuelCanisterExplosionTouch(mobj_t *special, mobj_t *toucher);
-boolean Obj_FuelCanisterExplosionThink(mobj_t *mo);
+dboolean Obj_FuelCanisterExplosionThink(mobj_t *mo);
 
 /* Bustable Rocks */
 void Obj_LinkRocks(mobj_t *mo);
@@ -448,13 +448,13 @@ void Obj_TalkPointThink(mobj_t* mo);
 void Obj_TalkPointOrbThink(mobj_t* mo);
 
 /* Power-up Spinner */
-void Obj_SpawnPowerUpSpinner(mobj_t *source, INT32 powerup, tic_t duration);
+void Obj_SpawnPowerUpSpinner(mobj_t *source, int32_t powerup, tic_t duration);
 void Obj_TickPowerUpSpinner(mobj_t *mobj);
 
 /* Destroyed Kart */
 void Obj_SpawnDestroyedKart(mobj_t *player);
 void Obj_DestroyedKartThink(mobj_t *kart);
-boolean Obj_DestroyKart(mobj_t *kart);
+dboolean Obj_DestroyKart(mobj_t *kart);
 void Obj_DestroyedKartParticleThink(mobj_t *part);
 void Obj_DestroyedKartParticleLanding(mobj_t *part);
 
@@ -469,30 +469,30 @@ void Obj_PulleyThink(mobj_t *root);
 void Obj_PulleyHookTouch(mobj_t *special, mobj_t *toucher);
 
 /* Ballhog */
-UINT8 K_HogChargeToHogCount(INT32 charge, UINT8 cap);
-void K_UpdateBallhogReticules(player_t *player, UINT8 num_hogs, boolean on_release);
-void K_DoBallhogAttack(player_t *player, UINT8 num_hogs);
+uint8_t K_HogChargeToHogCount(int32_t charge, uint8_t cap);
+void K_UpdateBallhogReticules(player_t *player, uint8_t num_hogs, dboolean on_release);
+void K_DoBallhogAttack(player_t *player, uint8_t num_hogs);
 
 /* Bubble Shield */
 void Obj_SpawnBubbleShieldVisuals(mobj_t *source);
-boolean Obj_TickBubbleShieldVisual(mobj_t *mobj);
+dboolean Obj_TickBubbleShieldVisual(mobj_t *mobj);
 
 /* Lightning Shield */
 void Obj_SpawnLightningShieldVisuals(mobj_t *source);
-boolean Obj_TickLightningShieldVisual(mobj_t *mobj);
+dboolean Obj_TickLightningShieldVisual(mobj_t *mobj);
 
 /* Lightning Attack */
 void Obj_SpawnLightningAttackVisuals(mobj_t *source);
-boolean Obj_TickLightningAttackVisual(mobj_t *mobj);
+dboolean Obj_TickLightningAttackVisual(mobj_t *mobj);
 
 /* Flame Shield */
 void Obj_SpawnFlameShieldVisuals(mobj_t *source);
-boolean Obj_TickFlameShieldVisual(mobj_t *mobj);
+dboolean Obj_TickFlameShieldVisual(mobj_t *mobj);
 
 /* Stone Shoe */
-mobj_t *Obj_SpawnStoneShoe(INT32 owner, mobj_t *victim);
-boolean Obj_TickStoneShoe(mobj_t *shoe);
-boolean Obj_TickStoneShoeChain(mobj_t *chain);
+mobj_t *Obj_SpawnStoneShoe(int32_t owner, mobj_t *victim);
+dboolean Obj_TickStoneShoe(mobj_t *shoe);
+dboolean Obj_TickStoneShoeChain(mobj_t *chain);
 player_t *Obj_StoneShoeOwnerPlayer(mobj_t *shoe);
 void Obj_CollideStoneShoe(mobj_t *mover, mobj_t *mobj);
 
@@ -501,11 +501,11 @@ player_t *Obj_StoneShoeChainShoeFollowPlayer(mobj_t *chain);	//SCS - RADIO
 
 /* Toxomister */
 void Obj_InitToxomisterPole(mobj_t *pole);
-boolean Obj_TickToxomisterPole(mobj_t *pole);
-boolean Obj_TickToxomisterEye(mobj_t *eye);
-boolean Obj_TickToxomisterCloud(mobj_t *cloud);
-boolean Obj_ToxomisterPoleCollide(mobj_t *pole, mobj_t *toucher);
-boolean Obj_ToxomisterCloudCollide(mobj_t *cloud, mobj_t *toucher);
+dboolean Obj_TickToxomisterPole(mobj_t *pole);
+dboolean Obj_TickToxomisterEye(mobj_t *eye);
+dboolean Obj_TickToxomisterCloud(mobj_t *cloud);
+dboolean Obj_ToxomisterPoleCollide(mobj_t *pole, mobj_t *toucher);
+dboolean Obj_ToxomisterCloudCollide(mobj_t *cloud, mobj_t *toucher);
 fixed_t Obj_GetToxomisterCloudDrag(mobj_t *cloud);
 
 /* Ancient Gear */
@@ -515,11 +515,11 @@ void Obj_AncientGearRemoved(mobj_t *gear);
 void Obj_AncientGearTouch(mobj_t *gear, mobj_t *toucher);
 void Obj_AncientGearDeath(mobj_t *gear, mobj_t *source);
 void Obj_AncientGearDeadThink(mobj_t *gear);
-boolean Obj_AllowNextAncientGearSpawn(void);
+dboolean Obj_AllowNextAncientGearSpawn(void);
 void Obj_AncientGearSetup(mobj_t *gear, mapthing_t *mt);
 void Obj_AncientGearLevelInit(void);
 player_t *Obj_GetAncientGearCollectingPlayer(void);
-boolean Obj_AllAncientGearsCollected(void);
+dboolean Obj_AllAncientGearsCollected(void);
 mobj_t *Obj_GetAncientGearMinimapMobj(void);
 
 void Obj_MushroomHillPolePlayerThink(player_t *player);
@@ -529,12 +529,12 @@ void Obj_MushroomHillPoleFuse(mobj_t *pole);
 
 /* Wrecking Ball */				//SCS ADD
 void Obj_WreckingBallThink(mobj_t *th);
-//boolean Obj_WreckingBallJawzCollide(mobj_t *t1, mobj_t *t2);
+//dboolean Obj_WreckingBallJawzCollide(mobj_t *t1, mobj_t *t2);
 void Obj_WreckingBallThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir);
 void Obj_WreckingBallDrop(mobj_t *th);
-boolean Obj_WreckingBallCanRunOnWater(mobj_t *th);
+dboolean Obj_WreckingBallCanRunOnWater(mobj_t *th);
 void Obj_WreckingBallThrown_Pre(mobj_t *th, fixed_t finalSpeed, fixed_t dir);
-boolean Obj_WreckingBallWasTossed(mobj_t *th);
+dboolean Obj_WreckingBallWasTossed(mobj_t *th);
 void Obj_WreckingBallChainThink(mobj_t *th);
 void Obj_WreckingBallChunkThink(mobj_t *th);
 void Obj_WreckingBallSpawnChain(mobj_t *th);
@@ -543,12 +543,12 @@ void Obj_WreckingBallDeath(mobj_t *th);
 /*Master Emerald */					//SCS ADD
 void EM_OrbitThinker(mobj_t *th);
 void EM_BeamThinker(mobj_t *th);
-fixed_t cSpd (fixed_t ang, fixed_t spd, mobj_t *th, boolean Cosine);
+fixed_t cSpd (fixed_t ang, fixed_t spd, mobj_t *th, dboolean Cosine);
 
 /* Normal Shield */
-UINT8 K_NormShieldChargeToNormShieldBoostCount(INT32 charge, UINT8 cap); //SCS ADD
+uint8_t K_NormShieldChargeToNormShieldBoostCount(int32_t charge, uint8_t cap); //SCS ADD
 void Obj_SpawnNormalShieldVisuals(mobj_t *shield);
-boolean Obj_TickNormalShieldVisual(mobj_t *mobj);
+dboolean Obj_TickNormalShieldVisual(mobj_t *mobj);
 
 /* Mega Chopper */
 void Obj_MegaChopperDeath(mobj_t *th);
@@ -556,7 +556,7 @@ void Obj_MegaChopperThink(mobj_t *th);
 
 /* Armageddon Shield */
 void Obj_SpawnArmaShieldVisuals(mobj_t *shield);	//SCS ADD
-boolean Obj_TickArmaShieldVisual(mobj_t *mobj);
+dboolean Obj_TickArmaShieldVisual(mobj_t *mobj);
 
 /* Afterburner Jawz */
 void Obj_ABJawzThink(mobj_t *th);										//SCS ADD

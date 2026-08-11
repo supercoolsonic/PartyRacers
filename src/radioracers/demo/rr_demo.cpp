@@ -24,7 +24,7 @@
 #include <fstream>
 #include <map>
 
-static tic_t _millisecondstoTics(INT32 milliseconds) {
+static tic_t _millisecondstoTics(int32_t milliseconds) {
     return(tic_t) ((milliseconds * TICRATE)/ 1000);
 }
 

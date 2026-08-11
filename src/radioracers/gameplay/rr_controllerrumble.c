@@ -19,11 +19,11 @@
 #include "../../s_sound.h"
 
 int16_t localPlayerWavedashClickTimer = 0;
-boolean localPlayerJustBootyBounced = false;
-UINT8 localPlayerPickupSpheres = 0;
+dboolean localPlayerJustBootyBounced = false;
+uint8_t localPlayerPickupSpheres = 0;
 int16_t localPlayerPickupSpheresDelay = 0;
 
-static boolean RR_RumbleSphereCollected(const player_t *player)
+static dboolean RR_RumbleSphereCollected(const player_t *player)
 {    
     if (!cv_rr_rumble_spheres.value)
         return false;
@@ -36,7 +36,7 @@ static boolean RR_RumbleSphereCollected(const player_t *player)
 }
 
 
-boolean RR_ShouldUseMoreRumbleEvents(void)
+dboolean RR_ShouldUseMoreRumbleEvents(void)
 {
     return (cv_morerumbleevents.value);
 }
@@ -102,7 +102,7 @@ uint16_t RR_GetRumbleStrength(const rumbleevent_e event)
     }
 }
 
-boolean RR_RumbleJustBumpedWall(const player_t *player)
+dboolean RR_RumbleJustBumpedWall(const player_t *player)
 {
     if (!cv_rr_rumble_wall_bump.value)
         return false;
@@ -110,7 +110,7 @@ boolean RR_RumbleJustBumpedWall(const player_t *player)
     return (player->mo->eflags & MFE_JUSTBOUNCEDWALL);
 }
 
-boolean RR_RumbleIsSpindashingGently(const player_t *player)
+dboolean RR_RumbleIsSpindashingGently(const player_t *player)
 {
     if (!cv_rr_rumble_spindash.value)
         return false;
@@ -122,7 +122,7 @@ boolean RR_RumbleIsSpindashingGently(const player_t *player)
     );
 }
 
-boolean RR_RumbleIsSpindashingViolently(const player_t *player)
+dboolean RR_RumbleIsSpindashingViolently(const player_t *player)
 {
     if (!cv_rr_rumble_spindash.value)
         return false;
@@ -134,7 +134,7 @@ boolean RR_RumbleIsSpindashingViolently(const player_t *player)
     );
 }
 
-boolean RR_RumbleRingCollected(const player_t *player)
+dboolean RR_RumbleRingCollected(const player_t *player)
 {
     if (!cv_rr_rumble_rings.value)
         return false;
@@ -145,7 +145,7 @@ boolean RR_RumbleRingCollected(const player_t *player)
     );
 }
 
-boolean RR_RumbleChargingTailWhip(const player_t *player)
+dboolean RR_RumbleChargingTailWhip(const player_t *player)
 {
     if (!cv_rr_rumble_tailwhip.value)
         return false;
@@ -156,7 +156,7 @@ boolean RR_RumbleChargingTailWhip(const player_t *player)
     );
 }
 
-boolean RR_RumbleOverchargingTailWhip(const player_t *player)
+dboolean RR_RumbleOverchargingTailWhip(const player_t *player)
 {
     if (!cv_rr_rumble_tailwhip.value)
         return false;   
@@ -166,21 +166,21 @@ boolean RR_RumbleOverchargingTailWhip(const player_t *player)
     );
 }
 
-boolean RR_RumbleJustDrifted(const player_t *player)
+dboolean RR_RumbleJustDrifted(const player_t *player)
 {
     if (!cv_rr_rumble_drift.value)
         return false;
     
     // Charlie, Charlie! Have I told you how much I LOVE repeated code?!
-    const INT32 dsone = K_GetKartDriftSparkValueForStage(player, 1);
-    const INT32 dstwo = K_GetKartDriftSparkValueForStage(player, 2);
-    const INT32 dsthree = K_GetKartDriftSparkValueForStage(player, 3);
-    const INT32 dsfour = K_GetKartDriftSparkValueForStage(player, 4);
+    const int32_t dsone = K_GetKartDriftSparkValueForStage(player, 1);
+    const int32_t dstwo = K_GetKartDriftSparkValueForStage(player, 2);
+    const int32_t dsthree = K_GetKartDriftSparkValueForStage(player, 3);
+    const int32_t dsfour = K_GetKartDriftSparkValueForStage(player, 4);
 
-    const boolean yellowSparkDrifts = (player->driftcharge >= (dsone - (32*2)) && player-> driftcharge < dsone);
-    const boolean redSparkDrifts = (player->driftcharge >= (dstwo - (32*2)) && player->driftcharge < dstwo);
-    const boolean blueSparkDrifts = (player->driftcharge >= (dsthree - (32*2)) && player->driftcharge < dsthree);
-    const boolean rainbowSparkDrifts = (player->driftcharge >= (dsfour - (32*2)) && player->driftcharge < dsfour);
+    const dboolean yellowSparkDrifts = (player->driftcharge >= (dsone - (32*2)) && player-> driftcharge < dsone);
+    const dboolean redSparkDrifts = (player->driftcharge >= (dstwo - (32*2)) && player->driftcharge < dstwo);
+    const dboolean blueSparkDrifts = (player->driftcharge >= (dsthree - (32*2)) && player->driftcharge < dsthree);
+    const dboolean rainbowSparkDrifts = (player->driftcharge >= (dsfour - (32*2)) && player->driftcharge < dsfour);
     
     return (
         player->mo &&
@@ -189,7 +189,7 @@ boolean RR_RumbleJustDrifted(const player_t *player)
     );
 }
 
-boolean RR_RumbleRingConsumed(const player_t *player)
+dboolean RR_RumbleRingConsumed(const player_t *player)
 {
     if (!cv_rr_rumble_rings.value)
         return false;
@@ -213,7 +213,7 @@ boolean RR_RumbleRingConsumed(const player_t *player)
  * That way, the player gets feedback immediately and knows when to start adjusting lines and the sort.
  */
 
-boolean RR_RumbleJustFastFallBounced(const player_t *player)
+dboolean RR_RumbleJustFastFallBounced(const player_t *player)
 {
     if (!cv_rr_rumble_fastfall_bounce.value)
         return false;
@@ -225,7 +225,7 @@ boolean RR_RumbleJustFastFallBounced(const player_t *player)
     );
 }
 
-boolean RR_RumbleJustWaveDashed(const player_t *player)
+dboolean RR_RumbleJustWaveDashed(const player_t *player)
 {
     if (!cv_rr_rumble_wavedash.value)
         return false;

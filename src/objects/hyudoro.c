@@ -87,7 +87,7 @@ get_look_angle (mobj_t *thing)
 	return player ? player->angleturn : thing->angle;
 }
 
-static boolean
+static dboolean
 is_hyudoro (mobj_t *thing)
 {
 	return !P_MobjWasRemoved(thing) &&
@@ -129,7 +129,7 @@ sine_bob
 static void
 bob_in_place
 (		mobj_t * hyu,
-		INT32 bob_speed)
+		int32_t bob_speed)
 {
 	sine_bob(hyu,
 			(leveltime & (bob_speed - 1)) *
@@ -221,7 +221,7 @@ project_hyudoro_hover (mobj_t *hyu)
 	bob_in_place(hyu, 64);
 }
 
-static boolean
+static dboolean
 project_hyudoro_orbit (mobj_t *hyu)
 {
 	mobj_t *orbit = hyudoro_target(hyu);
@@ -249,8 +249,8 @@ static mobj_t *
 find_duel_target (mobj_t *ignore)
 {
 	mobj_t *ret = NULL;
-	UINT8 bestPosition = UINT8_MAX;
-	UINT8 i;
+	uint8_t bestPosition = UINT8_MAX;
+	uint8_t i;
 
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
@@ -389,7 +389,7 @@ append_hyudoro
 (		mobj_t ** head,
 		mobj_t * hyu)
 {
-	INT32 lastpos = 0;
+	int32_t lastpos = 0;
 
 	while (is_hyudoro(*head))
 	{
@@ -421,7 +421,7 @@ pop_hyudoro (mobj_t **head)
 		return;
 	}
 
-	INT32 lastpos = hyudoro_stackpos(hyu);
+	int32_t lastpos = hyudoro_stackpos(hyu);
 
 	{
 		mobj_t *next = hyudoro_next(hyu);
@@ -441,7 +441,7 @@ pop_hyudoro (mobj_t **head)
 
 	do
 	{
-		INT32 thispos = hyudoro_stackpos(hyu);
+		int32_t thispos = hyudoro_stackpos(hyu);
 
 		hyudoro_stackpos(hyu) = lastpos;
 		lastpos = thispos;
@@ -452,7 +452,7 @@ pop_hyudoro (mobj_t **head)
 }
 
 static mobj_t *
-spawn_capsule (mobj_t *hyu, INT32 item)					//SCS EDIT - adding item parameter so flags can not be set if it's a pickpocket ringbox
+spawn_capsule (mobj_t *hyu, int32_t item)					//SCS EDIT - adding item parameter so flags can not be set if it's a pickpocket ringbox
 {
 	mobj_t *caps = P_SpawnMobjFromMobj(
 			hyu, 0, 0, 0, MT_ITEMCAPSULE);
@@ -504,8 +504,8 @@ update_capsule_position (mobj_t *hyu)
 static void
 set_item
 (		mobj_t * hyu,
-		INT32 item,
-		INT32 amount)
+		int32_t item,
+		int32_t amount)
 {
 	mobj_t *caps = P_MobjWasRemoved(hyudoro_capsule(hyu))
 		? spawn_capsule(hyu, item) : hyudoro_capsule(hyu);
@@ -526,7 +526,7 @@ hyudoro_set_held_item_from_player
 {
 	if (hyu->type != MT_PPOCKETHYUDORO && K_ItemEnabled(KITEM_KITCHENSINK))		//SCS EDIT
 	{
-		boolean convert = false;
+		dboolean convert = false;
 
 		switch (player->itemtype)
 		{
@@ -623,7 +623,7 @@ static void pickpocket_hyudoro_set_stunned (mobj_t * hyu)							//SCS ADD
 	hyu->destscale = hyu->scale*2;
 }
 
-static boolean
+static dboolean
 hyudoro_patrol_hit_player
 (		mobj_t * hyu,
 		mobj_t * toucher)
@@ -711,7 +711,7 @@ hyudoro_patrol_hit_player
 	//if (master && !P_MobjWasRemoved(master))
 		//K_SpawnAmps(master->player, K_PvPAmpReward(20, master->player, player), toucher);
 	
-	UINT8 hyuAmps = 0;															//SCS - RADIO START
+	uint8_t hyuAmps = 0;															//SCS - RADIO START
 	if (master && !P_MobjWasRemoved(master)) {
 		hyuAmps = K_PvPAmpReward(hyu->type == MT_PPOCKETHYUDORO ? 5 : 20, master->player, player);
 		K_SpawnAmps(master->player, hyuAmps, toucher);
@@ -755,7 +755,7 @@ hyudoro_patrol_hit_player
 	return true;
 }
 
-static boolean
+static dboolean
 award_immediately (mobj_t *hyu)
 {
 	player_t *player = get_hyudoro_target_player(hyu);
@@ -814,7 +814,7 @@ award_immediately (mobj_t *hyu)
 	return true;
 }
 
-static boolean
+static dboolean
 hyudoro_return_hit_player
 (		mobj_t * hyu,
 		mobj_t * toucher)
@@ -834,7 +834,7 @@ hyudoro_return_hit_player
 	return true;
 }
 
-static boolean
+static dboolean
 hyudoro_hover_await_stack (mobj_t *hyu)
 {
 	player_t *player = get_hyudoro_target_player(hyu);
@@ -857,7 +857,7 @@ hyudoro_hover_await_stack (mobj_t *hyu)
 static void
 trail_ghosts
 (		mobj_t * hyu,
-		boolean colorize)
+		dboolean colorize)
 {
 	// Spawns every other frame
 	if (leveltime & 1)
@@ -1057,9 +1057,9 @@ Obj_MiniHyudoroThink(mobj_t *th)
 {
 	//angle_t newangle = th->target->angle + th->angle + ANGLE_90;
 	
-	//UINT32 newx = th->target->x + th->target->momx + FixedMul(FixedMul(th->target->scale, th->scale*10), FINECOSINE((newangle) >> ANGLETOFINESHIFT));
+	//uint32_t newx = th->target->x + th->target->momx + FixedMul(FixedMul(th->target->scale, th->scale*10), FINECOSINE((newangle) >> ANGLETOFINESHIFT));
 
-	//UINT32 newy = th->target->y + th->target->momy + FixedMul(FixedMul(th->target->scale, th->scale*10), FINESINE((newangle) >> ANGLETOFINESHIFT));
+	//uint32_t newy = th->target->y + th->target->momy + FixedMul(FixedMul(th->target->scale, th->scale*10), FINESINE((newangle) >> ANGLETOFINESHIFT));
 	if (th->extravalue2 > 0)	//vanishing
 	{
 		th->extravalue2--;
@@ -1216,9 +1216,9 @@ Obj_MiniHyudoroThink_OLD(mobj_t *th)
 {
 	angle_t newangle = th->target->angle + th->angle + ANGLE_90;
 	
-	UINT32 newx = th->target->x + th->target->momx + FixedMul(FixedMul(th->target->scale, th->scale*10), FINECOSINE((newangle) >> ANGLETOFINESHIFT));
+	uint32_t newx = th->target->x + th->target->momx + FixedMul(FixedMul(th->target->scale, th->scale*10), FINECOSINE((newangle) >> ANGLETOFINESHIFT));
 
-	UINT32 newy = th->target->y + th->target->momy + FixedMul(FixedMul(th->target->scale, th->scale*10), FINESINE((newangle) >> ANGLETOFINESHIFT));
+	uint32_t newy = th->target->y + th->target->momy + FixedMul(FixedMul(th->target->scale, th->scale*10), FINESINE((newangle) >> ANGLETOFINESHIFT));
 			
 	th->momx = 0;
 	th->momy = 0;
@@ -1316,7 +1316,7 @@ Obj_HyudoroCollide
 	}
 }
 
-boolean
+dboolean
 Obj_HyudoroShadowZ
 (		mobj_t * hyu,
 		fixed_t * return_z,

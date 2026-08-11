@@ -332,14 +332,14 @@ char menusearch[MAXSTRINGLENGTH+1];
 char **dirmenu, **coredirmenu; // core only local for this file
 size_t sizedirmenu, sizecoredirmenu; // ditto
 size_t dir_on[menudepth];
-UINT8 refreshdirmenu = 0;
+uint8_t refreshdirmenu = 0;
 char *refreshdirname = NULL;
 
 
 #if defined (_XBOX) && defined (_MSC_VER)
 filestatus_t filesearch(char *filename, const char *startpath,
-	const char *priorityfolder, const UINT8 *wantedmd5sum,
-	boolean completepath, int maxsearchdepth)
+	const char *priorityfolder, const uint8_t *wantedmd5sum,
+	dboolean completepath, int maxsearchdepth)
 {
 //NONE?
 	startpath = filename = NULL;
@@ -349,7 +349,7 @@ filestatus_t filesearch(char *filename, const char *startpath,
 	return FS_NOTFOUND;
 }
 
-void closefilemenu(boolean validsize)
+void closefilemenu(dboolean validsize)
 {
 	(void)validsize;
 	return;
@@ -361,7 +361,7 @@ void searchfilemenu(char *tempname)
 	return;
 }
 
-boolean preparefilemenu(boolean samedepth, boolean replayhut)
+dboolean preparefilemenu(dboolean samedepth, dboolean replayhut)
 {
 	(void)samedepth;
 	(void)replayhut;
@@ -370,8 +370,8 @@ boolean preparefilemenu(boolean samedepth, boolean replayhut)
 
 #elif defined (_WIN32_WCE)
 filestatus_t filesearch(char *filename, const char *startpath,
-	const char *priorityfolder, const UINT8 *wantedmd5sum,
-	boolean completepath, int maxsearchdepth)
+	const char *priorityfolder, const uint8_t *wantedmd5sum,
+	dboolean completepath, int maxsearchdepth)
 {
 #ifdef __GNUC__
 //NONE?
@@ -422,7 +422,7 @@ filestatus_t filesearch(char *filename, const char *startpath,
 	return FS_NOTFOUND;
 }
 
-void closefilemenu(boolean validsize)
+void closefilemenu(dboolean validsize)
 {
 	(void)validsize;
 	return;
@@ -434,7 +434,7 @@ void searchfilemenu(char *tempname)
 	return;
 }
 
-boolean preparefilemenu(boolean samedepth, boolean replayhut)
+dboolean preparefilemenu(dboolean samedepth, dboolean replayhut)
 {
 	(void)samedepth;
 	(void)replayhut;
@@ -451,8 +451,8 @@ static const char *filesearch_exclude[] = {
 };
 
 filestatus_t filesearch(char *filename, const char *startpath,
-	const char *priorityfolder, const UINT8 *wantedmd5sum,
-	boolean completepath, int maxsearchdepth)
+	const char *priorityfolder, const uint8_t *wantedmd5sum,
+	dboolean completepath, int maxsearchdepth)
 {
 	filestatus_t retval = FS_NOTFOUND;
 	DIR **dirhandle;
@@ -623,7 +623,7 @@ char exttable[NUM_EXT_TABLE][7] = { // maximum extension length (currently 4) pl
 char filenamebuf[MAX_WADFILES][MAX_WADPATH];
 
 
-static boolean filemenucmp(char *haystack)
+static dboolean filemenucmp(char *haystack)
 {
 	static char localhaystack[128];
 	strlcpy(localhaystack, haystack, 128);
@@ -634,14 +634,14 @@ static boolean filemenucmp(char *haystack)
 	return (!strncmp(localhaystack, menusearch+1, menusearch[0]));
 }
 
-void closefilemenu(boolean validsize)
+void closefilemenu(dboolean validsize)
 {
 	// search
 	if (dirmenu)
 	{
 		if (dirmenu != coredirmenu)
 		{
-			if (dirmenu[0] && ((UINT8)(dirmenu[0][DIR_TYPE]) == EXT_NORESULTS))
+			if (dirmenu[0] && ((uint8_t)(dirmenu[0][DIR_TYPE]) == EXT_NORESULTS))
 			{
 				Z_Free(dirmenu[0]);
 				dirmenu[0] = NULL;
@@ -683,7 +683,7 @@ void searchfilemenu(char *tempname)
 	{
 		if (dirmenu != coredirmenu)
 		{
-			if (dirmenu[0] && ((UINT8)(dirmenu[0][DIR_TYPE]) == EXT_NORESULTS))
+			if (dirmenu[0] && ((uint8_t)(dirmenu[0][DIR_TYPE]) == EXT_NORESULTS))
 			{
 				Z_Free(dirmenu[0]);
 				dirmenu[0] = NULL;
@@ -694,7 +694,7 @@ void searchfilemenu(char *tempname)
 			dirmenu = NULL;
 	}
 
-	first = (((UINT8)(coredirmenu[0][DIR_TYPE]) == EXT_UP) ? 1 : 0); // skip UP...
+	first = (((uint8_t)(coredirmenu[0][DIR_TYPE]) == EXT_UP) ? 1 : 0); // skip UP...
 
 	if (!menusearch[0])
 	{
@@ -767,7 +767,7 @@ void searchfilemenu(char *tempname)
 	}
 }
 
-boolean preparefilemenu(boolean samedepth, boolean replayhut)
+dboolean preparefilemenu(dboolean samedepth, dboolean replayhut)
 {
 	DIR *dirhandle;
 	struct dirent *dent;
@@ -826,7 +826,7 @@ boolean preparefilemenu(boolean samedepth, boolean replayhut)
 				}
 				else if (!cv_addons_showall.value)
 				{
-					UINT8 ext;
+					uint8_t ext;
 					for (ext = 0; ext < NUM_EXT_TABLE; ext++)
 						if (!strcasecmp(exttable[ext]+1, dent->d_name+len-(exttable[ext][0]))) break; // extension comparison
 					if (ext == NUM_EXT_TABLE) continue; // not an addfile-able (or exec-able) file
@@ -887,8 +887,8 @@ boolean preparefilemenu(boolean samedepth, boolean replayhut)
 		{
 			char *temp;
 			size_t len = strlen(dent->d_name)+1;
-			UINT8 ext = EXT_FOLDER;
-			UINT8 folder;
+			uint8_t ext = EXT_FOLDER;
+			uint8_t folder;
 
 			if (!S_ISDIR(fsstat.st_mode)) // file
 			{
@@ -947,7 +947,7 @@ boolean preparefilemenu(boolean samedepth, boolean replayhut)
 			if (!(temp = Z_Malloc((len+DIR_STRING+folder) * sizeof (char), PU_STATIC, NULL)))
 				I_Error("preparefilemenu(): could not create file entry.");
 			temp[DIR_TYPE] = ext;
-			temp[DIR_LEN] = (UINT8)(len);
+			temp[DIR_LEN] = (uint8_t)(len);
 			strlcpy(temp+DIR_STRING, dent->d_name, len);
 			if (folder)
 			{

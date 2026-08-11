@@ -17,7 +17,7 @@
 #include "../../hu_stuff.h"
 #include "../../k_zvote.h"
 
-boolean RR_UseVoteSnitch(void)
+dboolean RR_UseVoteSnitch(void)
 {
     return (cv_votesnitch.value);
 }
@@ -61,7 +61,7 @@ void RR_VoteSnitchNewVote(midVoteType_e type, player_t *victim, player_t *caller
 }
 
 // .. and WHO are the fuckers who keep voting yes?
-void RR_VoteSnitchYesVotes(INT32 playernum)
+void RR_VoteSnitchYesVotes(int32_t playernum)
 {
     // e.g. [VOTE]: SlamDunk voted yes.
     if (playeringame[playernum]) {		

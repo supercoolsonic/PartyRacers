@@ -61,64 +61,64 @@ typedef enum
 
 struct level_tally_t
 {
-	boolean active;
+	dboolean active;
 	player_t *owner;
 
-	UINT16 gt;
-	boolean gotThru;
+	uint16_t gt;
+	dboolean gotThru;
 	char header[64];
-	boolean showRoundNum;
+	dboolean showRoundNum;
 	sfxenum_t gradeVoice;
 
 	// Stats
-	INT32 time;
-	UINT16 ringPool;
-	UINT8 livesAdded;
+	int32_t time;
+	uint16_t ringPool;
+	uint8_t livesAdded;
 	tally_stat_e stats[TALLY_WINDOW_SIZE];
 
 	// Possible grade metrics
-	UINT8 position, numPlayers;
-	UINT8 rings;
-	UINT16 exp, totalExp;
-	UINT16 prisons, totalPrisons;
-	INT32 points, pointLimit;
-	UINT8 powerStones;
+	uint8_t position, numPlayers;
+	uint8_t rings;
+	uint16_t exp, totalExp;
+	uint16_t prisons, totalPrisons;
+	int32_t points, pointLimit;
+	uint8_t powerStones;
 	tally_bonus_e bonuses[TALLY_WINDOW_SIZE];
-	INT32 rank; // FIXME: should be gp_rank_e, weird circular dependency happened
+	int32_t rank; // FIXME: should be gp_rank_e, weird circular dependency happened
 
 	// Animations
 	tally_state_e state;
-	INT32 hudSlide;
-	INT32 delay;
-	INT32 transition, transitionTime;
-	UINT8 lines, lineCount;
-	INT32 displayStat[TALLY_WINDOW_SIZE];
-	INT32 displayBonus[TALLY_WINDOW_SIZE];
-	UINT8 tickSound;
-	UINT8 xtraBlink;
-	boolean showGrade;
-	boolean done;
-	boolean releasedFastForward;
-	INT32 directorWait;
+	int32_t hudSlide;
+	int32_t delay;
+	int32_t transition, transitionTime;
+	uint8_t lines, lineCount;
+	int32_t displayStat[TALLY_WINDOW_SIZE];
+	int32_t displayBonus[TALLY_WINDOW_SIZE];
+	uint8_t tickSound;
+	uint8_t xtraBlink;
+	dboolean showGrade;
+	dboolean done;
+	dboolean releasedFastForward;
+	int32_t directorWait;
 	
 	// Radio hook
-	boolean perfectRace;				//SCS - RADIO START
-	boolean nearlyPerfectExpBonus;
-	boolean perfectExpBonus;
-	boolean perfectRingBonus;
-	boolean perfectPrisonBonus;
-	boolean expBonusEvaulated;
-	boolean prisonBonusEvaluated;
-	boolean ringBonusEvaluated;			//SCS - RADIO END
+	dboolean perfectRace;				//SCS - RADIO START
+	dboolean nearlyPerfectExpBonus;
+	dboolean perfectExpBonus;
+	dboolean perfectRingBonus;
+	dboolean perfectPrisonBonus;
+	dboolean expBonusEvaulated;
+	dboolean prisonBonusEvaluated;
+	dboolean ringBonusEvaluated;			//SCS - RADIO END
 
 #ifdef __cplusplus
-	boolean UseBonuses(void);
+	dboolean UseBonuses(void);
 	void DetermineBonuses(void);
 	void DetermineStatistics(void);
-	INT32 CalculateGrade(void);
+	int32_t CalculateGrade(void);
 	void Init(player_t *player);
 	void NewLine(void);
-	boolean IncrementLine(void);
+	dboolean IncrementLine(void);
 	void Tick(void);
 	void Draw(void);
 #endif
@@ -131,7 +131,7 @@ extern "C" {
 void K_InitPlayerTally(player_t *player);
 void K_TickPlayerTally(player_t *player);
 void K_DrawPlayerTally(void);
-boolean K_PlayerTallyActive(player_t *player);
+dboolean K_PlayerTallyActive(player_t *player);
 tic_t K_TallyDelay(void);
 
 #ifdef __cplusplus

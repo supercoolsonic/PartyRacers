@@ -17,9 +17,9 @@
 rendermode_t rendermode = render_none;
 rendermode_t chosenrendermode = render_none;
 
-boolean highcolor = false;
+dboolean highcolor = false;
 
-boolean allow_fullscreen = false;
+dboolean allow_fullscreen = false;
 
 consvar_t cv_vidwait = CVAR_INIT ("vid_wait", "On", CV_SAVE, CV_OnOff, NULL);
 
@@ -33,12 +33,12 @@ void I_SetPalette(RGBA_t *palette)
 	(void)palette;
 }
 
-INT32 VID_NumModes(void)
+int32_t VID_NumModes(void)
 {
 	return 0;
 }
 
-INT32 VID_GetModeForSize(INT32 w, INT32 h)
+int32_t VID_GetModeForSize(int32_t w, int32_t h)
 {
 	(void)w;
 	(void)h;
@@ -47,13 +47,13 @@ INT32 VID_GetModeForSize(INT32 w, INT32 h)
 
 void VID_PrepareModeList(void){}
 
-INT32 VID_SetMode(INT32 modenum)
+int32_t VID_SetMode(int32_t modenum)
 {
 	(void)modenum;
 	return 0;
 }
 
-boolean VID_CheckRenderer(void)
+dboolean VID_CheckRenderer(void)
 {
 	return false;
 }
@@ -63,7 +63,7 @@ void VID_CheckGLLoaded(rendermode_t oldrender)
 	(void)oldrender;
 }
 
-const char *VID_GetModeName(INT32 modenum)
+const char *VID_GetModeName(int32_t modenum)
 {
 	(void)modenum;
 	return NULL;
@@ -75,12 +75,12 @@ void I_FinishUpdate(void){}
 
 void I_UpdateNoVsync(void) {}
 
-void I_WaitVBL(INT32 count)
+void I_WaitVBL(int32_t count)
 {
 	(void)count;
 }
 
-void I_ReadScreen(UINT8 *scr)
+void I_ReadScreen(uint8_t *scr)
 {
 	(void)scr;
 }

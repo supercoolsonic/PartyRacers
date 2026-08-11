@@ -44,18 +44,18 @@ srb2::String chat_mini_log_offset[8];
  * Battle HUD
  */
 
-static void RR_drawCompactEmeraldHud(INT32 flags)
+static void RR_drawCompactEmeraldHud(int32_t flags)
 {
     static patch_t *kp_rankemerald = static_cast<patch_t*>(W_CachePatchName("K_EMERC", GTC_CACHE));
     static patch_t *kp_rankemeraldflash = static_cast<patch_t*>(W_CachePatchName("K_EMERW", GTC_CACHE));
 
-    INT32 badge_y = (LAPS_Y-6);
-    INT32 startx = (LAPS_X + 8);
-    INT32 starty = badge_y-2;
+    int32_t badge_y = (LAPS_Y-6);
+    int32_t startx = (LAPS_X + 8);
+    int32_t starty = badge_y-2;
 
-    INT32 i = 0;
-    INT32 emeraldGap = 0;
-    INT32 emeraldGapAdd = 6;
+    int32_t i = 0;
+    int32_t emeraldGap = 0;
+    int32_t emeraldGapAdd = 6;
 
     // Firstly, draw the (compact) sticker/badge
     K_DrawSticker(LAPS_X + 8, badge_y, 45, flags, true);
@@ -63,7 +63,7 @@ static void RR_drawCompactEmeraldHud(INT32 flags)
     // Secondly, loop over all the potential emeralds a player can get (i.e. seven.)
     for (i = 0; i < 7; i++)
 	{
-		UINT32 emeraldFlag = (1 << i);
+		uint32_t emeraldFlag = (1 << i);
 		skincolornum_t emeraldColor = static_cast<skincolornum_t>(SKINCOLOR_CHAOSEMERALD1 + i);
 
         // Does the player have THIS specific emerald?
@@ -97,17 +97,17 @@ static void RR_drawCompactEmeraldHud(INT32 flags)
 /**
  * Draw an expanded version of the emerald display HUD.
  */
-static void RR_drawEmeraldHudFull(INT32 flags)
+static void RR_drawEmeraldHudFull(int32_t flags)
 {
     static patch_t *kp_chaosemerald = static_cast<patch_t*>(W_CachePatchName("EMRCA0", GTC_CACHE));
     static patch_t *kp_chaosemeraldoverlay = static_cast<patch_t*>(W_CachePatchName("EMRCB0", GTC_CACHE));
 
-    INT32 startx = LAPS_X + 19;
-    INT32 starty = BASEVIDHEIGHT - 29;
+    int32_t startx = LAPS_X + 19;
+    int32_t starty = BASEVIDHEIGHT - 29;
 
-    INT32 i = 0;
-    INT32 emeraldGap = 0;
-    INT32 emeraldGapAdd = 10;
+    int32_t i = 0;
+    int32_t emeraldGap = 0;
+    int32_t emeraldGapAdd = 10;
     
     // Firstly, draw the sticker/badge
     using srb2::Draw;
@@ -116,7 +116,7 @@ static void RR_drawEmeraldHudFull(INT32 flags)
     // Secondly, loop over all the potential emeralds a player can get (i.e. seven.)
     for (i = 0; i < 7; i++)
 	{
-		UINT32 emeraldFlag = (1 << i);
+		uint32_t emeraldFlag = (1 << i);
 		skincolornum_t emeraldColor = static_cast<skincolornum_t>(SKINCOLOR_CHAOSEMERALD1 + i);
 
         // Does the player have THIS specific emerald?
@@ -150,14 +150,14 @@ static void RR_drawEmeraldHudFull(INT32 flags)
 /**
  * Draw a minimal version of the emerald display HUD, akin to the bumpers and score graphic.
  */
-static void RR_drawEmeraldHudMinimal(INT32 flags)
+static void RR_drawEmeraldHudMinimal(int32_t flags)
 {
     const uint8_t numEmeralds = K_NumEmeralds(stplyr);
-    const boolean isAboutToWin = numEmeralds >= 6;
+    const dboolean isAboutToWin = numEmeralds >= 6;
     static patch_t *kp_chaosemerald = static_cast<patch_t*>(W_CachePatchName("EMRCA0", GTC_CACHE));
 
-    INT32 startx = LAPS_X + 19;
-    INT32 starty = BASEVIDHEIGHT - 29;
+    int32_t startx = LAPS_X + 19;
+    int32_t starty = BASEVIDHEIGHT - 29;
     
     // Firstly, draw the sticker/badge
     K_DrawSticker(LAPS_X+12, starty-14, 38, flags, false);
@@ -190,21 +190,21 @@ static void RR_drawEmeraldHudMinimal(INT32 flags)
     
 }
 
-static void RR_drawEmeraldHud(INT32 flags)
+static void RR_drawEmeraldHud(int32_t flags)
 {
     static patch_t *kp_chaosemerald = static_cast<patch_t*>(W_CachePatchName("EMRCA0", GTC_CACHE));
     static patch_t *kp_chaosemeraldoverlay = static_cast<patch_t*>(W_CachePatchName("EMRCB0", GTC_CACHE));
 
-    INT32 startx = LAPS_X + 19;
-    INT32 starty = BASEVIDHEIGHT - 29;
+    int32_t startx = LAPS_X + 19;
+    int32_t starty = BASEVIDHEIGHT - 29;
 
-    INT32 i = 0;
-    INT32 emeraldGap = 0;
-    INT32 emeraldGapAdd = 10;
+    int32_t i = 0;
+    int32_t emeraldGap = 0;
+    int32_t emeraldGapAdd = 10;
 
 
     const uint8_t numEmeralds = K_NumEmeralds(stplyr);
-    INT32 sticker_width = 20 + (5 * numEmeralds);
+    int32_t sticker_width = 20 + (5 * numEmeralds);
     
     // Firstly, draw the sticker/badge
     K_DrawSticker(LAPS_X+12, starty-14, sticker_width, flags, false);
@@ -216,7 +216,7 @@ static void RR_drawEmeraldHud(INT32 flags)
     // Secondly, loop over all the potential emeralds a player can get (i.e. seven.)
     for (i = 0; i < 7; i++)
 	{
-		UINT32 emeraldFlag = (1 << i);
+		uint32_t emeraldFlag = (1 << i);
 		skincolornum_t emeraldColor = static_cast<skincolornum_t>(SKINCOLOR_CHAOSEMERALD1 + i);
 
         // Does the player have THIS specific emerald?
@@ -256,11 +256,11 @@ typedef enum {
     MAX_EMERALD_LAYOUTS
 } CustomEmeraldDrawType;
 
-static void (*drawEmeraldLayout[MAX_EMERALD_LAYOUTS])(INT32) = {RR_drawEmeraldHudMinimal, RR_drawEmeraldHudFull};
+static void (*drawEmeraldLayout[MAX_EMERALD_LAYOUTS])(int32_t) = {RR_drawEmeraldHudMinimal, RR_drawEmeraldHudFull};
 extern void RR_drawKartEmeralds(void)
 {
-    INT32 splitflags = V_SLIDEIN|V_SNAPTOBOTTOM|V_SNAPTOLEFT;
-    const boolean DRAW_SPHERES_ON_PLAYER = cv_spheremeteronplayer.value == 1;
+    int32_t splitflags = V_SLIDEIN|V_SNAPTOBOTTOM|V_SNAPTOLEFT;
+    const dboolean DRAW_SPHERES_ON_PLAYER = cv_spheremeteronplayer.value == 1;
 
     /**
      * If the player wants the blue sphere meter drawn on top of them,
@@ -284,10 +284,10 @@ extern void RR_drawKartEmeralds(void)
 
 /** Do Radio-related functions for the chatbox, in here. */
 void RR_DoChatStuff(chat_box_parameters_t parameters) {
-    INT32 boxw = cv_chatwidth.value;
-    INT16 chatx = parameters.x, y = parameters.y;
-    INT16 typelines = parameters.typelines;
-    const INT32 charheight = parameters.charheight;
+    int32_t boxw = cv_chatwidth.value;
+    int16_t chatx = parameters.x, y = parameters.y;
+    int16_t typelines = parameters.typelines;
+    const int32_t charheight = parameters.charheight;
 
     // Is the player trying to quick-select an emote?
     //if (is_emote_preview_on) {
@@ -299,12 +299,12 @@ void RR_DoChatStuff(chat_box_parameters_t parameters) {
 		//RR_DrawChatEmoteMenu(chatx + boxw + 4, (y-1) + (typelines*charheight));
 	} else {
         if(cv_chat_emotes.value && cv_chat_emotes_button.value) {
-            const INT32 endkey_x = chatx + boxw + 4;
-            const INT32 endkey_y = (y-10) + (typelines*charheight);
+            const int32_t endkey_x = chatx + boxw + 4;
+            const int32_t endkey_y = (y-10) + (typelines*charheight);
 
             if (radioracers_useendkey) {
-                const UINT8 anim_duration = 32; // K_drawButtonAnim
-                const boolean push = ((I_GetTime() % (anim_duration * 2)) < anim_duration);
+                const uint8_t anim_duration = 32; // K_drawButtonAnim
+                const dboolean push = ((I_GetTime() % (anim_duration * 2)) < anim_duration);
                 const int btn_index = push ? 1 : 0;
     
                 V_DrawStretchyFixedPatch(
@@ -343,13 +343,13 @@ void RR_DoChatStuff(chat_box_parameters_t parameters) {
 
 struct PlayerFinishTicker {
     std::string position;
-    boolean is_local_player;
+    dboolean is_local_player;
     fixed_t x;
     fixed_t old_x;
 };
 
 static std::deque<PlayerFinishTicker> playerFinishTickerQueue;
-static boolean drawLapFlagAtStart = false;
+static dboolean drawLapFlagAtStart = false;
 
 #define offscreen_offset() \
     ((vid.width/vid.dupx) - BASEVIDWIDTH)/ 2
@@ -361,7 +361,7 @@ void RR_addPlayerToFinshTicker(player_t *player)
 	//if (dedicated) return;																//SCS ADD
 
     // https://www.mathsisfun.com/numbers/cardinal-ordinal-chart.html
-    auto position_string = [](UINT8 position) -> std::string {
+    auto position_string = [](uint8_t position) -> std::string {
         if (position % 10 == 1 && position % 100 != 11)
             return std::to_string(position) + "st";
         if (position % 10 == 2 && position % 100 != 12)
@@ -395,7 +395,7 @@ void RR_ridersFinishTick(void)
     playerFinishTickerQueue.front().old_x = playerFinishTickerQueue.front().x;
     playerFinishTickerQueue.front().x -= (2*FRACUNIT);
 
-    auto string_width = [](std::string string) -> INT32 
+    auto string_width = [](std::string string) -> int32_t 
     {
         return V_ThinStringWidth(string.c_str(), 0);
     };
@@ -415,7 +415,7 @@ void RR_ridersFinishTick(void)
         }
     }
 
-    const INT32 OFFSCREEN_X = 0 - offscreen_offset() - string_width(
+    const int32_t OFFSCREEN_X = 0 - offscreen_offset() - string_width(
         playerFinishTickerQueue.front().position.c_str()
     );
 
@@ -442,7 +442,7 @@ void RR_drawRidersFinishTicker(void)
     for (size_t i = 0; i < playerFinishTickerQueue.size(); ++i) {
         PlayerFinishTicker &player = playerFinishTickerQueue[i];
 
-        INT32 flags = V_20TRANS;
+        int32_t flags = V_20TRANS;
 
         if (player.is_local_player)
         {
@@ -485,8 +485,8 @@ void RR_DrawKartLapsMini(void)
     if (r_splitscreen)
         return;
     
-    const INT32 MINI_LAPS_Y = LAPS_Y + 5;
-    const INT32 splitflags = V_HUDTRANS|V_SLIDEIN|V_SNAPTOBOTTOM|V_SNAPTOLEFT;
+    const int32_t MINI_LAPS_Y = LAPS_Y + 5;
+    const int32_t splitflags = V_HUDTRANS|V_SLIDEIN|V_SNAPTOBOTTOM|V_SNAPTOLEFT;
     using srb2::Draw;
 
     Draw(LAPS_X + 7, MINI_LAPS_Y)
@@ -529,8 +529,8 @@ lumpnum_t getEmoteAtlasFrame(int atlas_id) {
 emote_atlas_coordinates_t getEmoteAtlasCoordinates(emote_t* emote, float scale)
 {
     const int atlas_id = emote->atlas_id;
-    INT32 height = EMOTE_ATLASES[atlas_id]->height;
-    INT32 width = EMOTE_ATLASES[atlas_id]->width;
+    int32_t height = EMOTE_ATLASES[atlas_id]->height;
+    int32_t width = EMOTE_ATLASES[atlas_id]->width;
     
     return {
         FloatToFixed(scale * ((emote->atlas_column) * width)),
@@ -548,7 +548,7 @@ lumpnum_t getEmoteFrame(emote_t* emote) {
     if (paused)
         return emote->frames[frame];
 
-    if ((INT32)(leveltime - lastUpdate) >= emote->frame_delay) {
+    if ((int32_t)(leveltime - lastUpdate) >= emote->frame_delay) {
         frame = (frame + 1) % emote->frame_count;
         lastUpdate = leveltime;
     }
@@ -569,7 +569,7 @@ lumpnum_t getChatEmoteFrame(emote_t* emote) {
     if (paused)
         return emote->frames[frame];
 
-    if ((INT32)(gametic - lastUpdate) >= emote->frame_delay) {
+    if ((int32_t)(gametic - lastUpdate) >= emote->frame_delay) {
         frame = (frame + 1) % emote->frame_count;
         lastUpdate = gametic;
     }

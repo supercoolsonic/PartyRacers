@@ -260,7 +260,7 @@ static bool ACS_GetStateFromString(const char *word, statenum_t *type)
 }
 
 /*--------------------------------------------------
-	static bool ACS_GetSkinFromString(const char *word, INT32 *type)
+	static bool ACS_GetSkinFromString(const char *word, int32_t *type)
 
 		Helper function for CallFunc_Get/SetThingProperty.
 		Gets a skin from a string.
@@ -272,9 +272,9 @@ static bool ACS_GetStateFromString(const char *word, statenum_t *type)
 	Return:-
 		true if successful, otherwise false.
 --------------------------------------------------*/
-static bool ACS_GetSkinFromString(const char *word, INT32 *type)
+static bool ACS_GetSkinFromString(const char *word, int32_t *type)
 {
-	INT32 skin = R_SkinAvailable(word);
+	int32_t skin = R_SkinAvailable(word);
 	if (skin == -1)
 		return false;
 
@@ -373,7 +373,7 @@ static bool ACS_ActivatorIsLocal(ACSVM::Thread *thread)
 }
 
 /*--------------------------------------------------
-	static UINT32 ACS_SectorThingCounter(sector_t *sec, mtag_t thingTag, bool (*filter)(mobj_t *))
+	static uint32_t ACS_SectorThingCounter(sector_t *sec, mtag_t thingTag, bool (*filter)(mobj_t *))
 
 		Helper function for CallFunc_CountEnemies
 		and CallFunc_CountPushables. Counts a number
@@ -388,9 +388,9 @@ static bool ACS_ActivatorIsLocal(ACSVM::Thread *thread)
 	Return:-
 		Numbers of things matching the filter found.
 --------------------------------------------------*/
-static UINT32 ACS_SectorThingCounter(sector_t *sec, mtag_t thingTag, bool (*filter)(mobj_t *))
+static uint32_t ACS_SectorThingCounter(sector_t *sec, mtag_t thingTag, bool (*filter)(mobj_t *))
 {
-	UINT32 count = 0;
+	uint32_t count = 0;
 
 	for (msecnode_t *node = sec->touching_thinglist; node; node = node->m_thinglist_next) // things touching this sector
 	{
@@ -417,7 +417,7 @@ static UINT32 ACS_SectorThingCounter(sector_t *sec, mtag_t thingTag, bool (*filt
 }
 
 /*--------------------------------------------------
-	static UINT32 ACS_SectorTagThingCounter(mtag_t sectorTag, sector_t *activator, mtag_t thingTag, bool (*filter)(mobj_t *))
+	static uint32_t ACS_SectorTagThingCounter(mtag_t sectorTag, sector_t *activator, mtag_t thingTag, bool (*filter)(mobj_t *))
 
 		Helper function for CallFunc_CountEnemies
 		and CallFunc_CountPushables. Counts a number
@@ -433,10 +433,10 @@ static UINT32 ACS_SectorThingCounter(sector_t *sec, mtag_t thingTag, bool (*filt
 	Return:-
 		Numbers of things matching the filter found.
 --------------------------------------------------*/
-static UINT32 ACS_SectorIterateThingCounter(sector_t *sec, mtag_t thingTag, bool (*filter)(mobj_t *))
+static uint32_t ACS_SectorIterateThingCounter(sector_t *sec, mtag_t thingTag, bool (*filter)(mobj_t *))
 {
-	UINT32 count = 0;
-	boolean FOFsector = false;
+	uint32_t count = 0;
+	dboolean FOFsector = false;
 	size_t i;
 
 	if (sec == nullptr)
@@ -447,7 +447,7 @@ static UINT32 ACS_SectorIterateThingCounter(sector_t *sec, mtag_t thingTag, bool
 	// Check the lines of this sector, to see if it is a FOF control sector.
 	for (i = 0; i < sec->linecount; i++)
 	{
-		INT32 targetsecnum = -1;
+		int32_t targetsecnum = -1;
 
 		if (sec->lines[i]->special < 100 || sec->lines[i]->special >= 300)
 		{
@@ -471,9 +471,9 @@ static UINT32 ACS_SectorIterateThingCounter(sector_t *sec, mtag_t thingTag, bool
 	return count;
 }
 
-static UINT32 ACS_SectorTagThingCounter(mtag_t sectorTag, sector_t *activator, mtag_t thingTag, bool (*filter)(mobj_t *))
+static uint32_t ACS_SectorTagThingCounter(mtag_t sectorTag, sector_t *activator, mtag_t thingTag, bool (*filter)(mobj_t *))
 {
-	UINT32 count = 0;
+	uint32_t count = 0;
 
 	if (sectorTag == 0)
 	{
@@ -481,7 +481,7 @@ static UINT32 ACS_SectorTagThingCounter(mtag_t sectorTag, sector_t *activator, m
 	}
 	else
 	{
-		INT32 secnum = -1;
+		int32_t secnum = -1;
 
 		TAG_ITER_SECTORS(sectorTag, secnum)
 		{
@@ -500,8 +500,8 @@ static UINT32 ACS_SectorTagThingCounter(mtag_t sectorTag, sector_t *activator, m
 --------------------------------------------------*/
 bool CallFunc_Random(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word argC)
 {
-	INT32 low = 0;
-	INT32 high = 0;
+	int32_t low = 0;
+	int32_t high = 0;
 
 	(void)argC;
 
@@ -762,7 +762,7 @@ bool CallFunc_ChangeFloor(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM:
 	ACSVM::String *str = nullptr;
 	const char *texName = nullptr;
 
-	INT32 secnum = -1;
+	int32_t secnum = -1;
 	mtag_t tag = 0;
 
 	(void)argC;
@@ -793,7 +793,7 @@ bool CallFunc_ChangeCeiling(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSV
 	ACSVM::String *str = NULL;
 	const char *texName = NULL;
 
-	INT32 secnum = -1;
+	int32_t secnum = -1;
 	mtag_t tag = 0;
 
 	(void)argC;
@@ -880,8 +880,8 @@ bool CallFunc_EndPrint(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Wo
 --------------------------------------------------*/
 bool CallFunc_PlayerCount(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word argC)
 {
-	UINT8 numPlayers = 0;
-	UINT8 i;
+	uint8_t numPlayers = 0;
+	uint8_t i;
 
 	(void)argV;
 	(void)argC;
@@ -981,7 +981,7 @@ bool CallFunc_SectorSound(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM:
 	size_t sfxLen = 0;
 
 	sfxenum_t sfxId = sfx_None;
-	INT32 vol = 0;
+	int32_t vol = 0;
 	mobj_t *origin = nullptr;
 
 	(void)argC;
@@ -1040,7 +1040,7 @@ bool CallFunc_AmbientSound(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM
 	size_t sfxLen = 0;
 
 	sfxenum_t sfxId = sfx_None;
-	INT32 vol = 0;
+	int32_t vol = 0;
 
 	(void)argC;
 
@@ -1088,15 +1088,15 @@ enum
 bool CallFunc_SetLineTexture(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word argC)
 {
 	mtag_t tag = 0;
-	UINT8 sideId = 0;
-	UINT8 texPos = 0;
+	uint8_t sideId = 0;
+	uint8_t texPos = 0;
 
 	ACSVM::MapScope *map = NULL;
 	ACSVM::String *str = NULL;
 	const char *texName = NULL;
-	INT32 texId = LUMPERROR;
+	int32_t texId = LUMPERROR;
 
-	INT32 lineId = -1;
+	int32_t lineId = -1;
 
 	(void)argC;
 
@@ -1157,8 +1157,8 @@ bool CallFunc_SetLineTexture(ACSVM::Thread *thread, const ACSVM::Word *argV, ACS
 bool CallFunc_SetLineBlocking(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word argC)
 {
 	mtag_t tag = 0;
-	UINT32 blocking = 0;
-	INT32 lineId = -1;
+	uint32_t blocking = 0;
+	int32_t lineId = -1;
 
 	tag = argV[0];
 
@@ -1190,10 +1190,10 @@ bool CallFunc_SetLineSpecial(ACSVM::Thread *thread, const ACSVM::Word *argV, ACS
 	auto info = &static_cast<Thread *>(thread)->info;
 
 	mtag_t tag = 0;
-	INT32 spec = 0;
+	int32_t spec = 0;
 	size_t numArgs = 0;
 
-	INT32 lineId = -1;
+	int32_t lineId = -1;
 
 	tag = argV[0];
 	spec = argV[1];
@@ -1238,7 +1238,7 @@ bool CallFunc_ThingSound(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::
 
 	mtag_t tag = 0;
 	sfxenum_t sfxId = sfx_None;
-	INT32 vol = 0;
+	int32_t vol = 0;
 
 	mobj_t *mobj = nullptr;
 
@@ -1304,7 +1304,7 @@ bool CallFunc_EndPrintBold(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM
 bool CallFunc_PlayerTeam(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word argC)
 {
 	auto info = &static_cast<Thread *>(thread)->info;
-	UINT8 teamID = TEAM_UNASSIGNED;
+	uint8_t teamID = TEAM_UNASSIGNED;
 
 	(void)argV;
 	(void)argC;
@@ -1328,7 +1328,7 @@ bool CallFunc_PlayerTeam(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::
 bool CallFunc_PlayerRings(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word argC)
 {
 	auto info = &static_cast<Thread *>(thread)->info;
-	SINT8 rings = 0;
+	int8_t rings = 0;
 
 	(void)argV;
 	(void)argC;
@@ -1354,7 +1354,7 @@ bool CallFunc_PlayerRings(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM:
 bool CallFunc_PlayerScore(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word argC)
 {
 	auto info = &static_cast<Thread *>(thread)->info;
-	UINT32 score = 0;
+	uint32_t score = 0;
 
 	(void)argV;
 	(void)argC;
@@ -1378,7 +1378,7 @@ bool CallFunc_PlayerScore(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM:
 bool CallFunc_PlayerNumber(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word argC)
 {
 	auto info = &static_cast<Thread *>(thread)->info;
-	INT16 playerID = -1;
+	int16_t playerID = -1;
 
 	(void)argV;
 	(void)argC;
@@ -1402,7 +1402,7 @@ bool CallFunc_PlayerNumber(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM
 bool CallFunc_ActivatorTID(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word argC)
 {
 	auto info = &static_cast<Thread *>(thread)->info;
-	INT16 tid = 0;
+	int16_t tid = 0;
 
 	(void)argV;
 	(void)argC;
@@ -1532,7 +1532,7 @@ bool CallFunc_CountEnemies(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM
 
 	mtag_t tag = 0;
 	mtag_t tid = 0;
-	UINT32 count = 0;
+	uint32_t count = 0;
 
 	(void)argC;
 
@@ -1561,7 +1561,7 @@ bool CallFunc_CountPushables(ACSVM::Thread *thread, const ACSVM::Word *argV, ACS
 
 	mtag_t tag = 0;
 	mtag_t tid = 0;
-	UINT32 count = 0;
+	uint32_t count = 0;
 
 	(void)argC;
 
@@ -1580,7 +1580,7 @@ bool CallFunc_CountPushables(ACSVM::Thread *thread, const ACSVM::Word *argV, ACS
 --------------------------------------------------*/
 bool CallFunc_HaveUnlockableTrigger(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word argC)
 {
-	UINT8 id = 0;
+	uint8_t id = 0;
 	bool unlocked = false;
 	auto info = &static_cast<Thread *>(thread)->info;
 
@@ -1610,7 +1610,7 @@ bool CallFunc_HaveUnlockableTrigger(ACSVM::Thread *thread, const ACSVM::Word *ar
 --------------------------------------------------*/
 bool CallFunc_HaveUnlockable(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word argC)
 {
-	UINT32 id = 0;
+	uint32_t id = 0;
 	bool unlocked = false;
 
 	(void)argC;
@@ -1647,7 +1647,7 @@ bool CallFunc_PlayerSkin(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::
 		&& (info->mo != NULL && P_MobjWasRemoved(info->mo) == false)
 		&& (info->mo->player != NULL))
 	{
-		UINT16 skin = info->mo->player->skin;
+		uint16_t skin = info->mo->player->skin;
 		thread->dataStk.push(~env->getString( skins[skin]->name )->idx);
 		return false;
 	}
@@ -1657,7 +1657,6 @@ bool CallFunc_PlayerSkin(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::
 }
 
 /*--------------------------------------------------
-
 	bool CallFunc_PlayerSkinRealName(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word argC)
 
 		Returns the activating player's skin real name.
@@ -1674,7 +1673,7 @@ bool CallFunc_PlayerSkinRealName(ACSVM::Thread *thread, const ACSVM::Word *argV,
 		&& (info->mo != NULL && P_MobjWasRemoved(info->mo) == false)
 		&& (info->mo->player != NULL))
 	{
-		UINT16 skin = info->mo->player->skin;
+		uint16_t skin = info->mo->player->skin;
 		thread->dataStk.push(~env->getString( skins[skin]->realname )->idx);
 		return false;
 	}
@@ -1765,7 +1764,7 @@ bool CallFunc_GetObjectDye(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM
 {
 	Environment *env = &ACSEnv;
 	auto info = &static_cast<Thread *>(thread)->info;
-	UINT16 dye = SKINCOLOR_NONE;
+	uint16_t dye = SKINCOLOR_NONE;
 
 	(void)argV;
 	(void)argC;
@@ -1788,7 +1787,7 @@ bool CallFunc_GetObjectDye(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM
 bool CallFunc_PlayerEmeralds(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word argC)
 {
 	auto info = &static_cast<Thread *>(thread)->info;
-	UINT8 count = 0;
+	uint8_t count = 0;
 
 	(void)argV;
 	(void)argC;
@@ -1812,7 +1811,7 @@ bool CallFunc_PlayerEmeralds(ACSVM::Thread *thread, const ACSVM::Word *argV, ACS
 bool CallFunc_PlayerLap(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word argC)
 {
 	auto info = &static_cast<Thread *>(thread)->info;
-	UINT8 laps = 0;
+	uint8_t laps = 0;
 
 	(void)argV;
 	(void)argC;
@@ -1943,12 +1942,12 @@ bool CallFunc_GetGrabbedSprayCan(ACSVM::Thread *thread, const ACSVM::Word *argV,
 	&& gamemap-1 < basenummapheaders)
 	{
 		// See also P_SprayCanInit
-		UINT16 can_id = mapheaderinfo[gamemap-1]->records.spraycan;
+		uint16_t can_id = mapheaderinfo[gamemap-1]->records.spraycan;
 
 		// Intentionally not affected by MCAN_BONUS
 		if (can_id < gamedata->numspraycans)
 		{
-			UINT16 col = gamedata->spraycans[can_id].col;
+			uint16_t col = gamedata->spraycans[can_id].col;
 
 			thread->dataStk.push(~env->getString( skincolors[col].name )->idx);
 			return false;
@@ -2003,8 +2002,8 @@ bool CallFunc_CheckTutorialChallenge(ACSVM::Thread *thread, const ACSVM::Word *a
 --------------------------------------------------*/
 bool CallFunc_PodiumPosition(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word argC)
 {
-	UINT8 ret = MAXPLAYERS;
-	INT32 i;
+	uint8_t ret = MAXPLAYERS;
+	int32_t i;
 
 	(void)argV;
 	(void)argC;
@@ -2063,7 +2062,7 @@ bool CallFunc_SetLineRenderStyle(ACSVM::Thread *thread, const ACSVM::Word *argV,
 	patchalphastyle_t blend = AST_COPY;
 	fixed_t alpha = FRACUNIT;
 
-	INT32 lineId = -1;
+	int32_t lineId = -1;
 
 	tag = argV[0];
 
@@ -2116,7 +2115,7 @@ bool CallFunc_MapWarp(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Wor
 	const char *levelName = NULL;
 	size_t levelLen = 0;
 
-	UINT16 nextmap = NEXTMAP_INVALID;
+	uint16_t nextmap = NEXTMAP_INVALID;
 
 	(void)argC;
 
@@ -2170,12 +2169,12 @@ bool CallFunc_AddBot(ACSVM::Thread *thread, const ACSVM::Word *argV, ACSVM::Word
 	ACSVM::MapScope *map = NULL;
 
 	ACSVM::String *skinStr = nullptr;
-	INT32 skin = -1;
+	int32_t skin = -1;
 
-	UINT8 difficulty = 0;
+	uint8_t difficulty = 0;
 	botStyle_e style = BOT_STYLE_NORMAL;
 
-	UINT8 newplayernum = 0;
+	uint8_t newplayernum = 0;
 	bool success = false;
 
 	(void)argC;
@@ -2257,7 +2256,7 @@ bool CallFunc_DialogueSetCustomSpeaker(ACSVM::Thread *thread, const ACSVM::Word 
 	ACSVM::String *colorStr = nullptr;
 	const char *colorName = nullptr;
 	skincolornum_t colorID = SKINCOLOR_NONE;
-	UINT8 *colormap = nullptr;
+	uint8_t *colormap = nullptr;
 
 	ACSVM::String *voiceStr = nullptr;
 	const char *voiceName = nullptr;
@@ -2539,7 +2538,7 @@ enum
 	LINE_PROP__MAX
 };
 
-static INT32 NextLine(mtag_t tag, size_t *iterate, INT32 activatorID)
+static int32_t NextLine(mtag_t tag, size_t *iterate, int32_t activatorID)
 {
 	size_t i = *iterate;
 	*iterate = *iterate + 1;
@@ -2568,12 +2567,12 @@ bool CallFunc_GetLineProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, AC
 	mtag_t tag = 0;
 	size_t tagIt = 0;
 
-	INT32 lineID = 0;
-	INT32 activatorID = -1;
+	int32_t lineID = 0;
+	int32_t activatorID = -1;
 	line_t *line = NULL;
 
-	INT32 property = LINE_PROP__MAX;
-	INT32 value = 0;
+	int32_t property = LINE_PROP__MAX;
+	int32_t value = 0;
 
 	tag = argV[0];
 
@@ -2595,14 +2594,14 @@ bool CallFunc_GetLineProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, AC
 #define PROP_INT(x, y) \
 	case x: \
 	{ \
-		value = static_cast<INT32>( line->y ); \
+		value = static_cast<int32_t>( line->y ); \
 		break; \
 	}
 
 #define PROP_STR(x, y) \
 	case x: \
 	{ \
-		value = static_cast<INT32>( ~env->getString( line->y )->idx ); \
+		value = static_cast<int32_t>( ~env->getString( line->y )->idx ); \
 		break; \
 	}
 
@@ -2649,12 +2648,12 @@ bool CallFunc_SetLineProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, AC
 	mtag_t tag = 0;
 	size_t tagIt = 0;
 
-	INT32 lineID = 0;
-	INT32 activatorID = -1;
+	int32_t lineID = 0;
+	int32_t activatorID = -1;
 	line_t *line = NULL;
 
-	INT32 property = LINE_PROP__MAX;
-	INT32 value = 0;
+	int32_t property = LINE_PROP__MAX;
+	int32_t value = 0;
 
 	tag = argV[0];
 
@@ -2781,15 +2780,15 @@ bool CallFunc_GetSideProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, AC
 	mtag_t tag = 0;
 	size_t tagIt = 0;
 
-	INT32 lineID = 0;
-	INT32 activatorID = -1;
+	int32_t lineID = 0;
+	int32_t activatorID = -1;
 	line_t *line = NULL;
 
-	UINT8 sideID = 0;
+	uint8_t sideID = 0;
 	side_t *side = NULL;
 
-	INT32 property = SIDE_PROP__MAX;
-	INT32 value = 0;
+	int32_t property = SIDE_PROP__MAX;
+	int32_t value = 0;
 
 	tag = argV[0];
 
@@ -2833,21 +2832,21 @@ bool CallFunc_GetSideProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, AC
 #define PROP_INT(x, y) \
 	case x: \
 	{ \
-		value = static_cast<INT32>( side->y ); \
+		value = static_cast<int32_t>( side->y ); \
 		break; \
 	}
 
 #define PROP_STR(x, y) \
 	case x: \
 	{ \
-		value = static_cast<INT32>( ~env->getString( side->y )->idx ); \
+		value = static_cast<int32_t>( ~env->getString( side->y )->idx ); \
 		break; \
 	}
 
 #define PROP_TEXTURE(x, y) \
 	case x: \
 	{ \
-		value = static_cast<INT32>( ~env->getString( textures[ side->y ]->name )->idx ); \
+		value = static_cast<int32_t>( ~env->getString( textures[ side->y ]->name )->idx ); \
 		break; \
 	}
 
@@ -2884,16 +2883,16 @@ bool CallFunc_SetSideProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, AC
 	mtag_t tag = 0;
 	size_t tagIt = 0;
 
-	INT32 lineID = 0;
-	INT32 activatorID = -1;
+	int32_t lineID = 0;
+	int32_t activatorID = -1;
 	line_t *line = NULL;
 
-	UINT8 sideID = 0;
+	uint8_t sideID = 0;
 	side_t *side = NULL;
-	boolean tryBoth = false;
+	dboolean tryBoth = false;
 
-	INT32 property = SIDE_PROP__MAX;
-	INT32 value = 0;
+	int32_t property = SIDE_PROP__MAX;
+	int32_t value = 0;
 
 	tag = argV[0];
 
@@ -3095,7 +3094,7 @@ enum
 	SECTOR_PROP__MAX
 };
 
-static INT32 NextSector(mtag_t tag, size_t *iterate, INT32 activatorID)
+static int32_t NextSector(mtag_t tag, size_t *iterate, int32_t activatorID)
 {
 	size_t i = *iterate;
 	*iterate = *iterate + 1;
@@ -3124,12 +3123,12 @@ bool CallFunc_GetSectorProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, 
 	mtag_t tag = 0;
 	size_t tagIt = 0;
 
-	INT32 sectorID = 0;
-	INT32 activatorID = -1;
+	int32_t sectorID = 0;
+	int32_t activatorID = -1;
 	sector_t *sector = NULL;
 
-	INT32 property = SECTOR_PROP__MAX;
-	INT32 value = 0;
+	int32_t property = SECTOR_PROP__MAX;
+	int32_t value = 0;
 
 	tag = argV[0];
 
@@ -3151,21 +3150,21 @@ bool CallFunc_GetSectorProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, 
 #define PROP_INT(x, y) \
 	case x: \
 	{ \
-		value = static_cast<INT32>( sector->y ); \
+		value = static_cast<int32_t>( sector->y ); \
 		break; \
 	}
 
 #define PROP_STR(x, y) \
 	case x: \
 	{ \
-		value = static_cast<INT32>( ~env->getString( sector->y )->idx ); \
+		value = static_cast<int32_t>( ~env->getString( sector->y )->idx ); \
 		break; \
 	}
 
 #define PROP_FLAT(x, y) \
 	case x: \
 	{ \
-		value = static_cast<INT32>( ~env->getString( levelflats[ sector->y ].name )->idx ); \
+		value = static_cast<int32_t>( ~env->getString( levelflats[ sector->y ].name )->idx ); \
 		break; \
 	}
 
@@ -3222,12 +3221,12 @@ bool CallFunc_SetSectorProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, 
 	mtag_t tag = 0;
 	size_t tagIt = 0;
 
-	INT32 sectorID = 0;
-	INT32 activatorID = -1;
+	int32_t sectorID = 0;
+	int32_t activatorID = -1;
 	sector_t *sector = NULL;
 
-	INT32 property = SECTOR_PROP__MAX;
-	INT32 value = 0;
+	int32_t property = SECTOR_PROP__MAX;
+	int32_t value = 0;
 
 	tag = argV[0];
 
@@ -3427,8 +3426,8 @@ bool CallFunc_GetThingProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, A
 	mtag_t tag = 0;
 	mobj_t *mobj = NULL;
 
-	INT32 property = SECTOR_PROP__MAX;
-	INT32 value = 0;
+	int32_t property = SECTOR_PROP__MAX;
+	int32_t value = 0;
 
 	tag = argV[0];
 	mobj = P_FindMobjFromTID(tag, mobj, info->mo);
@@ -3441,21 +3440,21 @@ bool CallFunc_GetThingProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, A
 #define PROP_INT(x, y) \
 	case x: \
 	{ \
-		value = static_cast<INT32>( mobj->y ); \
+		value = static_cast<int32_t>( mobj->y ); \
 		break; \
 	}
 
 #define PROP_STR(x, y) \
 	case x: \
 	{ \
-		value = static_cast<INT32>( ~env->getString( mobj->y )->idx ); \
+		value = static_cast<int32_t>( ~env->getString( mobj->y )->idx ); \
 		break; \
 	}
 
 #define PROP_ANGLE(x, y) \
 	case x: \
 	{ \
-		value = static_cast<INT32>( AngleFixed( mobj->y ) ); \
+		value = static_cast<int32_t>( AngleFixed( mobj->y ) ); \
 		break; \
 	}
 
@@ -3466,11 +3465,11 @@ bool CallFunc_GetThingProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, A
 		{ \
 			std::string	prefix = "MT_"; \
 			std::string	full = prefix + FREE_MOBJS[mobj->y - MT_FIRSTFREESLOT]; \
-			value = static_cast<INT32>( ~env->getString( full.c_str() )->idx ); \
+			value = static_cast<int32_t>( ~env->getString( full.c_str() )->idx ); \
 		} \
 		else \
 		{ \
-			value = static_cast<INT32>( ~env->getString( MOBJTYPE_LIST[ mobj->y ] )->idx ); \
+			value = static_cast<int32_t>( ~env->getString( MOBJTYPE_LIST[ mobj->y ] )->idx ); \
 		} \
 		break; \
 	}
@@ -3480,14 +3479,14 @@ bool CallFunc_GetThingProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, A
 	{ \
 		char crunched[5] = {0}; \
 		strncpy(crunched, sprnames[ mobj->y ], 4); \
-		value = static_cast<INT32>( ~env->getString( crunched )->idx ); \
+		value = static_cast<int32_t>( ~env->getString( crunched )->idx ); \
 		break; \
 	}
 
 #define PROP_SPR2(x, y) \
 	case x: \
 	{ \
-		value = static_cast<INT32>( ~env->getString( spr2names[ mobj->y ] )->idx ); \
+		value = static_cast<int32_t>( ~env->getString( spr2names[ mobj->y ] )->idx ); \
 		break; \
 	}
 
@@ -3499,11 +3498,11 @@ bool CallFunc_GetThingProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, A
 		{ \
 			std::string	prefix = "S_"; \
 			std::string	full = prefix + FREE_STATES[stateID - S_FIRSTFREESLOT]; \
-			value = static_cast<INT32>( ~env->getString( full.c_str() )->idx ); \
+			value = static_cast<int32_t>( ~env->getString( full.c_str() )->idx ); \
 		} \
 		else \
 		{ \
-			value = static_cast<INT32>( ~env->getString( STATE_LIST[ stateID ] )->idx ); \
+			value = static_cast<int32_t>( ~env->getString( STATE_LIST[ stateID ] )->idx ); \
 		} \
 		break; \
 	}
@@ -3514,7 +3513,7 @@ bool CallFunc_GetThingProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, A
 		if (mobj->y != NULL) \
 		{ \
 			skin_t *skin = static_cast<skin_t *>(mobj->y); \
-			value = static_cast<INT32>( ~env->getString( skin->name )->idx ); \
+			value = static_cast<int32_t>( ~env->getString( skin->name )->idx ); \
 		} \
 		break; \
 	}
@@ -3522,7 +3521,7 @@ bool CallFunc_GetThingProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, A
 #define PROP_COLOR(x, y) \
 	case x: \
 	{ \
-		value = static_cast<INT32>( ~env->getString( skincolors[ mobj->y ].name )->idx ); \
+		value = static_cast<int32_t>( ~env->getString( skincolors[ mobj->y ].name )->idx ); \
 		break; \
 	}
 
@@ -3531,7 +3530,7 @@ bool CallFunc_GetThingProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, A
 	{ \
 		if (P_MobjWasRemoved(mobj->y) == false) \
 		{ \
-			value = static_cast<INT32>( mobj->y->tid ); \
+			value = static_cast<int32_t>( mobj->y->tid ); \
 		} \
 		break; \
 	}
@@ -3639,8 +3638,8 @@ bool CallFunc_SetThingProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, A
 	mtag_t tag = 0;
 	mobj_t *mobj = NULL;
 
-	INT32 property = SECTOR_PROP__MAX;
-	INT32 value = 0;
+	int32_t property = SECTOR_PROP__MAX;
+	int32_t value = 0;
 
 	tag = argV[0];
 	mobj_t *next = P_FindMobjFromTID(tag, mobj, info->mo);
@@ -3755,7 +3754,7 @@ bool CallFunc_SetThingProperty(ACSVM::Thread *thread, const ACSVM::Word *argV, A
 #define PROP_SKIN(x, y) \
 	case x: \
 	{ \
-		INT32 newSkin = (mobj->skin != NULL) ? (static_cast<skin_t *>(mobj->skin)->skinnum) : -1; \
+		int32_t newSkin = (mobj->skin != NULL) ? (static_cast<skin_t *>(mobj->skin)->skinnum) : -1; \
 		bool success = ACS_GetSkinFromString(thread->scopeMap->getString( value )->str, &newSkin); \
 		if (success == true) \
 		{ \
@@ -3918,14 +3917,14 @@ bool CallFunc_GetLineUserProperty(ACSVM::Thread *thread, const ACSVM::Word *argV
 	mtag_t tag = 0;
 	size_t tagIt = 0;
 
-	INT32 lineID = 0;
-	INT32 activatorID = -1;
+	int32_t lineID = 0;
+	int32_t activatorID = -1;
 	line_t *line = NULL;
 
 	const char *key = NULL;
 
 	mapUserProperty_t *prop = NULL;
-	INT32 ret = 0;
+	int32_t ret = 0;
 
 	tag = argV[0];
 	key = thread->scopeMap->getString(argV[1])->str;
@@ -3951,7 +3950,7 @@ bool CallFunc_GetLineUserProperty(ACSVM::Thread *thread, const ACSVM::Word *argV
 		{
 			case USER_PROP_BOOL:
 			{
-				ret = static_cast<INT32>(prop->valueBool);
+				ret = static_cast<int32_t>(prop->valueBool);
 				break;
 			}
 			case USER_PROP_INT:
@@ -3961,12 +3960,12 @@ bool CallFunc_GetLineUserProperty(ACSVM::Thread *thread, const ACSVM::Word *argV
 			}
 			case USER_PROP_FIXED:
 			{
-				ret = static_cast<INT32>(prop->valueFixed);
+				ret = static_cast<int32_t>(prop->valueFixed);
 				break;
 			}
 			case USER_PROP_STR:
 			{
-				ret = static_cast<INT32>( ~env->getString( prop->valueStr )->idx );
+				ret = static_cast<int32_t>( ~env->getString( prop->valueStr )->idx );
 				break;
 			}
 		}
@@ -3984,17 +3983,17 @@ bool CallFunc_GetSideUserProperty(ACSVM::Thread *thread, const ACSVM::Word *argV
 	mtag_t tag = 0;
 	size_t tagIt = 0;
 
-	INT32 lineID = 0;
-	INT32 activatorID = -1;
+	int32_t lineID = 0;
+	int32_t activatorID = -1;
 	line_t *line = NULL;
 
-	UINT8 sideID = 0;
+	uint8_t sideID = 0;
 	side_t *side = NULL;
 
 	const char *key = NULL;
 
 	mapUserProperty_t *prop = NULL;
-	INT32 ret = 0;
+	int32_t ret = 0;
 
 	tag = argV[0];
 	sideID = argV[1];
@@ -4031,7 +4030,7 @@ bool CallFunc_GetSideUserProperty(ACSVM::Thread *thread, const ACSVM::Word *argV
 		{
 			case USER_PROP_BOOL:
 			{
-				ret = static_cast<INT32>(prop->valueBool);
+				ret = static_cast<int32_t>(prop->valueBool);
 				break;
 			}
 			case USER_PROP_INT:
@@ -4041,12 +4040,12 @@ bool CallFunc_GetSideUserProperty(ACSVM::Thread *thread, const ACSVM::Word *argV
 			}
 			case USER_PROP_FIXED:
 			{
-				ret = static_cast<INT32>(prop->valueFixed);
+				ret = static_cast<int32_t>(prop->valueFixed);
 				break;
 			}
 			case USER_PROP_STR:
 			{
-				ret = static_cast<INT32>( ~env->getString( prop->valueStr )->idx );
+				ret = static_cast<int32_t>( ~env->getString( prop->valueStr )->idx );
 				break;
 			}
 		}
@@ -4064,14 +4063,14 @@ bool CallFunc_GetSectorUserProperty(ACSVM::Thread *thread, const ACSVM::Word *ar
 	mtag_t tag = 0;
 	size_t tagIt = 0;
 
-	INT32 sectorID = 0;
-	INT32 activatorID = -1;
+	int32_t sectorID = 0;
+	int32_t activatorID = -1;
 	sector_t *sector = NULL;
 
 	const char *key = NULL;
 
 	mapUserProperty_t *prop = NULL;
-	INT32 ret = 0;
+	int32_t ret = 0;
 
 	tag = argV[0];
 	key = thread->scopeMap->getString(argV[1])->str;
@@ -4097,7 +4096,7 @@ bool CallFunc_GetSectorUserProperty(ACSVM::Thread *thread, const ACSVM::Word *ar
 		{
 			case USER_PROP_BOOL:
 			{
-				ret = static_cast<INT32>(prop->valueBool);
+				ret = static_cast<int32_t>(prop->valueBool);
 				break;
 			}
 			case USER_PROP_INT:
@@ -4107,12 +4106,12 @@ bool CallFunc_GetSectorUserProperty(ACSVM::Thread *thread, const ACSVM::Word *ar
 			}
 			case USER_PROP_FIXED:
 			{
-				ret = static_cast<INT32>(prop->valueFixed);
+				ret = static_cast<int32_t>(prop->valueFixed);
 				break;
 			}
 			case USER_PROP_STR:
 			{
-				ret = static_cast<INT32>( ~env->getString( prop->valueStr )->idx );
+				ret = static_cast<int32_t>( ~env->getString( prop->valueStr )->idx );
 				break;
 			}
 		}
@@ -4133,7 +4132,7 @@ bool CallFunc_GetThingUserProperty(ACSVM::Thread *thread, const ACSVM::Word *arg
 	const char *key = NULL;
 
 	mapUserProperty_t *prop = NULL;
-	INT32 ret = 0;
+	int32_t ret = 0;
 
 	tag = argV[0];
 	key = thread->scopeMap->getString(argV[1])->str;
@@ -4151,7 +4150,7 @@ bool CallFunc_GetThingUserProperty(ACSVM::Thread *thread, const ACSVM::Word *arg
 		{
 			case USER_PROP_BOOL:
 			{
-				ret = static_cast<INT32>(prop->valueBool);
+				ret = static_cast<int32_t>(prop->valueBool);
 				break;
 			}
 			case USER_PROP_INT:
@@ -4161,12 +4160,12 @@ bool CallFunc_GetThingUserProperty(ACSVM::Thread *thread, const ACSVM::Word *arg
 			}
 			case USER_PROP_FIXED:
 			{
-				ret = static_cast<INT32>(prop->valueFixed);
+				ret = static_cast<int32_t>(prop->valueFixed);
 				break;
 			}
 			case USER_PROP_STR:
 			{
-				ret = static_cast<INT32>( ~env->getString( prop->valueStr )->idx );
+				ret = static_cast<int32_t>( ~env->getString( prop->valueStr )->idx );
 				break;
 			}
 		}

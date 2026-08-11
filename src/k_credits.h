@@ -28,13 +28,13 @@ void F_StartCredits(void);
 
 void F_DeferContinueCredits(void);
 
-boolean F_IsDeferredContinueCredits(void);
+dboolean F_IsDeferredContinueCredits(void);
 
 void F_ContinueCredits(void);
 
 void F_TickCreditsDemoExit(void);
 
-INT32 F_CreditsDemoExitFade(void);
+int32_t F_CreditsDemoExitFade(void);
 
 void F_ConsiderCreditsMusicUpdate(void);
 

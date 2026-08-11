@@ -221,10 +221,10 @@ menu_t OPTIONS_GameplayItemsDef_Party = {							//SCS ADD
 	NULL,
 };
 
-boolean M_AnyItemsEnabled(void);
-boolean M_AnyItemsEnabled(void)
+dboolean M_AnyItemsEnabled(void);
+dboolean M_AnyItemsEnabled(void)
 {
-	INT32 i;
+	int32_t i;
 	for (i = 0; i < NUMKARTRESULTS-1; i++)
 	{
 		if (cv_items[i].value)
@@ -258,21 +258,21 @@ void KartFrantic_MenuSound(void)
 	S_StartSound(NULL, (cv_kartfrantic.value ? sfx_noooo2 : sfx_kc48));
 }
 
-void M_HandleItemToggles(INT32 choice)
+void M_HandleItemToggles(int32_t choice)
 {
-	const INT32 width = 8, height = 4;
-	//const INT32 width = 11, height = 5;						//SCS EDIT
-	INT32 column = itemOn/height, row = itemOn%height;
-	INT16 next;
-	UINT8 i;
-	boolean exitmenu = false;
-	const UINT8 pid = 0;
+	const int32_t width = 8, height = 4;
+	//const int32_t width = 11, height = 5;						//SCS EDIT
+	int32_t column = itemOn/height, row = itemOn%height;
+	int16_t next;
+	uint8_t i;
+	dboolean exitmenu = false;
+	const uint8_t pid = 0;
 
 	(void) choice;
 
 	if (M_MenuExtraPressed(pid))
 	{
-		const boolean check = !M_AnyItemsEnabled();
+		const dboolean check = !M_AnyItemsEnabled();
 		for (i = 0; i < NUMKARTRESULTS-1; i++)
 		{
 			if (cv_items[i].value != check)

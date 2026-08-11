@@ -77,7 +77,7 @@
 // comeback is Battle Mode's karma comeback, also bool
 // mapreset is set when enough players fill an empty server
 
-UINT8 K_SetPlayerItemAmount(player_t *player, INT32 amount)
+uint8_t K_SetPlayerItemAmount(player_t *player, int32_t amount)
 {
 	if (amount & ~UINT8_MAX)
 	{
@@ -88,7 +88,7 @@ UINT8 K_SetPlayerItemAmount(player_t *player, INT32 amount)
 	return (player->itemamount = amount);
 }
 
-UINT8 K_SetPlayerBackupItemAmount(player_t *player, INT32 amount)
+uint8_t K_SetPlayerBackupItemAmount(player_t *player, int32_t amount)
 {
 	if (amount & ~UINT8_MAX)
 	{
@@ -99,12 +99,12 @@ UINT8 K_SetPlayerBackupItemAmount(player_t *player, INT32 amount)
 	return (player->backupitemamount = amount);
 }
 
-UINT8 K_AdjustPlayerItemAmount(player_t *player, INT32 amount)
+uint8_t K_AdjustPlayerItemAmount(player_t *player, int32_t amount)
 {
 	return K_SetPlayerItemAmount(player, player->itemamount + amount);
 }
 
-UINT8 K_AdjustPlayerBackupItemAmount(player_t *player, INT32 amount)
+uint8_t K_AdjustPlayerBackupItemAmount(player_t *player, int32_t amount)
 {
 	return K_SetPlayerBackupItemAmount(player, player->backupitemamount + amount);
 }
@@ -127,18 +127,18 @@ void K_PopBubbleShield(player_t *player)
 	player->bubbledrag = false;
 }
 
-boolean K_ThunderDome(void)
+dboolean K_ThunderDome(void)
 {
 	if (K_CanChangeRules(true))
 	{
-		return (boolean)cv_thunderdome.value;
+		return (dboolean)cv_thunderdome.value;
 	}
 
 	return false;
 }
 
 // lat: used for when the player is in some weird state where it wouldn't be wise for it to be overwritten by another object that does similarly wacky shit.
-boolean K_isPlayerInSpecialState(player_t *p)
+dboolean K_isPlayerInSpecialState(player_t *p)
 {
 	return (
 		p->rideroid
@@ -150,7 +150,7 @@ boolean K_isPlayerInSpecialState(player_t *p)
 	);
 }
 
-boolean K_IsDuelItem(mobjtype_t type)
+dboolean K_IsDuelItem(mobjtype_t type)
 {
 	switch (type)
 	{
@@ -173,12 +173,12 @@ boolean K_IsDuelItem(mobjtype_t type)
 	}
 }
 
-boolean K_DuelItemAlwaysSpawns(mapthing_t *mt)
+dboolean K_DuelItemAlwaysSpawns(mapthing_t *mt)
 {
 	return !!(mt->thing_args[0]);
 }
 
-boolean K_InRaceDuel(void)
+dboolean K_InRaceDuel(void)
 {
 	return (
 		inDuel &&
@@ -211,7 +211,7 @@ player_t *K_DuelOpponent(player_t *player)
 		return player; // ????
 	else
 	{
-		for (UINT8 i = 0; i < MAXPLAYERS; i++)
+		for (uint8_t i = 0; i < MAXPLAYERS; i++)
 		{
 			if (playeringame[i] && !players[i].spectator && player - players != i)
 				return &players[i];
@@ -259,8 +259,8 @@ static void K_SpawnItemCapsules(void)
 
 	for (i = 0; i < nummapthings; i++, mt++)
 	{
-		boolean isRingCapsule = false;
-		INT32 modeFlags = 0;
+		dboolean isRingCapsule = false;
+		int32_t modeFlags = 0;
 
 		if (mt->type != mobjinfo[MT_ITEMCAPSULE].doomednum)
 		{
@@ -312,9 +312,9 @@ static void K_SpawnItemCapsules(void)
 
 void K_TimerInit(void)
 {
-	UINT8 i;
-	UINT8 numPlayers = 0;
-	boolean domodeattack = ((modeattacking != ATTACKING_NONE)
+	uint8_t i;
+	uint8_t numPlayers = 0;
+	dboolean domodeattack = ((modeattacking != ATTACKING_NONE)
 		|| (grandprixinfo.gp == true && grandprixinfo.eventmode != GPEVENT_NONE));
 
 	if (K_PodiumSequence() == true)
@@ -323,7 +323,7 @@ void K_TimerInit(void)
 		return;
 	}
 
-	const boolean bossintro = K_CheckBossIntro();
+	const dboolean bossintro = K_CheckBossIntro();
 
 	// Rooooooolllling staaaaaaart
 	if ((gametyperules & (GTR_ROLLINGSTART|GTR_CIRCUIT)) == (GTR_ROLLINGSTART|GTR_CIRCUIT))
@@ -434,9 +434,9 @@ void K_TimerInit(void)
 	}
 }
 
-UINT32 K_GetPlayerDontDrawFlag(player_t *player)
+uint32_t K_GetPlayerDontDrawFlag(player_t *player)
 {
-	UINT32 flag = 0;
+	uint32_t flag = 0;
 
 	if (player == NULL)
 		return flag;
@@ -467,8 +467,8 @@ void K_ReduceVFXForEveryone(mobj_t *mo)
 // Angle reflection used by springs & speed pads
 angle_t K_ReflectAngle(angle_t yourangle, angle_t theirangle, fixed_t yourspeed, fixed_t theirspeed)
 {
-	INT32 angoffset;
-	boolean subtract = false;
+	int32_t angoffset;
+	dboolean subtract = false;
 
 	angoffset = yourangle - theirangle;
 
@@ -506,10 +506,10 @@ angle_t K_ReflectAngle(angle_t yourangle, angle_t theirangle, fixed_t yourspeed,
 	return (angle_t)angoffset;
 }
 
-boolean K_IsPlayerLosing(player_t *player)
+dboolean K_IsPlayerLosing(player_t *player)
 {
-	INT32 winningpos = 1;
-	UINT8 i, pcount = 0;
+	int32_t winningpos = 1;
+	uint8_t i, pcount = 0;
 
 	if (K_PodiumSequence() == true)
 	{
@@ -562,8 +562,8 @@ fixed_t K_PlayerScamPercentage(const player_t *player, fixed_t mult)
 	// "Why 8?" Consistency
 	// "Why 2000?" Vibes
 
-	UINT32 distance = K_GetItemRouletteDistance(player, 8);
-	UINT32 scamdistance = FixedMul(mult, SCAMDIST*FRACUNIT)/FRACUNIT;
+	uint32_t distance = K_GetItemRouletteDistance(player, 8);
+	uint32_t scamdistance = FixedMul(mult, SCAMDIST*FRACUNIT)/FRACUNIT;
 
 	if (distance >= scamdistance)
 		return 0;
@@ -571,7 +571,7 @@ fixed_t K_PlayerScamPercentage(const player_t *player, fixed_t mult)
 	return Easing_Linear((scamdistance - distance) * FRACUNIT / scamdistance, 0, FRACUNIT);
 }
 
-fixed_t K_GetKartGameSpeedScalar(SINT8 value)
+fixed_t K_GetKartGameSpeedScalar(int8_t value)
 {
 	// Easy = 81.25%
 	// Normal = 100%
@@ -602,7 +602,7 @@ fixed_t K_GetKartGameSpeedScalar(SINT8 value)
 	return base + duel;
 }
 
-static fixed_t K_GetKartHandlingAssistScalar(SINT8 value)
+static fixed_t K_GetKartHandlingAssistScalar(int8_t value)
 {
 	fixed_t gamescale = K_GetKartGameSpeedScalar(value);
 
@@ -616,7 +616,7 @@ static fixed_t K_GetKartHandlingAssistScalar(SINT8 value)
 }
 
 // Array of states to pick the starting point of the animation, based on the actual time left for invincibility.
-static INT32 K_SparkleTrailStartStates[KART_NUMINVSPARKLESANIM][2] = {
+static int32_t K_SparkleTrailStartStates[KART_NUMINVSPARKLESANIM][2] = {
 	{S_KARTINVULN12, S_KARTINVULNB12},
 	{S_KARTINVULN11, S_KARTINVULNB11},
 	{S_KARTINVULN10, S_KARTINVULNB10},
@@ -631,7 +631,7 @@ static INT32 K_SparkleTrailStartStates[KART_NUMINVSPARKLESANIM][2] = {
 	{S_KARTINVULN1, S_KARTINVULNB1}
 };
 
-INT32 K_GetShieldFromItem(INT32 item)
+int32_t K_GetShieldFromItem(int32_t item)
 {
 	switch (item)
 	{
@@ -645,7 +645,7 @@ INT32 K_GetShieldFromItem(INT32 item)
 	}
 }
 
-SINT8 K_ItemResultToType(SINT8 getitem)
+int8_t K_ItemResultToType(int8_t getitem)
 {
 	if (getitem <= 0 || getitem >= NUMKARTRESULTS) // Sad (Fallback)
 	{
@@ -699,7 +699,7 @@ SINT8 K_ItemResultToType(SINT8 getitem)
 	return getitem;
 }
 
-UINT8 K_ItemResultToAmount(SINT8 getitem, const itemroulette_t *roulette)
+uint8_t K_ItemResultToAmount(int8_t getitem, const itemroulette_t *roulette)
 {
 	switch (getitem)
 	{
@@ -751,9 +751,9 @@ UINT8 K_ItemResultToAmount(SINT8 getitem, const itemroulette_t *roulette)
 	}
 }
 
-tic_t K_GetItemCooldown(SINT8 itemResult)
+tic_t K_GetItemCooldown(int8_t itemResult)
 {
-	SINT8 itemType = K_ItemResultToType(itemResult);
+	int8_t itemType = K_ItemResultToType(itemResult);
 
 	if (itemType < 1 || itemType >= NUMKARTITEMS)
 	{
@@ -763,9 +763,9 @@ tic_t K_GetItemCooldown(SINT8 itemResult)
 	return itemCooldowns[itemType - 1];
 }
 
-void K_SetItemCooldown(SINT8 itemResult, tic_t time)
+void K_SetItemCooldown(int8_t itemResult, tic_t time)
 {
-	SINT8 itemType = K_ItemResultToType(itemResult);
+	int8_t itemType = K_ItemResultToType(itemResult);
 
 	if (itemType < 1 || itemType >= NUMKARTITEMS)
 	{
@@ -788,10 +788,10 @@ void K_RunItemCooldowns(void)
 	}
 }
 
-boolean K_TimeAttackRules(void)
+dboolean K_TimeAttackRules(void)
 {
-	UINT8 playing = 0;
-	UINT8 i;
+	uint8_t playing = 0;
+	uint8_t i;
 
 	if ((gametyperules & (GTR_CATCHER|GTR_CIRCUIT)) == (GTR_CATCHER|GTR_CIRCUIT))
 	{
@@ -842,7 +842,7 @@ boolean K_TimeAttackRules(void)
 	return (playing <= 1);
 }
 
-boolean K_CapsuleTimeAttackRules(void)
+dboolean K_CapsuleTimeAttackRules(void)
 {
 	switch (cv_capsuletest.value)
 	{
@@ -1075,7 +1075,7 @@ void K_PlayerJustBumped(player_t *player)
 	}
 }
 
-static boolean K_JustBumpedException(mobj_t *mobj)
+static dboolean K_JustBumpedException(mobj_t *mobj)
 {
 	switch (mobj->type)
 	{
@@ -1155,7 +1155,7 @@ static fixed_t K_GetBounceForce(mobj_t *mobj1, mobj_t *mobj2, fixed_t distx, fix
 	return FixedMul(force, forceMul);
 }
 
-boolean K_KartBouncing(mobj_t *mobj1, mobj_t *mobj2)
+dboolean K_KartBouncing(mobj_t *mobj1, mobj_t *mobj2)
 {
 	const fixed_t minBump = 25*mapobjectscale;
 	mobj_t *goombaBounce = NULL;
@@ -1186,7 +1186,7 @@ boolean K_KartBouncing(mobj_t *mobj1, mobj_t *mobj2)
 
 	if (mobj1->type != MT_DROPTARGET && mobj1->type != MT_DROPTARGET_SHIELD)
 	{ // Don't bump if you're flashing
-		INT32 flash;
+		int32_t flash;
 
 		flash = K_GetKartFlashing(mobj1->player);
 		if (mobj1->player && mobj1->player->flashing > 0 && mobj1->player->flashing < flash)
@@ -1300,7 +1300,7 @@ boolean K_KartBouncing(mobj_t *mobj1, mobj_t *mobj2)
 }
 
 // K_KartBouncing, but simplified to act like P_BouncePlayerMove
-boolean K_KartSolidBounce(mobj_t *bounceMobj, mobj_t *solidMobj)
+dboolean K_KartSolidBounce(mobj_t *bounceMobj, mobj_t *solidMobj)
 {
 	const fixed_t minBump = 25*mapobjectscale;
 	fixed_t distx, disty;
@@ -1351,7 +1351,7 @@ boolean K_KartSolidBounce(mobj_t *bounceMobj, mobj_t *solidMobj)
 		{
 			// Okay no we need to use bad calculations just to
 			// prevent softlocks -- repeated touches attenuate
-			UINT8 atten = bounceMobj->player->wallSpikeDampen;
+			uint8_t atten = bounceMobj->player->wallSpikeDampen;
 
 			deflection = atten * FRACUNIT;
 			if (bounceMobj->angle - solidMobj->angle >= ANGLE_180)
@@ -1431,7 +1431,7 @@ boolean K_KartSolidBounce(mobj_t *bounceMobj, mobj_t *solidMobj)
 
 	\param	mo	player mobj object
 
-	\return	boolean
+	\return	dboolean
 */
 static fixed_t K_CheckOffroadCollide(mobj_t *mo)
 {
@@ -1519,7 +1519,7 @@ static void K_UpdateOffroad(player_t *player)
 	// If you are in offroad, a timer starts.
 	if (offroadstrength)
 	{
-		UINT8 offramp = (K_GetKartGameSpeedScalar(gamespeed) > FRACUNIT ? 2 : 1);
+		uint8_t offramp = (K_GetKartGameSpeedScalar(gamespeed) > FRACUNIT ? 2 : 1);
 
 		if (player->offroad < offroadstrength)
 			player->offroad += offroadstrength * offramp / TICRATE;
@@ -1539,11 +1539,11 @@ static void K_UpdateOffroad(player_t *player)
 		player->offroad = 0;
 }
 
-static void K_DrawDraftCombiring(player_t *player, mobj_t *victim, fixed_t curdist, fixed_t maxdist, boolean transparent)
+static void K_DrawDraftCombiring(player_t *player, mobj_t *victim, fixed_t curdist, fixed_t maxdist, dboolean transparent)
 {
 #define CHAOTIXBANDLEN 15
 #define CHAOTIXBANDCOLORS 9
-	static const UINT8 colors[CHAOTIXBANDCOLORS] = {
+	static const uint8_t colors[CHAOTIXBANDCOLORS] = {
 		SKINCOLOR_SAPPHIRE,
 		SKINCOLOR_PLATINUM,
 		SKINCOLOR_TEA,
@@ -1555,11 +1555,11 @@ static void K_DrawDraftCombiring(player_t *player, mobj_t *victim, fixed_t curdi
 		SKINCOLOR_TAFFY
 	};
 	fixed_t minimumdist = FixedMul(RING_DIST>>1, player->mo->scale);
-	UINT8 n = CHAOTIXBANDLEN;
-	UINT8 offset = ((leveltime / 3) % 3);
+	uint8_t n = CHAOTIXBANDLEN;
+	uint8_t offset = ((leveltime / 3) % 3);
 	fixed_t stepx, stepy, stepz;
 	fixed_t curx, cury, curz;
-	UINT8 c;
+	uint8_t c;
 
 	if (maxdist == 0)
 	{
@@ -1640,7 +1640,7 @@ static void K_DrawDraftCombiring(player_t *player, mobj_t *victim, fixed_t curdi
 #undef CHAOTIXBANDLEN
 }
 
-static boolean K_HasInfiniteTether(player_t *player)
+static dboolean K_HasInfiniteTether(player_t *player)
 {
 	switch (player->curshield)
 	{
@@ -1663,7 +1663,7 @@ static boolean K_HasInfiniteTether(player_t *player)
 	return false;
 }
 
-static boolean K_TryDraft(player_t *player, mobj_t *dest, fixed_t minDist, fixed_t draftdistance, UINT8 leniency)
+static dboolean K_TryDraft(player_t *player, mobj_t *dest, fixed_t minDist, fixed_t draftdistance, uint8_t leniency)
 {
 //#define EASYDRAFTTEST
 	fixed_t dist, olddraft;
@@ -1748,7 +1748,7 @@ static boolean K_TryDraft(player_t *player, mobj_t *dest, fixed_t minDist, fixed
 
 	// Bots are unusually good at keeping their facing aligned on long, tight turns.
 	// Force them to give up tether in these situations, like a drifting player typically would.
-	UINT16 rejectThreshold = KART_FULLTURN/4;
+	uint16_t rejectThreshold = KART_FULLTURN/4;
 	if (K_PlayerUsesBotMovement(player) && (abs(player->oldcmd.turning + player->cmd.turning) >= rejectThreshold))
 	{
 		return false;
@@ -1821,8 +1821,8 @@ static void K_UpdateDraft(player_t *player)
 	fixed_t topspd = K_GetKartSpeed(player, false, false);
 	fixed_t draftdistance;
 	fixed_t minDist;
-	UINT8 leniency;
-	UINT8 i;
+	uint8_t leniency;
+	uint8_t i;
 
 	if (K_HasInfiniteTether(player))
 	{
@@ -1938,8 +1938,8 @@ draftdurationhandling:
 
 void K_KartPainEnergyFling(player_t *player)
 {
-	static const UINT8 numfling = 5;
-	INT32 i;
+	static const uint8_t numfling = 5;
+	int32_t i;
 	mobj_t *mo;
 	angle_t fa;
 	fixed_t ns;
@@ -1954,7 +1954,7 @@ void K_KartPainEnergyFling(player_t *player)
 
 	for (i = 0; i < numfling; i++)
 	{
-		INT32 objType = mobjinfo[MT_FLINGENERGY].reactiontime;
+		int32_t objType = mobjinfo[MT_FLINGENERGY].reactiontime;
 		fixed_t momxy, momz; // base horizonal/vertical thrusts
 
 		z = player->mo->z;
@@ -2063,7 +2063,7 @@ void K_SpawnDashDustRelease(player_t *player)
 	fixed_t newy;
 	mobj_t *dust;
 	angle_t travelangle;
-	INT32 i;
+	int32_t i;
 
 	I_Assert(player != NULL);
 	I_Assert(player->mo != NULL);
@@ -2167,7 +2167,7 @@ static void K_SpawnBrakeVisuals(player_t *player)
 		angle_t aoff;
 		fixed_t radf;
 
-		UINT8 wheel = 3;
+		uint8_t wheel = 3;
 
 		if (player->drift)
 		{
@@ -2243,7 +2243,7 @@ void K_SpawnDriftBoostClipSpark(mobj_t *clip)
 	spark->momy = clip->momx/2;
 }
 
-static void K_SpawnGenericSpeedLines(player_t *player, boolean top)
+static void K_SpawnGenericSpeedLines(player_t *player, dboolean top)
 {
 	fixed_t rand_x;
 	fixed_t rand_y;
@@ -2333,8 +2333,8 @@ static void K_SpawnGenericSpeedLines(player_t *player, boolean top)
 	}
 	else if (player->ringboost)
 	{
-		UINT8 ringboostcolors[] = {SKINCOLOR_AQUAMARINE, SKINCOLOR_EMERALD, SKINCOLOR_GARDEN, SKINCOLOR_CROCODILE, SKINCOLOR_BANANA};
-		UINT8 ringboostbreakpoint = min(player->ringboost / TICRATE / 6, sizeof(ringboostcolors) / sizeof(ringboostcolors[0]));
+		uint8_t ringboostcolors[] = {SKINCOLOR_AQUAMARINE, SKINCOLOR_EMERALD, SKINCOLOR_GARDEN, SKINCOLOR_CROCODILE, SKINCOLOR_BANANA};
+		uint8_t ringboostbreakpoint = min(player->ringboost / TICRATE / 6, sizeof(ringboostcolors) / sizeof(ringboostcolors[0]));
 		if (ringboostbreakpoint > 0)
 		{
 			fast->color = ringboostcolors[ringboostbreakpoint - 1];
@@ -2389,12 +2389,12 @@ void K_SpawnInvincibilitySpeedLines(mobj_t *mo)
 		fast->destscale = 6*((mo->player->invincibilitytimer/TICRATE)*FRACUNIT)/8;
 }
 
-static void K_SpawnGrowShrinkParticles(mobj_t *mo, INT32 timer)
+static void K_SpawnGrowShrinkParticles(mobj_t *mo, int32_t timer)
 {
-	const boolean shrink = (timer < 0);
-	const INT32 maxTime = (10*TICRATE);
-	const INT32 noTime = (2*TICRATE);
-	INT32 spawnFreq = 1;
+	const dboolean shrink = (timer < 0);
+	const int32_t maxTime = (10*TICRATE);
+	const int32_t noTime = (2*TICRATE);
+	int32_t spawnFreq = 1;
 
 	mobj_t *particle = NULL;
 	fixed_t particleScale = FRACUNIT;
@@ -2488,7 +2488,7 @@ void K_SpawnBumpEffect(mobj_t *mo)
 
 void K_SpawnMagicianParticles(mobj_t *mo, int spread)
 {
-	INT32 i;
+	int32_t i;
 	mobj_t *target = mo->target;
 
 	if (!target || P_MobjWasRemoved(target))
@@ -2498,10 +2498,10 @@ void K_SpawnMagicianParticles(mobj_t *mo, int spread)
 	{
 		fixed_t hmomentum = P_RandomRange(PR_DECORATION, spread * -1, spread) * mo->scale;
 		fixed_t vmomentum = P_RandomRange(PR_DECORATION, spread * -1, spread) * mo->scale;
-		UINT16 color = P_RandomKey(PR_DECORATION, numskincolors);
+		uint16_t color = P_RandomKey(PR_DECORATION, numskincolors);
 
 		fixed_t ang = FixedAngle(P_RandomRange(PR_DECORATION, 0, 359)*FRACUNIT);
-		SINT8 flip = 1;
+		int8_t flip = 1;
 
 		mobj_t *dust;
 
@@ -2529,14 +2529,14 @@ void K_SpawnMagicianParticles(mobj_t *mo, int spread)
 	}
 }
 
-static SINT8 K_GlanceAtPlayers(player_t *glancePlayer, boolean horn)
+static int8_t K_GlanceAtPlayers(player_t *glancePlayer, dboolean horn)
 {
 	const fixed_t maxdistance = FixedMul(1280 * mapobjectscale, K_GetKartGameSpeedScalar(gamespeed));
 	const angle_t blindSpotSize = ANG10; // ANG5
-	SINT8 glanceDir = 0;
-	SINT8 lastValidGlance = 0;
-	const boolean podiumspecial = (K_PodiumSequence() == true && glancePlayer->nextwaypoint == NULL && glancePlayer->speed == 0);
-	boolean mysticmelodyspecial = false;
+	int8_t glanceDir = 0;
+	int8_t lastValidGlance = 0;
+	const dboolean podiumspecial = (K_PodiumSequence() == true && glancePlayer->nextwaypoint == NULL && glancePlayer->speed == 0);
+	dboolean mysticmelodyspecial = false;
 
 	if (podiumspecial)
 	{
@@ -2563,7 +2563,7 @@ static SINT8 K_GlanceAtPlayers(player_t *glancePlayer, boolean horn)
 		angle_t back;
 		angle_t diff;
 		fixed_t distance;
-		SINT8 dir = -1;
+		int8_t dir = -1;
 
 		victimnext = victim->itnext;
 
@@ -2654,7 +2654,7 @@ static SINT8 K_GlanceAtPlayers(player_t *glancePlayer, boolean horn)
 
 	if (horn == true && lastValidGlance != 0)
 	{
-		const boolean tasteful = (glancePlayer->karthud[khud_taunthorns] == 0);
+		const dboolean tasteful = (glancePlayer->karthud[khud_taunthorns] == 0);
 
 		K_FollowerHornTaunt(glancePlayer, glancePlayer, mysticmelodyspecial);
 
@@ -2682,20 +2682,20 @@ static SINT8 K_GlanceAtPlayers(player_t *glancePlayer, boolean horn)
 */
 void K_KartMoveAnimation(player_t *player)
 {
-	const INT16 minturn = KART_FULLTURN/8;
+	const int16_t minturn = KART_FULLTURN/8;
 
 	const fixed_t fastspeed = (K_GetKartSpeed(player, false, true) * 17) / 20; // 85%
 	const fixed_t speedthreshold = player->mo->scale / 8;
 
-	const boolean onground = P_IsObjectOnGround(player->mo);
+	const dboolean onground = P_IsObjectOnGround(player->mo);
 
-	UINT16 buttons = K_GetKartButtons(player);
-	const boolean spinningwheels = (((buttons & BT_ACCELERATE) == BT_ACCELERATE) || (onground && player->speed > 0));
-	const boolean lookback = ((buttons & BT_LOOKBACK) == BT_LOOKBACK);
+	uint16_t buttons = K_GetKartButtons(player);
+	const dboolean spinningwheels = (((buttons & BT_ACCELERATE) == BT_ACCELERATE) || (onground && player->speed > 0));
+	const dboolean lookback = ((buttons & BT_LOOKBACK) == BT_LOOKBACK);
 
-	SINT8 turndir = 0;
-	SINT8 destGlanceDir = 0;
-	SINT8 drift = player->drift;
+	int8_t turndir = 0;
+	int8_t destGlanceDir = 0;
+	int8_t drift = player->drift;
 
 	if (!lookback)
 	{
@@ -2738,7 +2738,7 @@ void K_KartMoveAnimation(player_t *player)
 	{
 		// Only try glancing if you're driving straight.
 		// This avoids all-players loops when we don't need it.
-		const boolean horn = lookback && !(player->pflags & PF_GAINAX);
+		const dboolean horn = lookback && !(player->pflags & PF_GAINAX);
 		destGlanceDir = K_GlanceAtPlayers(player, horn);
 
 		if (lookback == true)
@@ -3064,7 +3064,7 @@ static void K_RegularVoiceTimers(player_t *player)
 		player->karthud[khud_tauntvoices] = 4*TICRATE;
 }
 
-static UINT16 K_ObjectToSkinIDForSounds(mobj_t *source)
+static uint16_t K_ObjectToSkinIDForSounds(mobj_t *source)
 {
 	if (source->player)
 		return source->player->skin;
@@ -3077,11 +3077,11 @@ static UINT16 K_ObjectToSkinIDForSounds(mobj_t *source)
 
 static void K_PlayGenericTastefulTaunt(mobj_t *source, sfxenum_t sfx_id)
 {
-	UINT16 skinid = K_ObjectToSkinIDForSounds(source);
+	uint16_t skinid = K_ObjectToSkinIDForSounds(source);
 	if (skinid >= numskins)
 		return;
 
-	boolean tasteful = (!source->player || !source->player->karthud[khud_tauntvoices]);
+	dboolean tasteful = (!source->player || !source->player->karthud[khud_tauntvoices]);
 
 	if (
 		(
@@ -3116,11 +3116,11 @@ void K_PlayBoostTaunt(mobj_t *source)
 
 void K_PlayOvertakeSound(mobj_t *source)
 {
-	UINT16 skinid = K_ObjectToSkinIDForSounds(source);
+	uint16_t skinid = K_ObjectToSkinIDForSounds(source);
 	if (skinid >= numskins)
 		return;
 
-	boolean tasteful = (!source->player || !source->player->karthud[khud_voices]);
+	dboolean tasteful = (!source->player || !source->player->karthud[khud_voices]);
 
 	if (
 		(
@@ -3141,11 +3141,11 @@ void K_PlayOvertakeSound(mobj_t *source)
 
 static void K_PlayGenericCombatSound(mobj_t *source, mobj_t *other, sfxenum_t sfx_id)
 {
-	UINT16 skinid = K_ObjectToSkinIDForSounds(source);
+	uint16_t skinid = K_ObjectToSkinIDForSounds(source);
 	if (skinid >= numskins)
 		return;
 
-	boolean alwaysHear = false;
+	dboolean alwaysHear = false;
 
 	if (other != NULL && P_MobjWasRemoved(other) == false && other->player != NULL)
 	{
@@ -3199,7 +3199,7 @@ void K_TryHurtSoundExchange(mobj_t *victim, mobj_t *attacker)
 	attacker->player->confirmVictim = (victim->player - players);
 	attacker->player->confirmVictimDelay = TICRATE/2;
 
-	const INT32 followerskin = K_GetEffectiveFollowerSkin(attacker->player);
+	const int32_t followerskin = K_GetEffectiveFollowerSkin(attacker->player);
 	if (attacker->player->follower != NULL
 		&& followerskin >= 0
 		&& followerskin < numfollowers)
@@ -3211,7 +3211,7 @@ void K_TryHurtSoundExchange(mobj_t *victim, mobj_t *attacker)
 
 void K_PlayPowerGloatSound(mobj_t *source)
 {
-	UINT16 skinid = K_ObjectToSkinIDForSounds(source);
+	uint16_t skinid = K_ObjectToSkinIDForSounds(source);
 	if (skinid >= numskins)
 		return;
 
@@ -3229,7 +3229,7 @@ void K_PlayPowerGloatSound(mobj_t *source)
 // MOVED so we don't have to extern K_ObjectToSkinID
 void P_PlayVictorySound(mobj_t *source)
 {
-	UINT16 skinid = K_ObjectToSkinIDForSounds(source);
+	uint16_t skinid = K_ObjectToSkinIDForSounds(source);
 	if (skinid >= numskins)
 		return;
 
@@ -3287,7 +3287,7 @@ void K_MomentumToFacing(player_t *player)
 	player->mo->momy = FixedMul(player->mo->momy - player->cmomy, player->mo->friction) + player->cmomy;
 }
 
-boolean K_ApplyOffroad(const player_t *player)
+dboolean K_ApplyOffroad(const player_t *player)
 {
 	if (player->invincibilitytimer || player->hyudorotimer || player->sneakertimer || player->panelsneakertimer|| player->weaksneakertimer)
 		return false;
@@ -3296,7 +3296,7 @@ boolean K_ApplyOffroad(const player_t *player)
 	return true;
 }
 
-boolean K_SlopeResistance(const player_t *player)
+dboolean K_SlopeResistance(const player_t *player)
 {
 	if (player->invincibilitytimer || player->sneakertimer || player->panelsneakertimer || player->weaksneakertimer || player->tiregrease || player->flamedash || player->baildrop)
 		return true;
@@ -3360,7 +3360,7 @@ fixed_t K_PlayerTripwireSpeedThreshold(const player_t *player)
 		#define REVERSED_SONICBOOM_PRORATION (30000)
 		#define MAX_SONICBOOM_REDUCTION (7*FRACUNIT/9)
 
-		UINT32 dist = K_GetItemRouletteDistance(player, D_NumPlayersInRace());
+		uint32_t dist = K_GetItemRouletteDistance(player, D_NumPlayersInRace());
 
 		if (dist > REVERSED_SONICBOOM_PRORATION)
 		{
@@ -3444,17 +3444,17 @@ tripwirepass_t K_TripwirePassConditions(const player_t *player)
 	return TRIPWIRE_NONE;
 }
 
-boolean K_TripwirePass(const player_t *player)
+dboolean K_TripwirePass(const player_t *player)
 {
 	return (player->tripwirePass != TRIPWIRE_NONE);
 }
 
-boolean K_MovingHorizontally(mobj_t *mobj)
+dboolean K_MovingHorizontally(mobj_t *mobj)
 {
 	return (P_AproxDistance(mobj->momx, mobj->momy) / 4 > abs(mobj->momz));
 }
 
-boolean K_WaterRun(mobj_t *mobj)
+dboolean K_WaterRun(mobj_t *mobj)
 {
 	switch (mobj->type)
 	{
@@ -3552,7 +3552,7 @@ boolean K_WaterRun(mobj_t *mobj)
 	}
 }
 
-boolean K_WaterSkip(mobj_t *mobj)
+dboolean K_WaterSkip(mobj_t *mobj)
 {
 	if (mobj->waterskip >= 2)
 	{
@@ -3753,7 +3753,7 @@ void K_SpawnWaterRunParticles(mobj_t *mobj)
 
 			if (!S_SoundPlaying(mobj, sfx_s3kdbs))
 			{
-				const INT32 volume = (min(trailScale, FRACUNIT) * 255) / FRACUNIT;
+				const int32_t volume = (min(trailScale, FRACUNIT) * 255) / FRACUNIT;
 				S_ReducedVFXSoundAtVolume(mobj, sfx_s3kdbs, volume, mobj->player);
 			}
 		}
@@ -3769,7 +3769,7 @@ void K_SpawnWaterRunParticles(mobj_t *mobj)
 	}
 }
 
-boolean K_IsRidingFloatingTop(const player_t *player)
+dboolean K_IsRidingFloatingTop(const player_t *player)
 {
 	if (player->curshield != KSHIELD_TOP)
 	{
@@ -3779,7 +3779,7 @@ boolean K_IsRidingFloatingTop(const player_t *player)
 	return !Obj_GardenTopPlayerIsGrinding(player);
 }
 
-boolean K_IsHoldingDownTop(const player_t *player)
+dboolean K_IsHoldingDownTop(const player_t *player)
 {
 	if (player->curshield != KSHIELD_TOP)
 	{
@@ -3809,13 +3809,13 @@ mobj_t *K_GetGardenTop(const player_t *player)
 	return player->mo->hnext;
 }
 
-static fixed_t K_FlameShieldDashVar(INT32 val)
+static fixed_t K_FlameShieldDashVar(int32_t val)
 {
 	// 1 second = 75% + 50% top speed
 	return (3*FRACUNIT/4) + (((val * FRACUNIT) / TICRATE));
 }
 
-INT16 K_GetSpindashChargeTime(const player_t *player)
+int16_t K_GetSpindashChargeTime(const player_t *player)
 {
 	// more charge time for higher speed
 	// Tails = 1.7s, Knuckles = 2.2s, Metal = 2.7s
@@ -3886,7 +3886,7 @@ static void K_GetKartBoostPower(player_t *player)
 
 	fixed_t boostpower = FRACUNIT;
 	fixed_t speedboost = 0, accelboost = 0, handleboost = 0;
-	UINT8 numboosts = 0;
+	uint8_t numboosts = 0;
 
 	if (player->spinouttimer && player->wipeoutslow == 1) // Slow down after you've been bumped
 	{
@@ -3918,7 +3918,7 @@ static void K_GetKartBoostPower(player_t *player)
 
 	if (player->sneakertimer) // Sneaker
 	{
-		UINT8 i;
+		uint8_t i;
 		for (i = 0; i < player->numsneakers; i++)
 		{
 			ADDBOOST(FRACUNIT, 8*FRACUNIT, HANDLESCALING+HANDLESCALING/3); // + 100% top speed, + 800% acceleration, +50%(???) handling
@@ -3927,7 +3927,7 @@ static void K_GetKartBoostPower(player_t *player)
 
 	if (player->panelsneakertimer) // Sneaker panel
 	{
-		UINT8 i;
+		uint8_t i;
 		for (i = 0; i < player->numpanelsneakers; i++)
 		{
 			ADDBOOST(FRACUNIT/2, 8*FRACUNIT, HANDLESCALING); // + 50% top speed, + 800% acceleration, +50%(???) handling
@@ -3936,7 +3936,7 @@ static void K_GetKartBoostPower(player_t *player)
 
 	if (player->weaksneakertimer) // Rocket sneaker boost
 	{
-		UINT8 i;
+		uint8_t i;
 		for (i = 0; i < player->numweaksneakers; i++)
 		{
 			ADDBOOST((FRACUNIT*85)/100, 8*FRACUNIT, HANDLESCALING+HANDLESCALING/3); // + 85% top speed, + 800% acceleration, +50%(???) handling
@@ -4047,7 +4047,7 @@ static void K_GetKartBoostPower(player_t *player)
 	if (player->driftboost) // Drift Boost
 	{
 		// Rebuff Eggman's stat block corner
-		// const INT32 heavyAccel = ((9 - player->kartspeed) * 2) + (player->kartweight - 1);
+		// const int32_t heavyAccel = ((9 - player->kartspeed) * 2) + (player->kartweight - 1);
 		// const fixed_t heavyAccelBonus = FRACUNIT + ((heavyAccel * maxmetabolismincrease * 2) / 24);
 
 		// hello commit from 18 months ago, The Situation Has Changed.
@@ -4139,11 +4139,11 @@ static void K_GetKartBoostPower(player_t *player)
 		// Even when not inputting a turn, drift prediction is hard.
 		// Turn solver will sometimes need to slightly turn to stay "aligned".
 		// Award full boost even if turn solver creates a fractional miniturn.
-		const INT16 inner_deadzone = KART_FULLTURN / 100;
+		const int16_t inner_deadzone = KART_FULLTURN / 100;
 
-		INT16 steer_threshold = FixedMul((FRACUNIT * player->kartweight) / 9, max_steer_threshold)>>FRACBITS;
+		int16_t steer_threshold = FixedMul((FRACUNIT * player->kartweight) / 9, max_steer_threshold)>>FRACBITS;
 
-		INT16 steering = abs(player->steering);
+		int16_t steering = abs(player->steering);
 		steering = max(steering - inner_deadzone, 0);
 
 		fixed_t frac = 0;
@@ -4273,7 +4273,7 @@ fixed_t K_GrowShrinkSpeedMul(const player_t *player)
 }
 
 // Returns kart speed from a stat. Boost power and scale are NOT taken into account, no player or object is necessary.
-fixed_t K_GetKartSpeedFromStat(UINT8 kartspeed)
+fixed_t K_GetKartSpeedFromStat(uint8_t kartspeed)
 {
 	const fixed_t xspd = (3*FRACUNIT)/64;
 	fixed_t g_cc = K_GetKartGameSpeedScalar(gamespeed) + xspd;
@@ -4313,9 +4313,9 @@ static fixed_t K_GetKartSpeedAssist(const player_t *player)
 	return FixedMul(player->loneliness, MAX_SPEED_ASSIST);
 }
 
-fixed_t K_GetKartSpeed(const player_t *player, boolean doboostpower, boolean dorubberband)
+fixed_t K_GetKartSpeed(const player_t *player, dboolean doboostpower, dboolean dorubberband)
 {
-	const boolean mobjValid = (player->mo != NULL && P_MobjWasRemoved(player->mo) == false);
+	const dboolean mobjValid = (player->mo != NULL && P_MobjWasRemoved(player->mo) == false);
 	const fixed_t physicsScale = mobjValid ? K_GrowShrinkSpeedMul(player) : FRACUNIT;
 	fixed_t finalspeed = 0;
 
@@ -4419,8 +4419,8 @@ fixed_t K_GetKartSpeed(const player_t *player, boolean doboostpower, boolean dor
 fixed_t K_GetKartAccel(const player_t *player)
 {
 	fixed_t k_accel = 121;
-	//UINT8 stat = (9 - player->kartspeed);
-	INT16 stat = (9 - player->kartspeed);			//SCS EDIT MERGE REQUEST
+	//uint8_t stat = (9 - player->kartspeed);
+	int16_t stat = (9 - player->kartspeed);			//SCS EDIT MERGE REQUEST
 
 	if (K_PodiumSequence() == true)
 	{
@@ -4454,9 +4454,9 @@ fixed_t K_GetKartAccel(const player_t *player)
 	return k_accel;
 }
 
-UINT16 K_GetKartFlashing(const player_t *player)
+uint16_t K_GetKartFlashing(const player_t *player)
 {
-	UINT16 tics = flashingtics;
+	uint16_t tics = flashingtics;
 
 	if (gametyperules & GTR_BUMPERS)
 	{
@@ -4472,7 +4472,7 @@ UINT16 K_GetKartFlashing(const player_t *player)
 	return tics;
 }
 
-boolean K_PlayerShrinkCheat(const player_t *player)
+dboolean K_PlayerShrinkCheat(const player_t *player)
 {
 	return (
 		(player->pflags & PF_SHRINKACTIVE)
@@ -4483,7 +4483,7 @@ boolean K_PlayerShrinkCheat(const player_t *player)
 
 void K_UpdateShrinkCheat(player_t *player)
 {
-	const boolean mobjValid = (player->mo != NULL && P_MobjWasRemoved(player->mo) == false);
+	const dboolean mobjValid = (player->mo != NULL && P_MobjWasRemoved(player->mo) == false);
 
 	if (player->pflags & PF_SHRINKME)
 	{
@@ -4500,16 +4500,16 @@ void K_UpdateShrinkCheat(player_t *player)
 	}
 }
 
-boolean K_KartKickstart(const player_t *player)
+dboolean K_KartKickstart(const player_t *player)
 {
 	return ((player->pflags & PF_KICKSTARTACCEL)
 		&& (!K_PlayerUsesBotMovement(player))
 		&& (player->kickstartaccel >= ACCEL_KICKSTART));
 }
 
-UINT16 K_GetKartButtons(const player_t *player)
+uint16_t K_GetKartButtons(const player_t *player)
 {
-	UINT16 buttons = player->cmd.buttons;
+	uint16_t buttons = player->cmd.buttons;
 	if ((buttons & BT_RESPAWNMASK) == BT_RESPAWNMASK)
 	{
 		buttons &= ~BT_LOOKBACK;
@@ -4521,9 +4521,9 @@ UINT16 K_GetKartButtons(const player_t *player)
 	return buttons;
 }
 
-SINT8 K_GetForwardMove(const player_t *player)
+int8_t K_GetForwardMove(const player_t *player)
 {
-	SINT8 forwardmove = player->cmd.forwardmove;
+	int8_t forwardmove = player->cmd.forwardmove;
 
 	if ((player->pflags & PF_STASIS)
 		|| (player->carry == CR_SLIDING)
@@ -4571,7 +4571,7 @@ SINT8 K_GetForwardMove(const player_t *player)
 		{
 			// forwardmove = MAXPLMOVE;
 
-			UINT8 minmove = MAXPLMOVE/10;
+			uint8_t minmove = MAXPLMOVE/10;
 			fixed_t assistmove = (MAXPLMOVE - minmove) * FRACUNIT;
 
 			angle_t topdelta = player->mo->angle - K_MomentumAngle(player->mo);
@@ -4634,7 +4634,7 @@ fixed_t K_3dKartMovement(const player_t *player)
 	fixed_t finalspeed = K_GetNewSpeed(player);
 
 	fixed_t movemul = FRACUNIT;
-	SINT8 forwardmove = K_GetForwardMove(player);
+	int8_t forwardmove = K_GetForwardMove(player);
 
 	movemul = abs(forwardmove * FRACUNIT) / 50;
 
@@ -4679,7 +4679,7 @@ angle_t K_MomentumAngleReal(const mobj_t *mo)
 }
 
 // Scale amp rewards for crab bucketing. Play ambitiously!
-boolean K_PvPAmpReward(UINT32 award, player_t *attacker, player_t *defender)
+dboolean K_PvPAmpReward(uint32_t award, player_t *attacker, player_t *defender)
 {
 	if (G_SameTeam(attacker, defender) == true)
 	{
@@ -4687,10 +4687,10 @@ boolean K_PvPAmpReward(UINT32 award, player_t *attacker, player_t *defender)
 		return 0;
 	}
 
-	//UINT32 epsilon = FixedMul(2048/4, mapobjectscale); // How close is close enough that full reward seems fair, even if you're technically ahead?
-	//UINT32 range = FixedMul(2048, mapobjectscale);
-	//UINT32 atkdist = attacker->distancetofinish + epsilon;
-	//UINT32 defdist = defender->distancetofinish;
+	//uint32_t epsilon = FixedMul(2048/4, mapobjectscale); // How close is close enough that full reward seems fair, even if you're technically ahead?
+	//uint32_t range = FixedMul(2048, mapobjectscale);
+	//uint32_t atkdist = attacker->distancetofinish + epsilon;
+	//uint32_t defdist = defender->distancetofinish;
 
 	/*if (atkdist > defdist) 									//SCS -Again, no. Rules for everyone and all the same.
 	{
@@ -4699,7 +4699,7 @@ boolean K_PvPAmpReward(UINT32 award, player_t *attacker, player_t *defender)
 	else
 	{
 		// Reduce the award for an attacker that's significantly ahead.
-		UINT32 delta = min(range, defdist - atkdist);
+		uint32_t delta = min(range, defdist - atkdist);
 		award -= (delta * award / range / 2);
 	}*/
 
@@ -4712,7 +4712,7 @@ boolean K_PvPAmpReward(UINT32 award, player_t *attacker, player_t *defender)
 	return award;
 }
 
-void K_SpawnAmps(player_t *player, UINT8 amps, mobj_t *impact)
+void K_SpawnAmps(player_t *player, uint8_t amps, mobj_t *impact)
 {
 	if (gametyperules & GTR_SPHERES)
 		return;
@@ -4723,14 +4723,14 @@ void K_SpawnAmps(player_t *player, UINT8 amps, mobj_t *impact)
 	if (!player->mo && P_MobjWasRemoved(player->mo))
 		return;
 
-	UINT32 itemdistance = min(FRACUNIT-1, K_GetItemRouletteDistance(player, D_NumPlayersInRace())); // cap this to FRACUNIT-1, so it doesn't wrap when turning it into fixed_t
+	uint32_t itemdistance = min(FRACUNIT-1, K_GetItemRouletteDistance(player, D_NumPlayersInRace())); // cap this to FRACUNIT-1, so it doesn't wrap when turning it into fixed_t
 	fixed_t itemdistmult = FRACUNIT + min(FRACUNIT, (itemdistance<<FRACBITS) / MAXAMPSCALINGDIST);
 	
-	INT32 weighting = player->kartweight - player->kartspeed;
-	INT32 minweight = 1 - 9;
-	INT32 maxweight = 9 - 1;
+	int32_t weighting = player->kartweight - player->kartspeed;
+	int32_t minweight = 1 - 9;
+	int32_t maxweight = 9 - 1;
 
-	UINT16 scaledamps = FixedRescale(weighting, minweight, maxweight, Easing_Linear, amps/2, 5*amps/4);
+	uint16_t scaledamps = FixedRescale(weighting, minweight, maxweight, Easing_Linear, amps/2, 5*amps/4);
 	// Debug print for scaledamps calculation
 	// CONS_Printf("K_SpawnAmps: player=%s, amps=%d, kartspeed=%d, kartweight=%d, itemdistance=%d, itemdistmult=%0.2f, statscaledamps=%d, distscaledamps=%d\n",
 	// 	player_names[player-players], amps, player->kartspeed, player->kartweight,
@@ -4743,9 +4743,9 @@ void K_SpawnAmps(player_t *player, UINT8 amps, mobj_t *impact)
 
 	// Arbitrary tuning constants.
 	// Reduce amp payouts by 1/40th for each 2 amps obtained recently
-	UINT8 num = 40;
-	UINT8 div = 40;
-	UINT8 reduction = min(30, player->recentamps);
+	uint8_t num = 40;
+	uint8_t div = 40;
+	uint8_t reduction = min(30, player->recentamps);
 
 	num -= reduction;
 
@@ -4760,7 +4760,7 @@ void K_SpawnAmps(player_t *player, UINT8 amps, mobj_t *impact)
 		scaledamps /= 2;
 	*/
 
-	UINT16 finalreward = max(1, scaledamps/2);
+	uint16_t finalreward = max(1, scaledamps/2);
 
 	for (int i = 0; i < finalreward; i++)
 	{
@@ -4775,12 +4775,12 @@ void K_SpawnAmps(player_t *player, UINT8 amps, mobj_t *impact)
 	}
 }
 
-void K_SpawnEXP(player_t *player, UINT8 exp, mobj_t *impact)
+void K_SpawnEXP(player_t *player, uint8_t exp, mobj_t *impact)
 {
 	if (exp == 0)
 		return;
 
-	boolean special = false;
+	dboolean special = false;
 
 	if (player->gradingpointnum == K_GetNumGradingPoints())
 	{
@@ -4811,10 +4811,10 @@ void K_SpawnEXP(player_t *player, UINT8 exp, mobj_t *impact)
 	}
 }
 
-void K_AwardPlayerAmps(player_t *player, UINT8 amps)
+void K_AwardPlayerAmps(player_t *player, uint8_t amps)
 {
-	UINT16 getamped = player->amps + amps;
-	UINT8 oldamps = player->amps;
+	uint16_t getamped = player->amps + amps;
+	uint8_t oldamps = player->amps;
 
 	if (getamped > 200)
 		player->amps = 200;
@@ -4826,7 +4826,7 @@ void K_AwardPlayerAmps(player_t *player, UINT8 amps)
 
 	if (oldamps/AMPLEVEL != player->amps/AMPLEVEL)
 	{
-		UINT8 amplevel = player->amps / AMPLEVEL;
+		uint8_t amplevel = player->amps / AMPLEVEL;
 		static sfxenum_t bwips[7] = {sfx_mbs4c,
 			sfx_mbs4d, sfx_mbs4e, sfx_mbs4f, sfx_mbs50,
 			sfx_mbs51, sfx_mbs52};
@@ -4852,13 +4852,13 @@ void K_AwardPlayerAmps(player_t *player, UINT8 amps)
 	}
 }
 
-void K_AwardPlayerRings(player_t *player, UINT16 rings, boolean overload)
+void K_AwardPlayerRings(player_t *player, uint16_t rings, dboolean overload)
 {
-	UINT16 superring;
+	uint16_t superring;
 
 	if (!overload)
 	{
-		INT32 totalrings =
+		int32_t totalrings =
 			RINGTOTAL(player) + (player->superring);
 
 		/* capped at 20 rings */
@@ -4886,7 +4886,7 @@ static player_t* K_CheckpointLeader(void)
 {
 	player_t *leader = NULL;
 
-	for (UINT8 i = 0; i < MAXPLAYERS; i++)
+	for (uint8_t i = 0; i < MAXPLAYERS; i++)
 	{
 		if (!playeringame[i])
 			continue;
@@ -4901,7 +4901,7 @@ static player_t* K_CheckpointLeader(void)
 	}
 
 	// No unambiguous leader? Return NULL.
-	for (UINT8 i = 0; i < MAXPLAYERS; i++)
+	for (uint8_t i = 0; i < MAXPLAYERS; i++)
 	{
 		if (!playeringame[i])
 			continue;
@@ -4924,10 +4924,10 @@ static void K_SetupSplitForPlayer(player_t *us, player_t *them, tic_t ourtime, t
 {
 	us->karthud[khud_splittimer] = 3*TICRATE;
 
-	INT32 delta = (INT32)theirtime - (INT32)ourtime; 	// how ahead are we? bigger number = more ahead, negative = behind
+	int32_t delta = (int32_t)theirtime - (int32_t)ourtime; 	// how ahead are we? bigger number = more ahead, negative = behind
 	us->karthud[khud_splittime] = -1 * delta; 			// (HUD expects this to be backwards, but this is how i felt today!)
 
-	INT32 winning = 0;
+	int32_t winning = 0;
 
 	if (delta > 0)
 		winning = 2; // winning aid gaining
@@ -4948,7 +4948,7 @@ static void K_SetupSplitForPlayer(player_t *us, player_t *them, tic_t ourtime, t
 		us->karthud[khud_splitposition] = them->position;
 }
 
-static void K_HandleRaceSplits(player_t *player, tic_t time, UINT8 checkpoint)
+static void K_HandleRaceSplits(player_t *player, tic_t time, uint8_t checkpoint)
 {
 	if (checkpoint >= MAXRACESPLITS)
 		return;
@@ -4957,10 +4957,10 @@ static void K_HandleRaceSplits(player_t *player, tic_t time, UINT8 checkpoint)
 
 	player_t *lowest = player;
 	player_t *next = player;
-	UINT8 numrealsplits = 0;
+	uint8_t numrealsplits = 0;
 
 	// find fastest player for this checkpoint and # players who have already crossed
-	for (UINT8 i = 0; i < MAXPLAYERS; i++)
+	for (uint8_t i = 0; i < MAXPLAYERS; i++)
 	{
 		if (!playeringame[i])
 			continue;
@@ -5058,7 +5058,7 @@ void K_CheckpointCrossAward(player_t *player)
 				// epic lighting
 				g_darkness.start = leveltime;
 				g_darkness.end = INT32_MAX;
-				for (UINT8 i = 0; i < MAXSPLITSCREENPLAYERS; i++)
+				for (uint8_t i = 0; i < MAXSPLITSCREENPLAYERS; i++)
 				{
 					g_darkness.value[i] = FRACUNIT;
 				}
@@ -5073,12 +5073,12 @@ void K_CheckpointCrossAward(player_t *player)
 		}
 
 		player_t *opp = K_DuelOpponent(player);
-		boolean clutch = (player->duelscore - opp->duelscore == (DUELWINNINGSCORE-1));
-		boolean win = (player->duelscore - opp->duelscore == DUELWINNINGSCORE);
+		dboolean clutch = (player->duelscore - opp->duelscore == (DUELWINNINGSCORE-1));
+		dboolean win = (player->duelscore - opp->duelscore == DUELWINNINGSCORE);
 
 		if (!win)
 		{
-			for (UINT8 i = 0; i < MAXSPLITSCREENPLAYERS; i++)
+			for (uint8_t i = 0; i < MAXSPLITSCREENPLAYERS; i++)
 			{
 				player_t *check = &players[displayplayers[i]];
 				if (check == player)
@@ -5122,7 +5122,7 @@ void K_CheckpointCrossAward(player_t *player)
 		else
 		{
 			// Doing this here because duel exit is a weird path, and we don't want to transform for endcam.
-			UINT32 skinflags = (demo.playback)
+			uint32_t skinflags = (demo.playback)
 					? demo.skinlist[demo.currentskinid[(player-players)]].flags
 					: skins[player->skin]->flags;
 			if (skinflags & SF_IRONMAN)
@@ -5134,7 +5134,7 @@ void K_CheckpointCrossAward(player_t *player)
 
 }
 
-boolean K_Overdrive(player_t *player)
+dboolean K_Overdrive(player_t *player)
 {
 	if (player->amps == 0)
 		return false;
@@ -5163,7 +5163,7 @@ boolean K_Overdrive(player_t *player)
 	return true;
 }
 
-boolean K_DefensiveOverdrive(player_t *player)
+dboolean K_DefensiveOverdrive(player_t *player)
 {
 	if (player->amps == 0)
 		return false;
@@ -5212,12 +5212,12 @@ void K_DoInstashield(player_t *player)
 
 void K_DoPowerClash(mobj_t *t1, mobj_t *t2) {
 	mobj_t *clash;
-	UINT8 lag1 = 10; // Base value used for kartitem-to-player collision.
-	UINT8 lag2 = 10; // We want to preserve shooting invinc players to hinder them!
-	boolean slow1 = false; // If we _are_ hitting a kartitem, keep that value.
-	boolean slow2 = false; // Otherwise, route to K_AddHitLagFromCollision.
+	uint8_t lag1 = 10; // Base value used for kartitem-to-player collision.
+	uint8_t lag2 = 10; // We want to preserve shooting invinc players to hinder them!
+	dboolean slow1 = false; // If we _are_ hitting a kartitem, keep that value.
+	dboolean slow2 = false; // Otherwise, route to K_AddHitLagFromCollision.
 
-	boolean stripbubble = (gametyperules & GTR_BUMPERS);
+	dboolean stripbubble = (gametyperules & GTR_BUMPERS);
 
 	// short-circuit instashield for vfx visibility
 	if (t1->player)
@@ -5295,11 +5295,11 @@ void K_DoGuardBreak(mobj_t *t1, mobj_t *t2) {
 	clash->destscale = 3*((t1->scale) + (t2->scale))/2;
 }
 
-void K_BattleAwardHit(player_t *player, player_t *victim, mobj_t *inflictor, UINT8 damage)
+void K_BattleAwardHit(player_t *player, player_t *victim, mobj_t *inflictor, uint8_t damage)
 {
-	UINT8 points = 1;
-	boolean trapItem = false;
-	boolean finishOff = (victim->mo->health > 0) && (victim->mo->health <= damage);
+	uint8_t points = 1;
+	dboolean trapItem = false;
+	dboolean finishOff = (victim->mo->health > 0) && (victim->mo->health <= damage);
 
 	if (!(gametyperules & GTR_POINTLIMIT))
 	{
@@ -5380,7 +5380,7 @@ void K_BattleAwardHit(player_t *player, player_t *victim, mobj_t *inflictor, UIN
 	K_GivePointsToPlayer(player, victim, points);
 }
 
-void K_SpinPlayer(player_t *player, mobj_t *inflictor, mobj_t *source, INT32 type)
+void K_SpinPlayer(player_t *player, mobj_t *inflictor, mobj_t *source, int32_t type)
 {
 	(void)inflictor;
 	(void)source;
@@ -5430,7 +5430,7 @@ void K_RemoveGrowShrink(player_t *player)
 
 // Should this object actually scale check?
 // Scale-to-scale comparisons only make sense for objects that expect to have dynamic scale.
-static boolean K_IsScaledItem(mobj_t *mobj)
+static dboolean K_IsScaledItem(mobj_t *mobj)
 {
 	return mobj && !P_MobjWasRemoved(mobj) &&
 		(mobj->type == MT_ORBINAUT || mobj->type == MT_JAWZ || mobj->type == MT_GACHABOM || mobj->type == MT_STONESHOE
@@ -5442,7 +5442,7 @@ static boolean K_IsScaledItem(mobj_t *mobj)
 }
 
 
-boolean K_IsBigger(mobj_t *compare, mobj_t *other)
+dboolean K_IsBigger(mobj_t *compare, mobj_t *other)
 {
 	fixed_t compareScale, otherScale;
 	const fixed_t requiredDifference = (mapobjectscale/4);
@@ -5503,7 +5503,7 @@ static fixed_t K_TumbleZ(mobj_t *mo, fixed_t input)
 	return FixedMul(input, -gravityAdjust);
 }
 
-void K_TumblePlayer(player_t *player, mobj_t *inflictor, mobj_t *source, boolean soften)
+void K_TumblePlayer(player_t *player, mobj_t *inflictor, mobj_t *source, dboolean soften)
 {
 	(void)source;
 
@@ -5593,7 +5593,7 @@ void K_StumblePlayer(player_t *player)
 	P_ResetPitchRoll(player->mo);
 }
 
-boolean K_CheckStumble(player_t *player, angle_t oldPitch, angle_t oldRoll, boolean fromAir)
+dboolean K_CheckStumble(player_t *player, angle_t oldPitch, angle_t oldRoll, dboolean fromAir)
 {
 	angle_t steepVal = ANGLE_MAX;
 	angle_t oldSlope, newSlope;
@@ -5733,7 +5733,7 @@ void K_InitTrickIndicator(player_t *player)
 		P_RemoveMobj(player->trickIndicator);
 	}
 
-	UINT32 invis = (RF_DONTDRAW & ~K_GetPlayerDontDrawFlag(player));
+	uint32_t invis = (RF_DONTDRAW & ~K_GetPlayerDontDrawFlag(player));
 
 	new = P_SpawnMobjFromMobj(player->mo, 0, 0, 0, MT_TRICKINDICATOR);
 
@@ -5758,13 +5758,13 @@ void K_UpdateStumbleIndicator(player_t *player)
 	const angle_t fudge = ANG15;
 	mobj_t *mobj = NULL;
 
-	boolean air = false;
+	dboolean air = false;
 	angle_t steepVal = STUMBLE_STEEP_VAL;
 	angle_t slopeSteep = 0;
 	angle_t steepRange = ANGLE_90;
 
-	INT32 delta = 0;
-	INT32 trans = 0;
+	int32_t delta = 0;
+	int32_t trans = 0;
 
 	if (player == NULL)
 	{
@@ -5795,8 +5795,8 @@ void K_UpdateStumbleIndicator(player_t *player)
 	if (slopeSteep > steepVal)
 	{
 		angle_t testAngles[2];
-		INT32 testDeltas[2];
-		UINT8 i;
+		int32_t testDeltas[2];
+		uint8_t i;
 
 		testAngles[0] = R_PointToAngle2(0, 0, player->mo->pitch, player->mo->roll);
 		testAngles[1] = R_PointToAngle2(0, 0, -player->mo->pitch, -player->mo->roll);
@@ -5858,7 +5858,7 @@ void K_UpdateStumbleIndicator(player_t *player)
 	}
 }
 
-static boolean K_IsLosingWavedash(player_t *player)
+static dboolean K_IsLosingWavedash(player_t *player)
 {
 	if (player->mo == NULL || P_MobjWasRemoved(player->mo) == true)
 		return true;
@@ -5912,8 +5912,8 @@ void K_UpdateWavedashIndicator(player_t *player)
 
 	mobj->renderflags &= ~RF_DONTDRAW;
 
-	UINT32 chargeFrame = 7 - min(7, player->wavedash / 100);
-	UINT32 decayFrame = min(7, player->wavedashdelay / 2);
+	uint32_t chargeFrame = 7 - min(7, player->wavedash / 100);
+	uint32_t decayFrame = min(7, player->wavedashdelay / 2);
 	if (max(chargeFrame, decayFrame) > mobj->frame)
 		mobj->frame++;
 	else if (max(chargeFrame, decayFrame) < mobj->frame)
@@ -6011,7 +6011,7 @@ void K_UpdateTrickIndicator(player_t *player)
 	}
 }
 
-static boolean K_LastTumbleBounceCondition(player_t *player)
+static dboolean K_LastTumbleBounceCondition(player_t *player)
 {
 	return (player->tumbleBounces > TUMBLEBOUNCES && player->tumbleHeight < 60);
 }
@@ -6189,9 +6189,9 @@ void K_ApplyTripWire(player_t *player, tripwirestate_t state)
 	player->tripwireUnstuck += 10;
 }
 
-INT32 K_ExplodePlayer(player_t *player, mobj_t *inflictor, mobj_t *source) // A bit of a hack, we just throw the player up higher here and extend their spinout timer
+int32_t K_ExplodePlayer(player_t *player, mobj_t *inflictor, mobj_t *source) // A bit of a hack, we just throw the player up higher here and extend their spinout timer
 {
-	INT32 ringburst = 10;
+	int32_t ringburst = 10;
 	fixed_t spbMultiplier = FRACUNIT;
 
 	(void)source;
@@ -6253,7 +6253,7 @@ INT32 K_ExplodePlayer(player_t *player, mobj_t *inflictor, mobj_t *source) // A 
 // This kind of wipeout happens with no rings -- doesn't remove a bumper, has no invulnerability, and is much shorter.
 void K_DebtStingPlayer(player_t *player, mobj_t *source)
 {
-	INT32 length = TICRATE;
+	int32_t length = TICRATE;
 
 	if (source && !P_MobjWasRemoved(source) && source->player)
 	{
@@ -6274,15 +6274,15 @@ void K_DebtStingPlayer(player_t *player, mobj_t *source)
 	P_SetPlayerMobjState(player->mo, S_KART_SPINOUT);
 }
 
-void K_GiveBumpersToPlayer(player_t *player, player_t *victim, UINT8 amount)
+void K_GiveBumpersToPlayer(player_t *player, player_t *victim, uint8_t amount)
 {
-	const UINT8 oldPlayerBumpers = K_Bumpers(player);
+	const uint8_t oldPlayerBumpers = K_Bumpers(player);
 
-	UINT8 tookBumpers = 0;
+	uint8_t tookBumpers = 0;
 
 	while (tookBumpers < amount)
 	{
-		const UINT8 newbumper = (oldPlayerBumpers + tookBumpers);
+		const uint8_t newbumper = (oldPlayerBumpers + tookBumpers);
 
 		angle_t newangle, diff;
 		fixed_t newx, newy;
@@ -6335,7 +6335,7 @@ void K_GiveBumpersToPlayer(player_t *player, player_t *victim, UINT8 amount)
 	player->mo->health += tookBumpers;
 }
 
-void K_TakeBumpersFromPlayer(player_t *player, player_t *victim, UINT8 amount)
+void K_TakeBumpersFromPlayer(player_t *player, player_t *victim, uint8_t amount)
 {
 	amount = min(amount, K_Bumpers(victim));
 
@@ -6350,7 +6350,7 @@ void K_TakeBumpersFromPlayer(player_t *player, player_t *victim, UINT8 amount)
 	S_StartSound(player->mo, sfx_3db06);
 }
 
-void K_GivePointsToPlayer(player_t *player, player_t *victim, UINT8 amount)
+void K_GivePointsToPlayer(player_t *player, player_t *victim, uint8_t amount)
 {
 	K_SpawnBattlePoints(player, victim, amount); // first just in case player score ends the game
 	P_AddPlayerScore(player, amount);
@@ -6361,7 +6361,7 @@ void K_GivePointsToPlayer(player_t *player, player_t *victim, UINT8 amount)
 // Does the proximity screen flash and quake for explosions
 void K_MineFlashScreen(mobj_t *source)
 {
-	INT32 pnum;
+	int32_t pnum;
 	player_t *p;
 
 	if (P_MobjWasRemoved(source))
@@ -6396,11 +6396,11 @@ void K_MineFlashScreen(mobj_t *source)
 // Spawns the purely visual explosion
 void K_SpawnMineExplosion(mobj_t *source, skincolornum_t color, tic_t delay)
 {
-	INT32 i, radius, height;
+	int32_t i, radius, height;
 	mobj_t *smoldering = P_SpawnMobj(source->x, source->y, source->z, MT_SMOLDERING);
 	mobj_t *dust;
 	mobj_t *truc;
-	INT32 speed, speed2;
+	int32_t speed, speed2;
 
 	K_MatchGenericExtraFlagsNoInterp(smoldering, source);
 	smoldering->tics = TICRATE*3;
@@ -6508,7 +6508,7 @@ void K_SpawnLandMineExplosion(mobj_t *source, skincolornum_t color, tic_t delay)
 {
 	mobj_t *smoldering;
 	mobj_t *expl;
-	UINT8 i;
+	uint8_t i;
 
 	// Spawn smoke remains:
 	smoldering = P_SpawnMobj(source->x, source->y, source->z, MT_SMOLDERING);
@@ -6552,7 +6552,7 @@ fixed_t K_GetItemScaleConst(fixed_t scale)
 	}
 }
 
-fixed_t K_ItemScaleFromConst(UINT8 item_scale_const)
+fixed_t K_ItemScaleFromConst(uint8_t item_scale_const)
 {
 	switch (item_scale_const)
 	{
@@ -6585,7 +6585,7 @@ fixed_t K_DefaultPlayerRadius(player_t *player)
 			player->mo->info->radius);
 }
 
-static mobj_t *K_SpawnKartMissile(mobj_t *source, mobjtype_t type, angle_t an, INT32 flags2, fixed_t speed, fixed_t dir)
+static mobj_t *K_SpawnKartMissile(mobj_t *source, mobjtype_t type, angle_t an, int32_t flags2, fixed_t speed, fixed_t dir)
 {
 	mobj_t *th;
 	fixed_t x, y, z;
@@ -6824,14 +6824,14 @@ static mobj_t *K_SpawnKartMissile(mobj_t *source, mobjtype_t type, angle_t an, I
 	return th;
 }
 
-UINT16 K_DriftSparkColor(player_t *player, INT32 charge)
+uint16_t K_DriftSparkColor(player_t *player, int32_t charge)
 {
-	const INT32 dsone = K_GetKartDriftSparkValueForStage(player, 1);
-	const INT32 dstwo = K_GetKartDriftSparkValueForStage(player, 2);
-	const INT32 dsthree = K_GetKartDriftSparkValueForStage(player, 3);
-	const INT32 dsfour = K_GetKartDriftSparkValueForStage(player, 4);
+	const int32_t dsone = K_GetKartDriftSparkValueForStage(player, 1);
+	const int32_t dstwo = K_GetKartDriftSparkValueForStage(player, 2);
+	const int32_t dsthree = K_GetKartDriftSparkValueForStage(player, 3);
+	const int32_t dsfour = K_GetKartDriftSparkValueForStage(player, 4);
 
-	UINT16 color = SKINCOLOR_NONE;
+	uint16_t color = SKINCOLOR_NONE;
 
 	if (charge < 0)
 	{
@@ -6901,8 +6901,8 @@ UINT16 K_DriftSparkColor(player_t *player, INT32 charge)
 
 static void K_SpawnDriftElectricity(player_t *player)
 {
-	UINT8 i;
-	UINT16 color = K_DriftSparkColor(player, player->driftcharge);
+	uint8_t i;
+	uint16_t color = K_DriftSparkColor(player, player->driftcharge);
 	mobj_t *mo = player->mo;
 	fixed_t vr = FixedDiv(mo->radius/3, mo->scale); // P_SpawnMobjFromMobj will rescale
 	fixed_t horizontalradius = FixedDiv(5*mo->radius/3, mo->scale);
@@ -6946,9 +6946,9 @@ static void K_SpawnDriftElectricity(player_t *player)
 	}
 }
 
-void K_SpawnDriftElectricSparks(player_t *player, int color, boolean shockwave)
+void K_SpawnDriftElectricSparks(player_t *player, int color, dboolean shockwave)
 {
-	SINT8 hdir, vdir, i;
+	int8_t hdir, vdir, i;
 	int shockscale = shockwave ? 2 : 1;
 
 	mobj_t *mo = player->mo;
@@ -7020,16 +7020,16 @@ void K_SpawnDriftElectricSparks(player_t *player, int color, boolean shockwave)
 
 static void K_SpawnDriftSparks(player_t *player)
 {
-	const INT32 dsone = K_GetKartDriftSparkValueForStage(player, 1);
-	const INT32 dstwo = K_GetKartDriftSparkValueForStage(player, 2);
-	const INT32 dsthree = K_GetKartDriftSparkValueForStage(player, 3);
-	const INT32 dsfour = K_GetKartDriftSparkValueForStage(player, 4);
+	const int32_t dsone = K_GetKartDriftSparkValueForStage(player, 1);
+	const int32_t dstwo = K_GetKartDriftSparkValueForStage(player, 2);
+	const int32_t dsthree = K_GetKartDriftSparkValueForStage(player, 3);
+	const int32_t dsfour = K_GetKartDriftSparkValueForStage(player, 4);
 
 	fixed_t newx;
 	fixed_t newy;
 	mobj_t *spark;
 	angle_t travelangle;
-	INT32 i;
+	int32_t i;
 
 	I_Assert(player != NULL);
 	I_Assert(player->mo != NULL);
@@ -7054,8 +7054,8 @@ static void K_SpawnDriftSparks(player_t *player)
 
 	for (i = 0; i < 2; i++)
 	{
-		SINT8 size = 1;
-		UINT8 trail = 0;
+		int8_t size = 1;
+		uint8_t trail = 0;
 
 		newx = player->mo->x + P_ReturnThrustX(player->mo, travelangle + ((i&1) ? -1 : 1)*ANGLE_135, FixedMul(32*FRACUNIT, player->mo->scale));
 		newy = player->mo->y + P_ReturnThrustY(player->mo, travelangle + ((i&1) ? -1 : 1)*ANGLE_135, FixedMul(32*FRACUNIT, player->mo->scale));
@@ -7228,7 +7228,7 @@ void K_SpawnBoostTrail(player_t *player)
 	fixed_t ground;
 	mobj_t *flame;
 	angle_t travelangle;
-	INT32 i;
+	int32_t i;
 
 	I_Assert(player != NULL);
 	I_Assert(player->mo != NULL);
@@ -7286,11 +7286,11 @@ void K_SpawnBoostTrail(player_t *player)
 
 void K_SpawnSparkleTrail(mobj_t *mo)
 {
-	const INT32 rad = (mo->radius*3)/FRACUNIT;
+	const int32_t rad = (mo->radius*3)/FRACUNIT;
 	mobj_t *sparkle;
-	UINT8 invanimnum; // Current sparkle animation number
-	INT32 invtime;// Invincibility time left, in seconds
-	UINT8 index = 0;
+	uint8_t invanimnum; // Current sparkle animation number
+	int32_t invtime;// Invincibility time left, in seconds
+	uint8_t index = 0;
 	fixed_t newx, newy, newz;
 
 	I_Assert(mo != NULL);
@@ -7399,7 +7399,7 @@ void K_SpawnFireworkTrail(mobj_t *mo)
 
 void K_SpawnDraftDust(mobj_t *mo)
 {
-	UINT8 i;
+	uint8_t i;
 
 	I_Assert(mo != NULL);
 	I_Assert(!P_MobjWasRemoved(mo));
@@ -7407,14 +7407,14 @@ void K_SpawnDraftDust(mobj_t *mo)
 	for (i = 0; i < 2; i++)
 	{
 		angle_t ang, aoff;
-		SINT8 sign = 1;
-		UINT8 foff = 0;
+		int8_t sign = 1;
+		uint8_t foff = 0;
 		mobj_t *dust;
-		boolean drifting = false;
+		dboolean drifting = false;
 
 		if (mo->player)
 		{
-			UINT8 leniency = (3*TICRATE)/4 + ((mo->player->kartweight-1) * (TICRATE/4));
+			uint8_t leniency = (3*TICRATE)/4 + ((mo->player->kartweight-1) * (TICRATE/4));
 
 			if (gametyperules & GTR_CLOSERPLAYERS)
 				leniency *= 4;
@@ -7486,7 +7486,7 @@ void K_SpawnDraftDust(mobj_t *mo)
 void K_DriftDustHandling(mobj_t *spawner)
 {
 	angle_t anglediff;
-	const INT16 spawnrange = spawner->radius >> FRACBITS;
+	const int16_t spawnrange = spawner->radius >> FRACBITS;
 
 	if (!P_IsObjectOnGround(spawner) || leveltime % 2 != 0 || spawner->destscale == 1)
 		return;
@@ -7527,7 +7527,7 @@ void K_DriftDustHandling(mobj_t *spawner)
 	{
 		fixed_t spawnx = P_RandomRange(PR_DECORATION, -spawnrange, spawnrange) << FRACBITS;
 		fixed_t spawny = P_RandomRange(PR_DECORATION, -spawnrange, spawnrange) << FRACBITS;
-		INT32 speedrange = 2;
+		int32_t speedrange = 2;
 		mobj_t *dust = P_SpawnMobj(spawner->x + spawnx, spawner->y + spawny, spawner->z, MT_DRIFTDUST);
 		dust->momx = FixedMul(spawner->momx + (P_RandomRange(PR_DECORATION, -speedrange, speedrange) * spawner->scale), 3*FRACUNIT/4);
 		dust->momy = FixedMul(spawner->momy + (P_RandomRange(PR_DECORATION, -speedrange, speedrange) * spawner->scale), 3*FRACUNIT/4);
@@ -7547,11 +7547,11 @@ void K_DriftDustHandling(mobj_t *spawner)
 		// Sparkle-y warning for when you're about to change drift sparks!
 		if (spawner->player && spawner->player->drift)
 		{
-			INT32 driftval = K_GetKartDriftSparkValue(spawner->player);
-			INT32 warntime = driftval/3;
-			INT32 dc = spawner->player->driftcharge;
-			UINT8 c = SKINCOLOR_NONE;
-			boolean rainbow = false;
+			int32_t driftval = K_GetKartDriftSparkValue(spawner->player);
+			int32_t warntime = driftval/3;
+			int32_t dc = spawner->player->driftcharge;
+			uint8_t c = SKINCOLOR_NONE;
+			dboolean rainbow = false;
 
 			if (dc >= 0)
 			{
@@ -7637,7 +7637,7 @@ static mobj_t *K_FindLastTrailMobj(player_t *player)
 	return trail;
 }
 
-mobj_t *K_ThrowKartItemEx(player_t *player, boolean missile, mobjtype_t mapthing, INT32 defaultDir, INT32 altthrow, angle_t angleOffset, fixed_t tossX, fixed_t tossY)
+mobj_t *K_ThrowKartItemEx(player_t *player, dboolean missile, mobjtype_t mapthing, int32_t defaultDir, int32_t altthrow, angle_t angleOffset, fixed_t tossX, fixed_t tossY)
 {
 	mobj_t *mo;
 	fixed_t dir = FRACUNIT;
@@ -7771,7 +7771,7 @@ mobj_t *K_ThrowKartItemEx(player_t *player, boolean missile, mobjtype_t mapthing
 
 				if (g > 0)
 				{
-					const INT32 air_time = (FixedDiv(mo->momz * P_MobjFlip(mo), g) * 2) / FRACUNIT;
+					const int32_t air_time = (FixedDiv(mo->momz * P_MobjFlip(mo), g) * 2) / FRACUNIT;
 
 					if (air_time > 0)
 					{
@@ -7932,7 +7932,7 @@ mobj_t *K_ThrowKartItemEx(player_t *player, boolean missile, mobjtype_t mapthing
 	return mo;
 }
 
-mobj_t *K_ThrowKartItem(player_t *player, boolean missile, mobjtype_t mapthing, INT32 defaultDir, INT32 altthrow, angle_t angleOffset)
+mobj_t *K_ThrowKartItem(player_t *player, dboolean missile, mobjtype_t mapthing, int32_t defaultDir, int32_t altthrow, angle_t angleOffset)
 {
 	return K_ThrowKartItemEx(player, missile, mapthing, defaultDir, altthrow, angleOffset, 0, 0);
 }
@@ -8079,7 +8079,7 @@ static void K_DoLightningShield(player_t *player)
 
 static void K_FlameDashLeftoverSmoke(mobj_t *src)
 {
-	UINT8 i;
+	uint8_t i;
 
 	for (i = 0; i < 2; i++)
 	{
@@ -8106,12 +8106,12 @@ static void K_FlameDashLeftoverSmoke(mobj_t *src)
 #if 0
 static void K_DoHyudoroSteal(player_t *player)		//SCS RESTORE - I mean, is it coming back? No, lmao. Is it funny? Kinda. Could it be used for something? Maybe...
 {
-	INT32 i, numplayers = 0;
-	INT32 playerswappable[MAXPLAYERS];
-	INT32 stealplayer = -1; // The player that's getting stolen from
-	INT32 prandom = 0;
-	boolean sink = P_RandomChance(FRACUNIT/64);
-	INT32 hyu = hyudorotime;
+	int32_t i, numplayers = 0;
+	int32_t playerswappable[MAXPLAYERS];
+	int32_t stealplayer = -1; // The player that's getting stolen from
+	int32_t prandom = 0;
+	dboolean sink = P_RandomChance(FRACUNIT/64);
+	int32_t hyu = hyudorotime;
 
 	if (gametype == GT_RACE)
 		hyu *= 2; // double in race
@@ -8183,10 +8183,10 @@ static void K_DoHyudoroSteal(player_t *player)		//SCS RESTORE - I mean, is it co
 }
 #endif
 
-void K_DoSneaker(player_t *player, INT32 type)
+void K_DoSneaker(player_t *player, int32_t type)
 {
 
-	INT32 originaltype = type;
+	int32_t originaltype = type;
 	fixed_t intendedboost = FRACUNIT/2;
 
 	// If you've already got an rocket sneaker type boost, panel sneakers will instead turn into rocket sneaker boosts
@@ -8365,10 +8365,10 @@ static void K_DoShrink(player_t *user)
 #endif
 }
 
-void K_DoPogoSpring(mobj_t *mo, fixed_t vertispeed, UINT8 sound)
+void K_DoPogoSpring(mobj_t *mo, fixed_t vertispeed, uint8_t sound)
 {
 	fixed_t thrust = 0;
-	boolean dontapplymomz = false;
+	dboolean dontapplymomz = false;
 
 	if (mo->player && mo->player->spectator)
 		return;
@@ -8421,7 +8421,7 @@ void K_DoPogoSpring(mobj_t *mo, fixed_t vertispeed, UINT8 sound)
 					SKINCOLOR_MOONSET,
 					SKINCOLOR_ULTRAMARINE, // trickPanel == 4
 				};
-				static const UINT8 numColors = sizeof(trick_colors) / sizeof(skincolornum_t);
+				static const uint8_t numColors = sizeof(trick_colors) / sizeof(skincolornum_t);
 
 				const fixed_t step = 8*FRACUNIT;
 				fixed_t trickcol = ((vertispeed - (step/2)) / step) - 1;
@@ -8478,10 +8478,10 @@ void K_DoPogoSpring(mobj_t *mo, fixed_t vertispeed, UINT8 sound)
 	}
 }
 
-void K_DoYellowPogoSpring(mobj_t *mo, fixed_t vertispeed, UINT8 sound)
+void K_DoYellowPogoSpring(mobj_t *mo, fixed_t vertispeed, uint8_t sound)
 {
 	fixed_t thrust = 0;
-	boolean dontapplymomz = false;
+	dboolean dontapplymomz = false;
 
 	if (mo->player && mo->player->spectator)
 		return;
@@ -8539,7 +8539,7 @@ void K_DoYellowPogoSpring(mobj_t *mo, fixed_t vertispeed, UINT8 sound)
 	}
 }
 
-boolean K_CanSuperTransfer(player_t *player)
+dboolean K_CanSuperTransfer(player_t *player)
 {
 	if (!player->transfer)
 		return false;
@@ -8652,9 +8652,9 @@ static void K_ThrowIcedusTrap(player_t *player)	//SCS ADD
 
 void K_SpawnSparkleTrail_OLD(mobj_t *mo)			//SCS ADD
 {
-	const INT32 rad = (mo->radius*2)>>FRACBITS;
+	const int32_t rad = (mo->radius*2)>>FRACBITS;
 	mobj_t *sparkle;
-	INT32 i;
+	int32_t i;
 
 	for (i = 0; i < 3; i++)
 	{
@@ -8703,9 +8703,9 @@ void K_SpawnSuperFormSparkle(mobj_t *mo)			//SCS ADD
 
 void K_SpawnTimeStoneSparkles(mobj_t *mo)			//SCS ADD
 {
-	const INT32 rad = (mo->radius*(3/2))>>FRACBITS;
+	const int32_t rad = (mo->radius*(3/2))>>FRACBITS;
 	mobj_t *sparkle;
-	INT32 i;
+	int32_t i;
 
 	for (i = 0; i < 3; i++)
 	{
@@ -8778,7 +8778,7 @@ killnext:
 }
 
 // Just for firing/dropping items.
-void K_UpdateHnextList(player_t *player, boolean clean)
+void K_UpdateHnextList(player_t *player, dboolean clean)
 {
 	mobj_t *work = player->mo, *nextwork;
 
@@ -8791,7 +8791,7 @@ void K_UpdateHnextList(player_t *player, boolean clean)
 	{
 		nextwork = work->hnext;
 
-		if (!clean && (!work->movedir || work->movedir <= (UINT16)player->itemamount))
+		if (!clean && (!work->movedir || work->movedir <= (uint16_t)player->itemamount))
 		{
 			continue;
 		}
@@ -8810,7 +8810,7 @@ void K_UpdateHnextList(player_t *player, boolean clean)
 // For getting hit!
 void K_PopPlayerShield(player_t *player)
 {
-	INT32 shield = player->curshield;
+	int32_t shield = player->curshield;
 
 	// Doesn't apply if player is invalid.
 	if (player->mo == NULL || P_MobjWasRemoved(player->mo))
@@ -8881,9 +8881,9 @@ static fixed_t K_BubbleSpeedCap(player_t *player)
 void K_DropHnextList(player_t *player)
 {
 	mobj_t *work = player->mo, *nextwork, *dropwork;
-	INT32 flip;
+	int32_t flip;
 	mobjtype_t type;
-	boolean orbit, ponground, dropall = true;
+	dboolean orbit, ponground, dropall = true;
 
 	if (work == NULL || P_MobjWasRemoved(work))
 	{
@@ -9110,11 +9110,11 @@ void K_DropHnextList(player_t *player)
 	}
 }
 
-SINT8 K_GetTotallyRandomResult(UINT8 useodds)
+int8_t K_GetTotallyRandomResult(uint8_t useodds)
 {
-	INT32 spawnchance[NUMKARTRESULTS];
-	INT32 totalspawnchance = 0;
-	INT32 i;
+	int32_t spawnchance[NUMKARTRESULTS];
+	int32_t totalspawnchance = 0;
+	int32_t i;
 
 	memset(spawnchance, 0, sizeof (spawnchance));
 
@@ -9143,7 +9143,7 @@ SINT8 K_GetTotallyRandomResult(UINT8 useodds)
 	return i;
 }
 
-mobj_t *K_CreatePaperItem(fixed_t x, fixed_t y, fixed_t z, angle_t angle, SINT8 flip, UINT8 type, UINT16 amount)
+mobj_t *K_CreatePaperItem(fixed_t x, fixed_t y, fixed_t z, angle_t angle, int8_t flip, uint8_t type, uint16_t amount)
 {
 	mobj_t *drop = P_SpawnMobj(x, y, z, MT_FLOATINGITEM);
 
@@ -9171,18 +9171,18 @@ mobj_t *K_CreatePaperItem(fixed_t x, fixed_t y, fixed_t z, angle_t angle, SINT8 
 
 	if (type == 0)
 	{
-		const SINT8 i = K_GetTotallyRandomResult(amount);
+		const int8_t i = K_GetTotallyRandomResult(amount);
 
 		// TODO: this is bad!
 		// K_KartGetItemResult requires a player
 		// but item roulette will need rewritten to change this
 
-		const SINT8 newType = K_ItemResultToType(i);
-		const UINT8 newAmount = K_ItemResultToAmount(i, NULL);
+		const int8_t newType = K_ItemResultToType(i);
+		const uint8_t newAmount = K_ItemResultToAmount(i, NULL);
 
 		if (newAmount > 1)
 		{
-			UINT8 j;
+			uint8_t j;
 
 			for (j = 0; j < newAmount-1; j++)
 			{
@@ -9217,7 +9217,7 @@ mobj_t *K_CreatePaperItem(fixed_t x, fixed_t y, fixed_t z, angle_t angle, SINT8 
 	return drop;
 }
 
-mobj_t *K_FlingPaperItem(fixed_t x, fixed_t y, fixed_t z, angle_t angle, SINT8 flip, UINT8 type, UINT16 amount)
+mobj_t *K_FlingPaperItem(fixed_t x, fixed_t y, fixed_t z, angle_t angle, int8_t flip, uint8_t type, uint16_t amount)
 {
 	mobj_t *drop = K_CreatePaperItem(x, y, z, angle, flip, type, amount);
 
@@ -9232,7 +9232,7 @@ mobj_t *K_FlingPaperItem(fixed_t x, fixed_t y, fixed_t z, angle_t angle, SINT8 f
 	return drop;
 }
 
-void K_DropPaperItem(player_t *player, UINT8 itemtype, UINT16 itemamount)
+void K_DropPaperItem(player_t *player, uint8_t itemtype, uint16_t itemamount)
 {
 	if (!player->mo || P_MobjWasRemoved(player->mo))
 	{
@@ -9253,7 +9253,7 @@ void K_PickpocketHyuChainDestroy(player_t *player)					//SCS - Old, now unused
 	/*
 	if (player->lastpickpockethyudoro != NULL)
 	{
-		UINT16 i = player->pickpockethyucombo;
+		uint16_t i = player->pickpockethyucombo;
 									
 		mobj_t *currenthyudoro = player->lastpickpockethyudoro;
 		mobj_t *prevhyudoro;
@@ -9303,7 +9303,7 @@ void K_DropRocketSneaker(player_t *player)
 {
 	mobj_t *shoe = player->mo;
 	fixed_t flingangle;
-	boolean leftshoe = true; //left shoe is first
+	dboolean leftshoe = true; //left shoe is first
 
 	if (!(player->mo && !P_MobjWasRemoved(player->mo) && player->mo->hnext && !P_MobjWasRemoved(player->mo->hnext)))
 		return;
@@ -9376,7 +9376,7 @@ void K_RepairOrbitChain(mobj_t *orbit)
 	// Then recount to make sure item amount is correct
 	if (orbit->target && orbit->target->player && !P_MobjWasRemoved(orbit->target))
 	{
-		INT32 num = 0;
+		int32_t num = 0;
 
 		mobj_t *cur = orbit->target->hnext;
 		mobj_t *prev = NULL;
@@ -9397,7 +9397,7 @@ void K_RepairOrbitChain(mobj_t *orbit)
 }
 
 // Simplified version of a code bit in P_MobjFloorZ
-static fixed_t K_BananaSlopeZ(pslope_t *slope, fixed_t x, fixed_t y, fixed_t z, fixed_t radius, boolean ceiling)
+static fixed_t K_BananaSlopeZ(pslope_t *slope, fixed_t x, fixed_t y, fixed_t z, fixed_t radius, dboolean ceiling)
 {
 	fixed_t testx, testy;
 
@@ -9431,7 +9431,7 @@ static fixed_t K_BananaSlopeZ(pslope_t *slope, fixed_t x, fixed_t y, fixed_t z, 
 	return P_GetZAt(slope, testx, testy, z);
 }
 
-void K_CalculateBananaSlope(mobj_t *mobj, fixed_t x, fixed_t y, fixed_t z, fixed_t radius, fixed_t height, boolean flip, boolean player)
+void K_CalculateBananaSlope(mobj_t *mobj, fixed_t x, fixed_t y, fixed_t z, fixed_t radius, fixed_t height, dboolean flip, dboolean player)
 {
 	fixed_t newz;
 	sector_t *sec;
@@ -9709,12 +9709,12 @@ static void K_MoveHeldObjects(player_t *player)
 		case MT_ROCKETSNEAKER: // Special rocket sneaker stuff
 			{
 				mobj_t *cur = player->mo->hnext;
-				INT32 num = 0;
+				int32_t num = 0;
 
 				while (cur && !P_MobjWasRemoved(cur))
 				{
 					const fixed_t radius = FixedHypot(player->mo->radius, player->mo->radius) + FixedHypot(cur->radius, cur->radius);
-					boolean vibrate = ((leveltime & 1) && !cur->tracer);
+					dboolean vibrate = ((leveltime & 1) && !cur->tracer);
 					angle_t angoffset;
 					fixed_t targx, targy, targz;
 
@@ -9748,7 +9748,7 @@ static void K_MoveHeldObjects(player_t *player)
 #if 1
 					{
 						angle_t input = player->drawangle - cur->angle;
-						boolean invert = (input > ANGLE_180);
+						dboolean invert = (input > ANGLE_180);
 						if (invert)
 							input = InvAngle(input);
 
@@ -9841,7 +9841,7 @@ mobj_t *K_FindJawzTarget(mobj_t *actor, player_t *source, angle_t range)
 {
 	fixed_t best = INT32_MAX;
 	mobj_t *wtarg = NULL;
-	INT32 i;
+	int32_t i;
 
 	if (specialstageinfo.valid == true)
 	{
@@ -9950,22 +9950,22 @@ mobj_t *K_FindJawzTarget(mobj_t *actor, player_t *source, angle_t range)
 // Engine Sounds.
 static void K_UpdateEngineSounds(player_t *player)
 {
-	const INT32 numsnds = 13;
+	const int32_t numsnds = 13;
 
 	const fixed_t closedist = 160*FRACUNIT;
 	const fixed_t fardist = 1536*FRACUNIT;
 
-	const UINT8 dampenval = 48; // 255 * 48 = close enough to FRACUNIT/6
+	const uint8_t dampenval = 48; // 255 * 48 = close enough to FRACUNIT/6
 
-	const UINT16 buttons = K_GetKartButtons(player);
+	const uint16_t buttons = K_GetKartButtons(player);
 
-	INT32 class; // engine class number
+	int32_t class; // engine class number
 
-	UINT8 volume = 255;
+	uint8_t volume = 255;
 	fixed_t volumedampen = FRACUNIT;
 
-	INT32 targetsnd = 0;
-	INT32 i;
+	int32_t targetsnd = 0;
+	int32_t i;
 
 	if (leveltime < 8 || player->spectator || gamestate != GS_LEVEL || player->exiting)
 	{
@@ -9976,7 +9976,7 @@ static void K_UpdateEngineSounds(player_t *player)
 
 	class = R_GetEngineClass(player->kartspeed, player->kartweight, 0); // there are no unique sounds for ENGINECLASS_J
 	
-	INT32 engineval = (leveltime % 8);		//SCS ADD - fixing unisgned, int comparison below
+	int32_t engineval = (leveltime % 8);		//SCS ADD - fixing unisgned, int comparison below
 
 #if 1												//SCS EDIT - ...And WHY was this disabled?
 	if (engineval != ((player-players) % 8)) // Per-player offset, to make engines sound distinct!	//SCS EDIT
@@ -10023,7 +10023,7 @@ static void K_UpdateEngineSounds(player_t *player)
 
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
-		UINT8 thisvol = 0;
+		uint8_t thisvol = 0;
 		fixed_t dist;
 
 		if (!playeringame[i] || !players[i].mo)
@@ -10086,7 +10086,7 @@ static void K_UpdateEngineSounds(player_t *player)
 
 static void K_UpdateInvincibilitySounds(player_t *player)
 {
-	INT32 sfxnum = sfx_None;
+	int32_t sfxnum = sfx_None;
 
 	if (player->mo->health > 0 && !P_IsPartyPlayer(player)) // used to be !P_IsDisplayPlayer(player)
 	{
@@ -10142,9 +10142,9 @@ void K_KartPlayerHUDUpdate(player_t *player)
 	if (player->positiondelay)
 		player->positiondelay--;
 
-	if (player->exp != (UINT32)player->karthud[khud_oldexp])
+	if (player->exp != (uint32_t)player->karthud[khud_oldexp])
 	{
-		if (player->exp <= (UINT32)player->karthud[khud_oldexp])
+		if (player->exp <= (uint32_t)player->karthud[khud_oldexp])
 		{
 			player->karthud[khud_oldexp] = 0;
 			player->karthud[khud_exp] = 0;
@@ -10152,8 +10152,8 @@ void K_KartPlayerHUDUpdate(player_t *player)
 		}
 		else
 		{
-			INT32 delta = player->exp - player->karthud[khud_exp];
-			INT32 speed = max(1, 10-delta);
+			int32_t delta = player->exp - player->karthud[khud_exp];
+			int32_t speed = max(1, 10-delta);
 
 			player->karthud[khud_exptimer]++;
 
@@ -10161,7 +10161,7 @@ void K_KartPlayerHUDUpdate(player_t *player)
 			{
 				player->karthud[khud_exp]++;
 				player->karthud[khud_exptimer] = 0;
-				if (player->exp == (UINT32)player->karthud[khud_exp])
+				if (player->exp == (uint32_t)player->karthud[khud_exp])
 					player->karthud[khud_oldexp] = player->exp;
 			}
 		}
@@ -10230,8 +10230,8 @@ void K_KartPlayerHUDUpdate(player_t *player)
 
 		if (player->pflags & PF_RINGLOCK)
 		{
-			UINT8 normalanim = (leveltime % 14);
-			UINT8 debtanim = 14 + (leveltime % 2);
+			uint8_t normalanim = (leveltime % 14);
+			uint8_t debtanim = 14 + (leveltime % 2);
 
 			if (player->karthud[khud_ringspblock] >= 14) // debt animation
 			{
@@ -10366,7 +10366,7 @@ static inline BlockItReturn_t PIT_AttractingRings(mobj_t *thing)
 	return BMIT_CONTINUE; // find other rings
 }
 
-boolean K_LegacyRingboost(const player_t *player)
+dboolean K_LegacyRingboost(const player_t *player)
 {
 	if (netgame)
 		return false;
@@ -10386,7 +10386,7 @@ boolean K_LegacyRingboost(const player_t *player)
   */
 static void K_LookForRings(mobj_t *pmo)
 {
-	INT32 bx, by, xl, xh, yl, yh;
+	int32_t bx, by, xl, xh, yl, yh;
 
 	attractmo = pmo;
 	attractdist = (400 * pmo->scale);
@@ -10408,10 +10408,10 @@ static void K_LookForRings(mobj_t *pmo)
 static void K_UpdateTripwire(player_t *player)
 {
 	fixed_t speedThreshold = (3*K_GetKartSpeed(player, false, true))/4;
-	boolean goodSpeed = (player->speed >= speedThreshold);
-	boolean boostExists = (player->tripwireLeniency > 0); // can't be checked later because of subtractions...
+	dboolean goodSpeed = (player->speed >= speedThreshold);
+	dboolean boostExists = (player->tripwireLeniency > 0); // can't be checked later because of subtractions...
 	tripwirepass_t triplevel = K_TripwirePassConditions(player);
-	boolean mightplaysound = false;
+	dboolean mightplaysound = false;
 
 	if (triplevel != TRIPWIRE_NONE) // Sonic Boom, able to pass tripwire
 	{
@@ -10493,7 +10493,7 @@ static void K_UpdateTripwire(player_t *player)
 	}
 }
 
-boolean K_PressingEBrake(const player_t *player)
+dboolean K_PressingEBrake(const player_t *player)
 {
 	return ((K_GetKartButtons(player) & BT_EBRAKEMASK) == BT_EBRAKEMASK);
 }
@@ -10507,7 +10507,7 @@ boolean K_PressingEBrake(const player_t *player)
 */
 void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 {
-	const boolean onground = P_IsObjectOnGround(player->mo);
+	const dboolean onground = P_IsObjectOnGround(player->mo);
 	const fixed_t scamming = K_PlayerScamPercentage(player, FRACUNIT);
 
 	/* reset sprite offsets :) */
@@ -10558,9 +10558,9 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 		// acceleration and deceleration times can be made
 		// asymmetrical.
 		const fixed_t hop = 24 * mapobjectscale;
-		const INT32 duration = 12;
-		const INT32 mid = (duration / 2) - 1;
-		const INT32 t = (duration - mid) - player->whip->fuse;
+		const int32_t duration = 12;
+		const int32_t mid = (duration / 2) - 1;
+		const int32_t t = (duration - mid) - player->whip->fuse;
 
 		player->cameraOffset = hop - (abs(t * hop) / (t < 0 ? mid : duration - mid));
 		player->mo->sprzoff += player->cameraOffset;
@@ -10661,7 +10661,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 		// Battle: spawn zero-bumpers indicator
 		if (!(player->pflags2 & PF2_UNSTINGABLE) && player->ringboostinprogress == 0 && ((gametyperules & GTR_SPHERES) ? player->mo->health <= 1 : RINGTOTAL(player) <= 0))
 		{
-			UINT8 doubler;
+			uint8_t doubler;
 
 			// GROSS. In order to have a transparent version of this for a splitscreen local player, we actually need to spawn two!
 			for (doubler = 0; doubler < 2; doubler++)
@@ -10826,7 +10826,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 			// fixed_t ampreward = Easing_OutQuart(starthaste*FRACUNIT/TIMEATTACK_START, 60*FRACUNIT, 0);
 			// K_SpawnAmps(player, ampreward/FRACUNIT, player->mo);
 
-			UINT8 baseboost = 125;
+			uint8_t baseboost = 125;
 
 			player->startboost = Easing_OutQuart(starthaste*FRACUNIT/TIMEATTACK_START, baseboost, 0);
 
@@ -10856,8 +10856,8 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 	
 	if (player->pflags2 & PF2_GIMMESTARTAWARDS)
 	{
-		UINT16 maxduration = 125;
-		UINT16 duration = FixedRescale(leveltime - starttime, 0, TICRATE*2, Easing_Linear, maxduration, 0);
+		uint16_t maxduration = 125;
+		uint16_t duration = FixedRescale(leveltime - starttime, 0, TICRATE*2, Easing_Linear, maxduration, 0);
 
 		player->neostartboost += duration;
 		S_StartSound(player->mo, sfx_s23c);
@@ -10889,7 +10889,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 
 			if (g_teamplay)
 			{
-				for (UINT8 j = 0; j < MAXPLAYERS; j++)
+				for (uint8_t j = 0; j < MAXPLAYERS; j++)
 				{
 					if (!playeringame[j] || players[j].spectator || !players[j].mo || P_MobjWasRemoved(players[j].mo))
 						continue;
@@ -11072,17 +11072,17 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 	// Speed Assist pt.1
 	if (!K_PlayerUsesBotMovement(player))
 	{
-		UINT32 average = 0;
-		UINT8 counted = 0;
-		UINT32 firstRaw = 0;
+		uint32_t average = 0;
+		uint8_t counted = 0;
+		uint32_t firstRaw = 0;
 		
 		// We want the average position of the back quarter...
-		UINT32 requiredPosition = ((D_NumPlayersInRace()*3)/4) - 1;
+		uint32_t requiredPosition = ((D_NumPlayersInRace()*3)/4) - 1;
 		// ...except in teamplay, where we want the true average.
 		if (g_teamplay)
 			requiredPosition = 1;
 
-		for (UINT8 i = 0; i < MAXPLAYERS; i++)
+		for (uint8_t i = 0; i < MAXPLAYERS; i++)
 		{
 			if (playeringame[i] == false || players[i].spectator == true || players[i].exiting)
 				continue;
@@ -11105,9 +11105,9 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 			average = firstRaw;
 		}
 
-		UINT32 REALLY_FAR = average + 9500; // This far back, get max gain
-		UINT32 TOO_CLOSE = average + 6500; // Start gaining here, lose if closer
-		UINT32 WAY_TOO_CLOSE = average + 5500; // Lose at max rate here
+		uint32_t REALLY_FAR = average + 9500; // This far back, get max gain
+		uint32_t TOO_CLOSE = average + 6500; // Start gaining here, lose if closer
+		uint32_t WAY_TOO_CLOSE = average + 5500; // Lose at max rate here
 		
 		fixed_t comeback = K_TeamComebackMultiplier(player);
 
@@ -11121,10 +11121,10 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 		fixed_t MAX_GAIN_PER_SEC = FRACUNIT/20; // % assist to gain per sec when REALLY_FAR
 		fixed_t MAX_LOSS_PER_SEC = FRACUNIT/5; // % assist to lose per sec when WAY_TOO_CLOSE
 
-		UINT32 gaingap = REALLY_FAR - TOO_CLOSE;
-		UINT32 lossgap = TOO_CLOSE - WAY_TOO_CLOSE;
+		uint32_t gaingap = REALLY_FAR - TOO_CLOSE;
+		uint32_t lossgap = TOO_CLOSE - WAY_TOO_CLOSE;
 
-		UINT32 mydist = K_UndoMapScaling(player->distancetofinish);
+		uint32_t mydist = K_UndoMapScaling(player->distancetofinish);
 
 		if (mydist >= TOO_CLOSE)
 		{
@@ -11284,10 +11284,10 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 		// 2.4: Even if it IS paying out, if the duration gets extreme,
 		// start applying decay anyway!
 
-		UINT8 roller = TICRATE*2;
+		uint8_t roller = TICRATE*2;
 		roller += 4*(8-player->kartspeed);
 
-		// UINT16 oldringboost = player->ringboost;
+		// uint16_t oldringboost = player->ringboost;
 
 		if (!player->baildrop && (player->superring == 0 || player->stunned))
 			player->ringboost -= max((player->ringboost / roller), 1);
@@ -11632,8 +11632,8 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 		mobj_t *pmo = player->mo;
 		// particle spawn
 		#define BAILSPARKLE_MAXBAIL 61 // amount of bail rings needed for max sparkle spawn frequency
-		UINT32 baildropinversefreq = BAILSPARKLE_MAXBAIL - min(player->baildrop, BAILSPARKLE_MAXBAIL-6);
-		UINT32 baildropmodulo = baildropinversefreq *5/3 /10;
+		uint32_t baildropinversefreq = BAILSPARKLE_MAXBAIL - min(player->baildrop, BAILSPARKLE_MAXBAIL-6);
+		uint32_t baildropmodulo = baildropinversefreq *5/3 /10;
 		if ((leveltime % (1+baildropmodulo)) == 0)
 		{
 			fixed_t rand_x;
@@ -11673,19 +11673,19 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 
 	if (player->bailhitlag && !player->mo->hitlag) // do the ring reduction and set boost as soon as we leave hitlag
 	{
-		UINT32 debtrings = player->ringlimit;	//SCS EDIT
+		uint32_t debtrings = player->ringlimit;	//SCS EDIT
 		if (player->rings < 0)
 		{
 			debtrings += player->rings;
 			player->rings = 0;
 		}
 
-		UINT32 totalrings = player->rings + player->superring + player->pickuprings;
+		uint32_t totalrings = player->rings + player->superring + player->pickuprings;
 		if (BAIL_CREDIT_DEBTRINGS)
 			totalrings += debtrings;
 		totalrings = max(totalrings, 0);
-		UINT32 bailboost = FixedInt(FixedMul(totalrings*FRACUNIT, BAIL_BOOST));
-		UINT32 baildrop = FixedInt(FixedMul((totalrings)*FRACUNIT, BAIL_DROP));
+		uint32_t bailboost = FixedInt(FixedMul(totalrings*FRACUNIT, BAIL_BOOST));
+		uint32_t baildrop = FixedInt(FixedMul((totalrings)*FRACUNIT, BAIL_DROP));
 
 		// CONS_Printf("R=%d SR=%d PR=%d DR=%d TR=%d\n", player->rings, player->superring, player->pickuprings, debtrings, totalrings);
 
@@ -11777,7 +11777,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 			P_ResetPitchRoll(player->mo);
 		}
 
-		INT32 fls = K_GetEffectiveFollowerSkin(player);
+		int32_t fls = K_GetEffectiveFollowerSkin(player);
 		if (player->follower && fls >= 0 && fls < numfollowers && cv_karthorns.value)
 		{
 			const follower_t *fl = &followers[fls];
@@ -11820,7 +11820,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 	if (player->preventfailsafe)
 		player->preventfailsafe--;
 
-	UINT8 unstuckthreshold = (onground) ? 80 : 40;
+	uint8_t unstuckthreshold = (onground) ? 80 : 40;
 
 	if (player->tripwireUnstuck > unstuckthreshold)
 	{
@@ -11934,7 +11934,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 	{
 		if (player->superringdisplay != player->superring)
 		{
-			INT16 delta = player->superring - player->superringdisplay;
+			int16_t delta = player->superring - player->superringdisplay;
 			if (player->superring > player->superringdisplay)
 				delta = max(delta/8, 1);
 			else
@@ -11947,14 +11947,14 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 	{
 		player->nextringaward++;
 
-		UINT8 fastringscaler = (K_GetKartGameSpeedScalar(gamespeed) > FRACUNIT) ? 20 : 20; // If G3 / TA gets out of control, can speed up all ring box payout
+		uint8_t fastringscaler = (K_GetKartGameSpeedScalar(gamespeed) > FRACUNIT) ? 20 : 20; // If G3 / TA gets out of control, can speed up all ring box payout
 
-		UINT32 existing = (player->lastringboost / K_GetFullKartRingPower(player, true)); // How many rings (effectively) do we have boost credit for right now?
+		uint32_t existing = (player->lastringboost / K_GetFullKartRingPower(player, true)); // How many rings (effectively) do we have boost credit for right now?
 
 		if (K_LegacyRingboost(player))
 			existing = 0;
 
-		UINT8 ringrate = 3 - min(2, (player->superring + existing) / fastringscaler); // Used to consume fat stacks of cash faster.
+		uint8_t ringrate = 3 - min(2, (player->superring + existing) / fastringscaler); // Used to consume fat stacks of cash faster.
 
 		if (player->stunned)
 			ringrate = 6;
@@ -12246,8 +12246,8 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 		player->defenseLockout--;
 	}
 
-	UINT16 normalturn = abs(cmd->turning);
-	UINT16 normalaim = abs(cmd->throwdir);
+	uint16_t normalturn = abs(cmd->turning);
+	uint16_t normalaim = abs(cmd->throwdir);
 
 	if (normalturn != 0 || normalaim != 0)
 	{
@@ -12337,8 +12337,8 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 		// Remove grease faster if players are moving slower; players that are recovering
 		// from mistakes (or who got sprung purely for track traversal) need steering!
 		// Up to 4x degrease speed below 10FU/t (speed at which you lose drift sparks).
-		INT16 toDegrease = 1;
-		INT16 driftSpeedIncrements = player->speed / (10 * player->mo->scale); // Same breakpoints used for driftcharge stages.
+		int16_t toDegrease = 1;
+		int16_t driftSpeedIncrements = player->speed / (10 * player->mo->scale); // Same breakpoints used for driftcharge stages.
 		toDegrease += max(3 - driftSpeedIncrements, 0);
 
 		if (player->tiregrease <= toDegrease)
@@ -12709,7 +12709,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 
 void K_KartResetPlayerColor(player_t *player)
 {
-	boolean fullbright = false;
+	dboolean fullbright = false;
 
 	if (!player->mo || P_MobjWasRemoved(player->mo)) // Can't do anything
 		return;
@@ -12721,7 +12721,7 @@ void K_KartResetPlayerColor(player_t *player)
 
 	if (player->eggmanexplode) // You're gonna diiiiie
 	{
-		const INT32 flashtime = 4<<(player->eggmanexplode/TICRATE);
+		const int32_t flashtime = 4<<(player->eggmanexplode/TICRATE);
 		if (player->eggmanexplode % (flashtime/2) != 0)
 		{
 			;
@@ -12765,7 +12765,7 @@ void K_KartResetPlayerColor(player_t *player)
 	{
 		const tic_t defaultTime = itemtime+(2*TICRATE);
 		tic_t flicker = 2;
-		boolean skip = false;
+		dboolean skip = false;
 
 		fullbright = true;
 		
@@ -12839,7 +12839,7 @@ void K_KartResetPlayerColor(player_t *player)
 		goto finalise;
 	}
 
-	boolean allowflashing = true;
+	dboolean allowflashing = true;
 	int flashingrate = 1;
 	if (demo.playback && cv_reducevfx.value && !R_CanShowSkinInDemo(player->skin))
 	{
@@ -12925,10 +12925,10 @@ void K_KartPlayerAfterThink(player_t *player)
 	// Jawz reticule (seeking)
 	if (player->itemtype == KITEM_JAWZ && (player->itemflags & IF_ITEMOUT))
 	{
-		const INT32 lastTargID = player->lastjawztarget;
+		const int32_t lastTargID = player->lastjawztarget;
 		mobj_t *lastTarg = NULL;
 
-		INT32 targID = MAXPLAYERS;
+		int32_t targID = MAXPLAYERS;
 		mobj_t *targ = NULL;
 
 		mobj_t *ret = NULL;
@@ -13021,10 +13021,10 @@ void K_KartPlayerAfterThink(player_t *player)
 	// AB Jawz reticule (seeking)
 	else if (player->itemtype == KITEM_ABURNERJAWZ)
 	{
-		const INT32 lastTargID = player->lastabjawztarget;
+		const int32_t lastTargID = player->lastabjawztarget;
 		mobj_t *lastTarg = NULL;
 
-		INT32 targID = MAXPLAYERS;
+		int32_t targID = MAXPLAYERS;
 		mobj_t *targ = NULL;
 
 		mobj_t *ret = NULL;
@@ -13141,7 +13141,7 @@ void K_KartPlayerAfterThink(player_t *player)
 }
 
 /*--------------------------------------------------
-	static boolean K_SetPlayerNextWaypoint(player_t *player)
+	static dboolean K_SetPlayerNextWaypoint(player_t *player)
 
 		Sets the next waypoint of a player, by finding their closest waypoint, then checking which of itself and next or
 		previous waypoints are infront of the player.
@@ -13153,11 +13153,11 @@ void K_KartPlayerAfterThink(player_t *player)
 	Return:-
 		Whether it is safe to update the respawn waypoint
 --------------------------------------------------*/
-static boolean K_SetPlayerNextWaypoint(player_t *player)
+static dboolean K_SetPlayerNextWaypoint(player_t *player)
 {
 	waypoint_t *finishline = K_GetFinishLineWaypoint();
 	waypoint_t *bestwaypoint = NULL;
-	boolean    updaterespawn = false;
+	dboolean    updaterespawn = false;
 
 	if ((player != NULL) && (player->mo != NULL) && (P_MobjWasRemoved(player->mo) == false))
 	{
@@ -13391,9 +13391,9 @@ static void K_UpdateDistanceFromFinishLine(player_t *const player)
 		}
 		else if ((player->currentwaypoint != NULL) && (player->nextwaypoint != NULL) && (finishline != NULL))
 		{
-			const boolean useshortcuts = false;
-			const boolean huntbackwards = false;
-			boolean pathfindsuccess = false;
+			const dboolean useshortcuts = false;
+			const dboolean huntbackwards = false;
+			dboolean pathfindsuccess = false;
 			path_t pathtofinish = {0};
 
 			pathfindsuccess =
@@ -13403,13 +13403,13 @@ static void K_UpdateDistanceFromFinishLine(player_t *const player)
 			// Using shortcuts won't find a path, so distance won't be updated until the player gets back on track
 			if (pathfindsuccess == true)
 			{
-				const boolean pathBackwardsReverse = ((player->pflags & PF_WRONGWAY) == 0);
-				boolean pathBackwardsSuccess = false;
+				const dboolean pathBackwardsReverse = ((player->pflags & PF_WRONGWAY) == 0);
+				dboolean pathBackwardsSuccess = false;
 				path_t pathBackwards = {0};
 
 				fixed_t disttonext = 0;
-				UINT32 traveldist = 0;
-				UINT32 adddist = 0;
+				uint32_t traveldist = 0;
+				uint32_t adddist = 0;
 
 				disttonext =
 					P_AproxDistance(
@@ -13417,7 +13417,7 @@ static void K_UpdateDistanceFromFinishLine(player_t *const player)
 						(player->mo->y >> FRACBITS) - (player->nextwaypoint->mobj->y >> FRACBITS));
 				disttonext = P_AproxDistance(disttonext, (player->mo->z >> FRACBITS) - (player->nextwaypoint->mobj->z >> FRACBITS));
 
-				traveldist = ((UINT32)disttonext) * 2;
+				traveldist = ((uint32_t)disttonext) * 2;
 				pathBackwardsSuccess =
 					K_PathfindThruCircuit(player->nextwaypoint, traveldist, &pathBackwards, false, pathBackwardsReverse);
 
@@ -13432,7 +13432,7 @@ static void K_UpdateDistanceFromFinishLine(player_t *const player)
 						vector3_t best;
 						fixed_t bestPoint = INT32_MAX;
 						fixed_t bestDist = INT32_MAX;
-						UINT32 bestGScore = UINT32_MAX;
+						uint32_t bestGScore = UINT32_MAX;
 
 						point.x = player->mo->x;
 						point.y = player->mo->y;
@@ -13451,7 +13451,7 @@ static void K_UpdateDistanceFromFinishLine(player_t *const player)
 							waypoint_t *wp = (waypoint_t *)pathBackwards.array[i].nodedata;
 
 							fixed_t pDist = 0;
-							UINT32 g = pathBackwards.array[i - 1].gscore;
+							uint32_t g = pathBackwards.array[i - 1].gscore;
 
 							line[0].x = pwp->mobj->x;
 							line[0].y = pwp->mobj->y;
@@ -13478,7 +13478,7 @@ static void K_UpdateDistanceFromFinishLine(player_t *const player)
 										(result.y >> FRACBITS) - (line[0].y >> FRACBITS));
 								bestDist = P_AproxDistance(bestDist, (result.z >> FRACBITS) - (line[0].z >> FRACBITS));
 
-								bestGScore = g + ((UINT32)bestDist);
+								bestGScore = g + ((uint32_t)bestDist);
 							}
 						}
 
@@ -13509,7 +13509,7 @@ static void K_UpdateDistanceFromFinishLine(player_t *const player)
 								(player->mo->y >> FRACBITS) - (wp->mobj->y >> FRACBITS));
 						disttowaypoint = P_AproxDistance(disttowaypoint, (player->mo->z >> FRACBITS) - (wp->mobj->z >> FRACBITS));
 
-						adddist = (UINT32)disttowaypoint;
+						adddist = (uint32_t)disttowaypoint;
 					}
 					*/
 					Z_Free(pathBackwards.array);
@@ -13518,7 +13518,7 @@ static void K_UpdateDistanceFromFinishLine(player_t *const player)
 				else
 				{
 					// Fallback to adding euclidean distance to the next waypoint to the distancetofinish
-					adddist = (UINT32)disttonext;
+					adddist = (uint32_t)disttonext;
 				}
 				*/
 
@@ -13546,7 +13546,7 @@ static void K_UpdateDistanceFromFinishLine(player_t *const player)
 				const mapheader_t *mapheader = mapheaderinfo[gamemap - 1];
 				if ((mapheader->levelflags & LF_SECTIONRACE) == 0U)
 				{
-					UINT8 numfulllapsleft = ((UINT8)numlaps - player->laps) / mapheader->lapspersection;
+					uint8_t numfulllapsleft = ((uint8_t)numlaps - player->laps) / mapheader->lapspersection;
 					player->distancetofinish += numfulllapsleft * K_GetCircuitLength();
 				}
 			}
@@ -13554,7 +13554,7 @@ static void K_UpdateDistanceFromFinishLine(player_t *const player)
 	}
 }
 
-static UINT32 u32_delta(UINT32 x, UINT32 y)
+static uint32_t u32_delta(uint32_t x, uint32_t y)
 {
 	return x > y ? x - y : y - x;
 }
@@ -13578,18 +13578,18 @@ static void K_UpdatePlayerWaypoints(player_t *const player)
 		return;
 	}
 
-	const UINT32 distance_threshold = FixedMul(32768, mapobjectscale);
+	const uint32_t distance_threshold = FixedMul(32768, mapobjectscale);
 
 	waypoint_t *const old_currentwaypoint = player->currentwaypoint;
 	waypoint_t *const old_nextwaypoint = player->nextwaypoint;
 
-	boolean updaterespawn = K_SetPlayerNextWaypoint(player);
+	dboolean updaterespawn = K_SetPlayerNextWaypoint(player);
 
 	// Update prev value (used for grief prevention code)
 	player->distancetofinishprev = player->distancetofinish;
 	K_UpdateDistanceFromFinishLine(player);
 
-	UINT32 delta = u32_delta(player->distancetofinish, player->distancetofinishprev);
+	uint32_t delta = u32_delta(player->distancetofinish, player->distancetofinishprev);
 	if (delta > distance_threshold &&
 		player->respawn.state == RESPAWNST_NONE && // Respawning should be a full reset.
 		old_currentwaypoint != NULL && // So should touching the first waypoint ever.
@@ -13650,7 +13650,7 @@ static void K_UpdatePlayerWaypoints(player_t *const player)
 	player->pflags &= ~PF_TRUSTWAYPOINTS; // clear special exception
 }
 
-INT32 K_GetKartRingPower(const player_t *player, boolean boosted)
+int32_t K_GetKartRingPower(const player_t *player, dboolean boosted)
 {
 	fixed_t ringPower = ((9 - player->kartspeed) + (9 - player->kartweight)) * (FRACUNIT/4);
 
@@ -13662,7 +13662,7 @@ INT32 K_GetKartRingPower(const player_t *player, boolean boosted)
 	return max(ringPower / FRACUNIT, 1);
 }
 
-INT32 K_GetFullKartRingPower(const player_t *player, boolean boosted)
+int32_t K_GetFullKartRingPower(const player_t *player, dboolean boosted)
 {
 	return 7 + K_GetKartRingPower(player, boosted);
 }
@@ -13670,9 +13670,9 @@ INT32 K_GetFullKartRingPower(const player_t *player, boolean boosted)
 // Returns false if this player being placed here causes them to collide with any other player
 // Used in g_game.c for match etc. respawning
 // This does not check along the z because the z is not correctly set for the spawnee at this point
-boolean K_CheckPlayersRespawnColliding(INT32 playernum, fixed_t x, fixed_t y)
+dboolean K_CheckPlayersRespawnColliding(int32_t playernum, fixed_t x, fixed_t y)
 {
-	INT32 i;
+	int32_t i;
 	fixed_t p1radius = players[playernum].mo->radius;
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
@@ -13691,9 +13691,9 @@ boolean K_CheckPlayersRespawnColliding(INT32 playernum, fixed_t x, fixed_t y)
 
 // countersteer is how strong the controls are telling us we are turning
 // turndir is the direction the controls are telling us to turn, -1 if turning right and 1 if turning left
-static INT16 K_GetKartDriftValue(const player_t *player, fixed_t countersteer)
+static int16_t K_GetKartDriftValue(const player_t *player, fixed_t countersteer)
 {
-	INT16 basedrift, driftadjust;
+	int16_t basedrift, driftadjust;
 	fixed_t driftweight = player->kartweight*14; // 12
 
 	if (player->drift == 0 || !P_IsObjectOnGround(player->mo))
@@ -13728,14 +13728,14 @@ static INT16 K_GetKartDriftValue(const player_t *player, fixed_t countersteer)
 	}
 }
 
-INT16 K_UpdateSteeringValue(INT16 inputSteering, INT16 destSteering)
+int16_t K_UpdateSteeringValue(int16_t inputSteering, int16_t destSteering)
 {
 	// player->steering is the turning value, but with easing applied.
 	// Keeps micro-turning from old easing, but isn't controller dependent.
 
-	INT16 amount = KART_FULLTURN/3;
-	INT16 diff = destSteering - inputSteering;
-	INT16 outputSteering = inputSteering;
+	int16_t amount = KART_FULLTURN/3;
+	int16_t diff = destSteering - inputSteering;
+	int16_t outputSteering = inputSteering;
 
 
 	// We switched steering directions, lighten up on easing for a more responsive countersteer.
@@ -13743,7 +13743,7 @@ INT16 K_UpdateSteeringValue(INT16 inputSteering, INT16 destSteering)
 	if ((inputSteering > 0 && destSteering < 0) || (inputSteering < 0 && destSteering > 0))
 	{
 		// Don't let small turns in direction X allow instant turns in direction Y.
-		INT16 countersteer = min(KART_FULLTURN, abs(inputSteering));  // The farthest we should go is to 0 -- neutral.
+		int16_t countersteer = min(KART_FULLTURN, abs(inputSteering));  // The farthest we should go is to 0 -- neutral.
 		amount = max(countersteer, amount); // But don't reduce turning strength from baseline either.
 	}
 
@@ -13779,7 +13779,7 @@ static fixed_t K_GetUnderwaterStrafeMul(const player_t *player)
 	return max(0, FixedDiv(max(player->speed, minSpeed) - minSpeed, baseline - minSpeed));
 }
 
-INT16 K_GetKartTurnValue(const player_t *player, INT16 turnvalue)
+int16_t K_GetKartTurnValue(const player_t *player, int16_t turnvalue)
 {
 	fixed_t turnfixed = turnvalue * FRACUNIT;
 
@@ -13978,11 +13978,11 @@ INT16 K_GetKartTurnValue(const player_t *player, INT16 turnvalue)
 	return (turnfixed / FixedDiv(FRACUNIT, K_GetKartHandlingAssistScalar(gamespeed)));
 }
 
-INT32 K_GetUnderwaterTurnAdjust(const player_t *player)
+int32_t K_GetUnderwaterTurnAdjust(const player_t *player)
 {
 	if (player->mo->eflags & MFE_UNDERWATER && player->curshield != KSHIELD_BUBBLE)		//SCS ADD
 	{
-		INT32 steer = (K_GetKartTurnValue(player,
+		int32_t steer = (K_GetKartTurnValue(player,
 					player->steering) << TICCMD_REDUCE);
 
 		if (!player->drift)
@@ -13994,12 +13994,12 @@ INT32 K_GetUnderwaterTurnAdjust(const player_t *player)
 		return 0;
 }
 
-INT32 K_GetKartDriftSparkValue(const player_t *player)
+int32_t K_GetKartDriftSparkValue(const player_t *player)
 {
 	return (26*4 + player->kartspeed*2 + (9 - player->kartweight))*8;
 }
 
-INT32 K_GetKartDriftSparkValueForStage(const player_t *player, UINT8 stage)
+int32_t K_GetKartDriftSparkValueForStage(const player_t *player, uint8_t stage)
 {
 	fixed_t mul = FRACUNIT;
 
@@ -14069,18 +14069,18 @@ void K_SpawnDriftBoostExplosion(player_t *player, int stage)
 	overlay->extravalue1 = stage;
 }
 
-static void K_KartDrift(player_t *player, boolean onground)
+static void K_KartDrift(player_t *player, dboolean onground)
 {
 	const fixed_t minspeed = (10 * player->mo->scale);
 
-	const INT32 dsone = K_GetKartDriftSparkValueForStage(player, 1);
-	const INT32 dstwo = K_GetKartDriftSparkValueForStage(player, 2);
-	const INT32 dsthree = K_GetKartDriftSparkValueForStage(player, 3);
-	const INT32 dsfour = K_GetKartDriftSparkValueForStage(player, 4);
+	const int32_t dsone = K_GetKartDriftSparkValueForStage(player, 1);
+	const int32_t dstwo = K_GetKartDriftSparkValueForStage(player, 2);
+	const int32_t dsthree = K_GetKartDriftSparkValueForStage(player, 3);
+	const int32_t dsfour = K_GetKartDriftSparkValueForStage(player, 4);
 
-	const UINT16 buttons = K_GetKartButtons(player);
+	const uint16_t buttons = K_GetKartButtons(player);
 
-	boolean dokicker = false;
+	dboolean dokicker = false;
 
 	// Drifting is actually straffing + automatic turning.
 	// Holding the Jump button will enable drifting.
@@ -14097,7 +14097,7 @@ static void K_KartDrift(player_t *player, boolean onground)
 			//K_SpawnDashDustRelease(player);
 
 			// Used to detect useful driftboosts.
-			UINT8 oldDriftBoost = player->driftboost;
+			uint8_t oldDriftBoost = player->driftboost;
 
 			// Airtime means we're not gaining speed. Get grounded!
 			if (!onground)
@@ -14250,7 +14250,7 @@ static void K_KartDrift(player_t *player, boolean onground)
 	{
 		// Incease/decrease the drift value to continue drifting in that direction
 		fixed_t driftadditive = 24;
-		boolean playsound = false;
+		dboolean playsound = false;
 
 		if (onground)
 		{
@@ -14350,7 +14350,7 @@ static void K_KartDrift(player_t *player, boolean onground)
 
 	// No longer meet the conditions to sliptide?
 	// We'll spot you the sliptide as long as you keep turning, but no charging wavedashes.
-	boolean extendedSliptide = false;
+	dboolean extendedSliptide = false;
 
 	// We don't meet sliptide conditions!
 	if ((player->handleboost < SLIPTIDEHANDLING)
@@ -14394,7 +14394,7 @@ static void K_KartDrift(player_t *player, boolean onground)
 		if (!extendedSliptide)
 		{
 			// Give charge proportional to your angle. Sharp turns are rewarding, slow analog slides are not—remember, this is giving back the speed you gave up.
-			UINT16 addCharge = FixedInt(
+			uint16_t addCharge = FixedInt(
 				FixedMul(10*FRACUNIT,
 					FixedDiv(abs(player->steering)*FRACUNIT, (9*KART_FULLTURN/10)*FRACUNIT)
 				));
@@ -14544,14 +14544,14 @@ static void K_KartDrift(player_t *player, boolean onground)
 //
 void K_KartUpdatePosition(player_t *player)
 {
-	UINT8 position = 1;
-	UINT8 oldposition = player->position;
+	uint8_t position = 1;
+	uint8_t oldposition = player->position;
 
-	UINT8 team_position = 1;
-	UINT32 team_importance = 0;
+	uint8_t team_position = 1;
+	uint32_t team_importance = 0;
 
 	fixed_t i;
-	INT32 realplayers = 0;
+	int32_t realplayers = 0;
 
 	if (player->spectator || !player->mo)
 	{
@@ -14589,7 +14589,7 @@ void K_KartUpdatePosition(player_t *player)
 
 			realplayers++;
 
-			const boolean same_team = G_SameTeam(player, &players[i]);
+			const dboolean same_team = G_SameTeam(player, &players[i]);
 
 #define increment_position(condition) \
 	if (condition) \
@@ -14634,8 +14634,8 @@ void K_KartUpdatePosition(player_t *player)
 				}
 				else
 				{
-					UINT8 myEmeralds = K_NumEmeralds(player);
-					UINT8 yourEmeralds = K_NumEmeralds(&players[i]);
+					uint8_t myEmeralds = K_NumEmeralds(player);
+					uint8_t yourEmeralds = K_NumEmeralds(&players[i]);
 
 					// First compare all points
 					if (players[i].roundscore > player->roundscore)
@@ -14670,7 +14670,7 @@ void K_KartUpdatePosition(player_t *player)
 		if (!K_Cooperative() && player->positiondelay <= 0 && position < oldposition && P_IsDisplayPlayer(player) == true)
 		{
 			// Play sound when getting closer to 1st.
-			UINT32 soundpos = (max(0, position - 1) * MAXPLAYERS)/realplayers; // always 1-15 despite there being 16 players at max...
+			uint32_t soundpos = (max(0, position - 1) * MAXPLAYERS)/realplayers; // always 1-15 despite there being 16 players at max...
 #if MAXPLAYERS > 16
 			if (soundpos > 15)		//SCS - bugfix from mergerequest to fix issues with more than 16 players?
 			{
@@ -14743,7 +14743,7 @@ void K_KartUpdatePosition(player_t *player)
 
 void K_UpdateAllPlayerPositions(void)
 {
-	INT32 i;
+	int32_t i;
 
 	// First loop: Ensure all players' distance to the finish line are all accurate
 	for (i = 0; i < MAXPLAYERS; i++)
@@ -14955,13 +14955,13 @@ void K_StripOther(player_t *player)
 	}
 }
 
-static INT32 K_FlameShieldMax(player_t *player)
+static int32_t K_FlameShieldMax(player_t *player)
 {
-	UINT32 disttofinish = 0;
-	UINT32 distv = 1024; // Pre no-scams: 2048
+	uint32_t disttofinish = 0;
+	uint32_t distv = 1024; // Pre no-scams: 2048
 	distv = distv * 16 / FLAMESHIELD_MAX; // Old distv was based on a 16-segment bar
-	UINT32 scamradius = 1500*4; // How close is close enough that we shouldn't be allowed to scam 1st?
-	// UINT8 i;
+	uint32_t scamradius = 1500*4; // How close is close enough that we shouldn't be allowed to scam 1st?
+	// uint8_t i;
 
 	disttofinish = K_GetItemRouletteDistance(player, 8);
 
@@ -14980,7 +14980,7 @@ static INT32 K_FlameShieldMax(player_t *player)
 	return min(FLAMESHIELD_MAX, (FLAMESHIELD_MAX / 16) + (disttofinish / distv)); // Ditto for this minimum, old value was 1/16
 }
 
-boolean K_PlayerEBrake(const player_t *player)
+dboolean K_PlayerEBrake(const player_t *player)
 {
 	if (player->respawn.state != RESPAWNST_NONE
 		&& (player->respawn.init == true || player->respawn.fromRingShooter == true))
@@ -15018,7 +15018,7 @@ boolean K_PlayerEBrake(const player_t *player)
 	return false;
 }
 
-boolean K_PlayerGuard(const player_t *player)
+dboolean K_PlayerGuard(const player_t *player)
 {
 	if (player->defenseLockout != 0)
 	{
@@ -15068,7 +15068,7 @@ boolean K_PlayerGuard(const player_t *player)
 	return false;
 }
 
-SINT8 K_Sliptiding(const player_t *player)
+int8_t K_Sliptiding(const player_t *player)
 {
 	/*
 	if (player->mo->eflags & MFE_UNDERWATER)
@@ -15077,7 +15077,7 @@ SINT8 K_Sliptiding(const player_t *player)
 	return player->drift ? 0 : player->aizdriftstrat;
 }
 
-INT32 K_StairJankFlip(INT32 value)
+int32_t K_StairJankFlip(int32_t value)
 {
 	return P_AltFlip(value, 2);
 }
@@ -15162,16 +15162,16 @@ void K_KartEbrakeVisuals(player_t *p)
 		}
 		else
 		{
-			const UINT16 MAXCHARGETIME = K_GetSpindashChargeTime(p);
+			const uint16_t MAXCHARGETIME = K_GetSpindashChargeTime(p);
 			const fixed_t MAXSHAKE = FRACUNIT;
 
 			// update HOLD bubble with numbers based on charge.
 			if (p->mo->hprev && !P_MobjWasRemoved(p->mo->hprev))
 			{
-				const INT16 overcharge = (p->spindash - MAXCHARGETIME);
-				const boolean desperation = (p->rings <= 0); // desperation spindash
+				const int16_t overcharge = (p->spindash - MAXCHARGETIME);
+				const dboolean desperation = (p->rings <= 0); // desperation spindash
 
-				UINT8 frame = min(1 + ((p->spindash*3) / MAXCHARGETIME), 4);
+				uint8_t frame = min(1 + ((p->spindash*3) / MAXCHARGETIME), 4);
 
 				// ?! limit.
 				if (overcharge >= TICRATE)
@@ -15202,14 +15202,14 @@ void K_KartEbrakeVisuals(player_t *p)
 			if (p->spindash < MAXCHARGETIME)
 			{
 				fixed_t shake = FixedMul(((p->spindash)*FRACUNIT/MAXCHARGETIME), MAXSHAKE);
-				SINT8 mult = leveltime & 1 ? 1 : -1;
+				int8_t mult = leveltime & 1 ? 1 : -1;
 
 				p->mo->spritexoffset = shake*mult;
 			}
 			else	// get VIOLENT on overcharge :)
 			{
 				fixed_t shake = MAXSHAKE + FixedMul(((p->spindash-MAXCHARGETIME)*FRACUNIT/TICRATE), MAXSHAKE)*3;
-				SINT8 mult = leveltime & 1 ? 1 : -1;
+				int8_t mult = leveltime & 1 ? 1 : -1;
 
 				p->mo->spritexoffset = shake*mult;
 			}
@@ -15245,7 +15245,7 @@ void K_KartEbrakeVisuals(player_t *p)
 static void K_KartSpindashDust(mobj_t *parent)
 {
 	fixed_t rad = FixedDiv(FixedHypot(parent->radius, parent->radius), parent->scale);
-	INT32 i;
+	int32_t i;
 
 	for (i = 0; i < 2; i++)
 	{
@@ -15253,7 +15253,7 @@ static void K_KartSpindashDust(mobj_t *parent)
 		fixed_t vmomentum = P_RandomRange(PR_DECORATION, 2, 6) * parent->scale;
 
 		angle_t ang = parent->player->drawangle + ANGLE_180;
-		SINT8 flip = 1;
+		int8_t flip = 1;
 
 		mobj_t *dust;
 
@@ -15322,10 +15322,10 @@ static void K_KartSpindashWind(mobj_t *parent)
 
 static void K_KartSpindash(player_t *player)
 {
-	const boolean onGround = P_IsObjectOnGround(player->mo);
-	const INT16 MAXCHARGETIME = K_GetSpindashChargeTime(player);
-	UINT16 buttons = K_GetKartButtons(player);
-	boolean spawnWind = (leveltime % 2 == 0);
+	const dboolean onGround = P_IsObjectOnGround(player->mo);
+	const int16_t MAXCHARGETIME = K_GetSpindashChargeTime(player);
+	uint16_t buttons = K_GetKartButtons(player);
+	dboolean spawnWind = (leveltime % 2 == 0);
 
 	if (player->mo->hitlag > 0 || P_PlayerInPain(player) || player->curshield == KSHIELD_TOP)
 	{
@@ -15449,18 +15449,18 @@ static void K_KartSpindash(player_t *player)
 		}
 		else if (!G_CompatLevel(0x0010))
 		{
-			UINT16 oldbuttons = player->oldcmd.buttons;
-			UINT16 nowbuttons = K_GetKartButtons(player);
+			uint16_t oldbuttons = player->oldcmd.buttons;
+			uint16_t nowbuttons = K_GetKartButtons(player);
 
 			if (K_KartKickstart(player))
 				oldbuttons |= BT_ACCELERATE; // Not strictly correct, but better than nothing.
 			// Kickstart needs substantial attention if we want this sort of thing to be clean.
 
-			boolean ebrakelasttic = ((oldbuttons & BT_EBRAKEMASK) == BT_EBRAKEMASK);
+			dboolean ebrakelasttic = ((oldbuttons & BT_EBRAKEMASK) == BT_EBRAKEMASK);
 			if (player->pflags2 & PF2_STRICTFASTFALL && !(oldbuttons & BT_SPINDASH))
 				ebrakelasttic = false;
 
-			boolean ebrakenow = K_PressingEBrake(player);
+			dboolean ebrakenow = K_PressingEBrake(player);
 			if (player->pflags2 & PF2_STRICTFASTFALL && !(nowbuttons & BT_SPINDASH))
 				ebrakenow = false;
 
@@ -15500,11 +15500,11 @@ static void K_KartSpindash(player_t *player)
 	{
 		if ((buttons & (BT_DRIFT|BT_BRAKE)) == (BT_DRIFT|BT_BRAKE))
 		{
-			UINT8 ringdropframes = 2 + (player->kartspeed + player->kartweight);
-			boolean spawnOldEffect = true;
-			UINT8 soundvol = 255;
+			uint8_t ringdropframes = 2 + (player->kartspeed + player->kartweight);
+			dboolean spawnOldEffect = true;
+			uint8_t soundvol = 255;
 
-			INT16 chargetime = MAXCHARGETIME - ++player->spindash;
+			int16_t chargetime = MAXCHARGETIME - ++player->spindash;
 
 			if (player->rings <= 0 && chargetime >= 0) // Desperation spindash
 			{
@@ -15553,8 +15553,8 @@ static void K_KartSpindash(player_t *player)
 
 			if (chargetime > 0)
 			{
-				UINT16 soundcharge = 0;
-				UINT8 add = 0;
+				uint16_t soundcharge = 0;
+				uint8_t add = 0;
 
 				while ((soundcharge += ++add) < chargetime);
 
@@ -15580,10 +15580,10 @@ static void K_KartSpindash(player_t *player)
 
 #undef SPINDASHTHRUSTTIME
 
-UINT8 GetTotalInGameRacers(void)
+uint8_t GetTotalInGameRacers(void)
 {
-	UINT8 i;
-	UINT8 numplayers = 0;
+	uint8_t i;
+	uint8_t numplayers = 0;
 	
 	if (gametyperules & GTR_CIRCUIT)
 	{
@@ -15625,7 +15625,7 @@ void K_SpawnRingCapIncreaseMessage(player_t *player)	//SCS ADD
 		pt->renderflags ^= RF_HORIZONTALFLIP;
 }
 
-boolean K_FastFallBounce(player_t *player)
+dboolean K_FastFallBounce(player_t *player)
 {
 	// Handle fastfall bounce.
 	if (player->fastfall != 0)
@@ -15676,7 +15676,7 @@ boolean K_FastFallBounce(player_t *player)
 
 			bounce += 3 * mapobjectscale;
 			
-			//UINT8 numplayers = GetTotalInGameRacers();
+			//uint8_t numplayers = GetTotalInGameRacers();
 
 			/*
 			if (player->position == 1 && player->positiondelay <= 0 && numplayers != 1)
@@ -15734,8 +15734,8 @@ void K_DappleEmployment(player_t *player)
 {
 	if (player->curshield == KSHIELD_BUBBLE)
 	{
-		const boolean JustWallBonked = !!(player->mo->eflags & MFE_JUSTBOUNCEDWALL); // some shit about signed...
-		const boolean NoMoreBubbleWallHump = (player->ignoreAirtimeLeniency > 0) && JustWallBonked;
+		const dboolean JustWallBonked = !!(player->mo->eflags & MFE_JUSTBOUNCEDWALL); // some shit about signed...
+		const dboolean NoMoreBubbleWallHump = (player->ignoreAirtimeLeniency > 0) && JustWallBonked;
 
 		// No more vertical wall humping
 		if (NoMoreBubbleWallHump)
@@ -15773,7 +15773,7 @@ static void K_AirFailsafe(player_t *player)
 	if (leveltime < introtime)
 		return;
 
-	UINT8 buttons = K_GetKartButtons(player);
+	uint8_t buttons = K_GetKartButtons(player);
 
 	// Accel inputs queue air-failsafe for when they're released,
 	// as long as they're not part of a fastfall attempt.
@@ -15837,8 +15837,8 @@ fixed_t K_PlayerBaseFriction(const player_t *player, fixed_t original)
 
 			if (player->currentwaypoint && player->currentwaypoint->mobj)
 			{
-				INT16 myradius = FixedDiv(player->currentwaypoint->mobj->radius, mapobjectscale) / FRACUNIT;
-				INT16 SMALL_WAYPOINT = 450;
+				int16_t myradius = FixedDiv(player->currentwaypoint->mobj->radius, mapobjectscale) / FRACUNIT;
+				int16_t SMALL_WAYPOINT = 450;
 
 				if (myradius < SMALL_WAYPOINT)
 					errorfrict *= 2;
@@ -15978,7 +15978,7 @@ static void K_trickPanelTimingVisual(player_t *player, fixed_t momz)
 	angle_t vang = -FixedAngle(momz)*12 + (ANG1*45);												// vertical angle dependant on momz, we want it to line up at 45 degrees at the perfect frame to trick at
 	fixed_t dist = FixedMul(max(MINRADIUS<<FRACBITS, abs(momz)*RADIUSSCALING), player->mo->scale);	// distance.
 
-	UINT8 i;
+	uint8_t i;
 
 	// Do you like trig? cool, me neither.
 	for (i=0; i < 2; i++)
@@ -16056,11 +16056,11 @@ void K_UnsetItemOut(player_t *player)
 	player->bananadrag = 0;
 }
 
-UINT32 K_CalcRingBoxAward(player_t *player, UINT32 Multiplier, boolean IsSuperJackpot)				//SCS ADD - making this math its own function
+uint32_t K_CalcRingBoxAward(player_t *player, uint32_t Multiplier, dboolean IsSuperJackpot)				//SCS ADD - making this math its own function
 {
 	player->lastringboost = player->ringboost;
 	
-	UINT32 award = 0;
+	uint32_t award = 0;
 	
 	if (IsSuperJackpot)
 		award = 40;
@@ -16080,8 +16080,8 @@ UINT32 K_CalcRingBoxAward(player_t *player, UINT32 Multiplier, boolean IsSuperJa
 	else if (K_LegacyRingboost(player))
 	{
 		// An ancient power is revealed once more...
-		UINT8 accel = 10-player->kartspeed;
-		UINT8 weight = player->kartweight;
+		uint8_t accel = 10-player->kartspeed;
+		uint8_t weight = player->kartweight;
 
 		if (accel > weight)
 		{
@@ -16111,19 +16111,19 @@ UINT32 K_CalcRingBoxAward(player_t *player, UINT32 Multiplier, boolean IsSuperJa
 		// To try and help close this gap, we fudge Ring Box payouts to allow weaker characters
 		// better access to things that make them go fast, without changing core handling.
 
-		UINT8 accel = 10-player->kartspeed;
-		UINT8 weight = player->kartweight;
+		uint8_t accel = 10-player->kartspeed;
+		uint8_t weight = player->kartweight;
 
 		// Relative stat power for bonus TA Ring Box awards.
 		// AP 1, WP 2 = weight is worth twice what accel is.
 		// 0 = stat not considered at all!
-		UINT8 accelPower = 1;
-		UINT8 weightPower = 6;
+		uint8_t accelPower = 1;
+		uint8_t weightPower = 6;
 
-		UINT8 total = accelPower*accel + weightPower*weight;
-		UINT8 maxtotal = accelPower*9 + weightPower*9;
+		uint8_t total = accelPower*accel + weightPower*weight;
+		uint8_t maxtotal = accelPower*9 + weightPower*9;
 
-		UINT32 baseaward = award;
+		uint32_t baseaward = award;
 
 		// Scale from base payout at 9/1 to max payout at 1/9.
 		award += Easing_Linear(FRACUNIT*total/maxtotal, 0, 11*baseaward/10);
@@ -16137,9 +16137,9 @@ UINT32 K_CalcRingBoxAward(player_t *player, UINT32 Multiplier, boolean IsSuperJa
 	}
 	else
 	{
-		UINT32 behind = K_GetItemRouletteDistance(player, player->itemRoulette.playing);
+		uint32_t behind = K_GetItemRouletteDistance(player, player->itemRoulette.playing);
 		behind = FixedMul(behind, K_EffectiveGradingFactor(player));
-		UINT32 behindMulti = behind / 500;
+		uint32_t behindMulti = behind / 500;
 		behindMulti = min(behindMulti, 60);
 		award = award * (behindMulti + 10) / 10;
 	}
@@ -16150,8 +16150,8 @@ UINT32 K_CalcRingBoxAward(player_t *player, UINT32 Multiplier, boolean IsSuperJa
 	// Stacked Ring Box is good. REALLY good. "Uncapped speed that feeds into itself" good.
 	// Keep highly unusual values under control, using the following core rule:
 	// If we already have more boost than we're about to be awarded, STOP!!!
-	UINT32 existing = (player->ringboost / K_GetFullKartRingPower(player, true)); // How many rings (effectively) do we have boost credit for right now?
-	UINT32 reduction = 8*existing/10; // Take an arbitrary percentage of those rings, and...
+	uint32_t existing = (player->ringboost / K_GetFullKartRingPower(player, true)); // How many rings (effectively) do we have boost credit for right now?
+	uint32_t reduction = 8*existing/10; // Take an arbitrary percentage of those rings, and...
 	fixed_t reductionfactor = FixedDiv(FRACUNIT*reduction, FRACUNIT*award); // ...get a ratio to compare our potential award against it. 0 = no existing boost, 1+ = existing boost comparable to our award.
 	reductionfactor = min(reductionfactor, FRACUNIT); // Cap for easing function, and...
 	award = Easing_Linear(reductionfactor, award, award/4); // ...ease between unmodified and minimum award.
@@ -16163,12 +16163,12 @@ UINT32 K_CalcRingBoxAward(player_t *player, UINT32 Multiplier, boolean IsSuperJa
 //
 // K_MoveKartPlayer
 //
-void K_MoveKartPlayer(player_t *player, boolean onground)
+void K_MoveKartPlayer(player_t *player, dboolean onground)
 {
 	ticcmd_t *cmd = &player->cmd;
-	boolean ATTACK_IS_DOWN = ((cmd->buttons & BT_ATTACK) && !(player->oldcmd.buttons & BT_ATTACK) && (player->respawn.state == RESPAWNST_NONE));
-	boolean HOLDING_ITEM = (player->itemflags & (IF_ITEMOUT|IF_EGGMANOUT));
-	boolean NO_HYUDORO = (player->stealingtimer == 0);
+	dboolean ATTACK_IS_DOWN = ((cmd->buttons & BT_ATTACK) && !(player->oldcmd.buttons & BT_ATTACK) && (player->respawn.state == RESPAWNST_NONE));
+	dboolean HOLDING_ITEM = (player->itemflags & (IF_ITEMOUT|IF_EGGMANOUT));
+	dboolean NO_HYUDORO = (player->stealingtimer == 0);
 
 	// Play overtake sounds, but only if
 	// - your place changed
@@ -16224,8 +16224,8 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 	// which is allowed during painstate as a last-ditch defensive option.
 	if (player && player->mo && player->mo->health > 0 && !player->spectator && !mapreset && leveltime > introtime)
 	{
-		boolean chargingwhip = (cmd->buttons & BT_ATTACK) && (player->rings <= 0) && (!player->instaWhipChargeLockout) && (player->defenseLockout <= PUNISHWINDOW) && (!player->itemRoulette.active);
-		boolean releasedwhip = (!(cmd->buttons & BT_ATTACK)) && (player->rings <= 0 && player->instaWhipCharge) && !(P_PlayerInPain(player));
+		dboolean chargingwhip = (cmd->buttons & BT_ATTACK) && (player->rings <= 0) && (!player->instaWhipChargeLockout) && (player->defenseLockout <= PUNISHWINDOW) && (!player->itemRoulette.active);
+		dboolean releasedwhip = (!(cmd->buttons & BT_ATTACK)) && (player->rings <= 0 && player->instaWhipCharge) && !(P_PlayerInPain(player));
 
 		if (K_PowerUpRemaining(player, POWERUP_BADGE))
 		{
@@ -16356,7 +16356,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 		else if ((player->itemtype && player->itemamount) || (player->rings + player->superring + player->pickuprings > 0) || player->itemRoulette.active)
 		{
 			// Set up bail charge, provided we have something to bail with (any rings or item resource).
-			// boolean grounded = P_IsObjectOnGround(player->mo);
+			// dboolean grounded = P_IsObjectOnGround(player->mo);
 			// onground && player->tumbleBounces == 0 ?  player->bailcharge += 2 : player->bailcharge++; // charge twice as fast on the ground
 			player->bailcharge += 2;
 			// if ((P_PlayerInPain(player) && player->bailcharge == 1) || (grounded && P_PlayerInPain(player) && player->bailcharge == 2)) // this is brittle ..
@@ -16387,7 +16387,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 			if (player->itemflags & IF_USERINGS)
 			{
 				// Auto-Ring
-				UINT8 tiereddelay = 5;
+				uint8_t tiereddelay = 5;
 				player->autoring = false;
 				if (
 					player->pflags & PF_AUTORING
@@ -16424,8 +16424,8 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 
 					if (P_IsDisplayPlayer(player))
 					{
-						UINT8 startfade = 220;
-						UINT8 transfactor = 10 * (min(startfade, player->ringtransparency)) / startfade;
+						uint8_t startfade = 220;
+						uint8_t transfactor = 10 * (min(startfade, player->ringtransparency)) / startfade;
 						if (transfactor < 10)
 						{
 							transfactor = max(transfactor, 4);
@@ -16440,7 +16440,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 					ring->shadowscale = 0;
 					P_SetTarget(&ring->target, player->mo); // user
 
-					const INT32 followerskin = K_GetEffectiveFollowerSkin(player);
+					const int32_t followerskin = K_GetEffectiveFollowerSkin(player);
 					if (player->autoring
 						&& player->follower != NULL
 						&& P_MobjWasRemoved(player->follower) == false
@@ -16475,7 +16475,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 					}
 
 
-					UINT8 dumprate = 3;
+					uint8_t dumprate = 3;
 
 					// Allow players to spend out of pending payout to "dump" rings faster.
 					if (player->superring)
@@ -16626,7 +16626,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && onground && NO_HYUDORO
 								&& player->rocketsneakertimer == 0 && player->timestonefrozentimer == 0 && player->megachoppertimer == 0 && player->armageddonshieldboosttimer == 0)
 							{
-								INT32 moloop;
+								int32_t moloop;
 								mobj_t *mo = NULL;
 								mobj_t *prev = player->mo;
 
@@ -16659,8 +16659,8 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 						case KITEM_INVINCIBILITY:
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO) // Doesn't hold your item slot hostage normally, so you're free to waste it if you have multiple
 							{
-								UINT32 behind = K_GetItemRouletteDistance(player, player->itemRoulette.playing);
-								UINT32 behindScaled = behind * TICRATE / 4500;
+								uint32_t behind = K_GetItemRouletteDistance(player, player->itemRoulette.playing);
+								uint32_t behindScaled = behind * TICRATE / 4500;
 								behindScaled = min(behindScaled, 15*TICRATE);
 
 								K_DoInvincibility(player,
@@ -16679,7 +16679,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 						case KITEM_BANANA:
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
 							{
-								INT32 moloop;
+								int32_t moloop;
 								mobj_t *mo;
 								mobj_t *prev = player->mo;
 
@@ -16742,7 +16742,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
 							{
 								angle_t newangle;
-								INT32 moloop;
+								int32_t moloop;
 								mobj_t *mo = NULL;
 								mobj_t *prev = player->mo;
 
@@ -16786,7 +16786,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
 							{
 								angle_t newangle;
-								INT32 moloop;
+								int32_t moloop;
 								mobj_t *mo = NULL;
 								mobj_t *prev = player->mo;
 
@@ -16906,7 +16906,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 						case KITEM_BALLHOG:
 							if (!HOLDING_ITEM && NO_HYUDORO)
 							{
-								INT32 ballhogmax = player->itemamount * BALLHOGINCREMENT;
+								int32_t ballhogmax = player->itemamount * BALLHOGINCREMENT;
 
 								// This construct looks a little goofy, but we're basically just
 								// trying to prevent rapid taps from restarting a charge, while
@@ -16919,7 +16919,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 								if (player->ballhogcharge == 0)
 									player->ballhogtap = false;
 
-								boolean realcharge = (cmd->buttons & BT_ATTACK) && (player->itemflags & IF_HOLDREADY) /*&& (player->ballhogcharge < ballhogmax)*/;
+								dboolean realcharge = (cmd->buttons & BT_ATTACK) && (player->itemflags & IF_HOLDREADY) /*&& (player->ballhogcharge < ballhogmax)*/;
 								if ((realcharge && !player->ballhogtap) || (player->ballhogtap && player->ballhogcharge < BALLHOGINCREMENT))
 								{
 									if (player->ballhogcharge < ballhogmax)
@@ -16938,7 +16938,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 												sfx_bhog04,
 												sfx_bhog05
 											};
-											UINT8 chargesound = max(1, min(player->ballhogcharge / BALLHOGINCREMENT, 6));
+											uint8_t chargesound = max(1, min(player->ballhogcharge / BALLHOGINCREMENT, 6));
 											S_StartSound(player->mo, hogsound[chargesound-1]);
 										}
 									}
@@ -16955,7 +16955,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 										else if (player->ballhogburst == BALLHOG_BURST_FUSE)
 										{
 											K_PlayBoostTaunt(player->mo);
-											for (UINT8 j = 0; j < player->itemamount; j++)
+											for (uint8_t j = 0; j < player->itemamount; j++)
 											{
 												K_DoSneaker(player, 0);
 											}
@@ -17004,7 +17004,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 								{
 									if (player->ballhogcharge > 0)
 									{
-										INT32 numhogs = K_HogChargeToHogCount(player->ballhogcharge, player->itemamount);
+										int32_t numhogs = K_HogChargeToHogCount(player->ballhogcharge, player->itemamount);
 										if (numhogs > 0) // no tapfire scams
 										{
 											K_SetItemOut(player); // need this to set itemscale
@@ -17260,8 +17260,8 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 
 							if (!HOLDING_ITEM && NO_HYUDORO)
 							{
-								INT32 destlen = K_FlameShieldMax(player);
-								INT32 flamemax = 0;
+								int32_t destlen = K_FlameShieldMax(player);
+								int32_t flamemax = 0;
 
 								if (player->flamelength < destlen)
 									player->flamelength = min(destlen, player->flamelength + 7); // Allows gauge to grow quickly when first acquired. 120/16 = ~7
@@ -17270,7 +17270,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 
 								if ((cmd->buttons & BT_ATTACK) && (player->itemflags & IF_HOLDREADY))
 								{
-									const INT32 incr = (gametyperules & GTR_CLOSERPLAYERS) ? 4 : 2;
+									const int32_t incr = (gametyperules & GTR_CLOSERPLAYERS) ? 4 : 2;
 									player->flamemeter += incr;
 
 									if (player->flamelength)
@@ -17384,8 +17384,8 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 									P_Thrust(player->mo, K_MomentumAngle(player->mo), 50*player->mo->scale);
 								}
 
-								UINT8 numsparks = 8;
-								for (UINT8 i = 0; i < numsparks; i++)
+								uint8_t numsparks = 8;
+								for (uint8_t i = 0; i < numsparks; i++)
 								{
 									mobj_t *sparkle = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_RINGSPARKS);
 									P_InstaScale(sparkle, player->mo->scale*2);
@@ -17585,7 +17585,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 
 							if (!HOLDING_ITEM && NO_HYUDORO)
 							{
-								INT32 normshieldmax = 5 * NORMSHIELDINCREMENT; 
+								int32_t normshieldmax = 5 * NORMSHIELDINCREMENT; 
 
 								if (player->normalshieldboostcharge && !(cmd->buttons & BT_ATTACK))
 									player->normalshieldboosttap = true;
@@ -17593,7 +17593,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 								if (player->normalshieldboostcharge == 0)
 									player->normalshieldboosttap = false;
 
-								boolean realcharge = (cmd->buttons & BT_ATTACK) && (player->itemflags & IF_HOLDREADY);
+								dboolean realcharge = (cmd->buttons & BT_ATTACK) && (player->itemflags & IF_HOLDREADY);
 								
 								if ((realcharge && !player->normalshieldboosttap) || (player->normalshieldboosttap && player->normalshieldboostcharge < NORMSHIELDINCREMENT))
 								{
@@ -17614,9 +17614,9 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 								{
 									if (player->normalshieldboostcharge > 0)
 									{
-										//INT32 numshieldboosts = std::clamp<UINT8>((player->normalshieldboostcharge / NORMSHIELDINCREMENT), 0, player->itemamount);
-										//INT32 numhogs = K_HogChargeToHogCount(player->ballhogcharge, player->itemamount);
-										INT32 numshieldboosts = K_NormShieldChargeToNormShieldBoostCount(player->normalshieldboostcharge, 5);
+										//int32_t numshieldboosts = std::clamp<uint8_t>((player->normalshieldboostcharge / NORMSHIELDINCREMENT), 0, player->itemamount);
+										//int32_t numhogs = K_HogChargeToHogCount(player->ballhogcharge, player->itemamount);
+										int32_t numshieldboosts = K_NormShieldChargeToNormShieldBoostCount(player->normalshieldboostcharge, 5);
 										
 										if (numshieldboosts > 0) // no tapfire scams
 										{
@@ -17953,7 +17953,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 								if (player->playerringgunpower == 0)
 									player->playerringguntap = false;								
 
-								boolean realcharge = (cmd->buttons & BT_ATTACK) && (player->itemflags & IF_HOLDREADY);
+								dboolean realcharge = (cmd->buttons & BT_ATTACK) && (player->itemflags & IF_HOLDREADY);
 									
 								if ((realcharge && !player->playerringguntap)) //|| (player->playerringguntap && player->playerringgunpower < 50))	//50 is max power - NOPE NOT ANYMORE
 								{
@@ -18120,7 +18120,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
 							{
 								angle_t newangle;
-								INT32 moloop;
+								int32_t moloop;
 								mobj_t *mo = NULL;
 								mobj_t *prev = player->mo;
 
@@ -18281,12 +18281,12 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 									//player->orbichargetap = false;
 								
 							}
-							//boolean realcharge = (cmd->buttons & BT_ATTACK) && (player->itemflags & IF_ITEMOUT);
+							//dboolean realcharge = (cmd->buttons & BT_ATTACK) && (player->itemflags & IF_ITEMOUT);
 						
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
 							{
 								angle_t newangle;
-								INT32 moloop;
+								int32_t moloop;
 								mobj_t *mo = NULL;
 								mobj_t *prev = player->mo;
 
@@ -18566,7 +18566,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 				fixed_t trans = ((player->trickIndicator->scale * 9)/indicatormult) - 9;
 				if (trans < 10) // it's fine if it stays barely visible imo
 				{
-					UINT32 renderflags = player->trickIndicator->renderflags & ~RF_TRANSMASK;
+					uint32_t renderflags = player->trickIndicator->renderflags & ~RF_TRANSMASK;
 					if (trans > 0)
 						renderflags |= (trans << RF_TRANSSHIFT);
 
@@ -18578,9 +18578,9 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 			if (momz*P_MobjFlip(player->mo) > 0)	// only spawn those while you're going upwards relative to your current gravity
 			{
 				// these are all admittedly arbitrary numbers...
-				INT32 n;
-				INT32 maxlines = max(1, (momz/FRACUNIT)/16);
-				INT32 frequency = max(1, 5-(momz/FRACUNIT)/4);
+				int32_t n;
+				int32_t maxlines = max(1, (momz/FRACUNIT)/16);
+				int32_t frequency = max(1, 5-(momz/FRACUNIT)/4);
 				fixed_t sx, sy, sz;
 				mobj_t *spdl;
 
@@ -18641,15 +18641,15 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 				angle_t baseangle = player->mo->angle + angledelta/2;
 
 				// Old ambiguous-input filter, no longer needed for 2.2 tricks
-				// INT16 aimingcompare = abs(cmd->throwdir) - abs(cmd->turning);
+				// int16_t aimingcompare = abs(cmd->throwdir) - abs(cmd->turning);
 
-				boolean cantrick = true;
-				UINT16 buttons = player->cmd.buttons;
-				INT16 TRICKTHRESHOLD = 2*KART_FULLTURN/3;
+				dboolean cantrick = true;
+				uint16_t buttons = player->cmd.buttons;
+				int16_t TRICKTHRESHOLD = 2*KART_FULLTURN/3;
 
 				{
 					TRICKTHRESHOLD = KART_FULLTURN/2;
-					INT16 aimingcompare = abs(cmd->throwdir) - abs(cmd->turning);
+					int16_t aimingcompare = abs(cmd->throwdir) - abs(cmd->turning);
 					if (abs(aimingcompare) < TRICKTHRESHOLD)
 						cantrick = false;
 				}
@@ -18772,7 +18772,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 						player->karthud[khud_trickcool] = TICRATE;
 					}
 
-					INT32 j;
+					int32_t j;
 					skincolornum_t trickcolor = SKINCOLOR_NONE;
 
 					if (P_MobjWasRemoved(player->trickIndicator) == false)
@@ -18865,7 +18865,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 					player->fastfall = 0; // intentionally skip bounce
 					player->trickcharge = 0;
 
-					UINT8 i;
+					uint8_t i;
 					for (i = 0; i < 4; i++)
 					{
 						mobj_t *arc = P_SpawnMobjFromMobj(player->mo, 0, 0, 0, MT_CHARGEFALL);
@@ -18878,7 +18878,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 			{
 				S_StartSound(player->mo, sfx_s23c);
 
-				UINT8 award = TICRATE - player->trickboostdecay;
+				uint8_t award = TICRATE - player->trickboostdecay;
 
 				player->trickboost = award;
 				if (!(gametyperules & GTR_SPHERES))
@@ -18963,7 +18963,7 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 
 	Obj_PlayerBulbThink(player);
 
-	UINT8 hog_count = 0;
+	uint8_t hog_count = 0;
 	if (player->itemtype == KITEM_BALLHOG)
 	{
 		hog_count = K_HogChargeToHogCount(player->ballhogcharge, player->itemamount);
@@ -18971,11 +18971,11 @@ void K_MoveKartPlayer(player_t *player, boolean onground)
 	K_UpdateBallhogReticules(player, hog_count, false);
 }
 
-void K_CheckSpectateStatus(boolean considermapreset)
+void K_CheckSpectateStatus(dboolean considermapreset)
 {
-	UINT8 respawnlist[MAXPLAYERS];
-	UINT8 i, j, numingame = 0, numjoiners = 0;
-	UINT8 numhumans = 0, numbots = 0;
+	uint8_t respawnlist[MAXPLAYERS];
+	uint8_t i, j, numingame = 0, numjoiners = 0;
+	uint8_t numhumans = 0, numbots = 0;
 
 	// Maintain spectate wait timer
 	for (i = 0; i < MAXPLAYERS; i++)
@@ -19093,16 +19093,16 @@ void K_CheckSpectateStatus(boolean considermapreset)
 	// Organize by spectate wait timer (if there's more than one to sort)
 	if (cv_maxplayers.value && numjoiners > 1)
 	{
-		UINT8 oldrespawnlist[MAXPLAYERS];
+		uint8_t oldrespawnlist[MAXPLAYERS];
 		memcpy(oldrespawnlist, respawnlist, numjoiners);
 		for (i = 0; i < numjoiners; i++)
 		{
-			UINT8 pos = 0;
-			INT32 ispecwait = players[oldrespawnlist[i]].spectatewait;
+			uint8_t pos = 0;
+			int32_t ispecwait = players[oldrespawnlist[i]].spectatewait;
 
 			for (j = 0; j < numjoiners; j++)
 			{
-				INT32 jspecwait = players[oldrespawnlist[j]].spectatewait;
+				int32_t jspecwait = players[oldrespawnlist[j]].spectatewait;
 				if (j == i)
 					continue;
 				if (jspecwait > ispecwait)
@@ -19115,8 +19115,8 @@ void K_CheckSpectateStatus(boolean considermapreset)
 		}
 	}
 
-	const UINT8 previngame = numingame;
-	INT16 removeBotID = MAXPLAYERS - 1;
+	const uint8_t previngame = numingame;
+	int16_t removeBotID = MAXPLAYERS - 1;
 
 	// Finally, we can de-spectate everyone!
 	for (i = 0; i < numjoiners; i++)
@@ -19170,69 +19170,69 @@ void K_CheckSpectateStatus(boolean considermapreset)
 	}
 }
 
-UINT8 K_GetInvincibilityItemFrame(void)
+uint8_t K_GetInvincibilityItemFrame(void)
 {
 	return ((leveltime % (7*3)) / 3);
 }
 
-UINT8 K_GetMasterEmeraldItemFrame(void)		//SCS ADD
+uint8_t K_GetMasterEmeraldItemFrame(void)		//SCS ADD
 {
 	return ((leveltime % (6*3)) / 3);
 }
 
-UINT8 K_GetPickpocketHyudoroItemFrame(void)		//SCS ADD
+uint8_t K_GetPickpocketHyudoroItemFrame(void)		//SCS ADD
 {
 	return ((leveltime % (9*3)) / 3);
 }
 
-UINT8 K_GetTimeStoneItemFrame(void)		//SCS ADD
+uint8_t K_GetTimeStoneItemFrame(void)		//SCS ADD
 {
 	return ((leveltime % (10*3)) / 3);
 }
 
-UINT8 K_RingCapBonusItemFrame(void)		//SCS ADD
+uint8_t K_RingCapBonusItemFrame(void)		//SCS ADD
 {
 	return ((leveltime % (4*3)) / 3);
 }
 
-UINT8 K_GetOrbinautItemFrame(UINT8 count)
+uint8_t K_GetOrbinautItemFrame(uint8_t count)
 {
 	return min(count - 1, 3);
 }
 
-UINT8 K_GetBananaItemFrame(UINT8 count)		//SCS ADD
+uint8_t K_GetBananaItemFrame(uint8_t count)		//SCS ADD
 {
 	return min(count - 1, 3);
 }
 
-UINT8 K_GetSneakerItemFrame(UINT8 count)		//SCS ADD
+uint8_t K_GetSneakerItemFrame(uint8_t count)		//SCS ADD
 {
 	return min(count - 1, 2);
 }
 
-UINT8 K_GetJawzItemFrame(UINT8 count)		//SCS ADD
+uint8_t K_GetJawzItemFrame(uint8_t count)		//SCS ADD
 {
 	return min(count - 1, 1);
 }
 
-UINT8 K_GetIcedusItemFrame(UINT8 count)		//SCS ADD
+uint8_t K_GetIcedusItemFrame(uint8_t count)		//SCS ADD
 {
 	return min(count - 1, 3);
 }
 
-UINT8 K_GetSolItemFrame(UINT8 count)		//SCS ADD
+uint8_t K_GetSolItemFrame(uint8_t count)		//SCS ADD
 {
 	return min(count - 1, 3);
 }
 
-boolean K_IsSPBInGame(void)
+dboolean K_IsSPBInGame(void)
 {
 	// is there an SPB chasing anyone?
 	if (spbplace != -1)
 		return true;
 
 	// do any players have an SPB in their item slot?
-	UINT8 i;
+	uint8_t i;
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
 		if (!playeringame[i] || players[i].spectator)
@@ -19263,8 +19263,8 @@ void K_HandleDirectionalInfluence(player_t *player)
 	ticcmd_t *cmd = NULL;
 	angle_t sideAngle = ANGLE_MAX;
 
-	INT16 inputX, inputY;
-	INT16 inputLen;
+	int16_t inputX, inputY;
+	int16_t inputLen;
 
 	fixed_t diX, diY;
 	fixed_t diLen;
@@ -19355,7 +19355,7 @@ void K_HandleDirectionalInfluence(player_t *player)
 	player->mo->momy = FixedMul(speed, finalY);
 }
 
-void K_UpdateMobjItemOverlay(mobj_t *part, SINT8 itemType, UINT8 itemCount)
+void K_UpdateMobjItemOverlay(mobj_t *part, int8_t itemType, uint8_t itemCount)
 {
 	switch (itemType)
 	{
@@ -19441,7 +19441,7 @@ void K_EggmanTransfer(player_t *source, player_t *victim)
 	if (victim->eggmanexplode)
 		return;
 
-	boolean prank = false;
+	dboolean prank = false;
 
 	if (victim->itemRoulette.eggman)
 	{
@@ -19526,12 +19526,12 @@ tic_t K_TimeLimitForGametype(void)
 	return gametypeDefault;
 }
 
-UINT32 K_PointLimitForGametype(void)
+uint32_t K_PointLimitForGametype(void)
 {
-	const UINT32 gametypeDefault = gametypes[gametype]->pointlimit;
-	const UINT32 battleRules = GTR_BUMPERS|GTR_CLOSERPLAYERS|GTR_PAPERITEMS;
+	const uint32_t gametypeDefault = gametypes[gametype]->pointlimit;
+	const uint32_t battleRules = GTR_BUMPERS|GTR_CLOSERPLAYERS|GTR_PAPERITEMS;
 
-	UINT32 ptsCap = gametypeDefault;
+	uint32_t ptsCap = gametypeDefault;
 
 	if (!(gametyperules & GTR_POINTLIMIT))
 	{
@@ -19550,7 +19550,7 @@ UINT32 K_PointLimitForGametype(void)
 
 	if ((gametyperules & battleRules) == battleRules) // why isn't this just another GTR_??
 	{
-		INT32 i;
+		int32_t i;
 
 		// It's frustrating that this shitty for-loop needs to
 		// be duplicated every time the players need to be
@@ -19575,18 +19575,18 @@ UINT32 K_PointLimitForGametype(void)
 			// team, because it would make an uneven
 			// fucked up 1v15 possible to win, even
 			// if it was still unbalanced.
-			const UINT32 old_ptsCap = ptsCap;
-			UINT8 smallest_team = MAXPLAYERS;
+			const uint32_t old_ptsCap = ptsCap;
+			uint8_t smallest_team = MAXPLAYERS;
 
 			for (i = TEAM_UNASSIGNED+1; i < TEAM__MAX; i++)
 			{
-				UINT8 countteam = G_CountTeam(i);
+				uint8_t countteam = G_CountTeam(i);
 				smallest_team = min( smallest_team, countteam );
 			}
 
 			if (smallest_team > 1)
 			{
-				UINT8 pts_accumulator = ptsCap / 2;
+				uint8_t pts_accumulator = ptsCap / 2;
 				for (i = 0; i < smallest_team - 1; i++)
 				{
 					if (pts_accumulator == 0)
@@ -19609,7 +19609,7 @@ UINT32 K_PointLimitForGametype(void)
 	return ptsCap;
 }
 
-boolean K_Cooperative(void)
+dboolean K_Cooperative(void)
 {
 	if (battleprisons)
 	{
@@ -19639,7 +19639,7 @@ void K_SetTireGrease(player_t *player, tic_t tics)
 {
 	if (!player->tiregrease)
 	{
-		UINT8 i;
+		uint8_t i;
 		for (i = 0; i < 2; i++)
 		{
 			mobj_t *grease;
@@ -19656,12 +19656,12 @@ void K_SetTireGrease(player_t *player, tic_t tics)
 }
 
 // somewhat sensible check for HUD sounds in a post-bot-takeover world
-boolean K_IsPlayingDisplayPlayer(player_t *player)
+dboolean K_IsPlayingDisplayPlayer(player_t *player)
 {
 	return P_IsDisplayPlayer(player) && (!player->exiting);
 }
 
-boolean K_PlayerCanPunt(player_t *player)
+dboolean K_PlayerCanPunt(player_t *player)
 {
 	if (player->trickpanel > TRICKSTATE_READY)
 	{
@@ -19711,7 +19711,7 @@ void K_MakeObjectReappear(mobj_t *mo)
 	(!P_MobjWasRemoved(mo->punt_ref) ? mo->punt_ref : mo)->reappear = leveltime + (30*TICRATE);
 }
 
-boolean K_PlayerCanUseItem(player_t *player)
+dboolean K_PlayerCanUseItem(player_t *player)
 {
 	if (player->icecube.frozen)
 		return false;
@@ -19726,9 +19726,9 @@ boolean K_PlayerCanUseItem(player_t *player)
 // THE EXP ZONE
 // ===
 
-static boolean K_IsValidOpponent(player_t *me, player_t *them)
+static dboolean K_IsValidOpponent(player_t *me, player_t *them)
 {
-	UINT8 i = (them - players);
+	uint8_t i = (them - players);
 
 	if (!playeringame[i] || players[i].spectator)
 		return false;
@@ -19740,11 +19740,11 @@ static boolean K_IsValidOpponent(player_t *me, player_t *them)
 	return true;
 }
 
-static UINT8 K_Opponents(player_t *player)
+static uint8_t K_Opponents(player_t *player)
 {
-	UINT8 opponents = 0; // players we are competing against
+	uint8_t opponents = 0; // players we are competing against
 
-	for (UINT8 i = 0; i < MAXPLAYERS; i++)
+	for (uint8_t i = 0; i < MAXPLAYERS; i++)
 	{
 		if (K_IsValidOpponent(player, &players[i]))
 			opponents++;
@@ -19765,10 +19765,10 @@ fixed_t K_FinalCheckpointPower(void)
 	return bonusonly;
 }
 
-static fixed_t K_GradingFactorPower(player_t *player, UINT32 gradingpoint)
+static fixed_t K_GradingFactorPower(player_t *player, uint32_t gradingpoint)
 {
 	fixed_t power = EXP_POWER; // adjust to change overall exp volatility
-	UINT8 opponents = K_Opponents(player);
+	uint8_t opponents = K_Opponents(player);
 
 	if (g_teamplay)
 		power = 3 * power / 4;
@@ -19785,7 +19785,7 @@ static fixed_t K_GradingFactorPower(player_t *player, UINT32 gradingpoint)
 	if (opponents > 24)
 		power -= (opponents - 24) * (power/864);				//SCS EDIT END
 
-	UINT32 gp = K_GetNumGradingPoints();
+	uint32_t gp = K_GetNumGradingPoints();
 
 	if (gradingpoint == gp - 1)
 	{
@@ -19795,25 +19795,25 @@ static fixed_t K_GradingFactorPower(player_t *player, UINT32 gradingpoint)
 	return power;
 }
 
-static fixed_t K_GradingFactorGainPerWin(player_t *player, UINT32 gradingpoint)
+static fixed_t K_GradingFactorGainPerWin(player_t *player, uint32_t gradingpoint)
 {
 	return K_GradingFactorPower(player, gradingpoint);
 }
 
-static fixed_t K_GradingFactorDrainPerCheckpoint(player_t *player, UINT32 gradingpoint)
+static fixed_t K_GradingFactorDrainPerCheckpoint(player_t *player, uint32_t gradingpoint)
 {
 	// EXP_STABLERATE: How low do you have to place before losing gradingfactor? 4*FRACUNIT/10 = top 40% of race gains, 60% loses.
-	UINT8 opponents = K_Opponents(player);
+	uint8_t opponents = K_Opponents(player);
 	fixed_t power = K_GradingFactorPower(player, gradingpoint);
 	return FixedMul(power, FixedMul(opponents*FRACUNIT, FRACUNIT - EXP_STABLERATE));
 }
 
-fixed_t K_GetGradingFactorAdjustment(player_t *player, UINT32 gradingpoint)
+fixed_t K_GetGradingFactorAdjustment(player_t *player, uint32_t gradingpoint)
 {
 	fixed_t result = 0;
 
 	// Increase gradingfactor for each player you're beating...
-	for (INT32 i = 0; i < MAXPLAYERS; i++)
+	for (int32_t i = 0; i < MAXPLAYERS; i++)
 	{
 		if (!K_IsValidOpponent(player, &players[i]))
 			continue;
@@ -19830,15 +19830,15 @@ fixed_t K_GetGradingFactorAdjustment(player_t *player, UINT32 gradingpoint)
 	return result;
 }
 
-fixed_t K_GetGradingFactorMinMax(player_t *player, boolean max)
+fixed_t K_GetGradingFactorMinMax(player_t *player, dboolean max)
 {
 	fixed_t factor = FRACUNIT; // Starting gradingfactor
-	UINT8 opponents = K_Opponents(player);
-	UINT8 winning = (max) ? opponents : 0;
+	uint8_t opponents = K_Opponents(player);
+	uint8_t winning = (max) ? opponents : 0;
 
-	for (UINT8 i = 0; i < player->gradingpointnum; i++) // For each gradingpoint you've reached...
+	for (uint8_t i = 0; i < player->gradingpointnum; i++) // For each gradingpoint you've reached...
 	{
-		for (UINT8 j = 0; j < winning; j++)
+		for (uint8_t j = 0; j < winning; j++)
 			factor += K_GradingFactorGainPerWin(player, i); // If max, increase gradingfactor for each player you could have been beating.
 		factor -= K_GradingFactorDrainPerCheckpoint(player, i); // Then, drain like usual.
 	}
@@ -19846,11 +19846,11 @@ fixed_t K_GetGradingFactorMinMax(player_t *player, boolean max)
 	return factor;
 }
 
-UINT16 K_GetEXP(player_t *player)
+uint16_t K_GetEXP(player_t *player)
 {
 	fixed_t gradingpointnum = FRACUNIT * player->gradingpointnum;
 
-	UINT32 numgradingpoints = K_GetNumGradingPoints();
+	uint32_t numgradingpoints = K_GetNumGradingPoints();
 	fixed_t fixedgradingpoints = numgradingpoints * FRACUNIT;
 	fixed_t effgradingpoints = fixedgradingpoints + K_FinalCheckpointPower();
 
@@ -19865,7 +19865,7 @@ UINT16 K_GetEXP(player_t *player)
 	fixed_t factormin = K_GetGradingFactorMinMax(player, false);
 	fixed_t factormax = K_GetGradingFactorMinMax(player, true);
 
-	UINT16 exp = FixedRescale(player->gradingfactor, factormin, factormax, Easing_Linear, targetminexp, targetmaxexp)>>FRACBITS;
+	uint16_t exp = FixedRescale(player->gradingfactor, factormin, factormax, Easing_Linear, targetminexp, targetmaxexp)>>FRACBITS;
 
 	if (modeattacking)
 		exp = EXP_MAX * player->gradingpointnum / max(1, numgradingpoints); // No Final Check here, just a linear slide
@@ -19879,7 +19879,7 @@ UINT16 K_GetEXP(player_t *player)
 	return exp;
 }
 
-UINT32 K_GetNumGradingPoints(void)
+uint32_t K_GetNumGradingPoints(void)
 {
 	if (K_Cooperative())
 		return 0;
@@ -19901,7 +19901,7 @@ void K_BotHitPenalty(player_t *player)
 	}
 }
 
-boolean K_IsPickMeUpItem(mobjtype_t type)
+dboolean K_IsPickMeUpItem(mobjtype_t type)
 {
 	extern consvar_t cv_debugpickmeup;
 	if (cv_debugpickmeup.value)
@@ -19942,10 +19942,10 @@ boolean K_IsPickMeUpItem(mobjtype_t type)
 	}
 }
 
-static boolean K_PickUp(player_t *player, mobj_t *picked)
+static dboolean K_PickUp(player_t *player, mobj_t *picked)
 {
-	SINT8 type = -1;
-	SINT8 amount = 1;
+	int8_t type = -1;
+	int8_t amount = 1;
 
 	switch (picked->type)
 	{
@@ -20086,7 +20086,7 @@ static boolean K_PickUp(player_t *player, mobj_t *picked)
 }
 
 // ACHTUNG this destroys items when returning true, make sure to bail out
-boolean K_TryPickMeUp(mobj_t *m1, mobj_t *m2, boolean allowHostile)
+dboolean K_TryPickMeUp(mobj_t *m1, mobj_t *m2, dboolean allowHostile)
 {
 	extern consvar_t cv_debugpickmeup;
 	if (cv_debugpickmeup.value)
@@ -20119,7 +20119,7 @@ boolean K_TryPickMeUp(mobj_t *m1, mobj_t *m2, boolean allowHostile)
 	if (!victim->player)
 		return false;
 
-	boolean allied = (inflictor->target == victim);
+	dboolean allied = (inflictor->target == victim);
 
 	if (!allied && inflictor->target && !P_MobjWasRemoved(inflictor->target))
 		if (inflictor->target->player && G_SameTeam(inflictor->target->player, victim->player))
@@ -20142,16 +20142,16 @@ boolean K_TryPickMeUp(mobj_t *m1, mobj_t *m2, boolean allowHostile)
 
 fixed_t K_TeamComebackMultiplier(player_t *player)
 {
-	INT32 myteam = player->team;
-	INT32 theirteam = (myteam == TEAM_ORANGE) ? TEAM_BLUE : TEAM_ORANGE;
+	int32_t myteam = player->team;
+	int32_t theirteam = (myteam == TEAM_ORANGE) ? TEAM_BLUE : TEAM_ORANGE;
 
 	if (g_teamscores[myteam] >= g_teamscores[theirteam])
 		return FRACUNIT;
 
-	UINT32 ourdistance = 0;
-	UINT32 theirdistance = 0;
+	uint32_t ourdistance = 0;
+	uint32_t theirdistance = 0;
 
-	for (UINT8 i = 0; i < MAXPLAYERS; i++)
+	for (uint8_t i = 0; i < MAXPLAYERS; i++)
 	{
 		if (!playeringame[i] || players[i].spectator)
 			continue;
@@ -20169,15 +20169,15 @@ fixed_t K_TeamComebackMultiplier(player_t *player)
 	return multiplier;
 }
 
-void K_ApplyStun(player_t *player, mobj_t *inflictor, mobj_t *source, ATTRUNUSED INT32 damage, ATTRUNUSED UINT8 damagetype)
+void K_ApplyStun(player_t *player, mobj_t *inflictor, mobj_t *source, ATTRUNUSED int32_t damage, ATTRUNUSED uint8_t damagetype)
 {
 	#define BASE_STUN_TICS_MIN (4 * TICRATE)
 	#define BASE_STUN_TICS_MAX (8 * TICRATE)
 	#define MAX_STUN_REDUCTION (FRACUNIT/2)
 	#define STUN_REDUCTION_DISTANCE (20000)
-	INT32 stunTics = 0;
-	UINT8 numPlayers = 0;
-	UINT8 i;
+	int32_t stunTics = 0;
+	uint8_t numPlayers = 0;
+	uint8_t i;
 
 	// calculate the number of players playing
 	for (i = 0; i < MAXPLAYERS; i++)
@@ -20219,7 +20219,7 @@ void K_ApplyStun(player_t *player, mobj_t *inflictor, mobj_t *source, ATTRUNUSED
 		stunTics /= 4;
 	}
 
-	UINT32 dist = K_GetItemRouletteDistance(player, D_NumPlayersInRace());
+	uint32_t dist = K_GetItemRouletteDistance(player, D_NumPlayersInRace());
 	if (dist > STUN_REDUCTION_DISTANCE)
 		dist = STUN_REDUCTION_DISTANCE;
 

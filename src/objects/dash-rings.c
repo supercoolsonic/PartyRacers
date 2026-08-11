@@ -79,8 +79,8 @@ void Obj_RainbowDashRingSpawn(mobj_t *mobj)
 
 void Obj_DashRingSetup(mobj_t *mobj, mapthing_t *mthing)
 {
-	static const UINT8 numColors = sizeof(ring_colors) / sizeof(skincolornum_t);
-	const UINT8 additionalThrust = mthing->thing_args[1];
+	static const uint8_t numColors = sizeof(ring_colors) / sizeof(skincolornum_t);
+	const uint8_t additionalThrust = mthing->thing_args[1];
 	statenum_t ringState, overlayState;
 
 	mobj->extravalue1 = mthing->thing_args[0];
@@ -117,11 +117,11 @@ void Obj_DashRingSetup(mobj_t *mobj, mapthing_t *mthing)
 
 void Obj_RainbowDashRingThink(mobj_t *mobj)
 {
-	static const UINT8 numColors = sizeof(rainbow_colors) / sizeof(skincolornum_t);
+	static const uint8_t numColors = sizeof(rainbow_colors) / sizeof(skincolornum_t);
 	mobj->color = rainbow_colors[(leveltime / 2) % numColors];
 }
 
-static boolean DashRingsAreTooClose(mobj_t *ring1, mobj_t *ring2)
+static dboolean DashRingsAreTooClose(mobj_t *ring1, mobj_t *ring2)
 {
 	if (ring1 == ring2)
 		return true;
@@ -133,7 +133,7 @@ static boolean DashRingsAreTooClose(mobj_t *ring1, mobj_t *ring2)
 	return false;
 }
 
-boolean Obj_DashRingIsUsableByPlayer(mobj_t *ring, player_t *player)
+dboolean Obj_DashRingIsUsableByPlayer(mobj_t *ring, player_t *player)
 {
 	if (player->carry != CR_NONE)
 	{
@@ -279,7 +279,7 @@ void Obj_DashRingPlayerThink(player_t *player)
 	}
 }
 
-boolean Obj_DashRingPlayerHasNoGravity(player_t *player)
+dboolean Obj_DashRingPlayerHasNoGravity(player_t *player)
 {
 	if (player->dashRingPullTics > 0)
 		return true;

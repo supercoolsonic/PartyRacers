@@ -20,9 +20,9 @@ extern "C" {
 #include "../g_game.h"
 #include "../k_zvote.h"
 
-boolean RR_UseVoteSnitch(void);
+dboolean RR_UseVoteSnitch(void);
 void RR_VoteSnitchNewVote(midVoteType_e type, player_t *victim, player_t *caller);
-void RR_VoteSnitchYesVotes(INT32 playernum);
+void RR_VoteSnitchYesVotes(int32_t playernum);
 
 #ifdef __cplusplus
 } // extern "C"

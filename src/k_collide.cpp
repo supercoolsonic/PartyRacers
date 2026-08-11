@@ -58,11 +58,11 @@ angle_t K_GetCollideAngle(mobj_t *t1, mobj_t *t2)
 
 extern "C" consvar_t cv_debugpickmeup;
 
-boolean K_BananaBallhogCollide(mobj_t *t1, mobj_t *t2)
+dboolean K_BananaBallhogCollide(mobj_t *t1, mobj_t *t2)
 {
 	// Radio
-	boolean issnipe = false;			//SCS - RADIO
-	boolean damageitem = false;
+	dboolean issnipe = false;			//SCS - RADIO
+	dboolean damageitem = false;
 
 	if (((t1->target == t2) || (!(t2->flags & (MF_ENEMY|MF_BOSS)) && (t1->target == t2->target))) && (t1->threshold > 0 || (t2->type != MT_PLAYER && t2->threshold > 0)))
 		return true;
@@ -188,7 +188,7 @@ boolean K_BananaBallhogCollide(mobj_t *t1, mobj_t *t2)
 	return true;
 }
 
-boolean K_EggItemCollide(mobj_t *t1, mobj_t *t2)
+dboolean K_EggItemCollide(mobj_t *t1, mobj_t *t2)
 {
 	// Push fakes out of other item boxes
 	if (t2->type == MT_RANDOMITEM || t2->type == MT_EGGMANITEM)
@@ -255,10 +255,10 @@ boolean K_EggItemCollide(mobj_t *t1, mobj_t *t2)
 
 static mobj_t *grenade;
 static fixed_t explodedist;
-static boolean explodespin;
-static INT32 minehitlag;
+static dboolean explodespin;
+static int32_t minehitlag;
 
-static inline boolean PIT_SSMineChecks(mobj_t *thing)
+static inline dboolean PIT_SSMineChecks(mobj_t *thing)
 {
 	if (thing == grenade) // Don't explode yourself! Endless loop!
 		return true;
@@ -323,7 +323,7 @@ static inline BlockItReturn_t PIT_SSMineSearch(mobj_t *thing)
 
 void K_DoMineSearch(mobj_t *actor, fixed_t size)
 {
-	INT32 bx, by, xl, xh, yl, yh;
+	int32_t bx, by, xl, xh, yl, yh;
 
 	explodedist = FixedMul(size, actor->scale);
 	grenade = actor;
@@ -342,8 +342,8 @@ void K_DoMineSearch(mobj_t *actor, fixed_t size)
 
 static inline BlockItReturn_t PIT_SSMineExplode(mobj_t *thing)
 {
-	const INT32 oldhitlag = thing->hitlag;
-	INT32 lagadded;
+	const int32_t oldhitlag = thing->hitlag;
+	int32_t lagadded;
 
 	if (grenade == NULL || P_MobjWasRemoved(grenade))
 		return BMIT_ABORT; // There's the possibility these can chain react onto themselves after they've already died if there are enough all in one spot
@@ -375,9 +375,9 @@ static inline BlockItReturn_t PIT_SSMineExplode(mobj_t *thing)
 	return BMIT_CONTINUE;
 }
 
-tic_t K_MineExplodeAttack(mobj_t *actor, fixed_t size, boolean spin)
+tic_t K_MineExplodeAttack(mobj_t *actor, fixed_t size, dboolean spin)
 {
-	INT32 bx, by, xl, xh, yl, yh;
+	int32_t bx, by, xl, xh, yl, yh;
 
 	explodespin = spin;
 	explodedist = FixedMul(size, actor->scale);
@@ -416,7 +416,7 @@ tic_t K_MineExplodeAttack(mobj_t *actor, fixed_t size, boolean spin)
 	return 0;
 }
 
-boolean K_MineCollide(mobj_t *t1, mobj_t *t2)
+dboolean K_MineCollide(mobj_t *t1, mobj_t *t2)
 {
 	if (((t1->target == t2) || (!(t2->flags & (MF_ENEMY|MF_BOSS)) && (t1->target == t2->target))) && (t1->threshold > 0 || (t2->type != MT_PLAYER && t2->threshold > 0)))
 		return true;
@@ -477,10 +477,10 @@ boolean K_MineCollide(mobj_t *t1, mobj_t *t2)
 	return true;
 }
 
-boolean K_LandMineCollide(mobj_t *t1, mobj_t *t2)
+dboolean K_LandMineCollide(mobj_t *t1, mobj_t *t2)
 {
 	// Radio
-	boolean issnipe = false;			//SCS - RADIO
+	dboolean issnipe = false;			//SCS - RADIO
 
 	if (((t1->target == t2) || (!(t2->flags & (MF_ENEMY|MF_BOSS)) && (t1->target == t2->target))) && (t1->threshold > 0 || (t2->type != MT_PLAYER && t2->threshold > 0)))
 		return true;
@@ -493,7 +493,7 @@ boolean K_LandMineCollide(mobj_t *t1, mobj_t *t2)
 
 	if (t2->player)
 	{
-		const INT32 oldhitlag = t2->hitlag;
+		const int32_t oldhitlag = t2->hitlag;
 
 		if (t2->player->flashing)
 			return true;
@@ -678,7 +678,7 @@ void K_GHZBall_BallBounce(mobj_t *t1, mobj_t *t2)			//SCS ADD
 	}	
 }
 
-boolean K_IcedusSolfireCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
+dboolean K_IcedusSolfireCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 {
 	if (t1->type == MT_ICEDUSCRYSTAL_TRAP && t1->target != NULL && t1->target == t2 && P_IsObjectOnGround(t1))
 		goto PickUp;
@@ -710,7 +710,7 @@ PickUp:
 			return true;
 		}
 			
-		UINT8 IcedusAmps = K_PvPAmpReward(10, t1->target->player, t2->player);
+		uint8_t IcedusAmps = K_PvPAmpReward(10, t1->target->player, t2->player);
 		K_SpawnAmps(t1->target->player, IcedusAmps, t1);
 
 		RR_PushPlayerInteractionToFeed(t1->target, t2, ATTACK_ICEDUS, IcedusAmps);
@@ -749,7 +749,7 @@ PickUp:
 	return true;
 }
 
-boolean K_SlicerClawCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
+dboolean K_SlicerClawCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 {
 	if (((t1->target == t2) || (!(t2->flags & (MF_ENEMY|MF_BOSS)) && (t1->target == t2->target))) && (t1->threshold > 0 || (t2->type != MT_PLAYER && t2->threshold > 0)))
 		return true;
@@ -774,7 +774,7 @@ boolean K_SlicerClawCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 	return true;
 }
 
-boolean K_PickpocketCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
+dboolean K_PickpocketCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 {
 	if (((t1->target == t2) || (!(t2->flags & (MF_ENEMY|MF_BOSS)) && (t1->target == t2->target))) && (t1->threshold > 0 || (t2->type != MT_PLAYER && t2->threshold > 0)))
 		return true;
@@ -855,7 +855,7 @@ boolean K_PickpocketCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 	return true;
 }
 
-boolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
+dboolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 {
 	if (((t1->target == t2) || (!(t2->flags & (MF_ENEMY|MF_BOSS)) && (t1->target == t2->target))) && (t1->threshold > 0 || (t2->type != MT_PLAYER && t2->threshold > 0)))
 		return true;
@@ -870,7 +870,7 @@ boolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 		int minsquishspeed = 5;
 		bool balltooslow = (ballvelocity < minsquishspeed * mapobjectscale);
 		//bool behindtheball = (abs(t1->angle - R_PointToAngle2(t1->x, t1->y, t2->x, t2->y)) > frontanglerange);
-		const INT32 oldhitlag = t2->hitlag;
+		const int32_t oldhitlag = t2->hitlag;
 		
 		//if (behindtheball || balltooslow)
 		if (balltooslow)
@@ -1029,7 +1029,7 @@ boolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 	return true;
 }
 
-boolean K_RingGunBlastMaxCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
+dboolean K_RingGunBlastMaxCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 {
 	if (((t1->target == t2) || (!(t2->flags & (MF_ENEMY|MF_BOSS)) && (t1->target == t2->target))) && (t1->threshold > 0 || (t2->type != MT_PLAYER && t2->threshold > 0)))
 		return true;
@@ -1059,7 +1059,7 @@ boolean K_RingGunBlastMaxCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 	return true;
 }
 
-boolean K_MegaChopperCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
+dboolean K_MegaChopperCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 {
 	if (((t1->target == t2) || (!(t2->flags & (MF_ENEMY|MF_BOSS)) && (t1->target == t2->target))) && (t1->threshold > 0 || (t2->type != MT_PLAYER && t2->threshold > 0)))
 		return true;
@@ -1142,10 +1142,10 @@ boolean K_MegaChopperCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 	return true;
 }
 
-boolean K_DropTargetCollide(mobj_t *t1, mobj_t *t2)
+dboolean K_DropTargetCollide(mobj_t *t1, mobj_t *t2)
 {
 	mobj_t *draggeddroptarget = (t1->type == MT_DROPTARGET_SHIELD) ? t1->target : NULL;
-	UINT8 strength;
+	uint8_t strength;
 
 	if (((t1->target == t2) || (t1->target == t2->target)) && ((t1->threshold > 0 && t2->type == MT_PLAYER) || (t2->type != MT_PLAYER && t2->threshold > 0)))
 		return true;
@@ -1260,7 +1260,7 @@ boolean K_DropTargetCollide(mobj_t *t1, mobj_t *t2)
 
 	{
 		mobj_t *ghost = P_SpawnGhostMobj(t1);
-		UINT8 i;
+		uint8_t i;
 
 		P_SetScale(ghost, 3*ghost->destscale/2);
 		ghost->destscale = 15*ghost->destscale/2;
@@ -1356,7 +1356,7 @@ boolean K_DropTargetCollide(mobj_t *t1, mobj_t *t2)
 	if (t1->tracer && t1->tracer->player && t2->player && t2->player != t1->tracer->player)
 	{
 		//K_SpawnAmps(t1->tracer->player, K_PvPAmpReward(20, t1->tracer->player, t2->player), t1);
-		UINT8 dropTargetAmps = K_PvPAmpReward(20, t1->tracer->player, t2->player);					//SCS - RADIO START
+		uint8_t dropTargetAmps = K_PvPAmpReward(20, t1->tracer->player, t2->player);					//SCS - RADIO START
 		K_SpawnAmps(t1->tracer->player, dropTargetAmps, t1);
 
 		// Radio
@@ -1459,7 +1459,7 @@ static inline BlockItReturn_t PIT_IcedusBlastAttack(mobj_t *thing)
 		
 		if (IceSource->player)
 		{
-			UINT8 IcedusAmps = K_PvPAmpReward(10, IceSource->player, thing->player);
+			uint8_t IcedusAmps = K_PvPAmpReward(10, IceSource->player, thing->player);
 			K_SpawnAmps(IceSource->player, IcedusAmps, IceSource);
 			
 			RR_PushPlayerInteractionToFeed(IceSource, thing, ATTACK_ICEDUS, 5);
@@ -1471,7 +1471,7 @@ static inline BlockItReturn_t PIT_IcedusBlastAttack(mobj_t *thing)
 
 void K_IcedusBlastAttack(mobj_t *actor, fixed_t size)
 {
-	INT32 bx, by, xl, xh, yl, yh;
+	int32_t bx, by, xl, xh, yl, yh;
 
 	IceDist = FixedMul(size, actor->scale);
 	IceSource = actor;
@@ -1561,7 +1561,7 @@ static inline BlockItReturn_t PIT_ArmageddonShieldAttack(mobj_t *thing)
 
 void K_ArmageddonShieldAttack(mobj_t *actor, fixed_t size)
 {
-	INT32 bx, by, xl, xh, yl, yh;
+	int32_t bx, by, xl, xh, yl, yh;
 
 	BlastDist = FixedMul(size, actor->scale);
 	BlastSource = actor;
@@ -1652,7 +1652,7 @@ static inline BlockItReturn_t PIT_LightningShieldAttack(mobj_t *thing)
 
 void K_LightningShieldAttack(mobj_t *actor, fixed_t size)
 {
-	INT32 bx, by, xl, xh, yl, yh;
+	int32_t bx, by, xl, xh, yl, yh;
 
 	lightningDist = FixedMul(size, actor->scale);
 	lightningSource = actor;
@@ -1670,7 +1670,7 @@ void K_LightningShieldAttack(mobj_t *actor, fixed_t size)
 			P_BlockThingsIterator(bx, by, PIT_LightningShieldAttack);
 }
 
-boolean K_BubbleShieldCanReflect(mobj_t *t1, mobj_t *t2)
+dboolean K_BubbleShieldCanReflect(mobj_t *t1, mobj_t *t2)
 {
 	return (t2->type == MT_ORBINAUT || t2->type == MT_JAWZ || t2->type == MT_GACHABOM
 		|| t2->type == MT_BANANA || t2->type == MT_EGGMANITEM || t2->type == MT_BALLHOG
@@ -1695,7 +1695,7 @@ boolean K_BubbleShieldCanReflect(mobj_t *t1, mobj_t *t2)
 		|| (t2->type == MT_PLAYER && t1->target != t2));
 }
 
-boolean K_BubbleShieldReflect(mobj_t *t1, mobj_t *t2)
+dboolean K_BubbleShieldReflect(mobj_t *t1, mobj_t *t2)
 {
 	mobj_t *owner = t1->player ? t1 : t1->target;
 
@@ -1727,7 +1727,7 @@ boolean K_BubbleShieldReflect(mobj_t *t1, mobj_t *t2)
 	return true;
 }
 
-boolean K_BubbleShieldCollide(mobj_t *t1, mobj_t *t2)
+dboolean K_BubbleShieldCollide(mobj_t *t1, mobj_t *t2)
 {
 	if (t2->type == MT_PLAYER)
 	{
@@ -1740,7 +1740,7 @@ boolean K_BubbleShieldCollide(mobj_t *t1, mobj_t *t2)
 		thing = oldthing;
 		P_SetTarget(&g_tm.thing, oldg_tm.thing);*/
 
-		boolean hit = false;
+		dboolean hit = false;
 
 		if (K_KartBouncing(t2, t1->target) == true)
 		{
@@ -1777,7 +1777,7 @@ boolean K_BubbleShieldCollide(mobj_t *t1, mobj_t *t2)
 	return true;
 }
 
-boolean K_InstaWhipCollide(mobj_t *shield, mobj_t *victim)
+dboolean K_InstaWhipCollide(mobj_t *shield, mobj_t *victim)
 {
 	int victimHitlag = 10;
 	int attackerHitlag = 4;
@@ -1882,7 +1882,7 @@ boolean K_InstaWhipCollide(mobj_t *shield, mobj_t *victim)
 			}
 
 			// if you're here, you're getting hit
-			boolean hit = P_DamageMobj(victim, shield, attacker, 1, DMG_WHUMBLE);
+			dboolean hit = P_DamageMobj(victim, shield, attacker, 1, DMG_WHUMBLE);
 
 			if (!hit)
 				return false;
@@ -1965,7 +1965,7 @@ boolean K_InstaWhipCollide(mobj_t *shield, mobj_t *victim)
 	}
 }
 
-boolean K_KitchenSinkCollide(mobj_t *t1, mobj_t *t2)
+dboolean K_KitchenSinkCollide(mobj_t *t1, mobj_t *t2)
 {
 	if (((t1->target == t2) || (!(t2->flags & (MF_ENEMY|MF_BOSS)) && (t1->target == t2->target))) && (t1->threshold > 0 || (t2->type != MT_PLAYER && t2->threshold > 0)))
 		return true;
@@ -2011,14 +2011,14 @@ boolean K_KitchenSinkCollide(mobj_t *t1, mobj_t *t2)
 	return true;
 }
 
-boolean K_FallingRockCollide(mobj_t *t1, mobj_t *t2)
+dboolean K_FallingRockCollide(mobj_t *t1, mobj_t *t2)
 {
 	if (t2->player || t2->type == MT_FALLINGROCK)
 		K_KartBouncing(t2, t1);
 	return true;
 }
 
-boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
+dboolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 {
 	if (K_PodiumSequence() == true)
 	{
@@ -2028,7 +2028,7 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 	
 	if (t2->player->squishedtimer <= 0 && t1->player->squishedtimer <= 0 && (t1->player->itemtype == KITEM_PICKPOCKETHYU || t2->player->itemtype == KITEM_PICKPOCKETHYU))				//SCS ADD
 	{
-		UINT8 pickpocketamps; 
+		uint8_t pickpocketamps; 
 
 		if (t2->player->itemtype == KITEM_PICKPOCKETHYU && t1->player->itemtype == KITEM_PICKPOCKETHYU)
 		{
@@ -2080,8 +2080,8 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 						}
 					}					
 				}*/
-				//void K_AddMessageForPlayer(player_t *player, const char *msg, boolean interrupt, boolean persist)
-				//void K_AddMessage			(				   const char *msg, boolean interrupt, boolean persist)
+				//void K_AddMessageForPlayer(player_t *player, const char *msg, dboolean interrupt, dboolean persist)
+				//void K_AddMessage			(				   const char *msg, dboolean interrupt, dboolean persist)
 				
 				//K_AddMessage(va("Pickpocket Combo x%d!", t1->player->pickpockethyucombo), true, false);
 				K_AddMessageForPlayer(t1->player, va("Pickpocket Combo x%d!", t1->player->pickpockethyucombo), true, false);
@@ -2214,8 +2214,8 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 		return false;
 	}
 
-	boolean guard1 = K_PlayerGuard(t1->player);
-	boolean guard2 = K_PlayerGuard(t2->player);
+	dboolean guard1 = K_PlayerGuard(t1->player);
+	dboolean guard2 = K_PlayerGuard(t2->player);
 
 	// Bubble Shield physically extends past guard when inflated,
 	// makes some sense to suppress this behavior
@@ -2277,7 +2277,7 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 		return false;
 	};
 
-	auto doDamage = [](UINT8 damageType)
+	auto doDamage = [](uint8_t damageType)
 	{
 		return [damageType](mobj_t *t1, mobj_t *t2)
 		{
@@ -2338,7 +2338,7 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 		{
 			K_StumblePlayer(t2->player);
 			//K_SpawnAmps(t1->player, K_PvPAmpReward(20, t1->player, t2->player), t2);
-			UINT8 stumbleAmps = K_PvPAmpReward(20, t1->player, t2->player);					//SCS - RADIO START
+			uint8_t stumbleAmps = K_PvPAmpReward(20, t1->player, t2->player);					//SCS - RADIO START
 			K_SpawnAmps(t1->player, stumbleAmps, t2);
 			// Radio: Workaround for Grow
 			RR_PushPlayerInteractionToFeed(t1, t2, ATTACK_GROW, stumbleAmps);				//SCS - RADIO END
@@ -2363,7 +2363,7 @@ boolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 			return false;
 		}
 
-		boolean damagedpresting = (t2->player->flashing || P_PlayerInPain(t2->player));
+		dboolean damagedpresting = (t2->player->flashing || P_PlayerInPain(t2->player));
 
 		// CONS_Printf("T1=%s T2=%s\n", player_names[t1->player - players], player_names[t2->player - players]);
 		// CONS_Printf("DPS=%d\n", damagedpresting);
@@ -2480,7 +2480,7 @@ void K_PuntHazard(mobj_t *t1, mobj_t *t2)
 	P_SpawnMobj(t2->x/2 + t1->x/2, t2->y/2 + t1->y/2, t2->z/2 + t1->z/2, MT_ITEMCLASH);
 }
 
-boolean K_PuntCollide(mobj_t *t1, mobj_t *t2)
+dboolean K_PuntCollide(mobj_t *t1, mobj_t *t2)
 {
 	// MF_SHOOTABLE will get damaged directly, instead
 	if (t1->flags & (MF_DONTPUNT | MF_SHOOTABLE))
@@ -2503,8 +2503,8 @@ boolean K_PuntCollide(mobj_t *t1, mobj_t *t2)
 		K_MakeObjectReappear(t1);
 
 		// copied from MT_ITEMCAPSULE
-		UINT8 i;
-		INT16 spacing = (t1->radius >> 1) / t1->scale;
+		uint8_t i;
+		int16_t spacing = (t1->radius >> 1) / t1->scale;
 		// dust effects
 		for (i = 0; i < 10; i++)
 		{

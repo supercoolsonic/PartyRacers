@@ -38,9 +38,9 @@ std::vector<struct hog_angles> g_hogangles;
 
 };
 
-static void CalculateHogAngles(UINT8 n)
+static void CalculateHogAngles(uint8_t n)
 {
-	const UINT8 total_hogs = n;
+	const uint8_t total_hogs = n;
 
 	// This algorithm should probably be replaced to
 	// maximize more space covered, but the desired effect
@@ -63,7 +63,7 @@ static void CalculateHogAngles(UINT8 n)
 	{
 		const fixed_t base_radius = mobjinfo[MT_BALLHOG].radius * 12;
 		fixed_t radius = base_radius;
-		UINT8 max_points = 6;
+		uint8_t max_points = 6;
 		angle_t circle_offset = 0;
 
 		if (total_hogs < 5)
@@ -75,12 +75,12 @@ static void CalculateHogAngles(UINT8 n)
 
 		while (n > 0)
 		{
-			const UINT8 add_points = std::min<UINT8>(n, max_points);
+			const uint8_t add_points = std::min<uint8_t>(n, max_points);
 
 			angle_t angle = circle_offset;
 			const angle_t angle_offset = ANGLE_MAX / add_points;
 
-			for (UINT8 c = 0; c < add_points; c++)
+			for (uint8_t c = 0; c < add_points; c++)
 			{
 				g_hogangles.emplace_back(
 					FixedMul(FINECOSINE( angle >> ANGLETOFINESHIFT ), radius),
@@ -97,17 +97,17 @@ static void CalculateHogAngles(UINT8 n)
 	}
 }
 
-UINT8 K_HogChargeToHogCount(INT32 charge, UINT8 cap)
+uint8_t K_HogChargeToHogCount(int32_t charge, uint8_t cap)
 {
-	return std::clamp<UINT8>((charge / BALLHOGINCREMENT), 0, cap);
+	return std::clamp<uint8_t>((charge / BALLHOGINCREMENT), 0, cap);
 }
 
-UINT8 K_NormShieldChargeToNormShieldBoostCount(INT32 charge, UINT8 cap)					//SCS ADD - stupid-ass hack, putting this here. Need the std thing for the Norm Shield
+uint8_t K_NormShieldChargeToNormShieldBoostCount(int32_t charge, uint8_t cap)					//SCS ADD - stupid-ass hack, putting this here. Need the std thing for the Norm Shield
 {
-	return std::clamp<UINT8>((charge / NORMSHIELDINCREMENT), 0, cap);
+	return std::clamp<uint8_t>((charge / NORMSHIELDINCREMENT), 0, cap);
 }
 
-static boolean HogReticuleEmulate(mobj_t *mobj)
+static dboolean HogReticuleEmulate(mobj_t *mobj)
 {
 	fixed_t x, y, z;
 
@@ -221,8 +221,8 @@ static void HogReticuleTest(player_t *player, vector3_t *ret, fixed_t final_scal
 	ret->y = mo->y;
 	ret->z = mo->z;
 
-	constexpr INT32 max_iteration = 256;
-	for (INT32 i = 0; i < max_iteration; i++)
+	constexpr int32_t max_iteration = 256;
+	for (int32_t i = 0; i < max_iteration; i++)
 	{
 #if 0
 		mobj_t *test = P_SpawnMobj(mo->x, mo->y, mo->z, MT_THOK);
@@ -242,7 +242,7 @@ static void HogReticuleTest(player_t *player, vector3_t *ret, fixed_t final_scal
 	P_RemoveMobj(mo);
 }
 
-void K_UpdateBallhogReticules(player_t *player, UINT8 num_hogs, boolean on_release)
+void K_UpdateBallhogReticules(player_t *player, uint8_t num_hogs, dboolean on_release)
 {
 	if (player == nullptr)
 	{
@@ -254,7 +254,7 @@ void K_UpdateBallhogReticules(player_t *player, UINT8 num_hogs, boolean on_relea
 		return;
 	}
 
-	const UINT8 start_hogs = num_hogs;
+	const uint8_t start_hogs = num_hogs;
 #if 1
 	if (start_hogs == 0)
 	{
@@ -277,13 +277,13 @@ void K_UpdateBallhogReticules(player_t *player, UINT8 num_hogs, boolean on_relea
 	while (reticule != nullptr && P_MobjWasRemoved(reticule) == false)
 	{
 		mobj_t *next = reticule->hnext;
-		boolean removed = false;
+		dboolean removed = false;
 
 		if (num_hogs > 0)
 		{
-			const UINT8 old_hogs = reticule->extravalue1;
+			const uint8_t old_hogs = reticule->extravalue1;
 
-			UINT8 angle_index = num_hogs - 1;
+			uint8_t angle_index = num_hogs - 1;
 			fixed_t x_offset = FixedMul(g_hogangles[angle_index].x, final_scale);
 			fixed_t y_offset = FixedMul(g_hogangles[angle_index].y, final_scale);
 
@@ -374,7 +374,7 @@ void K_UpdateBallhogReticules(player_t *player, UINT8 num_hogs, boolean on_relea
 
 		if (on_release == true)
 		{
-			UINT8 angle_index = num_hogs - 1;
+			uint8_t angle_index = num_hogs - 1;
 			fixed_t x_offset = FixedMul(g_hogangles[angle_index].x, final_scale);
 			fixed_t y_offset = FixedMul(g_hogangles[angle_index].y, final_scale);
 
@@ -390,7 +390,7 @@ void K_UpdateBallhogReticules(player_t *player, UINT8 num_hogs, boolean on_relea
 	}
 }
 
-void K_DoBallhogAttack(player_t *player, UINT8 num_hogs)
+void K_DoBallhogAttack(player_t *player, uint8_t num_hogs)
 {
 	// Update reticules instantly, then untie them to us.
 	K_UpdateBallhogReticules(player, num_hogs, true);
@@ -400,7 +400,7 @@ void K_DoBallhogAttack(player_t *player, UINT8 num_hogs)
 
 	while (num_hogs > 0)
 	{
-		UINT8 angle_index = num_hogs - 1;
+		uint8_t angle_index = num_hogs - 1;
 
 		fixed_t x_offset = g_hogangles[angle_index].x;
 		fixed_t y_offset = g_hogangles[angle_index].y;

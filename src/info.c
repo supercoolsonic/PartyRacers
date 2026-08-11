@@ -24708,7 +24708,7 @@ skincolor_t skincolors[MAXSKINCOLORS] = {
   */
 void P_PatchInfoTables(void)
 {
-	INT32 i;
+	int32_t i;
 	char *tempname;
 
 #if NUMSPRITEFREESLOTS > 9999 //tempname numbering actually starts at SPR_FIRSTFREESLOT, so the limit is actually 9999 + SPR_FIRSTFREESLOT-1, but the preprocessor doesn't understand enums, so its left at 9999 for safety
@@ -24784,7 +24784,7 @@ void P_BackupTables(void)
 #endif
 }
 
-void P_ResetData(INT32 flags)
+void P_ResetData(int32_t flags)
 {
 #ifndef ALLOW_RESETDATA
 	(void)flags;

@@ -86,7 +86,7 @@ static void SlicerChase(mobj_t *th)
 			if (angledelta != 0)
 			{
 				angle_t turnSpeed = MAX_SLICER_TURN;
-				boolean turnclockwise = true;
+				dboolean turnclockwise = true;
 
 				// MAX_JAWZ_TURN gets stronger the slower the top speed of jawz
 				if (topspeed < slicer_speed(th))
@@ -158,14 +158,14 @@ static void SlicerChase(mobj_t *th)
 	P_Thrust(th, th->angle, thrustamount);
 }
 
-static boolean SlicerSteersBetter(void)
+static dboolean SlicerSteersBetter(void)
 {
 	return !!!(gametyperules & GTR_CIRCUIT);
 }
 
 void Obj_SlicerThink(mobj_t *th)
 {
-	boolean grounded = P_IsObjectOnGround(th);
+	dboolean grounded = P_IsObjectOnGround(th);
 
 	if (th->fuse > 0 && th->fuse <= TICRATE)
 	{

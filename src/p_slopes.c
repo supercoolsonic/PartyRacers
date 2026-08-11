@@ -30,7 +30,7 @@
 #include "m_easing.h"
 
 pslope_t *slopelist = NULL;
-UINT16 slopecount = 0;
+uint16_t slopecount = 0;
 
 static void P_BuildSlopeAnchorList (void);
 static void P_SetupAnchoredSlopes  (void);
@@ -38,7 +38,7 @@ static void P_SetupAnchoredSlopes  (void);
 // Calculate light
 void P_UpdateSlopeLightOffset(pslope_t *slope)
 {
-	const UINT8 contrast = maplighting.contrast;
+	const uint8_t contrast = maplighting.contrast;
 
 	fixed_t contrastFixed = ((fixed_t)contrast) * FRACUNIT;
 	fixed_t zMul = FRACUNIT;
@@ -104,7 +104,7 @@ void P_CalculateSlopeNormal(pslope_t *slope) {
 }
 
 // Calculate slope's high & low z
-static void P_CalculateLineSlopeHighLow(pslope_t *slope, line_t *line, boolean ceiling, boolean back)
+static void P_CalculateLineSlopeHighLow(pslope_t *slope, line_t *line, dboolean ceiling, dboolean back)
 {
 	// To find the real highz/lowz of a slope, you need to check all the vertexes
 	// in the slope's sector with P_GetZAt to get the REAL lowz & highz
@@ -315,13 +315,13 @@ static inline void P_AddDynLineSlopeThinker (pslope_t* slope, dynplanetype_t typ
 	R_CreateInterpolator_DynSlope(&th->thinker, slope);
 }
 
-static inline void P_AddDynVertexSlopeThinker (pslope_t* slope, const INT16 tags[3], const vector3_t vx[3])
+static inline void P_AddDynVertexSlopeThinker (pslope_t* slope, const int16_t tags[3], const vector3_t vx[3])
 {
 	dynvertexplanethink_t* th = Z_LevelPoolCalloc(sizeof (*th));
 	th->thinker.alloctype = TAT_LEVELPOOL;
 	th->thinker.size = sizeof(*th);
 	size_t i;
-	INT32 l;
+	int32_t l;
 	th->thinker.function.acp1 = (actionf_p1)T_DynamicSlopeVert;
 	th->slope = slope;
 
@@ -344,7 +344,7 @@ static inline void P_AddDynVertexSlopeThinker (pslope_t* slope, const INT16 tags
 }
 
 /// Create a new slope and add it to the slope list.
-static inline pslope_t* Slope_Add (const UINT8 flags)
+static inline pslope_t* Slope_Add (const uint8_t flags)
 {
 	pslope_t *ret = Z_Calloc(sizeof(pslope_t), PU_LEVEL, NULL);
 	ret->flags = flags;
@@ -360,7 +360,7 @@ static inline pslope_t* Slope_Add (const UINT8 flags)
 
 /// Alocates and fill the contents of a slope structure.
 static pslope_t *MakeViaVectors(const vector3_t *o, const vector2_t *d,
-                             const fixed_t zdelta, UINT8 flags)
+                             const fixed_t zdelta, uint8_t flags)
 {
 	pslope_t *ret = Slope_Add(flags);
 
@@ -408,7 +408,7 @@ static fixed_t GetExtent(sector_t *sector, line_t *line)
 	return fardist;
 }
 
-static boolean P_CopySlope(pslope_t** toslope, pslope_t* fromslope)
+static dboolean P_CopySlope(pslope_t** toslope, pslope_t* fromslope)
 {
 	if (*toslope || !fromslope)
 		return true;
@@ -430,7 +430,7 @@ static void P_UpdateHasSlope(sector_t *sec)
 }
 
 /// Creates one or more slopes based on the given line type and front/back sectors.
-static void line_SpawnViaLine(const int linenum, const boolean spawnthinker)
+static void line_SpawnViaLine(const int linenum, const dboolean spawnthinker)
 {
 	// With dynamic slopes, it's fine to just leave this function as normal,
 	// because checking to see if a slope had changed will waste more memory than
@@ -441,11 +441,11 @@ static void line_SpawnViaLine(const int linenum, const boolean spawnthinker)
 	vector2_t direction;
 	fixed_t nx, ny, dz, extent;
 
-	boolean frontfloor = line->args[0] == TMS_FRONT;
-	boolean backfloor = line->args[0] == TMS_BACK;
-	boolean frontceil = line->args[1] == TMS_FRONT;
-	boolean backceil = line->args[1] == TMS_BACK;
-	UINT8 flags = 0; // Slope flags
+	dboolean frontfloor = line->args[0] == TMS_FRONT;
+	dboolean backfloor = line->args[0] == TMS_BACK;
+	dboolean frontceil = line->args[1] == TMS_FRONT;
+	dboolean backceil = line->args[1] == TMS_BACK;
+	uint8_t flags = 0; // Slope flags
 	if (line->args[2] & TMSL_NOPHYSICS)
 		flags |= SL_NOPHYSICS;
 	if (line->args[2] & TMSL_DYNAMIC)
@@ -624,12 +624,12 @@ static void line_SpawnViaLine(const int linenum, const boolean spawnthinker)
 }
 
 /// Creates a new slope from three mapthings with the specified IDs
-static pslope_t *MakeViaMapthings(INT16 tag1, INT16 tag2, INT16 tag3, UINT8 flags, const boolean spawnthinker)
+static pslope_t *MakeViaMapthings(int16_t tag1, int16_t tag2, int16_t tag3, uint8_t flags, const dboolean spawnthinker)
 {
 	size_t i;
 	mapthing_t* mt = mapthings;
 	mapthing_t* vertices[3] = {0};
-	INT16 tags[3] = {tag1, tag2, tag3};
+	int16_t tags[3] = {tag1, tag2, tag3};
 
 	vector3_t vx[3];
 	pslope_t* ret = Slope_Add(flags);
@@ -668,15 +668,15 @@ static pslope_t *MakeViaMapthings(INT16 tag1, INT16 tag2, INT16 tag3, UINT8 flag
 }
 
 /// Create vertex based slopes using tagged mapthings.
-static void line_SpawnViaMapthingVertexes(const int linenum, const boolean spawnthinker)
+static void line_SpawnViaMapthingVertexes(const int linenum, const dboolean spawnthinker)
 {
 	line_t *line = lines + linenum;
 	side_t *side;
 	pslope_t **slopetoset;
-	UINT16 tag1 = line->args[1];
-	UINT16 tag2 = line->args[2];
-	UINT16 tag3 = line->args[3];
-	UINT8 flags = 0; // Slope flags
+	uint16_t tag1 = line->args[1];
+	uint16_t tag2 = line->args[2];
+	uint16_t tag3 = line->args[3];
+	uint8_t flags = 0; // Slope flags
 
 	if (line->args[4] & TMSL_NOPHYSICS)
 		flags |= SL_NOPHYSICS;
@@ -759,9 +759,9 @@ static void SpawnVertexSlopes(void)
 	}
 }
 
-static boolean P_SetSlopeFromTag(sector_t *sec, INT32 tag, boolean ceiling)
+static dboolean P_SetSlopeFromTag(sector_t *sec, int32_t tag, dboolean ceiling)
 {
-	INT32 i;
+	int32_t i;
 	pslope_t **secslope = ceiling ? &sec->c_slope : &sec->f_slope;
 
 	if (!tag || *secslope)
@@ -787,8 +787,8 @@ void P_CopySectorSlope(line_t *line)
 {
 	sector_t *fsec = line->frontsector;
 	sector_t *bsec = line->backsector;
-	boolean setfront = false;
-	boolean setback = false;
+	dboolean setfront = false;
+	dboolean setback = false;
 
 	setfront |= P_SetSlopeFromTag(fsec, line->args[0], false);
 	setfront |= P_SetSlopeFromTag(fsec, line->args[1], true);
@@ -820,7 +820,7 @@ void P_CopySectorSlope(line_t *line)
 //
 // Looks in the slope list for a slope with a specified ID. Mostly useful for netgame sync
 //
-pslope_t *P_SlopeById(UINT16 id)
+pslope_t *P_SlopeById(uint16_t id)
 {
 	pslope_t *ret;
 	for (ret = slopelist; ret && ret->id != id; ret = ret->next);
@@ -838,7 +838,7 @@ pslope_t *MakeViaEquationConstants(const fixed_t a, const fixed_t b, const fixed
 }
 
 /// Initializes and reads the slopes from the map data.
-void P_SpawnSlopes(const boolean fromsave) {
+void P_SpawnSlopes(const dboolean fromsave) {
 	size_t i;
 
 	/// Generates vertex slopes.
@@ -942,7 +942,7 @@ fixed_t P_GetLightZAt(const lightlist_t *light, fixed_t x, fixed_t y)
 }
 
 // Returns true if we should run slope physics code on an object.
-boolean P_CanApplySlopePhysics(mobj_t *mo, pslope_t *slope)
+dboolean P_CanApplySlopePhysics(mobj_t *mo, pslope_t *slope)
 {
 	if (slope == NULL || mo == NULL || P_MobjWasRemoved(mo) == true)
 	{
@@ -976,7 +976,7 @@ boolean P_CanApplySlopePhysics(mobj_t *mo, pslope_t *slope)
 }
 
 // Returns true if we should run slope launch code on an object.
-boolean P_CanApplySlopeLaunch(mobj_t *mo, pslope_t *slope)
+dboolean P_CanApplySlopeLaunch(mobj_t *mo, pslope_t *slope)
 {
 	if (slope == NULL || mo == NULL || P_MobjWasRemoved(mo) == true)
 	{

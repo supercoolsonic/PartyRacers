@@ -63,9 +63,9 @@
 #include "radioracers/rr_video.h"
 
 // Radio - static variables for drawing the backup items when being tracked on the player
-static INT32 itemRouletteX;
-static INT32 itemRouletteY;
-static INT32 itemRouletteFlags;						//SCS - RADIO END
+static int32_t itemRouletteX;
+static int32_t itemRouletteY;
+static int32_t itemRouletteFlags;						//SCS - RADIO END
 
 //{ 	Patch Definitions
 static patch_t *kp_nodraw;
@@ -358,7 +358,7 @@ static void K_LoadGenericButtonGraphics(patch_t *kp[2][2], const char* code)
 
 void K_LoadKartHUDGraphics(void)
 {
-	INT32 i, j, k;
+	int32_t i, j, k;
 	char buffer[9];
 
 	// Null Stuff
@@ -1422,7 +1422,7 @@ void K_LoadKartHUDGraphics(void)
 }
 
 // For the item toggle menu
-const char *K_GetItemPatch(UINT8 item, boolean tiny)
+const char *K_GetItemPatch(uint8_t item, dboolean tiny)
 {
 	switch (item)
 	{
@@ -1547,7 +1547,7 @@ const char *K_GetItemPatch(UINT8 item, boolean tiny)
 	}
 }
 
-static patch_t *K_GetCachedItemPatch(INT32 item, UINT8 offset)
+static patch_t *K_GetCachedItemPatch(int32_t item, uint8_t offset)
 {
 	patch_t **kp[1 + NUMKARTITEMS] = {
 		kp_sadface,
@@ -1608,7 +1608,7 @@ static patch_t *K_GetCachedItemPatch(INT32 item, UINT8 offset)
 
 patch_t *K_GetSmallStaticCachedItemPatch(kartitems_t item)
 {
-	UINT8 offset;
+	uint8_t offset;
 
 	item = static_cast<kartitems_t>(K_ItemResultToType(item));
 
@@ -1661,7 +1661,7 @@ patch_t *K_GetSmallStaticCachedItemPatch(kartitems_t item)
 	return K_GetCachedItemPatch(item, offset);
 }
 
-static patch_t *K_GetCachedSlotMachinePatch(INT32 item, UINT8 offset)
+static patch_t *K_GetCachedSlotMachinePatch(int32_t item, uint8_t offset)
 {
 	patch_t **kp[KSM__MAX] = {
 		kp_bar,
@@ -1681,44 +1681,44 @@ static patch_t *K_GetCachedSlotMachinePatch(INT32 item, UINT8 offset)
 //}
 
 // RAIDO
-INT32 LAPS_MINI_Y;
+int32_t LAPS_MINI_Y;
 
-INT32 ITEM_X, ITEM_Y;	// Item Window
-INT32 TIME_X, TIME_Y;	// Time Sticker
-INT32 LAPS_X, LAPS_Y;	// Lap Sticker
-INT32 POSI_X, POSI_Y;	// Position Number
-INT32 FACE_X, FACE_Y;	// Top-four Faces
-INT32 STCD_X, STCD_Y;	// Starting countdown
-INT32 CHEK_Y;			// CHECK graphic
-INT32 MINI_X, MINI_Y;	// Minimap
-INT32 WANT_X, WANT_Y;	// Battle WANTED poster
+int32_t ITEM_X, ITEM_Y;	// Item Window
+int32_t TIME_X, TIME_Y;	// Time Sticker
+int32_t LAPS_X, LAPS_Y;	// Lap Sticker
+int32_t POSI_X, POSI_Y;	// Position Number
+int32_t FACE_X, FACE_Y;	// Top-four Faces
+int32_t STCD_X, STCD_Y;	// Starting countdown
+int32_t CHEK_Y;			// CHECK graphic
+int32_t MINI_X, MINI_Y;	// Minimap
+int32_t WANT_X, WANT_Y;	// Battle WANTED poster
 
 // This is for the P2 and P4 side of splitscreen. Then we'll flip P1's and P2's to the bottom with V_SPLITSCREEN.
-INT32 ITEM2_X, ITEM2_Y;
-INT32 LAPS2_X, LAPS2_Y;
-INT32 POSI2_X, POSI2_Y;
+int32_t ITEM2_X, ITEM2_Y;
+int32_t LAPS2_X, LAPS2_Y;
+int32_t POSI2_X, POSI2_Y;
 
 // trick "cool"
-INT32 TCOOL_X, TCOOL_Y;
+int32_t TCOOL_X, TCOOL_Y;
 
 // This version of the function was prototyped in Lua by Nev3r ... a HUGE thank you goes out to them!
-void K_ObjectTracking(trackingResult_t *result, const vector3_t *point, boolean reverse)
+void K_ObjectTracking(trackingResult_t *result, const vector3_t *point, dboolean reverse)
 {
 #define NEWTAN(x) FINETANGENT(((x + ANGLE_90) >> ANGLETOFINESHIFT) & 4095) // tan function used by Lua
 #define NEWCOS(x) FINECOSINE((x >> ANGLETOFINESHIFT) & FINEMASK)
 
 	angle_t viewpointAngle, viewpointAiming, viewpointRoll;
 
-	INT32 screenWidth, screenHeight;
+	int32_t screenWidth, screenHeight;
 	fixed_t screenHalfW, screenHalfH;
 
 	const fixed_t baseFov = 90*FRACUNIT;
 	fixed_t fovDiff, fov, fovTangent, fg;
 
 	fixed_t h;
-	INT32 da, dp;
+	int32_t da, dp;
 
-	UINT8 cameraNum = R_GetViewNumber();
+	uint8_t cameraNum = R_GetViewNumber();
 
 	I_Assert(result != NULL);
 	I_Assert(point != NULL);
@@ -1731,15 +1731,15 @@ void K_ObjectTracking(trackingResult_t *result, const vector3_t *point, boolean 
 	// Take the view's properties as necessary.
 	if (reverse)
 	{
-		viewpointAngle = (INT32)(viewangle + ANGLE_180);
-		viewpointAiming = (INT32)InvAngle(aimingangle);
-		viewpointRoll = (INT32)viewroll;
+		viewpointAngle = (int32_t)(viewangle + ANGLE_180);
+		viewpointAiming = (int32_t)InvAngle(aimingangle);
+		viewpointRoll = (int32_t)viewroll;
 	}
 	else
 	{
-		viewpointAngle = (INT32)viewangle;
-		viewpointAiming = (INT32)aimingangle;
-		viewpointRoll = (INT32)InvAngle(viewroll);
+		viewpointAngle = (int32_t)viewangle;
+		viewpointAiming = (int32_t)aimingangle;
+		viewpointRoll = (int32_t)InvAngle(viewroll);
 	}
 
 	// Calculate screen size adjustments.
@@ -1961,7 +1961,7 @@ static void K_initKartHUD(void)
 	}
 }
 
-void K_DrawMapThumbnail2(fixed_t x, fixed_t y, fixed_t width, UINT32 flags, UINT16 map, const UINT8 *colormap, fixed_t accordion)
+void K_DrawMapThumbnail2(fixed_t x, fixed_t y, fixed_t width, uint32_t flags, uint16_t map, const uint8_t *colormap, fixed_t accordion)
 {
 	patch_t *PictureOfLevel = NULL;
 
@@ -1981,7 +1981,7 @@ void K_DrawMapThumbnail2(fixed_t x, fixed_t y, fixed_t width, UINT32 flags, UINT
 	K_DrawLikeMapThumbnail(x, y, width, flags, PictureOfLevel, colormap, accordion);
 }
 
-void K_DrawMapThumbnail2Widescreen(fixed_t x, fixed_t y, fixed_t width, UINT32 flags, UINT16 map, const UINT8 *colormap, fixed_t accordion)		//SCS - RADIO START
+void K_DrawMapThumbnail2Widescreen(fixed_t x, fixed_t y, fixed_t width, uint32_t flags, uint16_t map, const uint8_t *colormap, fixed_t accordion)		//SCS - RADIO START
 {
 	patch_t *PictureOfLevel = NULL;
 
@@ -2001,7 +2001,7 @@ void K_DrawMapThumbnail2Widescreen(fixed_t x, fixed_t y, fixed_t width, UINT32 f
 	K_DrawLikeMapThumbnailWidescreen(x, y, width, flags, PictureOfLevel, colormap, accordion);
 }																																				//SCS - RADIO END
 
-void K_DrawLikeMapThumbnail(fixed_t x, fixed_t y, fixed_t width, UINT32 flags, patch_t *patch, const UINT8 *colormap, fixed_t accordion)
+void K_DrawLikeMapThumbnail(fixed_t x, fixed_t y, fixed_t width, uint32_t flags, patch_t *patch, const uint8_t *colormap, fixed_t accordion)
 {
 	fixed_t scale = FixedDiv(width, (320 << FRACBITS));
 
@@ -2018,7 +2018,7 @@ void K_DrawLikeMapThumbnail(fixed_t x, fixed_t y, fixed_t width, UINT32 flags, p
 	);
 }
 
-void K_DrawLikeMapThumbnailWidescreen(fixed_t x, fixed_t y, fixed_t width, UINT32 flags, patch_t *patch, const UINT8 *colormap, fixed_t accordion)	//SCS - RADIO START
+void K_DrawLikeMapThumbnailWidescreen(fixed_t x, fixed_t y, fixed_t width, uint32_t flags, patch_t *patch, const uint8_t *colormap, fixed_t accordion)	//SCS - RADIO START
 {
 	if (flags & V_FLIP)
 		x += FixedMul(width, accordion);
@@ -2026,20 +2026,20 @@ void K_DrawLikeMapThumbnailWidescreen(fixed_t x, fixed_t y, fixed_t width, UINT3
 	V_DrawAdaptiveScaledFullScreenPatch(patch, const_cast<uint8_t*>(colormap), flags|V_NOSCALEPATCH);
 }																																					//SCS - RADIO END
 
-void K_DrawMapAsFace(INT32 x, INT32 y, UINT32 flags, UINT16 map, const UINT8 *colormap, fixed_t accordion, INT32 scalefactor)
+void K_DrawMapAsFace(int32_t x, int32_t y, uint32_t flags, uint16_t map, const uint8_t *colormap, fixed_t accordion, int32_t scalefactor)
 {
 	const fixed_t iconHeight = ((16 * scalefactor) - 2) << FRACBITS;
 	const fixed_t iconWidth = (iconHeight * 320) / 200;
 	fixed_t mul = FRACUNIT;
 
-	INT32 dup = 1;
+	int32_t dup = 1;
 	if (flags & V_NOSCALESTART)
 	{
 		dup = (vid.dupx < vid.dupy ? vid.dupx : vid.dupy);
 		mul = 1;
 	}
 
-	INT32 hdup = (dup * accordion);
+	int32_t hdup = (dup * accordion);
 
 	V_DrawFill(
 		x,
@@ -2049,7 +2049,7 @@ void K_DrawMapAsFace(INT32 x, INT32 y, UINT32 flags, UINT16 map, const UINT8 *co
 		(flags & ~V_FLIP)
 	);
 
-	INT32 xclip = ((16 * scalefactor) - 2) * dup * mul;
+	int32_t xclip = ((16 * scalefactor) - 2) * dup * mul;
 
 	if (flags & V_NOSCALESTART)
 	{
@@ -2090,7 +2090,7 @@ static trackingResult_t K_getRoulettePositionForTrackingPlayer(void)				//SCS - 
 	trackingResult_t result;
 
 	// No player object? Not bothering.
-	const boolean doesPlayerHaveMo = !((stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo)));
+	const dboolean doesPlayerHaveMo = !((stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo)));
 	if (!doesPlayerHaveMo)
 		return result;
 
@@ -2121,9 +2121,9 @@ static void K_drawKartItem(void)
 
 	// Why write V_DrawScaledPatch calls over and over when they're all the same?
 	// Set to 'no item' just in case.
-	const UINT8 offset = ((r_splitscreen > 1) ? 1 : 0);
+	const uint8_t offset = ((r_splitscreen > 1) ? 1 : 0);
 	patch_t *localpatch[3] = { kp_nodraw, kp_nodraw, kp_nodraw };
-	UINT8 localamt[3] = {0, 0, 0};
+	uint8_t localamt[3] = {0, 0, 0};
 	patch_t *localbg = ((offset) ? kp_itembg[2] : kp_itembg[0]);
 	patch_t *localinkblotch = ((offset) ? kp_inkblotches[0] : kp_inkblotches[1]);		//SCS ADD
 	//patch_t *localhyucombo = ((offset) ? kp_pickpockcombo[1] : kp_pickpockcombo[0]);	//SCS ADD
@@ -2132,33 +2132,33 @@ static void K_drawKartItem(void)
 	patch_t *localpickpocket = ((offset) ? kp_pickpockethyu[((leveltime % (3*3)) / 3) + 9] : kp_pickpockethyu[(leveltime % (9*3)) / 3]);		//SCS ADD
 	patch_t *localtimestone = ((offset) ? kp_timestone[((leveltime % (10*3)) / 3) + 10] : kp_timestone[(leveltime % (10*3)) / 3]);				//SCS ADD
 	patch_t *localringbonus = ((offset) ? kp_ringbonus[((leveltime % (4*3)) / 3) + 4] : kp_ringbonus[(leveltime % (4*3)) / 3]);				//SCS ADD
-	INT32 fx = 0, fy = 0, fflags = 0;	// final coords for hud and flags...
+	int32_t fx = 0, fy = 0, fflags = 0;	// final coords for hud and flags...
 	
-	const INT32 numberdisplaymin = (!offset && (stplyr->itemtype == KITEM_ORBINAUT 
+	const int32_t numberdisplaymin = (!offset && (stplyr->itemtype == KITEM_ORBINAUT 
 	|| stplyr->itemtype == KITEM_BANANA 
 	|| stplyr->itemtype == KITEM_ICEDUS 
 	|| stplyr->itemtype == KITEM_SOL) 
 	? 5 : !offset && stplyr->itemtype == KITEM_SNEAKER ? 4 : !offset && stplyr->itemtype == KITEM_JAWZ ? 3 : 2);		//SCS EDIT
 	
-	INT32 itembar = 0;
-	INT32 maxl = 0; // itembar's normal highest value
-	const INT32 barlength = (offset ? 12 : 26);
+	int32_t itembar = 0;
+	int32_t maxl = 0; // itembar's normal highest value
+	const int32_t barlength = (offset ? 12 : 26);
 	skincolornum_t localcolor[3] = { static_cast<skincolornum_t>(stplyr->skincolor) };
-	SINT8 colormode[3] = { TC_RAINBOW };
-	boolean flipamount = false;	// Used for 3P/4P splitscreen to flip item amount stuff
+	int8_t colormode[3] = { TC_RAINBOW };
+	dboolean flipamount = false;	// Used for 3P/4P splitscreen to flip item amount stuff
 
 	fixed_t rouletteOffset = 0;
 	fixed_t rouletteSpace = ROULETTE_SPACING;
 	vector2_t rouletteCrop = {7, 7};
-	INT32 i;
+	int32_t i;
 
-	boolean flashOnOne = false;
-	boolean flashOnTwo = false;
+	dboolean flashOnOne = false;
+	dboolean flashOnTwo = false;
 
 	// RadioRacers
-	const boolean isHudTranslucencyAlreadyLow = (cv_translucenthud.value << V_ALPHASHIFT) <= V_TRANSLUCENT;			//SCS - RADIO START
-	boolean shouldDrawOnPlayer = false;
-	INT32 baseVideoFlags = V_HUDTRANS|V_SLIDEIN;
+	const dboolean isHudTranslucencyAlreadyLow = (cv_translucenthud.value << V_ALPHASHIFT) <= V_TRANSLUCENT;			//SCS - RADIO START
+	dboolean shouldDrawOnPlayer = false;
+	int32_t baseVideoFlags = V_HUDTRANS|V_SLIDEIN;
 	fixed_t baseHudScale = FRACUNIT;
 	float baseHudScaleFloat = (float)((float)(baseHudScale) / (FRACUNIT));											//SCS - RADIO END
 
@@ -2167,13 +2167,13 @@ static void K_drawKartItem(void)
 		// Init with item roulette stuff.
 		for (i = 0; i < 3; i++)
 		{
-			const SINT8 indexOfs = i-1;
+			const int8_t indexOfs = i-1;
 			const size_t index = (stplyr->itemRoulette.itemList.len + (stplyr->itemRoulette.index + indexOfs)) % stplyr->itemRoulette.itemList.len;
 
-			const SINT8 result = stplyr->itemRoulette.itemList.items[index];
-			const SINT8 item = K_ItemResultToType(result);
-			const boolean usingDebugItemAmount = cv_kartdebugitem.value != KITEM_NONE && cv_kartdebugitem.value == item && cv_kartdebugamount.value > 1;
-			const UINT8 amt = usingDebugItemAmount ? cv_kartdebugamount.value : K_ItemResultToAmount(result, &stplyr->itemRoulette);
+			const int8_t result = stplyr->itemRoulette.itemList.items[index];
+			const int8_t item = K_ItemResultToType(result);
+			const dboolean usingDebugItemAmount = cv_kartdebugitem.value != KITEM_NONE && cv_kartdebugitem.value == item && cv_kartdebugamount.value > 1;
+			const uint8_t amt = usingDebugItemAmount ? cv_kartdebugamount.value : K_ItemResultToAmount(result, &stplyr->itemRoulette);
 
 			switch (item)
 			{
@@ -2517,7 +2517,7 @@ static void K_drawKartItem(void)
 			{
 				shouldDrawOnPlayer = true;
 				//localinkblotch = kp_inkblotches[0];
-				const boolean rouletteIsActive = (stplyr->itemRoulette.active == true);
+				const dboolean rouletteIsActive = (stplyr->itemRoulette.active == true);
 				/**
 				 * This solution WILL obscure the player's view.
 				 * The item roulette background is transparent .. but some items are pretty loud visually (e.g. flame shield)
@@ -2558,7 +2558,7 @@ static void K_drawKartItem(void)
 		fy -= 5;
 	}
 
-	UINT8 *boxmap = NULL;
+	uint8_t *boxmap = NULL;
 	if (stplyr->itemRoulette.active && (stplyr->itemRoulette.speed - stplyr->itemRoulette.tics < 3) && stplyr->itemRoulette.index == 0 && stplyr->itemRoulette.itemList.len > 1)
 	{
 		boxmap = R_GetTranslationColormap(TC_ALLWHITE, SKINCOLOR_WHITE, GTC_CACHE);
@@ -2570,7 +2570,7 @@ static void K_drawKartItem(void)
 	 * But if you're playing with the HUD 100% opaque, it's gonna block vision easily. 
 	 * At the very least, I'll enforce a slightly lower translucency.. until their hud transluency is low enough.
 	 */
-	INT32 itemBackgroundFlags = baseVideoFlags|fflags;				//SCS - RADIO START
+	int32_t itemBackgroundFlags = baseVideoFlags|fflags;				//SCS - RADIO START
 	if (shouldDrawOnPlayer) 
 	{
 		itemBackgroundFlags = V_70TRANS|fflags;
@@ -2580,8 +2580,8 @@ static void K_drawKartItem(void)
 	
 	if (cv_obvious_itemreel.value == 1 && stplyr->itemRoulette.active && stplyr->itemRoulette.itemList.len > 1)		//SCS ADD START
 	{
-		SINT8 listindex = 1;
-		UINT8 ListYOffset = (offset ? 9 : (r_splitscreen == 1 ? 2 : 0));
+		int8_t listindex = 1;
+		uint8_t ListYOffset = (offset ? 9 : (r_splitscreen == 1 ? 2 : 0));
 		
 		if (stplyr->itemRoulette.index == 0)
 			V_DrawFixedPatch(((fx - (offset ? -8 : 2))<<FRACBITS), ((fy+ListYOffset)<<FRACBITS), (shouldDrawOnPlayer && baseHudScale == FRACUNIT) ? baseHudScale : ((4*FRACUNIT)/5), itemBackgroundFlags, offset ? kp_itemlistmetersmall[2] : kp_itemlistmeter[3], 0);
@@ -2623,11 +2623,11 @@ static void K_drawKartItem(void)
 
 	auto draw_item = [&](fixed_t y, int i)
 	{
-		const UINT8 *colormap = (localcolor[i] ? R_GetTranslationColormap(colormode[i], localcolor[i], GTC_CACHE) : NULL);
-		// INT32 stupidflags = baseVideoFlags|fflags;			//SCS - RADIO
+		const uint8_t *colormap = (localcolor[i] ? R_GetTranslationColormap(colormode[i], localcolor[i], GTC_CACHE) : NULL);
+		// int32_t stupidflags = baseVideoFlags|fflags;			//SCS - RADIO
 		// if (i == 0 || i == 2) {
 
-		// 	INT32 offset = rouletteOffset / FRACUNIT;
+		// 	int32_t offset = rouletteOffset / FRACUNIT;
 		// 	if (i == 0) {
 		// 		if (offset > 0) {
 		// 			if (offset > 9)
@@ -2637,7 +2637,7 @@ static void K_drawKartItem(void)
 		// 		}
 		// 	} else {
 		// 		if (offset < 0) {
-		// 			INT32 absoffset = abs(offset);
+		// 			int32_t absoffset = abs(offset);
 		// 			if (absoffset < 1)
 		// 				absoffset = 1;
 		// 			if (absoffset > 8)
@@ -2656,8 +2656,8 @@ static void K_drawKartItem(void)
 		);
 		if (localamt[i] > 1)
 		{
-			INT32 splitScreenOffset = (r_splitscreen > 1 ? 15 : 33);				//SCS - RADIO START
-			// If this boolean is true, there should be no splitscreen
+			int32_t splitScreenOffset = (r_splitscreen > 1 ? 15 : 33);				//SCS - RADIO START
+			// If this dboolean is true, there should be no splitscreen
 			if (shouldDrawOnPlayer)
 			{
 				splitScreenOffset = (int)(33 * baseHudScaleFloat);
@@ -2693,9 +2693,9 @@ static void K_drawKartItem(void)
 		V_ClearClipRect();
 
 		// A little goofy, but helps with ballhog charge conveyance—you're "loading" them.
-		UINT8 fakeitemamount = stplyr->itemamount - std::min(stplyr->itemamount - 1, (stplyr->ballhogcharge / BALLHOGINCREMENT));
+		uint8_t fakeitemamount = stplyr->itemamount - std::min(stplyr->itemamount - 1, (stplyr->ballhogcharge / BALLHOGINCREMENT));
 
-		boolean transflag = V_HUDTRANS;
+		dboolean transflag = V_HUDTRANS;
 		
 		// RadioRacers
 		if (shouldDrawOnPlayer && stplyr->itemtype != KITEM_NONE)			//SCS - RADIO START  		SCS EDIT - I don't want it floating next to me all the time, only while the roulette is spinning
@@ -2726,7 +2726,7 @@ static void K_drawKartItem(void)
 			transflag = V_HUDTRANSHALF;
 		}
 
-		INT32 localpatchflags = (shouldDrawOnPlayer && stplyr->itemtype != KITEM_NONE) ? (transflag|fflags) : (transflag|V_SLIDEIN|fflags);		//SCS - RADIO		//SCS EDIT
+		int32_t localpatchflags = (shouldDrawOnPlayer && stplyr->itemtype != KITEM_NONE) ? (transflag|fflags) : (transflag|V_SLIDEIN|fflags);		//SCS - RADIO		//SCS EDIT
 		if (fakeitemamount >= numberdisplaymin && stplyr->itemRoulette.active == false)
 		{
 			// Then, the numbers:
@@ -2756,7 +2756,7 @@ static void K_drawKartItem(void)
 			 * In this case, the player needs to know the quantity of an item. That's a given.
 			 * That information doesn't need to be at FULL opacity though.
 			 */
-			INT32 itemAmountFlags = V_HUDTRANS|V_SLIDEIN;														//SCS - RADIO START
+			int32_t itemAmountFlags = V_HUDTRANS|V_SLIDEIN;														//SCS - RADIO START
 			
 			if (shouldDrawOnPlayer && stplyr->itemtype != KITEM_NONE)											//SCS EDIT
 				itemAmountFlags = (stplyr->exiting || isHudTranslucencyAlreadyLow) ? V_HUDTRANS : V_40TRANS;	//SCS - RADIO END
@@ -2814,14 +2814,14 @@ static void K_drawKartItem(void)
 	// Extensible meter, currently only used for rocket sneaker...
 	if (itembar && !stplyr->exiting)									//SCS EDIT - Fixes issue where lone item timer bar appears sometimes after finishing a race (Pretty sure, anyway)
 	{
-		const INT32 fill = ((itembar*barlength)/maxl);
-		const INT32 length = std::min(barlength, fill);
-		const INT32 height = (offset ? 1 : 2);
-		//const INT32 x = (offset ? 17 : 11), y = (offset ? 27 : 35);
-		INT32 x = (offset ? 17 : 11), y = (offset ? 27 : 35);					//SCS - RADIO
+		const int32_t fill = ((itembar*barlength)/maxl);
+		const int32_t length = std::min(barlength, fill);
+		const int32_t height = (offset ? 1 : 2);
+		//const int32_t x = (offset ? 17 : 11), y = (offset ? 27 : 35);
+		int32_t x = (offset ? 17 : 11), y = (offset ? 27 : 35);					//SCS - RADIO
 
 		//V_DrawScaledPatch(fx+x, fy+y, V_HUDTRANS|V_SLIDEIN|fflags, kp_itemtimer[offset]);
-		INT32 itemTimerFlags = V_HUDTRANS|V_SLIDEIN|fflags;						//SCS - RADIO START
+		int32_t itemTimerFlags = V_HUDTRANS|V_SLIDEIN|fflags;						//SCS - RADIO START
 		if (shouldDrawOnPlayer && stplyr->itemtype != KITEM_NONE) {				//SCS EDIT
 			x = (int) (11 * baseHudScaleFloat) - 5;
 			y = (int) (35 * baseHudScaleFloat) + 5;
@@ -2845,29 +2845,29 @@ static void K_drawKartItem(void)
 	// Quick Eggman numbers
 	if (stplyr->eggmanexplode > 1)
 	{
-		// V_DrawScaledPatch(fx+17, fy+13-offset, V_HUDTRANS|V_SLIDEIN|fflags, kp_eggnum[std::min<INT32>(5, G_TicsToSeconds(stplyr->eggmanexplode))]);
+		// V_DrawScaledPatch(fx+17, fy+13-offset, V_HUDTRANS|V_SLIDEIN|fflags, kp_eggnum[std::min<int32_t>(5, G_TicsToSeconds(stplyr->eggmanexplode))]);
 		// 13, 9
-		INT32 eggmanNumbersFlags = (shouldDrawOnPlayer && stplyr->itemtype != KITEM_NONE) ? V_HUDTRANS|fflags : V_HUDTRANS|V_SLIDEIN|fflags;		//SCS - RADIO START		//SCS EDIT
+		int32_t eggmanNumbersFlags = (shouldDrawOnPlayer && stplyr->itemtype != KITEM_NONE) ? V_HUDTRANS|fflags : V_HUDTRANS|V_SLIDEIN|fflags;		//SCS - RADIO START		//SCS EDIT
 		V_DrawFixedPatch(
 			((fx + (int)(17 * baseHudScaleFloat)) << FRACBITS), 
 			((fy + (int)(13 * baseHudScaleFloat) - offset) << FRACBITS), 
 			baseHudScale, eggmanNumbersFlags|fflags,
-			kp_eggnum[std::min<INT32>(5, G_TicsToSeconds(stplyr->eggmanexplode))], 0
+			kp_eggnum[std::min<int32_t>(5, G_TicsToSeconds(stplyr->eggmanexplode))], 0
 		);																																			//SCS - RADIO END
 	}
 
 	if (stplyr->itemtype == KITEM_FLAMESHIELD && stplyr->flamelength > 0)
 	{
-		INT32 numframes = FLAMESHIELD_MAX;
-		INT32 absolutemax = numframes;
-		INT32 flamemax = stplyr->flamelength;
-		INT32 flamemeter = std::min(static_cast<INT32>(stplyr->flamemeter), flamemax);
+		int32_t numframes = FLAMESHIELD_MAX;
+		int32_t absolutemax = numframes;
+		int32_t flamemax = stplyr->flamelength;
+		int32_t flamemeter = std::min(static_cast<int32_t>(stplyr->flamemeter), flamemax);
 
-		INT32 bf = numframes - stplyr->flamelength;
-		INT32 ff = numframes - ((flamemeter * numframes) / absolutemax);
+		int32_t bf = numframes - stplyr->flamelength;
+		int32_t ff = numframes - ((flamemeter * numframes) / absolutemax);
 
-		INT32 xo = 6, yo = 4;
-		INT32 flip = 0;
+		int32_t xo = 6, yo = 4;
+		int32_t flip = 0;
 		
 		/**
 		 * RadioRacers
@@ -2875,7 +2875,7 @@ static void K_drawKartItem(void)
 		 * Flame Shield gets a unique exception. 
 		 * We wouldn't want to focus on the item icon, you'd want to focus on the flame meter.
 		 */
-		INT32 flameMeterFlags = fflags|flip;									//SCS - RADIO START
+		int32_t flameMeterFlags = fflags|flip;									//SCS - RADIO START
 		if (shouldDrawOnPlayer && stplyr->itemtype != KITEM_NONE)				//SCS EDIT
 		{
 			xo = (int) (xo * baseHudScaleFloat);
@@ -2900,7 +2900,7 @@ static void K_drawKartItem(void)
 		}
 
 		/*
-		INT32 fmin = (8 * (bf-1));
+		int32_t fmin = (8 * (bf-1));
 		if (ff < fmin)
 			ff = fmin;
 		*/
@@ -2922,7 +2922,7 @@ static void K_drawKartItem(void)
 		{
 			if ((stplyr->flamemeter > flamemax) && (leveltime & 1))
 			{
-				UINT8 *fsflash = R_GetTranslationColormap(TC_BLINK, SKINCOLOR_WHITE, GTC_CACHE);
+				uint8_t *fsflash = R_GetTranslationColormap(TC_BLINK, SKINCOLOR_WHITE, GTC_CACHE);
 				if (offset)
 					V_DrawMappedPatch(fx-xo, fy-yo, V_HUDTRANS|V_SLIDEIN|fflags|flip, kp_flameshieldmeter[ff][offset], fsflash);
 				else
@@ -2982,10 +2982,10 @@ static void K_drawBackupItem(void)
 	patch_t *localpickpocket = kp_pickpockethyu[((leveltime % (3*3)) / 3) + 9 + (tiny ? 2 : 0) + tiny];		//SCS ADD
 	patch_t *localtimestone = kp_timestone[((leveltime % (10*3)) / 3) + 10 + (tiny ? 9 : 0) + tiny];			//SCS ADD
 	patch_t *localringbonus = kp_ringbonus[((leveltime % (4*3)) / 3) + 4 + (tiny ? 8 : 0) + tiny];			//SCS ADD
-	INT32 fx = 0, fy = 0, fflags = 0, tx = 0, ty = 0;	// final coords for hud and flags...
-	const INT32 numberdisplaymin = 2;
+	int32_t fx = 0, fy = 0, fflags = 0, tx = 0, ty = 0;	// final coords for hud and flags...
+	const int32_t numberdisplaymin = 2;
 	skincolornum_t localcolor[3] = { static_cast<skincolornum_t>(stplyr->skincolor) };
-	SINT8 colormode[3] = { TC_RAINBOW };
+	int8_t colormode[3] = { TC_RAINBOW };
 
 	if (stplyr->backupitemamount <= 0)
 		return;
@@ -3090,13 +3090,13 @@ static void K_drawBackupItem(void)
 		ty += 30;
 	}
 
-	boolean transflag = V_HUDTRANS;
+	dboolean transflag = V_HUDTRANS;
 	
 	// Radio
-	boolean drawingOnPlayer = (cv_rouletteonplayer.value == 1 && r_splitscreen == 0 && stplyr->itemtype == KITEM_NONE && !stplyr->ringboxdelay);				//SCS - RADIO START			//SCS EDIT - Only draw the backup item next to me while the roulette is spinning
+	dboolean drawingOnPlayer = (cv_rouletteonplayer.value == 1 && r_splitscreen == 0 && stplyr->itemtype == KITEM_NONE && !stplyr->ringboxdelay);				//SCS - RADIO START			//SCS EDIT - Only draw the backup item next to me while the roulette is spinning
 	const fixed_t baseHudScaleFixed = (drawingOnPlayer) ? RR_getItemBoxHudScale() : FRACUNIT;
 	const float_t baseHudScaleFloat = RR_getItemBoxHudScaleFloat();
-	INT32 backupitemflags = transflag|V_SLIDEIN|fflags;
+	int32_t backupitemflags = transflag|V_SLIDEIN|fflags;
 	
 	if (drawingOnPlayer) {
 		backupitemflags = V_20TRANS;
@@ -3155,7 +3155,7 @@ static void K_drawKartSlotMachine(void)
 
 	// Why write V_DrawScaledPatch calls over and over when they're all the same?
 	// Set to 'no item' just in case.
-	const UINT8 offset = ((r_splitscreen > 1) ? 1 : 0);
+	const uint8_t offset = ((r_splitscreen > 1) ? 1 : 0);
 
 	patch_t *localpatch[3] = { kp_nodraw, kp_nodraw, kp_nodraw };
 	patch_t *localbg = offset ? kp_ringbg[1] : kp_ringbg[0];
@@ -3164,23 +3164,23 @@ static void K_drawKartSlotMachine(void)
 	// FIVE LAYERS OF BULLSHIT PER-PIXEL SHOVING BECAUSE THE PATCHES HAVE DIFFERENT OFFSETS
 	// IF YOU ARE HERE TO ADJUST THE RINGBOX HUD TURN OFF YOUR COMPUTER AND GO TO YOUR LOCAL PARK
 
-	INT32 fx = 0, fy = 0, fflags = 0;	// final coords for hud and flags...
-	INT32 boxoffx = 0;
-	INT32 boxoffy = -6;
-	INT32 vstretch = 0;
-	INT32 hstretch = 3;
-	INT32 splitbsx = 0, splitbsy = 0;
+	int32_t fx = 0, fy = 0, fflags = 0;	// final coords for hud and flags...
+	int32_t boxoffx = 0;
+	int32_t boxoffy = -6;
+	int32_t vstretch = 0;
+	int32_t hstretch = 3;
+	int32_t splitbsx = 0, splitbsy = 0;
 	skincolornum_t localcolor[3] = { static_cast<skincolornum_t>(stplyr->skincolor) };
-	SINT8 colormode[3] = { TC_RAINBOW };
+	int8_t colormode[3] = { TC_RAINBOW };
 
 	fixed_t rouletteOffset = 0;
 	fixed_t rouletteSpace = SLOT_SPACING;
 	vector2_t rouletteCrop = {10, 10};
-	INT32 i;
+	int32_t i;
 
 	// RadioRacers
-	boolean shouldDrawOnPlayer = false;						//SCS - RADIO START
-	INT32 baseVideoFlags = V_HUDTRANS|V_SLIDEIN;
+	dboolean shouldDrawOnPlayer = false;						//SCS - RADIO START
+	int32_t baseVideoFlags = V_HUDTRANS|V_SLIDEIN;
 	fixed_t baseHudScale = FRACUNIT;						//SCS - RADIO END
 	
 
@@ -3189,10 +3189,10 @@ static void K_drawKartSlotMachine(void)
 		// Init with item roulette stuff.
 		for (i = 0; i < 3; i++)
 		{
-			const SINT8 indexOfs = i-1;
+			const int8_t indexOfs = i-1;
 			const size_t index = (stplyr->itemRoulette.itemList.len + (stplyr->itemRoulette.index + indexOfs)) % stplyr->itemRoulette.itemList.len;
 
-			const SINT8 result = stplyr->itemRoulette.itemList.items[index];
+			const int8_t result = stplyr->itemRoulette.itemList.items[index];
 
 			localpatch[i] = K_GetCachedSlotMachinePatch(result, offset);
 		}
@@ -3305,7 +3305,7 @@ static void K_drawKartSlotMachine(void)
 		localbg, 0
 	);
 
-	INT32 clipRectFlags = (shouldDrawOnPlayer ? 0 : V_SLIDEIN|fflags);	//SCS - RADIO END
+	int32_t clipRectFlags = (shouldDrawOnPlayer ? 0 : V_SLIDEIN|fflags);	//SCS - RADIO END
 	V_SetClipRect(
 		((fx + rouletteCrop.x + boxoffx + splitbsx) << FRACBITS), ((fy + rouletteCrop.y + boxoffy - vstretch + splitbsy) << FRACBITS),
 		rouletteSpace + (hstretch<<FRACBITS), rouletteSpace + (vstretch<<FRACBITS),
@@ -3331,9 +3331,9 @@ static void K_drawKartSlotMachine(void)
 	V_ClearClipRect();
 }
 
-tic_t K_TranslateTimer(tic_t drawtime, UINT8 mode, INT32 *return_jitter)
+tic_t K_TranslateTimer(tic_t drawtime, uint8_t mode, int32_t *return_jitter)
 {
-	INT32 jitter = 0;
+	int32_t jitter = 0;
 
 	if (!mode && drawtime != UINT32_MAX)
 	{
@@ -3376,25 +3376,25 @@ tic_t K_TranslateTimer(tic_t drawtime, UINT8 mode, INT32 *return_jitter)
 	return drawtime;
 }
 
-INT32 K_drawKartMicroTime(const char *todrawtext, INT32 workx, INT32 worky, INT32 splitflags)
+int32_t K_drawKartMicroTime(const char *todrawtext, int32_t workx, int32_t worky, int32_t splitflags)
 {
 	using srb2::Draw;
 	Draw::TextElement text(todrawtext);
 	text.flags(splitflags);
 	text.font(Draw::Font::kZVote);
 
-	INT32 result = text.width();
+	int32_t result = text.width();
 	Draw(workx - result, worky).text(text);
 
 	return result;
 }
 
-void K_drawKartTimestamp(tic_t drawtime, INT32 TX, INT32 TY, INT32 splitflags, UINT8 mode)
+void K_drawKartTimestamp(tic_t drawtime, int32_t TX, int32_t TY, int32_t splitflags, uint8_t mode)
 {
 	// TIME_X = BASEVIDWIDTH-124;	// 196
 	// TIME_Y = 6;					//   6
 
-	INT32 jitter = 0;
+	int32_t jitter = 0;
 
 	drawtime = K_TranslateTimer(drawtime, mode, &jitter);
 
@@ -3450,8 +3450,8 @@ void K_drawKartTimestamp(tic_t drawtime, INT32 TX, INT32 TY, INT32 splitflags, U
 	if ((modeattacking || (mode == 1))
 		&& !demo.playback)
 	{
-		INT32 workx = TX + 96, worky = TY+18;
-		UINT8 i = stickermedalinfo.visiblecount;
+		int32_t workx = TX + 96, worky = TY+18;
+		uint8_t i = stickermedalinfo.visiblecount;
 
 		if (stickermedalinfo.targettext[0] != '\0')
 		{
@@ -3509,11 +3509,11 @@ void K_drawKartTimestamp(tic_t drawtime, INT32 TX, INT32 TY, INT32 splitflags, U
 
 	if (modeattacking & ATTACKING_SPB && stplyr->SPBdistance > 0)
 	{
-		UINT8 *colormap = R_GetTranslationColormap(stplyr->skin, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE);
-		INT32 ybar = 180;
-		INT32 widthbar = 120, xbar = 160 - widthbar/2, currentx;
-		INT32 barflags = V_SNAPTOBOTTOM|V_SLIDEIN;
-		INT32 transflags = ((6)<<FF_TRANSSHIFT);
+		uint8_t *colormap = R_GetTranslationColormap(stplyr->skin, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE);
+		int32_t ybar = 180;
+		int32_t widthbar = 120, xbar = 160 - widthbar/2, currentx;
+		int32_t barflags = V_SNAPTOBOTTOM|V_SLIDEIN;
+		int32_t transflags = ((6)<<FF_TRANSSHIFT);
 
 		V_DrawScaledPatch(xbar, ybar - 2, barflags|transflags, kp_wouldyoustillcatchmeifiwereaworm);
 
@@ -3535,12 +3535,12 @@ void K_drawKartTimestamp(tic_t drawtime, INT32 TX, INT32 TY, INT32 splitflags, U
 	}
 }
 
-static fixed_t K_DrawKartPositionNumPatch(UINT8 num, UINT8 splitIndex, UINT8 *color, fixed_t x, fixed_t y, fixed_t scale, INT32 flags)
+static fixed_t K_DrawKartPositionNumPatch(uint8_t num, uint8_t splitIndex, uint8_t *color, fixed_t x, fixed_t y, fixed_t scale, int32_t flags)
 {
 	fixed_t w = FRACUNIT;
 	fixed_t h = FRACUNIT;
-	INT32 overlayFlags[2];
-	INT32 i;
+	int32_t overlayFlags[2];
+	int32_t i;
 
 	if (num > 9)
 	{
@@ -3558,8 +3558,8 @@ static fixed_t K_DrawKartPositionNumPatch(UINT8 num, UINT8 splitIndex, UINT8 *co
 		overlayFlags[1] = V_SUBTRACT;
 	}
 
-	w = SHORT(kp_positionnum[num][0][splitIndex]->width) * scale;
-	h = SHORT(kp_positionnum[num][0][splitIndex]->height) * scale;
+	w = LSBF_SHORT(kp_positionnum[num][0][splitIndex]->width) * scale;
+	h = LSBF_SHORT(kp_positionnum[num][0][splitIndex]->height) * scale;
 
 	x -= w;
 
@@ -3582,11 +3582,11 @@ static fixed_t K_DrawKartPositionNumPatch(UINT8 num, UINT8 splitIndex, UINT8 *co
 }
 
 void K_DrawKartPositionNumXY(
-		UINT8 num,
-		UINT8 splitIndex,
-		fixed_t fx, fixed_t fy, fixed_t scale, INT32 fflags,
-		tic_t counter, boolean subtract,
-		boolean exit, boolean lastLap, boolean losing
+		uint8_t num,
+		uint8_t splitIndex,
+		fixed_t fx, fixed_t fy, fixed_t scale, int32_t fflags,
+		tic_t counter, dboolean subtract,
+		dboolean exit, dboolean lastLap, dboolean losing
 	)
 {
 	if (cv_reducevfx.value != 0)
@@ -3597,7 +3597,7 @@ void K_DrawKartPositionNumXY(
 
 	counter /= 3; // Alternate colors every three frames
 
-	UINT8 *color = NULL;
+	uint8_t *color = NULL;
 	if (exit && num == 1)
 	{
 		// 1st place winner? You get rainbows!!
@@ -3606,7 +3606,7 @@ void K_DrawKartPositionNumXY(
 	else if (exit || lastLap)
 	{
 		// On the final lap, or already won.
-		boolean useRedNums = losing;
+		dboolean useRedNums = losing;
 
 		if (subtract)
 		{
@@ -3630,10 +3630,10 @@ void K_DrawKartPositionNumXY(
 
 	if ((fflags & V_SNAPTORIGHT) == 0)
 	{
-		UINT8 adjustNum = num;
+		uint8_t adjustNum = num;
 		do
 		{
-			fixed_t w = SHORT(kp_positionnum[adjustNum % 10][0][splitIndex]->width) * scale;
+			fixed_t w = LSBF_SHORT(kp_positionnum[adjustNum % 10][0][splitIndex]->width) * scale;
 			fx += w;
 			adjustNum /= 10;
 		} while (adjustNum);
@@ -3651,9 +3651,9 @@ void K_DrawKartPositionNumXY(
 	} while (num);
 }
 
-static void K_DrawKartPositionNum(UINT8 num)
+static void K_DrawKartPositionNum(uint8_t num)
 {
-	UINT8 splitIndex = (r_splitscreen > 0) ? 1 : 0;
+	uint8_t splitIndex = (r_splitscreen > 0) ? 1 : 0;
 	fixed_t scale = FRACUNIT;
 	// RADIO: It's pretty big already
 	if (cv_toggle_position_number.value == 1)
@@ -3661,7 +3661,7 @@ static void K_DrawKartPositionNum(UINT8 num)
 	
 	fixed_t fx = 0, fy = 0;
 	transnum_t trans = static_cast<transnum_t>(0);
-	INT32 fflags = 0;
+	int32_t fflags = 0;
 
 	if (stplyr->lives <= 0 && stplyr->playerstate == PST_DEAD)
 	{
@@ -3680,7 +3680,7 @@ static void K_DrawKartPositionNum(UINT8 num)
 
 	if (stplyr->positiondelay > 0 || K_PlayerTallyActive(stplyr) == true)
 	{
-		const UINT8 delay = (stplyr->exiting) ? POS_DELAY_TIME : stplyr->positiondelay;
+		const uint8_t delay = (stplyr->exiting) ? POS_DELAY_TIME : stplyr->positiondelay;
 		const fixed_t add = (scale * 3) >> ((r_splitscreen == 1) ? 1 : 2);
 		scale += std::min((add * (delay * delay)) / (POS_DELAY_TIME * POS_DELAY_TIME), add);
 	}
@@ -3688,7 +3688,7 @@ static void K_DrawKartPositionNum(UINT8 num)
 	// pain and suffering defined below
 	if (!r_splitscreen)
 	{
-		const boolean isDrawingInput = gamestate == GS_LEVEL && cv_drawinput.value && cv_inputdisplaytogglesize.value;		//SCS - RADIO
+		const dboolean isDrawingInput = gamestate == GS_LEVEL && cv_drawinput.value && cv_inputdisplaytogglesize.value;		//SCS - RADIO
 		fx = BASEVIDWIDTH << FRACBITS;
 		fy = BASEVIDHEIGHT << FRACBITS;
 		if (cv_toggle_position_number.value == 1)
@@ -3762,17 +3762,17 @@ static void K_DrawKartPositionNum(UINT8 num)
 
 struct PositionFacesInfo
 {
-	INT32 ranklines = 0;
-	INT32 strank = -1;
-	INT32 numplayersingame = 0;
-	INT32 rankplayer[MAXPLAYERS] = {};
+	int32_t ranklines = 0;
+	int32_t strank = -1;
+	int32_t numplayersingame = 0;
+	int32_t rankplayer[MAXPLAYERS] = {};
 
 	PositionFacesInfo();
 	void draw_1p();
-	void draw_4p_battle(int x, int y, INT32 flags);
+	void draw_4p_battle(int x, int y, int32_t flags);
 
 	player_t* top() const { return &players[rankplayer[0]]; }
-	UINT32 top_score() const { return G_TeamOrIndividualScore( top() ); }
+	uint32_t top_score() const { return G_TeamOrIndividualScore( top() ); }
 
 	bool near_goal() const
 	{
@@ -3804,7 +3804,7 @@ struct PositionFacesInfo
 
 PositionFacesInfo::PositionFacesInfo()
 {
-	INT32 i, j;
+	int32_t i, j;
 
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
@@ -3819,11 +3819,11 @@ PositionFacesInfo::PositionFacesInfo()
 	if (numplayersingame <= 1)
 		return;
 
-	boolean completed[MAXPLAYERS] = {};
+	dboolean completed[MAXPLAYERS] = {};
 
 	for (j = 0; j < numplayersingame; j++)
 	{
-		UINT8 lowestposition = MAXPLAYERS+1;
+		uint8_t lowestposition = MAXPLAYERS+1;
 		for (i = 0; i < MAXPLAYERS; i++)
 		{
 			if (completed[i] || !playeringame[i] || players[i].spectator || !players[i].mo)
@@ -3855,16 +3855,16 @@ void PositionFacesInfo::draw_1p()
 	// FACE_X = 15;				//  15
 	// FACE_Y = 72;				//  72
 
-	INT32 Y = FACE_Y-9; // -9 to offset where it's being drawn if there are more than one
-	INT32 i, j;
-	INT32 bumperx, emeraldx;
-	INT32 xoff, yoff, flipflag = 0;
-	UINT16 workingskin;
-	UINT8 *colormap;
-	UINT32 skinflags;
-	INT32 shakeoffset = 0;	//SCS ADD
-	INT32 shakeangle;		//SCS ADD
-	INT32 tumbleoffset;		//SCS ADD
+	int32_t Y = FACE_Y-9; // -9 to offset where it's being drawn if there are more than one
+	int32_t i, j;
+	int32_t bumperx, emeraldx;
+	int32_t xoff, yoff, flipflag = 0;
+	uint16_t workingskin;
+	uint8_t *colormap;
+	uint32_t skinflags;
+	int32_t shakeoffset = 0;	//SCS ADD
+	int32_t shakeangle;		//SCS ADD
+	int32_t tumbleoffset;		//SCS ADD
 
 	if (gametyperules & GTR_POINTLIMIT) // playing battle
 	{
@@ -3896,8 +3896,8 @@ void PositionFacesInfo::draw_1p()
 
 		// Draw GOAL
 		bool skull = g_pointlimit && (g_pointlimit <= G_TeamOrIndividualScore(stplyr));
-		INT32 height = i*18;
-		INT32 GOAL_Y = Y-height;
+		int32_t height = i*18;
+		int32_t GOAL_Y = Y-height;
 
 		colormap = nullptr;
 
@@ -4002,7 +4002,7 @@ void PositionFacesInfo::draw_1p()
 
 			if (LUA_HudEnabled(hud_battlebumpers))
 			{
-				const UINT8 bumpers = K_Bumpers(&players[rankplayer[i]]);
+				const uint8_t bumpers = K_Bumpers(&players[rankplayer[i]]);
 
 				if (bumpers > 0)
 				{
@@ -4018,7 +4018,7 @@ void PositionFacesInfo::draw_1p()
 
 		for (j = 0; j < 7; j++)
 		{
-			UINT32 emeraldFlag = (1 << j);
+			uint32_t emeraldFlag = (1 << j);
 			skincolornum_t emeraldColor = static_cast<skincolornum_t>(SKINCOLOR_CHAOSEMERALD1 + j);
 
 			if (players[rankplayer[i]].emeralds & emeraldFlag)
@@ -4038,7 +4038,7 @@ void PositionFacesInfo::draw_1p()
 			;
 		else if (gametyperules & GTR_CIRCUIT)
 		{
-			INT32 pos = players[rankplayer[i]].position;
+			int32_t pos = players[rankplayer[i]].position;
 			if (pos < 0 || pos > MAXPLAYERS)
 				pos = 0;
 			// Draws the little number over the face
@@ -4046,7 +4046,7 @@ void PositionFacesInfo::draw_1p()
 		}
 		else if (gametyperules & GTR_POINTLIMIT)
 		{
-			INT32 flags = V_HUDTRANS | V_SLIDEIN | V_SNAPTOLEFT;
+			int32_t flags = V_HUDTRANS | V_SLIDEIN | V_SNAPTOLEFT;
 
 			colormap = NULL;
 
@@ -4101,12 +4101,12 @@ void PositionFacesInfo::draw_1p()
 	}
 }
 
-void PositionFacesInfo::draw_4p_battle(int x, int y, INT32 flags)
+void PositionFacesInfo::draw_4p_battle(int x, int y, int32_t flags)
 {
 	using srb2::Draw;
 	Draw row = Draw(x, y).flags(V_HUDTRANS | V_SLIDEIN | flags).font(Draw::Font::kPing);
 
-	UINT8 skull = []
+	uint8_t skull = []
 	{
 		if (g_pointlimit == 0)
 			return 0;
@@ -4152,7 +4152,7 @@ void PositionFacesInfo::draw_4p_battle(int x, int y, INT32 flags)
 	head(row.xy(2, 18), 0);
 }
 
-static boolean K_drawKartPositionFaces(void)
+static dboolean K_drawKartPositionFaces(void)
 {
 	PositionFacesInfo state{};
 
@@ -4162,7 +4162,7 @@ static boolean K_drawKartPositionFaces(void)
 	if (!LUA_HudEnabled(hud_minirankings))
 		return false;	// Don't proceed but still return true for free play above if HUD is disabled.
 	
-	boolean showstandings = cv_toggle_race_standings.value;			//SCS - RADIO START
+	dboolean showstandings = cv_toggle_race_standings.value;			//SCS - RADIO START
 	if (!showstandings && (gametyperules & GTR_POINTLIMIT)) {
 		showstandings = true;
 	}																//SCS - RADIO END
@@ -4193,11 +4193,11 @@ static boolean K_drawKartPositionFaces(void)
 
 static void K_drawBossHealthBar(void)
 {
-	UINT8 i = 0, barstatus = 1, randlen = 0, darken = 0;
-	const INT32 startx = BASEVIDWIDTH - 23;
-	INT32 starty = BASEVIDHEIGHT - 25;
-	INT32 rolrand = 0, randtemp = 0;
-	boolean randsign = false;
+	uint8_t i = 0, barstatus = 1, randlen = 0, darken = 0;
+	const int32_t startx = BASEVIDWIDTH - 23;
+	int32_t starty = BASEVIDHEIGHT - 25;
+	int32_t rolrand = 0, randtemp = 0;
+	dboolean randsign = false;
 
 	if (bossinfo.barlen <= 1)
 		return;
@@ -4207,7 +4207,7 @@ static void K_drawBossHealthBar(void)
 		;
 	else if (bossinfo.visualbarimpact)
 	{
-		INT32 mag = std::min<UINT32>((bossinfo.visualbarimpact/4) + 1, 8u);
+		int32_t mag = std::min<uint32_t>((bossinfo.visualbarimpact/4) + 1, 8u);
 		if (bossinfo.visualbarimpact & 1)
 			starty -= mag;
 		else
@@ -4282,7 +4282,7 @@ static void K_drawBossHealthBar(void)
 			}
 			if (lt_exitticker < (TICRATE/2))
 				;
-			else if ((bossinfo.visualbar - i) < (INT32)(bossinfo.visualbarimpact/8))
+			else if ((bossinfo.visualbar - i) < (int32_t)(bossinfo.visualbarimpact/8))
 			{
 				if (bossinfo.visualbarimpact & 1)
 					rolrand += (bossinfo.visualbar - i);
@@ -4321,7 +4321,7 @@ static void K_drawBossHealthBar(void)
 
 static void K_drawKartEmeralds(void)
 {
-	static const INT32 emeraldOffsets[7][3] = {
+	static const int32_t emeraldOffsets[7][3] = {
 		{34, 0, 15},
 		{25, 8, 11},
 		{43, 8, 19},
@@ -4331,10 +4331,10 @@ static void K_drawKartEmeralds(void)
 		{61, 8, 27}
 	};
 
-	INT32 splitflags = V_SLIDEIN|V_SNAPTOBOTTOM|V_SNAPTORIGHT|V_SPLITSCREEN;
-	INT32 startx = BASEVIDWIDTH - 77;
-	INT32 starty = BASEVIDHEIGHT - 29;
-	INT32 i = 0, xindex = 0;
+	int32_t splitflags = V_SLIDEIN|V_SNAPTOBOTTOM|V_SNAPTORIGHT|V_SPLITSCREEN;
+	int32_t startx = BASEVIDWIDTH - 77;
+	int32_t starty = BASEVIDHEIGHT - 29;
+	int32_t i = 0, xindex = 0;
 
 	{
 		if (r_splitscreen)
@@ -4371,13 +4371,13 @@ static void K_drawKartEmeralds(void)
 
 	for (i = 0; i < 7; i++)
 	{
-		UINT32 emeraldFlag = (1 << i);
+		uint32_t emeraldFlag = (1 << i);
 		skincolornum_t emeraldColor = static_cast<skincolornum_t>(SKINCOLOR_CHAOSEMERALD1 + i);
 
 		if (stplyr->emeralds & emeraldFlag)
 		{
-			boolean whiteFlash = (leveltime & 1);
-			UINT8 *colormap;
+			dboolean whiteFlash = (leveltime & 1);
+			uint8_t *colormap;
 
 			if (i & 1)
 			{
@@ -4403,7 +4403,7 @@ static void K_drawKartEmeralds(void)
 	}
 }
 
-INT32 K_GetTransFlagFromFixed(fixed_t value, boolean midrace)
+int32_t K_GetTransFlagFromFixed(fixed_t value, dboolean midrace)
 {
 	fixed_t base = FRACUNIT;
 
@@ -4415,7 +4415,7 @@ INT32 K_GetTransFlagFromFixed(fixed_t value, boolean midrace)
 	distance = std::clamp(distance, 0, FRACUNIT/2);
 
     // Map the distance to 0-10 range (10 = closest to 1.0, 0 = farthest from 1.0)
-    INT32 transLevel = 10 - ((distance * 10) / (FRACUNIT/2));
+    int32_t transLevel = 10 - ((distance * 10) / (FRACUNIT/2));
 
     // Map 0-10 to V_TRANS flags
     switch (transLevel) {
@@ -4437,9 +4437,9 @@ INT32 K_GetTransFlagFromFixed(fixed_t value, boolean midrace)
 // We want to draw teams and duel HUD in a player context,
 // but also precisely control how often it's drawn, even if
 // some players have no view.
-static UINT8 K_FirstActiveDisplayPlayer(player_t *player)
+static uint8_t K_FirstActiveDisplayPlayer(player_t *player)
 {
-	UINT8 i;
+	uint8_t i;
 	for (i = 0; i <= r_splitscreen; i++)
 	{
 		player_t *pl = &players[displayplayers[i]];
@@ -4455,9 +4455,9 @@ static UINT8 K_FirstActiveDisplayPlayer(player_t *player)
 
 // MAXSPLITSCREENPLAYERS not allowed here, warning for change later
 static tic_t duel_lastleveltime[4];
-static INT32 duel_marginanim[4];
-static INT32 duel_lastmargin[4];
-static INT32 youheight[4];
+static int32_t duel_marginanim[4];
+static int32_t duel_lastmargin[4];
+static int32_t youheight[4];
 
 static void K_drawKartDuelScores(void)
 {
@@ -4474,37 +4474,37 @@ static void K_drawKartDuelScores(void)
 	if (stplyr == foe)
 		return;
 
-	boolean use4p = (r_splitscreen) ? 1 : 0;
+	dboolean use4p = (r_splitscreen) ? 1 : 0;
 
-	UINT8 vn = R_GetViewNumber();
+	uint8_t vn = R_GetViewNumber();
 
-	INT32 basex = 0;
-	INT32 basey = 48;
-	INT32 flags = V_SNAPTOLEFT|V_HUDTRANS|V_SLIDEIN;
+	int32_t basex = 0;
+	int32_t basey = 48;
+	int32_t flags = V_SNAPTOLEFT|V_HUDTRANS|V_SLIDEIN;
 
 	// score bars, here barheight is the size of bars at tied score
-	INT32 barx = 8;
-	INT32 bary = 61;
-	INT32 barheight = 48;
-	INT32 barwidth = 6;
+	int32_t barx = 8;
+	int32_t bary = 61;
+	int32_t barheight = 48;
+	int32_t barwidth = 6;
 
 	// portraits
-	INT32 foex = 16;
-	INT32 foey = 21;
-	INT32 youx = 16;
-	INT32 youy = 85;
+	int32_t foex = 16;
+	int32_t foey = 21;
+	int32_t youx = 16;
+	int32_t youy = 85;
 
 	// scores
-	INT32 foescorex = 16;
-	INT32 foescorey = 38;
-	INT32 youscorex = 16;
-	INT32 youscorey = 69;
+	int32_t foescorex = 16;
+	int32_t foescorey = 38;
+	int32_t youscorex = 16;
+	int32_t youscorey = 69;
 
-	INT32 margx = 0;
-	INT32 margy = 0;
+	int32_t margx = 0;
+	int32_t margy = 0;
 
-	boolean redraw = false; // Draw a duplicate?
-	boolean redrawn = false;
+	dboolean redraw = false; // Draw a duplicate?
+	dboolean redrawn = false;
 
 	if (use4p)
 	{
@@ -4552,18 +4552,18 @@ static void K_drawKartDuelScores(void)
 	Draw::Font scorefont = use4p ? Draw::Font::kZVote : Draw::Font::kThinTimer;
 	Draw::Align scorealign = use4p ? Draw::Align::kCenter : Draw::Align::kLeft;
 
-	UINT8 ri = 6;
-	INT32 youfill = skincolors[stplyr->skincolor].ramp[ri];
-	INT32 foefill = skincolors[foe->skincolor].ramp[ri];
+	uint8_t ri = 6;
+	int32_t youfill = skincolors[stplyr->skincolor].ramp[ri];
+	int32_t foefill = skincolors[foe->skincolor].ramp[ri];
 
 	if (use4p)
 		V_DrawScaledPatch(basex, basey, flags, kp_duel_4sticker);
 	else
 		V_DrawScaledPatch(basex, basey, flags, kp_duel_sticker);
 
-	INT32 scoredelta = stplyr->duelscore - foe->duelscore;
-	INT32 clutchscore = DUELWINNINGSCORE - 1; // we want the bar to be full when NEXT checkpoint wins...
-	INT32 savemargin = 3; // ...minus a little bit.
+	int32_t scoredelta = stplyr->duelscore - foe->duelscore;
+	int32_t clutchscore = DUELWINNINGSCORE - 1; // we want the bar to be full when NEXT checkpoint wins...
+	int32_t savemargin = 3; // ...minus a little bit.
 
 	if (leveltime/(TICRATE/2) % 2)
 		savemargin += ((leveltime/2)%2);
@@ -4571,7 +4571,7 @@ static void K_drawKartDuelScores(void)
 	if (clutchscore == 0)
 		clutchscore = 1; // Fuck it, just don't crash
 
-	INT32 targetyouheight = barheight*abs(clutchscore+scoredelta)/clutchscore;
+	int32_t targetyouheight = barheight*abs(clutchscore+scoredelta)/clutchscore;
 
 	if (targetyouheight == 0)
 	{
@@ -4584,14 +4584,14 @@ static void K_drawKartDuelScores(void)
 
 	if (leveltime != duel_lastleveltime[vn])
 	{
-		INT32 slide = std::max(1, abs(targetyouheight - youheight[vn])/3);
+		int32_t slide = std::max(1, abs(targetyouheight - youheight[vn])/3);
 		if (targetyouheight > youheight[vn])
 			youheight[vn] += slide;
 		else if (targetyouheight < youheight[vn])
 			youheight[vn] -= slide;
 	}
 
-	INT32 foeheight = 2*barheight-youheight[vn]; // barheight is a single tied bar, so total height of the full gauge is 2x barheight
+	int32_t foeheight = 2*barheight-youheight[vn]; // barheight is a single tied bar, so total height of the full gauge is 2x barheight
 
 	if (use4p)
 	{
@@ -4634,15 +4634,15 @@ static void K_drawKartDuelScores(void)
 	// minirankings shamelessly copypasted because i know that shit works already
 	// and SURELY we will never need to use this somewhere else, right?
 
-	UINT16 workingskin;
-	UINT8 *colormap;
-	INT32 xoff, yoff, flipflag, skinflags;
+	uint16_t workingskin;
+	uint8_t *colormap;
+	int32_t xoff, yoff, flipflag, skinflags;
 
-	for (UINT8 draw = 0; draw < 2; draw++)
+	for (uint8_t draw = 0; draw < 2; draw++)
 	{
-		UINT8 drawme = draw ? (stplyr - players) : (foe - players);
-		UINT16 drawx = basex + (draw ? youx : foex);
-		UINT16 drawy = basey + (draw ? youy : foey);
+		uint8_t drawme = draw ? (stplyr - players) : (foe - players);
+		uint16_t drawx = basex + (draw ? youx : foex);
+		uint16_t drawy = basey + (draw ? youy : foey);
 
 		if (!playeringame[drawme] || players[drawme].spectator)
 			continue;
@@ -4689,8 +4689,8 @@ static void K_drawKartDuelScores(void)
 	// DESIGN INTENT: Create realistic-looking Puyo garbage stacks, while using the
 	// leading garbage symbol as an indicator of the current Margin Boost value.
 
-	INT32 rawmargin = overtimecheckpoints; // The actual Margin Boost value.
-	INT32 boostspersymbol = 3; // How many boosts should it take to see a new symbol?
+	int32_t rawmargin = overtimecheckpoints; // The actual Margin Boost value.
+	int32_t boostspersymbol = 3; // How many boosts should it take to see a new symbol?
 	// rawmargin = (leveltime/10)%(3*boostspersymbol);
 
 	if (duel_lastleveltime[vn] != leveltime) // Trigger the "slide" animation when rawmargin changes.
@@ -4715,11 +4715,11 @@ static void K_drawKartDuelScores(void)
 		// but we're a HUD hook, so we need to keep the results of the call consistent.
 		P_SetRandSeed(PR_NUISANCE, 69 + rawmargin);
 
-		INT32 highsymbol = rawmargin/boostspersymbol + 1; // Highest symbol that should appear.
-		INT32 symbolsperupgrade = 5; // What is each symbol worth relative to each other? Like, 5 Stars = 1 Moon, etc.
+		int32_t highsymbol = rawmargin/boostspersymbol + 1; // Highest symbol that should appear.
+		int32_t symbolsperupgrade = 5; // What is each symbol worth relative to each other? Like, 5 Stars = 1 Moon, etc.
 
 		// Okay, so we would LOVE to do this in a way that isn't a big clusterfuck, like just
-		// doing rawmargin^3 and then subtracting powers of 5 out of that. Unfortunately, UINT64
+		// doing rawmargin^3 and then subtracting powers of 5 out of that. Unfortunately, uint64_t
 		// is too small for the values that feel intuitively right here, so we have to do some of
 		// the math on a limited set of symbols, then shift up. This is the concept of "symbol
 		// headroom" that's in use here.
@@ -4729,12 +4729,12 @@ static void K_drawKartDuelScores(void)
 		// I dunno. I sort of feel like I should have just directly used the Puyo~n garbage table and
 		// avoided most of this, LOL)
 
-		INT32 symbolheadroom = 5; // Maximum # symbols we can "step down".
-		INT32 frac = rawmargin % boostspersymbol; // Used in intermediate calculations.
-		INT32 minsymbol = std::max(1, highsymbol - symbolheadroom); // The lowest symbol that should appear.
-		INT32 symbolheadroominuse = highsymbol - minsymbol; // The # of symbols we are stepping down.
-		INT32 minscore = std::pow(symbolsperupgrade, symbolheadroominuse+1);
-		INT32 maxscore = std::pow(symbolsperupgrade, symbolheadroominuse+2) - 1;
+		int32_t symbolheadroom = 5; // Maximum # symbols we can "step down".
+		int32_t frac = rawmargin % boostspersymbol; // Used in intermediate calculations.
+		int32_t minsymbol = std::max(1, highsymbol - symbolheadroom); // The lowest symbol that should appear.
+		int32_t symbolheadroominuse = highsymbol - minsymbol; // The # of symbols we are stepping down.
+		int32_t minscore = std::pow(symbolsperupgrade, symbolheadroominuse+1);
+		int32_t maxscore = std::pow(symbolsperupgrade, symbolheadroominuse+2) - 1;
 
 		// CONS_Printf("min %d max %d\n", minscore, maxscore);
 
@@ -4748,12 +4748,12 @@ static void K_drawKartDuelScores(void)
 		fixed_t hibound = FRACUNIT * (frac+1) / boostspersymbol;
 		fixed_t roll = P_RandomRange(PR_NUISANCE, lobound, hibound);
 
-		INT32 margin = Easing_Linear(roll, minscore, maxscore); // The score we're trying to draw a garbage stack for.
+		int32_t margin = Easing_Linear(roll, minscore, maxscore); // The score we're trying to draw a garbage stack for.
 
-		INT32 margindigits[5];
+		int32_t margindigits[5];
 		memset(margindigits, -1, sizeof(margindigits));
 
-		INT32 nummargindigits = 0;
+		int32_t nummargindigits = 0;
 
 		// CONS_Printf("margin %d min %d max %d roll %d shiu %d ms %d\n", margin, minscore, maxscore, roll, symbolheadroominuse, minsymbol);
 
@@ -4761,7 +4761,7 @@ static void K_drawKartDuelScores(void)
 		{
 			// Capped out. Show 5 Chaos.
 			nummargindigits = 5;
-			for(UINT8 i = 0; i < nummargindigits; i++)
+			for(uint8_t i = 0; i < nummargindigits; i++)
 			{
 				margindigits[i] = MARGINLEVELS-1;
 			}
@@ -4774,10 +4774,10 @@ static void K_drawKartDuelScores(void)
 			// a low-precision version of the math that ignores low enough symbols.
 			while (margin > 0)
 			{
-				INT32 significant_margin = 0;
-				for (UINT8 i = symbolheadroominuse+1; i >= 0; i--)
+				int32_t significant_margin = 0;
+				for (uint8_t i = symbolheadroominuse+1; i >= 0; i--)
 				{
-					INT32 test = std::pow(symbolsperupgrade, i);
+					int32_t test = std::pow(symbolsperupgrade, i);
 					// CONS_Printf("testing %d (%d)\n", i, test);
 					if (margin >= test)
 					{
@@ -4786,7 +4786,7 @@ static void K_drawKartDuelScores(void)
 					}
 				}
 
-				INT32 index = significant_margin;
+				int32_t index = significant_margin;
 
 				margindigits[nummargindigits] = index + minsymbol - 1;
 				// CONS_Printf("digit %d %d\n", nummargindigits, margindigits[nummargindigits]);
@@ -4802,10 +4802,10 @@ static void K_drawKartDuelScores(void)
 			}
 		}
 
-		INT32 marginspacing = std::min(6, duel_marginanim[vn]);
-		INT32 marginx = ((nummargindigits-1) * marginspacing)/2;
+		int32_t marginspacing = std::min(6, duel_marginanim[vn]);
+		int32_t marginx = ((nummargindigits-1) * marginspacing)/2;
 
-		for (INT32 i = nummargindigits - 1; i >= 0; i--)
+		for (int32_t i = nummargindigits - 1; i >= 0; i--)
 		{
 			// CONS_Printf("draw %d - %d\n", i, margindigits[i]);
 			V_DrawScaledPatch(basex + margx + marginx, basey + margy, flags, kp_duel_margin[margindigits[i]]);
@@ -4824,13 +4824,13 @@ static void K_drawKartDuelScores(void)
 }
 
 // MAXSPLITSCREENPLAYERS not allowed here, warning for changes later
-static INT32 easedallyscore[4];
+static int32_t easedallyscore[4];
 static tic_t scorechangecooldown[4];
 // Mildly ugly. Don't want to export this to khud when it's so nicely handled here,
 // but HUD hooks run at variable timing based on your actual framerate.
 static tic_t teams_lastleveltime[4];
 
-void K_drawKartTeamScores(boolean fromintermission, INT32 interoffset)
+void K_drawKartTeamScores(dboolean fromintermission, int32_t interoffset)
 {
 	if (G_GametypeHasTeams() == false)
 		return;
@@ -4847,13 +4847,13 @@ void K_drawKartTeamScores(boolean fromintermission, INT32 interoffset)
 	// I get to write HUD code from scratch, so it's going to be horribly
 	// verbose and obnoxious.
 
-	UINT8 use4p = !!(r_splitscreen);
-	UINT8 vn = R_GetViewNumber();
+	uint8_t use4p = !!(r_splitscreen);
+	uint8_t vn = R_GetViewNumber();
 
-	INT32 basex = BASEVIDWIDTH/2 + 20;
-	INT32 basey = 0;
-	INT32 flags = V_HUDTRANS|V_SLIDEIN;
-	INT32 snapflags = V_SNAPTOTOP|V_SNAPTORIGHT;
+	int32_t basex = BASEVIDWIDTH/2 + 20;
+	int32_t basey = 0;
+	int32_t flags = V_HUDTRANS|V_SLIDEIN;
+	int32_t snapflags = V_SNAPTOTOP|V_SNAPTORIGHT;
 
 	if (use4p)
 		snapflags = V_SNAPTOTOP;
@@ -4864,26 +4864,26 @@ void K_drawKartTeamScores(boolean fromintermission, INT32 interoffset)
 	flags |= snapflags;
 
 	// bar stuff, relative to base
-	INT32 barwidth = 124;
-	INT32 barheight = 4;
-	INT32 barx = 5; // 58
-	INT32 bary = 12; // -8
+	int32_t barwidth = 124;
+	int32_t barheight = 4;
+	int32_t barx = 5; // 58
+	int32_t bary = 12; // -8
 
 	// team score stuff, relative to base
-	INT32 scorex = 67;
-	INT32 scorey = 20;
-	INT32 scoregap = 8;
-	INT32 scoreoffset = 1;
+	int32_t scorex = 67;
+	int32_t scorey = 20;
+	int32_t scoregap = 8;
+	int32_t scoreoffset = 1;
 
 	// your score, relative to base
-	INT32 youx = 108;
-	INT32 youy = 26; // youy you arrive at the rising sus
+	int32_t youx = 108;
+	int32_t youy = 26; // youy you arrive at the rising sus
 
 	// minimap team leaders, relative to BARS
-	INT32 facex = -4;
-	INT32 facey = -4;
-	INT32 faceoff = 7;
-	INT32 facesize = 2;
+	int32_t facex = -4;
+	int32_t facey = -4;
+	int32_t faceoff = 7;
+	int32_t facesize = 2;
 
 	if (use4p)
 	{
@@ -4923,15 +4923,15 @@ void K_drawKartTeamScores(boolean fromintermission, INT32 interoffset)
 		basex += interoffset;
 	}
 
-	UINT8 allies = stplyr->team;
-	UINT8 enemies = (allies == TEAM_ORANGE) ? TEAM_BLUE : TEAM_ORANGE;
+	uint8_t allies = stplyr->team;
+	uint8_t enemies = (allies == TEAM_ORANGE) ? TEAM_BLUE : TEAM_ORANGE;
 
-	UINT8 *allycolor = R_GetTranslationColormap(TC_RAINBOW, g_teaminfo[allies].color, GTC_CACHE);
-	UINT8 *enemycolor = R_GetTranslationColormap(TC_RAINBOW, g_teaminfo[enemies].color, GTC_CACHE);
+	uint8_t *allycolor = R_GetTranslationColormap(TC_RAINBOW, g_teaminfo[allies].color, GTC_CACHE);
+	uint8_t *enemycolor = R_GetTranslationColormap(TC_RAINBOW, g_teaminfo[enemies].color, GTC_CACHE);
 
-	UINT16 allyscore = g_teamscores[allies];
-	UINT16 enemyscore = g_teamscores[enemies];
-	UINT16 totalscore = allyscore + enemyscore;
+	uint16_t allyscore = g_teamscores[allies];
+	uint16_t enemyscore = g_teamscores[enemies];
+	uint16_t totalscore = allyscore + enemyscore;
 
 	if (totalscore == 0)
 		return;
@@ -4957,23 +4957,23 @@ void K_drawKartTeamScores(boolean fromintermission, INT32 interoffset)
 		}
 	}
 
-	UINT32 youscore = stplyr->teamimportance;
+	uint32_t youscore = stplyr->teamimportance;
 	if (gametyperules & GTR_POINTLIMIT)
 	{
 		youscore = stplyr->roundscore;
 	}
 
-	UINT8 ri = 6; // "ramp index", picks drawfill color from team skincolors
-	INT32 allyfill = skincolors[g_teaminfo[allies].color].ramp[ri];
-	INT32 enemyfill = skincolors[g_teaminfo[enemies].color].ramp[ri];
+	uint8_t ri = 6; // "ramp index", picks drawfill color from team skincolors
+	int32_t allyfill = skincolors[g_teaminfo[allies].color].ramp[ri];
+	int32_t enemyfill = skincolors[g_teaminfo[enemies].color].ramp[ri];
 
-	INT32 winning = 0;
+	int32_t winning = 0;
 	if (allyscore > enemyscore)
 		winning = 1;
 	else if (enemyscore > allyscore)
 		winning = -1;
 
-	UINT8 *winnercolor = (winning == 1) ?
+	uint8_t *winnercolor = (winning == 1) ?
 		R_GetTranslationColormap(TC_RAINBOW, g_teaminfo[allies].color, GTC_CACHE) :
 		R_GetTranslationColormap(TC_RAINBOW, g_teaminfo[enemies].color, GTC_CACHE);
 
@@ -4989,7 +4989,7 @@ void K_drawKartTeamScores(boolean fromintermission, INT32 interoffset)
 	{
 		if (teams_lastleveltime[vn] != leveltime) // Timing consistency
 		{
-			INT32 delta = abs(easedallyscore[vn] - allyscore); // how wrong is display score?
+			int32_t delta = abs(easedallyscore[vn] - allyscore); // how wrong is display score?
 
 			if (scorechangecooldown[vn] == 0 && delta)
 			{
@@ -5021,24 +5021,24 @@ void K_drawKartTeamScores(boolean fromintermission, INT32 interoffset)
 
 	fixed_t enemypercent = FixedDiv(enemyscore*FRACUNIT, totalscore*FRACUNIT);
 	// fixed_t allypercent = FixedDiv(allyscore*FRACUNIT, totalscore*FRACUNIT);
-	INT32 enemywidth = FixedInt(FixedMul(enemypercent, barwidth*FRACUNIT));
-	INT32 allywidth = barwidth - enemywidth;
+	int32_t enemywidth = FixedInt(FixedMul(enemypercent, barwidth*FRACUNIT));
+	int32_t allywidth = barwidth - enemywidth;
 
 	player_t *bestenemy = NULL;
-	INT32 bestenemyscore = -1;
+	int32_t bestenemyscore = -1;
 	player_t *bestally = NULL;
-	INT32 bestallyscore = -1;
+	int32_t bestallyscore = -1;
 
-	boolean useroundscore = false;
+	dboolean useroundscore = false;
 	if (gametyperules & GTR_POINTLIMIT)
 		useroundscore = true;
 
-	for (UINT8 i = 0; i < MAXPLAYERS; i++)
+	for (uint8_t i = 0; i < MAXPLAYERS; i++)
 	{
 		if (!playeringame[i] || players[i].spectator || players[i].team == TEAM_UNASSIGNED)
 			continue;
 
-		INT32 score = useroundscore ? players[i].roundscore : players[i].teamimportance;
+		int32_t score = useroundscore ? players[i].roundscore : players[i].teamimportance;
 
 		if (players[i].team == allies)
 		{
@@ -5060,8 +5060,8 @@ void K_drawKartTeamScores(boolean fromintermission, INT32 interoffset)
 
 	// Draw at the top and bottom of the screen in 4P.
 	// Draw only at the bottom in intermission.
-	boolean shouldsecondpass = (r_splitscreen > 1);
-	boolean onsecondpass = fromintermission;
+	dboolean shouldsecondpass = (r_splitscreen > 1);
+	dboolean onsecondpass = fromintermission;
 
 	draw:
 
@@ -5091,8 +5091,8 @@ void K_drawKartTeamScores(boolean fromintermission, INT32 interoffset)
 	V_DrawFill(basex+barx+enemywidth, basey+bary, allywidth, barheight, allyfill|flags);
 
 	// Goofy, but we want the winning team to draw on top
-	boolean drawally = (winning != 1);
-	for (UINT8 drew = 0; drew < 2; drew++)
+	dboolean drawally = (winning != 1);
+	for (uint8_t drew = 0; drew < 2; drew++)
 	{
 		if (use4p)
 		{
@@ -5109,12 +5109,12 @@ void K_drawKartTeamScores(boolean fromintermission, INT32 interoffset)
 		{
 			if (bestenemy && !drawally)
 			{
-				UINT8 *colormap = R_GetTranslationColormap(bestenemy->skin, static_cast<skincolornum_t>(bestenemy->skincolor), GTC_CACHE);
+				uint8_t *colormap = R_GetTranslationColormap(bestenemy->skin, static_cast<skincolornum_t>(bestenemy->skincolor), GTC_CACHE);
 				V_DrawMappedPatch(basex+barx+facex+enemywidth-facesize+faceoff, basey+bary+facey, flags|V_FLIP, faceprefix[bestenemy->skin][FACE_MINIMAP], colormap);
 			}
 			if (bestally && drawally)
 			{
-				UINT8 *colormap = R_GetTranslationColormap(bestally->skin, static_cast<skincolornum_t>(bestally->skincolor), GTC_CACHE);
+				uint8_t *colormap = R_GetTranslationColormap(bestally->skin, static_cast<skincolornum_t>(bestally->skincolor), GTC_CACHE);
 				V_DrawMappedPatch(basex+barx+facex+enemywidth+facesize, basey+bary+facey, flags, faceprefix[bestally->skin][FACE_MINIMAP], colormap);
 			}
 		}
@@ -5150,9 +5150,9 @@ void K_drawKartTeamScores(boolean fromintermission, INT32 interoffset)
 	}
 
 	/*
-	for (INT32 i = TEAM_UNASSIGNED+1; i < TEAM__MAX; i++)
+	for (int32_t i = TEAM_UNASSIGNED+1; i < TEAM__MAX; i++)
 	{
-		INT32 x = BASEVIDWIDTH/2;
+		int32_t x = BASEVIDWIDTH/2;
 
 		x += -12 + (24 * (i - 1));
 
@@ -5160,7 +5160,7 @@ void K_drawKartTeamScores(boolean fromintermission, INT32 interoffset)
 
 		if (stplyr->team == i)
 		{
-			UINT32 individual_score = stplyr->teamimportance;
+			uint32_t individual_score = stplyr->teamimportance;
 			if (gametyperules & GTR_POINTLIMIT)
 			{
 				individual_score = stplyr->roundscore;
@@ -5172,14 +5172,14 @@ void K_drawKartTeamScores(boolean fromintermission, INT32 interoffset)
 	*/
 }
 
-static boolean K_DrawingLaps()
+static dboolean K_DrawingLaps()
 {
-	return (numlaps != 1 && !K_InRaceDuel() && (UINT16)stplyr->exp != UINT16_MAX);
+	return (numlaps != 1 && !K_InRaceDuel() && (uint16_t)stplyr->exp != UINT16_MAX);
 }
 
-static UINT16 K_GetDisplayEXP()									//SCS - RADIO START
+static uint16_t K_GetDisplayEXP()									//SCS - RADIO START
 {
-	UINT16 displayEXP = stplyr->karthud[khud_exp];
+	uint16_t displayEXP = stplyr->karthud[khud_exp];
 
 	// Odds debugger
 	if (cv_vorpal.value)
@@ -5191,16 +5191,16 @@ static UINT16 K_GetDisplayEXP()									//SCS - RADIO START
 }		
 
 static void RR_handleExpLogicMini(
-	INT32 bump,
-	boolean drewsticker,
-	UINT16 dancecolor,
-	INT32 danceflag,
-	UINT16 displayEXP
+	int32_t bump,
+	dboolean drewsticker,
+	uint16_t dancecolor,
+	int32_t danceflag,
+	uint16_t displayEXP
 )
 {
-	INT32 fx = LAPS_X + bump, fy = LAPS_Y, fr = 0;
-	INT32 flipflag = 0;
-	INT32 splitflags = V_SNAPTOLEFT|V_SNAPTOBOTTOM;
+	int32_t fx = LAPS_X + bump, fy = LAPS_Y, fr = 0;
+	int32_t flipflag = 0;
+	int32_t splitflags = V_SNAPTOLEFT|V_SNAPTOBOTTOM;
 
 	fr = fx;
 
@@ -5231,23 +5231,23 @@ static void RR_handleExpLogicMini(
 	row.text("{:03}", displayEXP);
 }														//SCS - RADIO END
 
-static boolean K_drawKartLaps(void)
+static dboolean K_drawKartLaps(void)
 {
-	INT32 splitflags = V_SNAPTOBOTTOM|V_SNAPTOLEFT|V_SPLITSCREEN;
-	INT32 bump = 0;
-	INT32 basebump = 0;
-	boolean drewsticker = false;
+	int32_t splitflags = V_SNAPTOBOTTOM|V_SNAPTOLEFT|V_SPLITSCREEN;
+	int32_t bump = 0;
+	int32_t basebump = 0;
+	dboolean drewsticker = false;
 	
-	const boolean DRAW_EXP_ON_PLAYER = cv_exponplayer.value == 1;							//SCS - RADIO START
-	const boolean DRAW_RINGS_ON_PLAYER = cv_ringsonplayer.value == 1;
-	const boolean DRAW_MINI_HUD_DETAILS = cv_hud_compact.value == 1 && r_splitscreen == 0;
+	const dboolean DRAW_EXP_ON_PLAYER = cv_exponplayer.value == 1;							//SCS - RADIO START
+	const dboolean DRAW_RINGS_ON_PLAYER = cv_ringsonplayer.value == 1;
+	const dboolean DRAW_MINI_HUD_DETAILS = cv_hud_compact.value == 1 && r_splitscreen == 0;
 
-	INT32 OLD_LAPS_Y = LAPS_Y;
+	int32_t OLD_LAPS_Y = LAPS_Y;
 	if (DRAW_MINI_HUD_DETAILS) {
 		LAPS_Y = LAPS_MINI_Y;
 	}																						//SCS - RADIO END
 
-	UINT16 displayEXP = stplyr->karthud[khud_exp];
+	uint16_t displayEXP = stplyr->karthud[khud_exp];
 
 	// Odds debugger
 	if (cv_vorpal.value)
@@ -5260,7 +5260,7 @@ static boolean K_drawKartLaps(void)
 	// I do not understand the way this system of offsets is laid out at all,
 	// so it's probably going to be pretty bad to maintain. Sorry.
 
-	boolean drawinglaps = (numlaps != 1 && !K_InRaceDuel() && displayEXP != UINT16_MAX);
+	dboolean drawinglaps = (numlaps != 1 && !K_InRaceDuel() && displayEXP != UINT16_MAX);
 
 	if (drawinglaps)
 	{
@@ -5280,8 +5280,8 @@ static boolean K_drawKartLaps(void)
 		if (r_splitscreen > 1 || DRAW_MINI_HUD_DETAILS)							//SCS EDIT - RADIO
 		{
 
-			INT32 fx = 0, fy = 0, fr = 0;
-			INT32 flipflag = 0;
+			int32_t fx = 0, fy = 0, fr = 0;
+			int32_t flipflag = 0;
 
 			// pain and suffering defined below
 			if (r_splitscreen < 2)	// don't change shit for THIS splitscreen.
@@ -5361,12 +5361,12 @@ static boolean K_drawKartLaps(void)
 		}
 	}
 
-	boolean dance = (stplyr->exp > (UINT32)stplyr->karthud[khud_exp]);
-	INT32 danceflag = dance ? V_STRINGDANCE : 0;
-	UINT16 dancecolor = dance ? SKINCOLOR_AQUAMARINE : 0;
-	INT32 expFlags = V_HUDTRANS|V_SLIDEIN|splitflags;			//SCS - RADIO START
-	INT32 EXP_X = LAPS_X;
-	INT32 EXP_Y = LAPS_Y;										//SCS - RADIO END
+	dboolean dance = (stplyr->exp > (uint32_t)stplyr->karthud[khud_exp]);
+	int32_t danceflag = dance ? V_STRINGDANCE : 0;
+	uint16_t dancecolor = dance ? SKINCOLOR_AQUAMARINE : 0;
+	int32_t expFlags = V_HUDTRANS|V_SLIDEIN|splitflags;			//SCS - RADIO START
+	int32_t EXP_X = LAPS_X;
+	int32_t EXP_Y = LAPS_Y;										//SCS - RADIO END
 
 	// EXP
 	if (displayEXP == UINT16_MAX)
@@ -5380,8 +5380,8 @@ static boolean K_drawKartLaps(void)
 	}																						//SCS EDIT - RADIO END
 	else if (r_splitscreen > 1)
 	{
-		INT32 fx = 0, fy = 0, fr = 0;
-		INT32 flipflag = 0;
+		int32_t fx = 0, fy = 0, fr = 0;
+		int32_t flipflag = 0;
 
 		// pain and suffering defined below
 		if (r_splitscreen < 2)	// don't change shit for THIS splitscreen.
@@ -5454,7 +5454,7 @@ static boolean K_drawKartLaps(void)
 				expFlags &= ~V_SLIDEIN;
 				expFlags &= ~splitflags;
 
-				const boolean doesPlayerHaveMo = !((stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo)));
+				const dboolean doesPlayerHaveMo = !((stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo)));
 				if (doesPlayerHaveMo)
 				{
 					// Get X,Y coordinates for player relative to the HUD
@@ -5504,9 +5504,9 @@ static boolean K_drawKartLaps(void)
 
 #define RINGANIM_FLIPFRAME (RINGANIM_NUMFRAMES/2)
 
-static void K_DrawLivesDigits(INT32 x, INT32 y, INT32 width, INT32 flags, patch_t *font[10])
+static void K_DrawLivesDigits(int32_t x, int32_t y, int32_t width, int32_t flags, patch_t *font[10])
 {
-	const SINT8 tens = stplyr->lives / 10;
+	const int8_t tens = stplyr->lives / 10;
 
 	if (tens)
 	{
@@ -5518,9 +5518,9 @@ static void K_DrawLivesDigits(INT32 x, INT32 y, INT32 width, INT32 flags, patch_
 }
 
 // RadioRacers: Split K_drawKartSpeedometer functionality into different util functions, for reusability
-static UINT8 K_GetKartSpeedometerLabel()																	//SCS - RADIO START
+static uint8_t K_GetKartSpeedometerLabel()																	//SCS - RADIO START
 {
-	UINT8 labeln = 0;
+	uint8_t labeln = 0;
 
 	if (!stplyr->exiting) // Keep the same speed value as when you crossed the finish line!
 	{
@@ -5583,23 +5583,23 @@ static void K_GetKartSpeedometerNumbers(uint8_t numbers[3])
 // partial code repetition, but the behaviour has to be somewhat consistent
 // also reduce rebasing work
 static void RR_drawRingCounterOnPlayer(
-	INT32 ringx, INT32 ringflip, SINT8 ringanim_realframe, boolean colorring, UINT8 *ringmap, UINT16 superringcolor)
+	int32_t ringx, int32_t ringflip, int8_t ringanim_realframe, dboolean colorring, uint8_t *ringmap, uint16_t superringcolor)
 {
-	const INT32 ringcounterflags = V_HUDTRANS;
-	INT32 ringstickerwidth = 33;
-	INT32 RINGC_X = 0;
-	INT32 fy = 0;
-	const INT32 bailbarlength = (r_splitscreen > 1 ? 10 : 20);					//SCS ADD
-	INT32 bailbar = 0;															//SCS ADD
-	UINT16 digitcolor;															//SCS ADD
+	const int32_t ringcounterflags = V_HUDTRANS;
+	int32_t ringstickerwidth = 33;
+	int32_t RINGC_X = 0;
+	int32_t fy = 0;
+	const int32_t bailbarlength = (r_splitscreen > 1 ? 10 : 20);					//SCS ADD
+	int32_t bailbar = 0;															//SCS ADD
+	uint16_t digitcolor;															//SCS ADD
 
-	const boolean DRAW_SPEEDO_ON_PLAYER = (cv_kartspeedometer.value && cv_speedometeronplayer.value);
-	const boolean DRAW_EXP_ON_PLAYER = cv_exponplayer.value == 1;
+	const dboolean DRAW_SPEEDO_ON_PLAYER = (cv_kartspeedometer.value && cv_speedometeronplayer.value);
+	const dboolean DRAW_EXP_ON_PLAYER = cv_exponplayer.value == 1;
 
 	{
 		trackingResult_t result;
 
-		const boolean doesPlayerHaveMo = !((stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo)));
+		const dboolean doesPlayerHaveMo = !((stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo)));
 		if (doesPlayerHaveMo)
 		{
 			// Get X,Y coordinates for player relative to the HUD
@@ -5653,7 +5653,7 @@ static void RR_drawRingCounterOnPlayer(
 
 		if (stplyr->amps)
 		{
-			UINT8 amplevel = std::min(stplyr->amps / AMPLEVEL, 6);
+			uint8_t amplevel = std::min(stplyr->amps / AMPLEVEL, 6);
 
 			V_DrawMappedPatch(RINGC_X+7-7, fy-5-8, ringcounterflags, kp_amps[amplevel][leveltime%12], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE));
 			if (amplevel == 6)
@@ -5663,7 +5663,7 @@ static void RR_drawRingCounterOnPlayer(
 		}
 	}
 
-	INT32 hr = stplyr->hudrings;
+	int32_t hr = stplyr->hudrings;
 
 	if (stplyr->baildrop)
 		hr += -1 * (stplyr->baildrop / BAIL_DROPFREQUENCY);
@@ -5676,9 +5676,9 @@ static void RR_drawRingCounterOnPlayer(
 		if (hr < -1*stplyr->ringlimit)
 		{
 			bailbar = abs(hr);
-			const INT32 fill = ((bailbar*bailbarlength)/(180-bailbarlength));
-			const INT32 length = std::min(bailbarlength, fill);
-			const INT32 height = 1;
+			const int32_t fill = ((bailbar*bailbarlength)/(180-bailbarlength));
+			const int32_t length = std::min(bailbarlength, fill);
+			const int32_t height = 1;
 
 			V_DrawScaledPatch(RINGC_X+24-1, fy+6, ringcounterflags, kp_ringmeterbail[0]);
 			// The left dark "AA" edge
@@ -5874,7 +5874,7 @@ static void RR_drawRingCounterOnPlayer(
 	if (DRAW_EXP_ON_PLAYER && !DRAW_SPEEDO_ON_PLAYER)
 	{
 		const int exp_x = RINGC_X - 36;
-		const INT32 exp_y = fy - 7;
+		const int32_t exp_y = fy - 7;
 
 		V_DrawMappedPatch(exp_x, exp_y, V_HUDTRANS, kp_exp[0], R_GetTranslationColormap(TC_RAINBOW, SKINCOLOR_MUSTARD, GTC_CACHE));
 
@@ -5884,9 +5884,9 @@ static void RR_drawRingCounterOnPlayer(
 
 		V_DrawMappedPatch(exp_x, exp_y, V_HUDTRANS|transflag, kp_exp[0], colormap);
 
-		boolean dance = (stplyr->exp > (UINT32)stplyr->karthud[khud_exp]);
-		INT32 danceflag = dance ? V_STRINGDANCE : 0;
-		UINT16 dancecolor = dance ? SKINCOLOR_AQUAMARINE : 0;
+		dboolean dance = (stplyr->exp > (uint32_t)stplyr->karthud[khud_exp]);
+		int32_t danceflag = dance ? V_STRINGDANCE : 0;
+		uint16_t dancecolor = dance ? SKINCOLOR_AQUAMARINE : 0;
 
 		using srb2::Draw;
 		Draw row = Draw(exp_x+23, exp_y+3).flags(V_HUDTRANS|danceflag).font(Draw::Font::kThinTimer).colorize(dancecolor);
@@ -5895,24 +5895,24 @@ static void RR_drawRingCounterOnPlayer(
 }
 
 static void RR_handleRingCounterLogicMini(
-	boolean gametypeinfoshown, 
-	boolean uselives,
-	INT32 ringx, 
-	INT32 ringflip, 
-	SINT8 ringanim_realframe, 
-	boolean colorring, 
-	UINT8 *ringmap, 
-	UINT16 superringcolor,
-	UINT8 *rn
+	dboolean gametypeinfoshown, 
+	dboolean uselives,
+	int32_t ringx, 
+	int32_t ringflip, 
+	int8_t ringanim_realframe, 
+	dboolean colorring, 
+	uint8_t *ringmap, 
+	uint16_t superringcolor,
+	uint8_t *rn
 )
 {
-	const boolean DRAW_RINGS_ON_PLAYER = cv_ringsonplayer.value == 1;
+	const dboolean DRAW_RINGS_ON_PLAYER = cv_ringsonplayer.value == 1;
 
-	INT32 fx = LAPS_X, fy = LAPS_Y, fr = fx;
-	INT32 splitflags = V_SNAPTOLEFT|V_SNAPTOBOTTOM;
-	const INT32 flipflag = 0;
-	const INT32 bailbarlength = 10;					//SCS ADD
-	INT32 bailbar = 0;															//SCS ADD
+	int32_t fx = LAPS_X, fy = LAPS_Y, fr = fx;
+	int32_t splitflags = V_SNAPTOLEFT|V_SNAPTOBOTTOM;
+	const int32_t flipflag = 0;
+	const int32_t bailbarlength = 10;					//SCS ADD
+	int32_t bailbar = 0;															//SCS ADD
 
 	if (gametypeinfoshown)
 	{
@@ -5923,26 +5923,26 @@ static void RR_handleRingCounterLogicMini(
 	if (!uselives)
 	{
 		if (!DRAW_RINGS_ON_PLAYER) {
-			V_DrawScaledPatch(fx-2 + (flipflag ? (SHORT(kp_ringstickersplit[1]->width) - 3) : 0), fy, V_HUDTRANS|V_SLIDEIN|splitflags|flipflag, kp_ringstickersplit[1]);
+			V_DrawScaledPatch(fx-2 + (flipflag ? (LSBF_SHORT(kp_ringstickersplit[1]->width) - 3) : 0), fy, V_HUDTRANS|V_SLIDEIN|splitflags|flipflag, kp_ringstickersplit[1]);
 			if (flipflag)
 				fr += 15;
 		}
 	} else {
 		if (DRAW_RINGS_ON_PLAYER) {
-			V_DrawScaledPatch(fx-2 + (flipflag ? (SHORT(kp_ringstickersplit[1]->width) - 3) : 0), fy, V_HUDTRANS|V_SLIDEIN|splitflags|flipflag, kp_ringstickersplit[1]);
+			V_DrawScaledPatch(fx-2 + (flipflag ? (LSBF_SHORT(kp_ringstickersplit[1]->width) - 3) : 0), fy, V_HUDTRANS|V_SLIDEIN|splitflags|flipflag, kp_ringstickersplit[1]);
 		} else {
-			V_DrawScaledPatch(fx-2 + (flipflag ? (SHORT(kp_ringstickersplit[0]->width) - 3) : 0), fy, V_HUDTRANS|V_SLIDEIN|splitflags|flipflag, kp_ringstickersplit[0]);
+			V_DrawScaledPatch(fx-2 + (flipflag ? (LSBF_SHORT(kp_ringstickersplit[0]->width) - 3) : 0), fy, V_HUDTRANS|V_SLIDEIN|splitflags|flipflag, kp_ringstickersplit[0]);
 		}
 	}
 
 
-	UINT8 ampx = 2 + 8;
-	UINT8 ampy = 1 + 8;
-	UINT8 odx = 11;
-	UINT8 ody = 9;
+	uint8_t ampx = 2 + 8;
+	uint8_t ampy = 1 + 8;
+	uint8_t odx = 11;
+	uint8_t ody = 9;
 
-	UINT32 greyout = V_HUDTRANS;
-	SINT8 superoffset = 5;
+	uint32_t greyout = V_HUDTRANS;
+	int8_t superoffset = 5;
 
 	if (DRAW_RINGS_ON_PLAYER) {
 		RR_drawRingCounterOnPlayer(ringx, ringflip, ringanim_realframe, colorring, ringmap, superringcolor);
@@ -5957,7 +5957,7 @@ static void RR_handleRingCounterLogicMini(
 
 			if (stplyr->amps)
 			{
-				UINT8 amplevel = std::min(stplyr->amps / AMPLEVEL, 6);
+				uint8_t amplevel = std::min(stplyr->amps / AMPLEVEL, 6);
 
 				V_DrawMappedPatch(fr-ampx, fy-3-ampy, V_HUDTRANS|V_SLIDEIN|splitflags, kp_amps[amplevel][leveltime%12], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE));
 				if (amplevel == 6)
@@ -5967,7 +5967,7 @@ static void RR_handleRingCounterLogicMini(
 			}
 		}
 
-		INT32 hr = stplyr->hudrings;
+		int32_t hr = stplyr->hudrings;
 
 		if (stplyr->baildrop)
 			hr += -1 * (stplyr->baildrop / BAIL_DROPFREQUENCY);
@@ -5980,9 +5980,9 @@ static void RR_handleRingCounterLogicMini(
 			if (hr < -1*stplyr->ringlimit)																								//SCS ADD START
 			{
 				bailbar = abs(hr);
-				const INT32 fill = ((bailbar*bailbarlength)/(100-bailbarlength));
-				const INT32 length = std::min(bailbarlength, fill);
-				const INT32 height = 1;
+				const int32_t fill = ((bailbar*bailbarlength)/(100-bailbarlength));
+				const int32_t length = std::min(bailbarlength, fill);
+				const int32_t height = 1;
 
 				V_DrawScaledPatch(fr+11-1, fy+6, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbail[1]);
 				// The left dark "AA" edge
@@ -6121,9 +6121,9 @@ static void RR_handleRingCounterLogicMini(
 		if (stplyr->inkblotchtimer >= 10 || (stplyr->inkblotchtimer && stplyr->inkblotchtimer < 10 && leveltime % 2 == 0))			//SCS ADD - want it to flicker when about to disappear
 		{
 			if (uselives)
-				V_DrawScaledPatch(fx-6 + (flipflag ? (SHORT(kp_inkblotches[6]->width) - 3) : 0), fy-8, V_HUDTRANS|V_SLIDEIN, kp_inkblotches[6]);
+				V_DrawScaledPatch(fx-6 + (flipflag ? (LSBF_SHORT(kp_inkblotches[6]->width) - 3) : 0), fy-8, V_HUDTRANS|V_SLIDEIN, kp_inkblotches[6]);
 			else
-				V_DrawScaledPatch(fx-6 + (flipflag ? (SHORT(kp_inkblotches[7]->width) - 3) : 0), fy-8, V_HUDTRANS|V_SLIDEIN, kp_inkblotches[7]);
+				V_DrawScaledPatch(fx-6 + (flipflag ? (LSBF_SHORT(kp_inkblotches[7]->width) - 3) : 0), fy-8, V_HUDTRANS|V_SLIDEIN, kp_inkblotches[7]);
 			
 		}
 		
@@ -6153,8 +6153,8 @@ static void RR_handleRingCounterLogicMini(
 	// Lives
 	if (uselives)
 	{
-		INT32 lives_x = fr+21;
-		INT32 lives_face_x = fr+34;
+		int32_t lives_x = fr+21;
+		int32_t lives_face_x = fr+34;
 		if (DRAW_RINGS_ON_PLAYER) {
 			lives_x = fr+5;
 			lives_face_x = lives_x+13;
@@ -6165,7 +6165,7 @@ static void RR_handleRingCounterLogicMini(
 				lives_face_x+= 5; 
 			}
 		}
-		UINT8 *colormap = R_GetTranslationColormap(stplyr->skin, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE);
+		uint8_t *colormap = R_GetTranslationColormap(stplyr->skin, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE);
 		V_DrawMappedPatch(lives_x, fy-3, V_SLIDEIN|splitflags|greyout, faceprefix[stplyr->skin][FACE_MINIMAP], colormap);
 		if (stplyr->lives >= 0)
 			K_DrawLivesDigits(lives_face_x, fy, 4, V_SLIDEIN|splitflags|greyout, fontv[PINGNUM_FONT].font);
@@ -6181,29 +6181,29 @@ static void RR_handleRingCounterLogicMini(
 	}
 }																													//SCS - RADIO END
 
-static void K_drawRingCounter(boolean gametypeinfoshown)
+static void K_drawRingCounter(dboolean gametypeinfoshown)
 {
-	const boolean uselives = G_GametypeUsesLives();
-	SINT8 ringanim_realframe = stplyr->karthud[khud_ringframe];
-	INT32 splitflags = V_SNAPTOBOTTOM|V_SNAPTOLEFT|V_SPLITSCREEN;
-	UINT8 rn[2];
-	INT32 ringflip = 0;
-	UINT8 *ringmap = NULL;
-	boolean colorring = false;
-	//INT32 ringx = 0, fy = 0;
-	INT32 ringx = 0, fy = 0, lives_y = 0;										//SCS - RADIO
-	const INT32 bailbarlength = (r_splitscreen > 1 ? 10 : 20);					//SCS ADD
-	INT32 bailbar = 0;															//SCS ADD
-	UINT16 digitcolor;															//SCS ADD
+	const dboolean uselives = G_GametypeUsesLives();
+	int8_t ringanim_realframe = stplyr->karthud[khud_ringframe];
+	int32_t splitflags = V_SNAPTOBOTTOM|V_SNAPTOLEFT|V_SPLITSCREEN;
+	uint8_t rn[2];
+	int32_t ringflip = 0;
+	uint8_t *ringmap = NULL;
+	dboolean colorring = false;
+	//int32_t ringx = 0, fy = 0;
+	int32_t ringx = 0, fy = 0, lives_y = 0;										//SCS - RADIO
+	const int32_t bailbarlength = (r_splitscreen > 1 ? 10 : 20);					//SCS ADD
+	int32_t bailbar = 0;															//SCS ADD
+	uint16_t digitcolor;															//SCS ADD
 
-	const boolean DRAW_MINI_HUD_DETAILS = cv_hud_compact.value == 1 && r_splitscreen == 0;		//SCS - RADIO START
-	const boolean DRAW_RINGS_ON_PLAYER = cv_ringsonplayer.value == 1;
+	const dboolean DRAW_MINI_HUD_DETAILS = cv_hud_compact.value == 1 && r_splitscreen == 0;		//SCS - RADIO START
+	const dboolean DRAW_RINGS_ON_PLAYER = cv_ringsonplayer.value == 1;
 
-	const INT32 OLD_LAPS_Y = LAPS_Y;
+	const int32_t OLD_LAPS_Y = LAPS_Y;
 	if (DRAW_MINI_HUD_DETAILS)
 		LAPS_Y = LAPS_MINI_Y;
 																								//SCS - RADIO END
-	UINT16 superringcolor = SKINCOLOR_SAPPHIRE;
+	uint16_t superringcolor = SKINCOLOR_SAPPHIRE;
 	if (stplyr->momentboost)
 	{
 		if (!cv_reducevfx.value)
@@ -6263,14 +6263,14 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 	{
 		ringflip = V_FLIP;
 		ringanim_realframe = RINGANIM_NUMFRAMES-stplyr->karthud[khud_ringframe];
-		ringx += SHORT((r_splitscreen > 1 || (DRAW_MINI_HUD_DETAILS && !DRAW_RINGS_ON_PLAYER)) ? kp_smallring[ringanim_realframe]->width : kp_ring[ringanim_realframe]->width);	//SCS EDIT - RADIO
+		ringx += LSBF_SHORT((r_splitscreen > 1 || (DRAW_MINI_HUD_DETAILS && !DRAW_RINGS_ON_PLAYER)) ? kp_smallring[ringanim_realframe]->width : kp_ring[ringanim_realframe]->width);	//SCS EDIT - RADIO
 	}
 
 	if (DRAW_MINI_HUD_DETAILS) {																																		//SCS EDIT - RADIO
 		RR_handleRingCounterLogicMini(gametypeinfoshown, uselives, ringx, ringflip, ringanim_realframe, colorring, ringmap, superringcolor, rn);
 	} else if (r_splitscreen > 1) {
-		INT32 fx = 0, fr = 0;
-		INT32 flipflag = 0;
+		int32_t fx = 0, fr = 0;
+		int32_t flipflag = 0;
 
 		// pain and suffering defined below
 		if (r_splitscreen < 2)	// don't change shit for THIS splitscreen.
@@ -6305,26 +6305,26 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 		if (stplyr->inkblotchtimer >= 10 || (stplyr->inkblotchtimer && stplyr->inkblotchtimer < 10 && leveltime % 2 == 0))			//SCS ADD - want it to flicker when about to disappear
 		{
 			if (uselives)
-				V_DrawScaledPatch(fx-2 + (flipflag ? (SHORT(kp_inkblotches[6]->width) - 3) : 0), fy-3, V_HUDTRANS|V_SLIDEIN, kp_inkblotches[6]);
+				V_DrawScaledPatch(fx-2 + (flipflag ? (LSBF_SHORT(kp_inkblotches[6]->width) - 3) : 0), fy-3, V_HUDTRANS|V_SLIDEIN, kp_inkblotches[6]);
 			else
-				V_DrawScaledPatch(fx-2 + (flipflag ? (SHORT(kp_inkblotches[7]->width) - 3) : 0), fy-3, V_HUDTRANS|V_SLIDEIN, kp_inkblotches[7]);
+				V_DrawScaledPatch(fx-2 + (flipflag ? (LSBF_SHORT(kp_inkblotches[7]->width) - 3) : 0), fy-3, V_HUDTRANS|V_SLIDEIN, kp_inkblotches[7]);
 			
 		}
 
 		// Rings
 		if (!uselives)
 		{
-			V_DrawScaledPatch(fx-2 + (flipflag ? (SHORT(kp_ringstickersplit[1]->width) - 3) : 0), fy, V_HUDTRANS|V_SLIDEIN|splitflags|flipflag, kp_ringstickersplit[1]);
+			V_DrawScaledPatch(fx-2 + (flipflag ? (LSBF_SHORT(kp_ringstickersplit[1]->width) - 3) : 0), fy, V_HUDTRANS|V_SLIDEIN|splitflags|flipflag, kp_ringstickersplit[1]);
 			if (flipflag)
 				fr += 15;
 		}
 		else
-			V_DrawScaledPatch(fx-2 + (flipflag ? (SHORT(kp_ringstickersplit[0]->width) - 3) : 0), fy, V_HUDTRANS|V_SLIDEIN|splitflags|flipflag, kp_ringstickersplit[0]);
+			V_DrawScaledPatch(fx-2 + (flipflag ? (LSBF_SHORT(kp_ringstickersplit[0]->width) - 3) : 0), fy, V_HUDTRANS|V_SLIDEIN|splitflags|flipflag, kp_ringstickersplit[0]);
 		
-		UINT8 ampx = 2 + 8;
-		UINT8 ampy = 1 + 8;
-		UINT8 odx = 11;
-		UINT8 ody = 9;
+		uint8_t ampx = 2 + 8;
+		uint8_t ampy = 1 + 8;
+		uint8_t odx = 11;
+		uint8_t ody = 9;
 		
 		if (stplyr->overdrive)
 		{
@@ -6336,7 +6336,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 
 			if (stplyr->amps)
 			{
-				UINT8 amplevel = std::min(stplyr->amps / AMPLEVEL, 6);
+				uint8_t amplevel = std::min(stplyr->amps / AMPLEVEL, 6);
 
 				V_DrawMappedPatch(fr-ampx, fy-3-ampy, V_HUDTRANS|V_SLIDEIN|splitflags, kp_amps[amplevel][leveltime%12], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE));
 				if (amplevel == 6)
@@ -6357,7 +6357,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 			V_DrawMappedPatch(fr-odx, fy-8-ody, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringemeraldssmall[6], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_PURPLE), GTC_CACHE));
 		}
 
-		INT32 hr = stplyr->hudrings;
+		int32_t hr = stplyr->hudrings;
 
 		if (stplyr->baildrop)
 			hr += -1 * (stplyr->baildrop / BAIL_DROPFREQUENCY);
@@ -6370,9 +6370,9 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 			if (hr < -1*stplyr->ringlimit)																								//SCS ADD START
 			{
 				bailbar = abs(hr);
-				const INT32 fill = ((bailbar*bailbarlength)/(100-bailbarlength));
-				const INT32 length = std::min(bailbarlength, fill);
-				const INT32 height = 1;
+				const int32_t fill = ((bailbar*bailbarlength)/(100-bailbarlength));
+				const int32_t length = std::min(bailbarlength, fill);
+				const int32_t height = 1;
 
 				V_DrawScaledPatch(fr+11-1, fy+6, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringmeterbail[1]);
 				// The left dark "AA" edge
@@ -6501,8 +6501,8 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 		if (stplyr->pflags & PF_RINGLOCK)
 			V_DrawScaledPatch(fr-12, fy-13, V_HUDTRANS|V_SLIDEIN|splitflags, kp_ringspblocksmall[stplyr->karthud[khud_ringspblock]]);
 
-		UINT32 greyout = V_HUDTRANS;
-		SINT8 superoffset = 5;
+		uint32_t greyout = V_HUDTRANS;
+		int8_t superoffset = 5;
 		if (stplyr->superringdisplay)
 		{
 			greyout = V_HUDTRANSHALF;
@@ -6513,7 +6513,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 		// Lives
 		if (uselives)
 		{
-			UINT8 *colormap = R_GetTranslationColormap(stplyr->skin, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE);
+			uint8_t *colormap = R_GetTranslationColormap(stplyr->skin, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE);
 			V_DrawMappedPatch(fr+21, fy-3, V_SLIDEIN|splitflags|greyout, faceprefix[stplyr->skin][FACE_MINIMAP], colormap);
 			if (stplyr->lives >= 0)
 				K_DrawLivesDigits(fr+34, fy, 4, V_SLIDEIN|splitflags|greyout, fontv[PINGNUM_FONT].font);
@@ -6528,11 +6528,11 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 	}
 	else			//SCS NOTE - Drawing in single-player screen
 	{
-		//const boolean DRAW_RINGS_ON_PLAYER = cv_ringsonplayer.value == 1;										//SCS - RADIO START
-		const boolean DRAW_SPEEDO_ON_PLAYER = (cv_kartspeedometer.value && cv_speedometeronplayer.value);
-		const boolean DRAW_EXP_ON_PLAYER = cv_exponplayer.value == 1;
-		INT32 ringcounterflags = V_HUDTRANS|V_SLIDEIN|splitflags;
-		INT32 RINGC_X = LAPS_X;
+		//const dboolean DRAW_RINGS_ON_PLAYER = cv_ringsonplayer.value == 1;										//SCS - RADIO START
+		const dboolean DRAW_SPEEDO_ON_PLAYER = (cv_kartspeedometer.value && cv_speedometeronplayer.value);
+		const dboolean DRAW_EXP_ON_PLAYER = cv_exponplayer.value == 1;
+		int32_t ringcounterflags = V_HUDTRANS|V_SLIDEIN|splitflags;
+		int32_t RINGC_X = LAPS_X;
 
 		fy = LAPS_Y;
 		lives_y = LAPS_Y;
@@ -6544,7 +6544,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 			ringcounterflags &= ~V_SLIDEIN;
 			ringcounterflags &= ~splitflags;
 
-			const boolean doesPlayerHaveMo = !((stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo)));
+			const dboolean doesPlayerHaveMo = !((stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo)));
 			if (doesPlayerHaveMo)
 			{
 				// Get X,Y coordinates for player relative to the HUD
@@ -6579,7 +6579,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 		}
 
 		// If the cvar isn't active AND we're using lives..															//SCS - RADIO START
-		INT32 ringstickerwidth = (uselives && !DRAW_RINGS_ON_PLAYER) ? (stplyr->lives >= 10 ? 70 : 64) : 33;
+		int32_t ringstickerwidth = (uselives && !DRAW_RINGS_ON_PLAYER) ? (stplyr->lives >= 10 ? 70 : 64) : 33;
 
 		if (DRAW_RINGS_ON_PLAYER && DRAW_SPEEDO_ON_PLAYER && !DRAW_EXP_ON_PLAYER) 
 		{
@@ -6625,7 +6625,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 
 			if (stplyr->amps)
 			{
-				UINT8 amplevel = std::min(stplyr->amps / AMPLEVEL, 6);
+				uint8_t amplevel = std::min(stplyr->amps / AMPLEVEL, 6);
 
 				//V_DrawMappedPatch(LAPS_X+7-7, fy-5-8, V_HUDTRANS|V_SLIDEIN|splitflags, kp_amps[amplevel][leveltime%12], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE));
 				V_DrawMappedPatch(RINGC_X+7-7, fy-5-8, ringcounterflags, kp_amps[amplevel][leveltime%12], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE));						//SCS - RADIO
@@ -6648,7 +6648,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 			V_DrawMappedPatch(RINGC_X-10, fy-22, V_HUDTRANS|V_SLIDEIN, kp_ringemeralds[6], R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_PURPLE), GTC_CACHE));		
 		}
 		
-		INT32 hr = stplyr->hudrings;
+		int32_t hr = stplyr->hudrings;
 
 		if (stplyr->baildrop)
 			hr += -1 * (stplyr->baildrop / BAIL_DROPFREQUENCY);
@@ -6661,9 +6661,9 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 			if (hr < -1*stplyr->ringlimit)																								//SCS ADD START
 			{
 				bailbar = abs(hr);
-				const INT32 fill = ((bailbar*bailbarlength)/(180-bailbarlength));
-				const INT32 length = std::min(bailbarlength, fill);
-				const INT32 height = 1;
+				const int32_t fill = ((bailbar*bailbarlength)/(180-bailbarlength));
+				const int32_t length = std::min(bailbarlength, fill);
+				const int32_t height = 1;
 
 				V_DrawScaledPatch(RINGC_X+24-1, fy+6, ringcounterflags, kp_ringmeterbail[0]);
 				// The left dark "AA" edge
@@ -6814,7 +6814,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 			V_DrawScaledPatch(RINGC_X-5, fy-17, ringcounterflags, kp_ringspblock[framenum]);
 		}																																//SCS - RADIO END
 
-		UINT32 greyout = V_HUDTRANS;
+		uint32_t greyout = V_HUDTRANS;
 
 		if (stplyr->superringdisplay)
 		{
@@ -6854,7 +6854,7 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 		if (DRAW_EXP_ON_PLAYER && !DRAW_SPEEDO_ON_PLAYER && DRAW_RINGS_ON_PLAYER)
 		{
 			const int exp_x = RINGC_X - 36;
-			const INT32 exp_y = fy - 7;
+			const int32_t exp_y = fy - 7;
 
 			V_DrawMappedPatch(exp_x, exp_y, V_HUDTRANS, kp_exp[0], R_GetTranslationColormap(TC_RAINBOW, SKINCOLOR_MUSTARD, GTC_CACHE));
 	
@@ -6864,9 +6864,9 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 
 			V_DrawMappedPatch(exp_x, exp_y, V_HUDTRANS|transflag, kp_exp[0], colormap);
 	
-			boolean dance = (stplyr->exp > (UINT32)stplyr->karthud[khud_exp]);
-			INT32 danceflag = dance ? V_STRINGDANCE : 0;
-			UINT16 dancecolor = dance ? SKINCOLOR_AQUAMARINE : 0;
+			dboolean dance = (stplyr->exp > (uint32_t)stplyr->karthud[khud_exp]);
+			int32_t danceflag = dance ? V_STRINGDANCE : 0;
+			uint16_t dancecolor = dance ? SKINCOLOR_AQUAMARINE : 0;
 
 			using srb2::Draw;
 			Draw row = Draw(exp_x+23, exp_y+3).flags(V_HUDTRANS|danceflag).font(Draw::Font::kThinTimer).colorize(dancecolor);
@@ -6876,8 +6876,8 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 		// Lives
 		if (uselives)
 		{
-			INT32 facerank_x = 46;									//SCS - RADIO START
-			INT32 lifecount_x = 65;
+			int32_t facerank_x = 46;									//SCS - RADIO START
+			int32_t lifecount_x = 65;
 
 			if (DRAW_RINGS_ON_PLAYER) {
 				facerank_x = 13;
@@ -6892,14 +6892,14 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 			}
 
 			// radio
-			UINT32 livesflags = V_SLIDEIN|splitflags|greyout;
+			uint32_t livesflags = V_SLIDEIN|splitflags|greyout;
 			if (DRAW_RINGS_ON_PLAYER)
 				livesflags = V_HUDTRANS|V_SLIDEIN|splitflags;		//SCS - RADIO END
 			
-			UINT8 *colormap = R_GetTranslationColormap(stplyr->skin, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE);
+			uint8_t *colormap = R_GetTranslationColormap(stplyr->skin, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE);
 			//V_DrawMappedPatch(LAPS_X+46, fy-5, V_SLIDEIN|splitflags|greyout, faceprefix[stplyr->skin][FACE_RANK], colormap);
 			V_DrawMappedPatch(LAPS_X+facerank_x, lives_y-5, livesflags, faceprefix[stplyr->skin][FACE_RANK], colormap);				//SCS - RADIO
-			SINT8 livescount = 0;
+			int8_t livescount = 0;
 			if (stplyr->lives > 0)
 			{
 				livescount = stplyr->lives;
@@ -6935,14 +6935,14 @@ static void K_drawRingCounter(boolean gametypeinfoshown)
 
 #undef RINGANIM_FLIPFRAME
 
-static void K_drawKartAccessibilityIcons(boolean gametypeinfoshown, INT32 fx)
+static void K_drawKartAccessibilityIcons(dboolean gametypeinfoshown, int32_t fx)
 {
-    //INT32 fy = LAPS_Y-14;
-	boolean showbluespheres = (gametyperules & GTR_SPHERES);														//SCS - RADIO START
-	INT32 fy = LAPS_Y - ((cv_ringsonplayer.value == 1 && !showbluespheres && !G_GametypeUsesLives()) ? 0 : 14);		//SCS - RADIO END
-    INT32 splitflags = V_SNAPTOLEFT|V_SNAPTOBOTTOM|V_SPLITSCREEN;
+    //int32_t fy = LAPS_Y-14;
+	dboolean showbluespheres = (gametyperules & GTR_SPHERES);														//SCS - RADIO START
+	int32_t fy = LAPS_Y - ((cv_ringsonplayer.value == 1 && !showbluespheres && !G_GametypeUsesLives()) ? 0 : 14);		//SCS - RADIO END
+    int32_t splitflags = V_SNAPTOLEFT|V_SNAPTOBOTTOM|V_SPLITSCREEN;
 
-    boolean mirror = false;
+    dboolean mirror = false;
 
     fx += LAPS_X;
 
@@ -7008,8 +7008,8 @@ static void K_drawKartAccessibilityIcons(boolean gametypeinfoshown, INT32 fx)
         if (mirror)
             fx -= 10;
 
-        SINT8 col = 0, wid, fil, ofs;
-        UINT8 i = 7;
+        int8_t col = 0, wid, fil, ofs;
+        uint8_t i = 7;
         ofs = (stplyr->kickstartaccel == ACCEL_KICKSTART) ? 1 : 0;
         fil = i-(stplyr->kickstartaccel*i)/ACCEL_KICKSTART;
 
@@ -7070,30 +7070,30 @@ static void K_drawKartAccessibilityIcons(boolean gametypeinfoshown, INT32 fx)
     }
 }
 
-static void K_drawKartSpeedometer(boolean gametypeinfoshown)
+static void K_drawKartSpeedometer(dboolean gametypeinfoshown)
 {
 	static fixed_t convSpeed;
-	UINT8 labeln = 0;
-	UINT8 numbers[3];
-	INT32 splitflags = V_SNAPTOBOTTOM|V_SNAPTOLEFT|V_SPLITSCREEN;
-	//INT32 fy = LAPS_Y-14;													//SCS - RADIO
+	uint8_t labeln = 0;
+	uint8_t numbers[3];
+	int32_t splitflags = V_SNAPTOBOTTOM|V_SNAPTOLEFT|V_SPLITSCREEN;
+	//int32_t fy = LAPS_Y-14;													//SCS - RADIO
 	skincolornum_t digitcolor;												//SCS ADD
-	UINT8 *digitmap = NULL;													//SCS ADD
+	uint8_t *digitmap = NULL;													//SCS ADD
 
 	// Radio
-	boolean isBattle = false;																						//SCS - RADIO START
-	INT32 SPEEDC_X = LAPS_X;
+	dboolean isBattle = false;																						//SCS - RADIO START
+	int32_t SPEEDC_X = LAPS_X;
 	
 
-	boolean showbluespheres = (gametyperules & GTR_SPHERES);
-	const boolean DRAW_MINI_HUD_DETAILS = cv_hud_compact.value == 1 && r_splitscreen == 0;
-	const boolean NOT_BATTLE_OR_LIVES = !showbluespheres && !G_GametypeUsesLives();
-	const boolean RINGS_ON_PLAYER = (cv_ringsonplayer.value == 1 && NOT_BATTLE_OR_LIVES);
+	dboolean showbluespheres = (gametyperules & GTR_SPHERES);
+	const dboolean DRAW_MINI_HUD_DETAILS = cv_hud_compact.value == 1 && r_splitscreen == 0;
+	const dboolean NOT_BATTLE_OR_LIVES = !showbluespheres && !G_GametypeUsesLives();
+	const dboolean RINGS_ON_PLAYER = (cv_ringsonplayer.value == 1 && NOT_BATTLE_OR_LIVES);
 
-	const boolean drawinglaps = (numlaps != 1 && !K_InRaceDuel() && stplyr->karthud[khud_exp] != UINT16_MAX);
-	const boolean EXP_ON_PLAYER = (cv_exponplayer.value == 1 && NOT_BATTLE_OR_LIVES) && !drawinglaps;
+	const dboolean drawinglaps = (numlaps != 1 && !K_InRaceDuel() && stplyr->karthud[khud_exp] != UINT16_MAX);
+	const dboolean EXP_ON_PLAYER = (cv_exponplayer.value == 1 && NOT_BATTLE_OR_LIVES) && !drawinglaps;
 
-	INT32 fy = LAPS_Y-14;
+	int32_t fy = LAPS_Y-14;
 	
 	if (r_splitscreen > 1)						//SCS ADD - Splitscreen stuff
 	{
@@ -7108,7 +7108,7 @@ static void K_drawKartSpeedometer(boolean gametypeinfoshown)
 
 	}
 	
-	INT32 speedometerFlags = V_HUDTRANS|V_SLIDEIN|splitflags;			//SCS EDIT - RADIO, moving this down here for splitscreen stuff
+	int32_t speedometerFlags = V_HUDTRANS|V_SLIDEIN|splitflags;			//SCS EDIT - RADIO, moving this down here for splitscreen stuff
 
 	/**
 	 * radio
@@ -7209,8 +7209,8 @@ static void K_drawKartSpeedometer(boolean gametypeinfoshown)
 	// Radio
 	// Don't track on player during battle
 	if (!isBattle) {																	//SCS - RADIO START
-		const boolean DRAW_RINGS_ON_PLAYER = cv_ringsonplayer.value == 1;
-		const boolean DRAW_SPEEDO_ON_PLAYER = cv_speedometeronplayer.value == 1;
+		const dboolean DRAW_RINGS_ON_PLAYER = cv_ringsonplayer.value == 1;
+		const dboolean DRAW_SPEEDO_ON_PLAYER = cv_speedometeronplayer.value == 1;
 
 		/**
 		 * Speedometer and rings being drawn on player at the same time?
@@ -7223,7 +7223,7 @@ static void K_drawKartSpeedometer(boolean gametypeinfoshown)
 				speedometerFlags &= ~V_SLIDEIN;
 				speedometerFlags &= ~splitflags;
 
-				const boolean doesPlayerHaveMo = !((stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo)));
+				const dboolean doesPlayerHaveMo = !((stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo)));
 				if (doesPlayerHaveMo)
 				{
 					// Get X,Y coordinates for player relative to the HUD
@@ -7292,26 +7292,26 @@ static void K_drawKartSpeedometer(boolean gametypeinfoshown)
 	K_drawKartAccessibilityIcons(gametypeinfoshown, 56);
 }
 
-static void K_drawBlueSphereMeter(boolean gametypeinfoshown)
+static void K_drawBlueSphereMeter(dboolean gametypeinfoshown)
 {
-	const UINT8 maxBars = 4;
+	const uint8_t maxBars = 4;
 	// see also K_DrawNameTagSphereMeter
-	const UINT8 segColors[] = {73, 64, 52, 54, 55, 35, 34, 33, 202, 180, 181, 182, 164, 165, 166, 153, 152};
-	const UINT8 sphere = std::clamp(static_cast<int>(stplyr->spheres), 0, 40);
+	const uint8_t segColors[] = {73, 64, 52, 54, 55, 35, 34, 33, 202, 180, 181, 182, 164, 165, 166, 153, 152};
+	const uint8_t sphere = std::clamp(static_cast<int>(stplyr->spheres), 0, 40);
 	
-	const boolean DRAW_SPHERES_ON_PLAYER = (cv_spheremeteronplayer.value == 1  && r_splitscreen == 0);				//SCS - RADIO START		//SCS EDIT - Why are we not making sure we're in 1P exclusively?
-	const boolean CUSTOM_EMERALD_HUD = (cv_customemeraldhud.value >= 1 && r_splitscreen == 0);		//SCS EDIT - Again, only do this in 1P
-	const boolean SHOULD_SCALE_METER = (CUSTOM_EMERALD_HUD || DRAW_SPHERES_ON_PLAYER);
+	const dboolean DRAW_SPHERES_ON_PLAYER = (cv_spheremeteronplayer.value == 1  && r_splitscreen == 0);				//SCS - RADIO START		//SCS EDIT - Why are we not making sure we're in 1P exclusively?
+	const dboolean CUSTOM_EMERALD_HUD = (cv_customemeraldhud.value >= 1 && r_splitscreen == 0);		//SCS EDIT - Again, only do this in 1P
+	const dboolean SHOULD_SCALE_METER = (CUSTOM_EMERALD_HUD || DRAW_SPHERES_ON_PLAYER);
 	const fixed_t SPHERE_METER_SCALE = (SHOULD_SCALE_METER) ? (4*FRACUNIT)/5 : FRACUNIT;	//SCS - RADIO END
 
-	UINT8 numBars = std::min((sphere / 10), +maxBars);
-	UINT8 colorIndex = (sphere * sizeof(segColors)) / (40 + 1);
-	INT32 fx, fy;
-	UINT8 i;
-	INT32 splitflags = V_HUDTRANS|V_SLIDEIN|V_SNAPTOBOTTOM|V_SNAPTOLEFT|V_SPLITSCREEN;
-	INT32 flipflag = 0;
-	//INT32 xstep = 15;
-	INT32 xstep = (SHOULD_SCALE_METER) ? 12 : 15;	//SCS - RADIO
+	uint8_t numBars = std::min((sphere / 10), +maxBars);
+	uint8_t colorIndex = (sphere * sizeof(segColors)) / (40 + 1);
+	int32_t fx, fy;
+	uint8_t i;
+	int32_t splitflags = V_HUDTRANS|V_SLIDEIN|V_SNAPTOBOTTOM|V_SNAPTOLEFT|V_SPLITSCREEN;
+	int32_t flipflag = 0;
+	//int32_t xstep = 15;
+	int32_t xstep = (SHOULD_SCALE_METER) ? 12 : 15;	//SCS - RADIO
 
 	// pain and suffering defined below
 	if (r_splitscreen < 2)	// don't change shit for THIS splitscreen.
@@ -7326,7 +7326,7 @@ static void K_drawBlueSphereMeter(boolean gametypeinfoshown)
 
 			splitflags = V_HUDTRANS;
 
-			const boolean doesPlayerHaveMo = !((stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo)));
+			const dboolean doesPlayerHaveMo = !((stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo)));
 			if (doesPlayerHaveMo)
 			{
 				v.x = R_InterpolateFixed(stplyr->mo->old_x, stplyr->mo->x);
@@ -7377,7 +7377,7 @@ static void K_drawBlueSphereMeter(boolean gametypeinfoshown)
 		{
 			if (r_splitscreen == 0) 
 			{
-				const INT32 new_fy = (CUSTOM_EMERALD_HUD && !DRAW_SPHERES_ON_PLAYER) ? fy-17 : fy;
+				const int32_t new_fy = (CUSTOM_EMERALD_HUD && !DRAW_SPHERES_ON_PLAYER) ? fy-17 : fy;
 				V_DrawFixedPatch(
 					((fx)*FRACUNIT), 
 					(new_fy)<<FRACBITS, 
@@ -7397,7 +7397,7 @@ static void K_drawBlueSphereMeter(boolean gametypeinfoshown)
 		}
 		else // else, that means we're P2 or P4.
 		{
-			fx = LAPS2_X+(SHORT(kp_splitspheresticker->width) - 10);
+			fx = LAPS2_X+(LSBF_SHORT(kp_splitspheresticker->width) - 10);
 			fy = LAPS2_Y;
 			splitflags ^= V_SNAPTOLEFT|V_SNAPTORIGHT;
 			flipflag = V_FLIP; // make the string right aligned and other shit
@@ -7429,13 +7429,13 @@ static void K_drawBlueSphereMeter(boolean gametypeinfoshown)
 
 	for (i = 0; i <= numBars; i++)
 	{
-		//UINT8 segLen = (r_splitscreen < 2) ? 10 : 5;
+		//uint8_t segLen = (r_splitscreen < 2) ? 10 : 5;
 		int SPHERE_BAR_LENGTH = 10;										//SCS - RADIO START
 		if (SHOULD_SCALE_METER)
 		{
 			SPHERE_BAR_LENGTH = scaleInt(SPHERE_BAR_LENGTH, SPHERE_METER_SCALE);
 		}
-		UINT8 segLen = (r_splitscreen < 2) ? SPHERE_BAR_LENGTH: 5;		//SCS - RADIO END
+		uint8_t segLen = (r_splitscreen < 2) ? SPHERE_BAR_LENGTH: 5;		//SCS - RADIO END
 
 		if (i == numBars)
 		{
@@ -7462,7 +7462,7 @@ static void K_drawBlueSphereMeter(boolean gametypeinfoshown)
 			/*V_DrawFill(fx, fy + 6, segLen, 3, segColors[std::max(colorIndex-1, 0)] | splitflags);
 			V_DrawFill(fx, fy + 7, segLen, 1, segColors[std::max(colorIndex-2, 0)] | splitflags);
 			V_DrawFill(fx, fy + 9, segLen, 3, segColors[colorIndex] | splitflags);*/
-			INT32 new_fy = fy;																					//SCS - RADIO START
+			int32_t new_fy = fy;																					//SCS - RADIO START
 			int yCoords[3] = {6, 7, 9};
 
 			if (r_splitscreen == 0)
@@ -7494,13 +7494,13 @@ static void K_drawBlueSphereMeter(boolean gametypeinfoshown)
 
 static void K_drawKartBumpersOrKarma(void)
 {
-	UINT8 *colormap = R_GetTranslationColormap(TC_DEFAULT, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE);
-	INT32 splitflags = V_SNAPTOBOTTOM|V_SNAPTOLEFT|V_SPLITSCREEN;
+	uint8_t *colormap = R_GetTranslationColormap(TC_DEFAULT, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE);
+	int32_t splitflags = V_SNAPTOBOTTOM|V_SNAPTOLEFT|V_SPLITSCREEN;
 
 	if (r_splitscreen > 1)
 	{
-		INT32 fx = 0, fy = 0;
-		INT32 flipflag = 0;
+		int32_t fx = 0, fy = 0;
+		int32_t flipflag = 0;
 
 		// pain and suffering defined below
 		if (r_splitscreen < 2)	// don't change shit for THIS splitscreen.
@@ -7551,7 +7551,7 @@ static void K_drawKartBumpersOrKarma(void)
 
 			if (numtargets > 9 || maptargets > 9)
 			{
-				UINT8 ln[2];
+				uint8_t ln[2];
 				ln[0] = ((numtargets / 10) % 10);
 				ln[1] = (numtargets % 10);
 
@@ -7572,7 +7572,7 @@ static void K_drawKartBumpersOrKarma(void)
 		}
 		else
 		{
-			const UINT8 bumpers = K_Bumpers(stplyr);
+			const uint8_t bumpers = K_Bumpers(stplyr);
 			const bool dance = g_pointlimit && (g_pointlimit <= stplyr->roundscore);
 
 			V_DrawMappedPatch(fx-1, fy-2, V_HUDTRANS|V_SLIDEIN|splitflags, kp_rankbumper, colormap);
@@ -7593,7 +7593,7 @@ static void K_drawKartBumpersOrKarma(void)
 	}
 	else
 	{
-		INT32 fy = r_splitscreen == 1 ? LAPS_Y-3 : LAPS_Y;
+		int32_t fy = r_splitscreen == 1 ? LAPS_Y-3 : LAPS_Y;
 
 		if (battleprisons)
 		{
@@ -7605,7 +7605,7 @@ static void K_drawKartBumpersOrKarma(void)
 		}
 		else
 		{
-			const UINT8 bumpers = K_Bumpers(stplyr);
+			const uint8_t bumpers = K_Bumpers(stplyr);
 			const bool dance = g_pointlimit && (g_pointlimit <= stplyr->roundscore);
 
 			if (r_splitscreen == 0)
@@ -7635,9 +7635,9 @@ static void K_drawKartBumpersOrKarma(void)
 #if 0
 static void K_drawKartWanted(void)
 {
-	UINT8 i, numwanted = 0;
-	UINT8 *colormap = NULL;
-	INT32 basex = 0, basey = 0;
+	uint8_t i, numwanted = 0;
+	uint8_t *colormap = NULL;
+	int32_t basex = 0, basey = 0;
 
 	if (!splitscreen)
 		return;
@@ -7668,7 +7668,7 @@ static void K_drawKartWanted(void)
 	}
 	else if (r_splitscreen == 3) // 4P splitscreen...
 	{
-		basex = BASEVIDWIDTH/2 - (SHORT(kp_wantedsplit->width)/2);	// center on screen
+		basex = BASEVIDWIDTH/2 - (LSBF_SHORT(kp_wantedsplit->width)/2);	// center on screen
 		basey = BASEVIDHEIGHT - 55;
 		//basey2 = 4;
 	}
@@ -7681,7 +7681,7 @@ static void K_drawKartWanted(void)
 
 	for (i = 0; i < numwanted; i++)
 	{
-		INT32 x = basex+(r_splitscreen > 1 ? 13 : 8), y = basey+(r_splitscreen > 1 ? 16 : 21);
+		int32_t x = basex+(r_splitscreen > 1 ? 13 : 8), y = basey+(r_splitscreen > 1 ? 16 : 21);
 		fixed_t scale = FRACUNIT/2;
 		player_t *p = &players[battlewanted[i]];
 
@@ -7712,8 +7712,8 @@ static void K_drawKartWanted(void)
 static void K_drawKartPlayerCheck(void)
 {
 	const fixed_t maxdistance = FixedMul(4000 * mapobjectscale, K_GetKartGameSpeedScalar(gamespeed));		//SCS edit - Distance was 2000
-	UINT8 i;
-	INT32 splitflags = V_SNAPTOBOTTOM|V_SPLITSCREEN;
+	uint8_t i;
+	int32_t splitflags = V_SNAPTOBOTTOM|V_SPLITSCREEN;
 	fixed_t y = CHEK_Y * FRACUNIT;
 
 	if (stplyr == NULL || stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo))
@@ -7735,8 +7735,8 @@ static void K_drawKartPlayerCheck(void)
 	{
 		player_t *checkplayer = &players[i];
 		fixed_t distance = maxdistance+1;
-		UINT8 *colormap = NULL;
-		UINT8 pnum = 0;
+		uint8_t *colormap = NULL;
+		uint8_t pnum = 0;
 		vector3_t v;
 		vector3_t pPos;
 		trackingResult_t result;
@@ -7782,7 +7782,7 @@ static void K_drawKartPlayerCheck(void)
 		// Otherwise, too far away
 		if (distance < maxdistance)
 		{
-			// boolean is_charging = checkplayer->instaWhipCharge >= INSTAWHIP_CHARGETIME;
+			// dboolean is_charging = checkplayer->instaWhipCharge >= INSTAWHIP_CHARGETIME;
 
 			// fixed_t patch_scale = FRACUNIT;
 				
@@ -7839,7 +7839,7 @@ static void K_drawKartPlayerCheck(void)
 	}
 }
 
-static boolean K_ShowPlayerNametag(player_t *p)
+static dboolean K_ShowPlayerNametag(player_t *p)
 {
 	if (cv_seenames.value == 0)
 	{
@@ -7870,7 +7870,7 @@ static boolean K_ShowPlayerNametag(player_t *p)
 	return true;
 }
 
-static void K_DrawTypingDot(fixed_t x, fixed_t y, UINT8 duration, player_t *p, INT32 flags)
+static void K_DrawTypingDot(fixed_t x, fixed_t y, uint8_t duration, player_t *p, int32_t flags)
 {
 	if (p->typing_duration > duration)
 	{
@@ -7878,7 +7878,7 @@ static void K_DrawTypingDot(fixed_t x, fixed_t y, UINT8 duration, player_t *p, I
 	}
 }
 
-static void K_DrawTypingNotifier(fixed_t x, fixed_t y, player_t *p, INT32 flags)
+static void K_DrawTypingNotifier(fixed_t x, fixed_t y, player_t *p, int32_t flags)
 {
 	int playernum = p - players;
 	flags &= ~V_FLIP; // does not support this
@@ -7901,11 +7901,11 @@ static void K_DrawTypingNotifier(fixed_t x, fixed_t y, player_t *p, INT32 flags)
 }
 
 // see also K_drawKartItem
-static void K_DrawNameTagItemSpy(INT32 x, INT32 y, player_t *p, INT32 flags)
+static void K_DrawNameTagItemSpy(int32_t x, int32_t y, player_t *p, int32_t flags)
 {
 	using srb2::Draw;
 	bool tiny = r_splitscreen > 1;
-	SINT8 flip = 1, flipboxoffset = 0;
+	int8_t flip = 1, flipboxoffset = 0;
 	if ((flags & V_VFLIP) == V_VFLIP)
 	{
 		// Remove the v_vflip flag - it makes things messy, but we also understand
@@ -7923,8 +7923,8 @@ static void K_DrawNameTagItemSpy(INT32 x, INT32 y, player_t *p, INT32 flags)
 
 	box.colorize(p->skincolor).patch(kp_itembg[tiny ? 4 : 2]);
 
-	INT32 item_type = KITEM_NONE;
-	UINT8 slot_type = KITEM_NONE;													//SCS ADD
+	int32_t item_type = KITEM_NONE;
+	uint8_t slot_type = KITEM_NONE;													//SCS ADD
 
 	if (p->itemRoulette.active == true && p->itemRoulette.ringbox == false)
 	{
@@ -8123,15 +8123,15 @@ static void K_DrawNameTagItemSpy(INT32 x, INT32 y, player_t *p, INT32 flags)
 	}
 }
 
-static void K_DrawNameTagSphereMeter(INT32 x, INT32 y, INT32 width, INT32 spheres, INT32 flags)
+static void K_DrawNameTagSphereMeter(int32_t x, int32_t y, int32_t width, int32_t spheres, int32_t flags)
 {
 	using srb2::Draw;
 	Draw bar = Draw(x + vid.dupx, y).flags(V_NOSCALESTART).height(vid.dupy);
 
 	// see also K_drawBlueSphereMeter
-	const UINT8 segColors[] = {73, 64, 52, 54, 55, 35, 34, 33, 202, 180, 181, 182, 164, 165, 166, 153, 152};
+	const uint8_t segColors[] = {73, 64, 52, 54, 55, 35, 34, 33, 202, 180, 181, 182, 164, 165, 166, 153, 152};
 
-	spheres = std::clamp<INT32>(spheres, 0, 40);
+	spheres = std::clamp<int32_t>(spheres, 0, 40);
 	int colorIndex = (spheres * sizeof segColors) / (40 + 1);
 
 	int px = r_splitscreen > 1 ? 1 : 2;
@@ -8155,20 +8155,20 @@ static void K_DrawNameTagSphereMeter(INT32 x, INT32 y, INT32 width, INT32 sphere
 	}
 }
 
-static void K_DrawLocalTagForPlayer(fixed_t x, fixed_t y, player_t *p, UINT8 id, UINT32 flags)
+static void K_DrawLocalTagForPlayer(fixed_t x, fixed_t y, player_t *p, uint8_t id, uint32_t flags)
 {
-	UINT8 blink = ((leveltime / 7) & 1);
-	UINT8 *colormap = R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(p->skincolor), GTC_CACHE);
+	uint8_t blink = ((leveltime / 7) & 1);
+	uint8_t *colormap = R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(p->skincolor), GTC_CACHE);
 
 	V_DrawFixedPatch(x, y, FRACUNIT, flags, kp_localtag[id][blink], colormap);
 }
 
-static void K_DrawRivalTagForPlayer(fixed_t x, fixed_t y, player_t *p, UINT32 flags)
+static void K_DrawRivalTagForPlayer(fixed_t x, fixed_t y, player_t *p, uint32_t flags)
 {
 	if ((p->itemtype != KITEM_NONE && p->itemamount != 0)
 		|| (p->itemRoulette.active == true) || (p->ringboxaward)) //&& p->itemRoulette.ringbox == false))	//SCS EDIT - I wanna show the slot machine roulette too
 	{
-		INT32 barx = 0, bary = 0;
+		int32_t barx = 0, bary = 0;
 
 		barx = (x * vid.dupx) / FRACUNIT;
 		bary = (y * vid.dupy) / FRACUNIT;
@@ -8190,16 +8190,16 @@ static void K_DrawRivalTagForPlayer(fixed_t x, fixed_t y, player_t *p, UINT32 fl
 		K_DrawNameTagItemSpy(barx, bary, p, flags);
 	}
 
-	UINT8 blink = ((leveltime / 7) & 1);
+	uint8_t blink = ((leveltime / 7) & 1);
 	V_DrawFixedPatch(x, y, FRACUNIT, flags, kp_rival[blink], NULL);
 }
 
-static void K_DrawCPUTagForPlayer(fixed_t x, fixed_t y, player_t *p, UINT32 flags)
+static void K_DrawCPUTagForPlayer(fixed_t x, fixed_t y, player_t *p, uint32_t flags)
 {
 	if ((p->itemtype != KITEM_NONE && p->itemamount != 0)
 		|| (p->itemRoulette.active == true) || (p->ringboxaward)) //&& p->itemRoulette.ringbox == false))		//SCS EDIT - I wanna show the slot roulette too
 	{
-		INT32 barx = 0, bary = 0;
+		int32_t barx = 0, bary = 0;
 
 		barx = (x * vid.dupx) / FRACUNIT;
 		bary = (y * vid.dupy) / FRACUNIT;
@@ -8221,24 +8221,24 @@ static void K_DrawCPUTagForPlayer(fixed_t x, fixed_t y, player_t *p, UINT32 flag
 		K_DrawNameTagItemSpy(barx, bary, p, flags);
 	}
 
-	UINT8 *foecol = R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_RED), GTC_CACHE);
+	uint8_t *foecol = R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_RED), GTC_CACHE);
 
-	UINT8 blink = ((leveltime / 7) & 1);
+	uint8_t blink = ((leveltime / 7) & 1);
 	V_DrawFixedPatch(x, y, FRACUNIT, flags, kp_cpu[blink], (p->botvars.foe) ? foecol : NULL);
 }
 
-static void K_DrawNameTagForPlayer(fixed_t x, fixed_t y, player_t *p, UINT32 flags)
+static void K_DrawNameTagForPlayer(fixed_t x, fixed_t y, player_t *p, uint32_t flags)
 {
-	const INT32 clr = skincolors[p->skincolor].chatcolor;
-	const INT32 namelen = V_ThinStringWidth(player_names[p - players], 0);
+	const int32_t clr = skincolors[p->skincolor].chatcolor;
+	const int32_t namelen = V_ThinStringWidth(player_names[p - players], 0);
 
-	UINT8 *colormap = V_GetStringColormap(clr);
-	INT32 barx = 0, bary = 0, barw = 0;
-	INT32 flipped = 1, flipfilloffset = 0, flipfontoffset = 0, flipspheresoffset = 0;
+	uint8_t *colormap = V_GetStringColormap(clr);
+	int32_t barx = 0, bary = 0, barw = 0;
+	int32_t flipped = 1, flipfilloffset = 0, flipfontoffset = 0, flipspheresoffset = 0;
 
-	const UINT8 cnum = R_GetViewNumber();
+	const uint8_t cnum = R_GetViewNumber();
 
-	const UINT32 hadflags = flags;
+	const uint32_t hadflags = flags;
 
 	if ((flags & V_VFLIP) == V_VFLIP)
 	{
@@ -8309,7 +8309,7 @@ static void K_DrawNameTagForPlayer(fixed_t x, fixed_t y, player_t *p, UINT32 fla
 
 playertagtype_t K_WhichPlayerTag(player_t *p)
 {
-	const UINT8 cnum = R_GetViewNumber();
+	const uint8_t cnum = R_GetViewNumber();
 
 	if (!(demo.playback == true && camera[cnum].freecam == true) && P_IsDisplayPlayer(p) &&
 		p != &players[displayplayers[cnum]])
@@ -8344,9 +8344,9 @@ playertagtype_t K_WhichPlayerTag(player_t *p)
 	return PLAYERTAG_NONE;
 }
 
-void K_DrawPlayerTag(fixed_t x, fixed_t y, player_t *p, playertagtype_t type, boolean foreground)
+void K_DrawPlayerTag(fixed_t x, fixed_t y, player_t *p, playertagtype_t type, dboolean foreground)
 {
-	INT32 flags = P_IsObjectFlipped(p->mo) ? (V_VFLIP|V_FLIP) : 0;
+	int32_t flags = P_IsObjectFlipped(p->mo) ? (V_VFLIP|V_FLIP) : 0;
 
 	switch (type)
 	{
@@ -8392,16 +8392,16 @@ void K_DrawPlayerTag(fixed_t x, fixed_t y, player_t *p, playertagtype_t type, bo
 
 typedef struct weakspotdraw_t
 {
-	UINT8 i;
-	INT32 x;
-	INT32 y;
-	boolean candrawtag;
+	uint8_t i;
+	int32_t x;
+	int32_t y;
+	dboolean candrawtag;
 } weakspotdraw_t;
 
 static void K_DrawWeakSpot(weakspotdraw_t *ws)
 {
-	UINT8 *colormap;
-	UINT8 j = (bossinfo.weakspots[ws->i].type == SPOT_BUMP) ? 1 : 0;
+	uint8_t *colormap;
+	uint8_t j = (bossinfo.weakspots[ws->i].type == SPOT_BUMP) ? 1 : 0;
 	tic_t flashtime = ~1; // arbitrary high even number
 
 	if (bossinfo.weakspots[ws->i].time < TICRATE)
@@ -8430,7 +8430,7 @@ static void K_DrawWeakSpot(weakspotdraw_t *ws)
 static void K_drawKartNameTags(void)
 {
 	vector3_t c;
-	const UINT8 cnum = R_GetViewNumber();
+	const uint8_t cnum = R_GetViewNumber();
 	size_t i, j;
 
 	if (stplyr == NULL || stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo))
@@ -8476,8 +8476,8 @@ static void K_drawKartNameTags(void)
 	if (bossinfo.valid == true)
 	{
 		weakspotdraw_t weakspotdraw[NUMWEAKSPOTS];
-		UINT8 numdraw = 0;
-		boolean onleft = false;
+		uint8_t numdraw = 0;
+		dboolean onleft = false;
 
 		for (i = 0; i < NUMWEAKSPOTS; i++)
 		{
@@ -8554,9 +8554,9 @@ static void K_drawKartNameTags(void)
 
 #define PROGRESSION_BAR_WIDTH 120
 
-static INT32 K_getKartProgressionMinimapDistance(UINT32 distancetofinish)
+static int32_t K_getKartProgressionMinimapDistance(uint32_t distancetofinish)
 {
-	INT32 dist;
+	int32_t dist;
 
 	if (specialstageinfo.maxDist == 0U)
 	{
@@ -8580,15 +8580,15 @@ static INT32 K_getKartProgressionMinimapDistance(UINT32 distancetofinish)
 	return dist;
 }
 
-static void K_drawKartProgressionMinimapIcon(UINT32 distancetofinish, INT32 hudx, INT32 hudy, INT32 flags, patch_t *icon, UINT8 *colormap)
+static void K_drawKartProgressionMinimapIcon(uint32_t distancetofinish, int32_t hudx, int32_t hudy, int32_t flags, patch_t *icon, uint8_t *colormap)
 {
 	if (distancetofinish == UINT32_MAX)
 		return;
 
 	hudx += K_getKartProgressionMinimapDistance(distancetofinish);
 
-	hudx = ((hudx - (SHORT(icon->width)/2))<<FRACBITS);
-	hudy = ((hudy - (SHORT(icon->height)/2))<<FRACBITS);
+	hudx = ((hudx - (LSBF_SHORT(icon->width)/2))<<FRACBITS);
+	hudy = ((hudy - (LSBF_SHORT(icon->height)/2))<<FRACBITS);
 
 	V_DrawFixedPatch(hudx, hudy, FRACUNIT, flags, icon, colormap);
 }
@@ -8606,7 +8606,7 @@ position_t K_GetKartObjectPosToMinimapPos(fixed_t objx, fixed_t objy)
 	return position_t{amnumxpos, amnumypos};
 }
 
-static void K_drawKartMinimapIcon(fixed_t objx, fixed_t objy, INT32 hudx, INT32 hudy, INT32 flags, patch_t *icon, UINT8 *colormap)
+static void K_drawKartMinimapIcon(fixed_t objx, fixed_t objy, int32_t hudx, int32_t hudy, int32_t flags, patch_t *icon, uint8_t *colormap)
 {
 	// amnum xpos & ypos are the icon's speed around the HUD.
 	// The number being divided by is for how fast it moves.
@@ -8616,20 +8616,20 @@ static void K_drawKartMinimapIcon(fixed_t objx, fixed_t objy, INT32 hudx, INT32 
 	// it, they wouldn't 'spawn' on the top-right side of the HUD.
 
 	position_t amnumpos;
-	INT32 amxpos, amypos;
+	int32_t amxpos, amypos;
 
 	amnumpos = K_GetKartObjectPosToMinimapPos(objx, objy);
 
-	amxpos = amnumpos.x + ((hudx - (SHORT(icon->width))/2)<<FRACBITS);
-	amypos = amnumpos.y + ((hudy - (SHORT(icon->height))/2)<<FRACBITS);
+	amxpos = amnumpos.x + ((hudx - (LSBF_SHORT(icon->width))/2)<<FRACBITS);
+	amypos = amnumpos.y + ((hudy - (LSBF_SHORT(icon->height))/2)<<FRACBITS);
 
 	V_DrawFixedPatch(amxpos, amypos, FRACUNIT, flags, icon, colormap);
 }
 
-static void K_drawKartMinimapDot(fixed_t objx, fixed_t objy, INT32 hudx, INT32 hudy, INT32 flags, UINT8 color, UINT8 size)
+static void K_drawKartMinimapDot(fixed_t objx, fixed_t objy, int32_t hudx, int32_t hudy, int32_t flags, uint8_t color, uint8_t size)
 {
 	position_t amnumpos;
-	INT32 amxpos, amypos;
+	int32_t amxpos, amypos;
 
 	amnumpos = K_GetKartObjectPosToMinimapPos(objx, objy);
 
@@ -8645,7 +8645,7 @@ static void K_drawKartMinimapDot(fixed_t objx, fixed_t objy, INT32 hudx, INT32 h
 	V_DrawFill((amxpos + hudx) - (size / 2), (amypos + hudy) - (size / 2), size, size, flags | color);
 }
 
-static UINT8 K_RankMinimapWaypoint(waypoint_t *wp)
+static uint8_t K_RankMinimapWaypoint(waypoint_t *wp)
 {
 	if (wp == stplyr->nextwaypoint)
 	{
@@ -8669,9 +8669,9 @@ static UINT8 K_RankMinimapWaypoint(waypoint_t *wp)
 	}
 }
 
-static void K_drawKartMinimapWaypoint(waypoint_t *wp, UINT8 rank, INT32 hudx, INT32 hudy, INT32 flags)
+static void K_drawKartMinimapWaypoint(waypoint_t *wp, uint8_t rank, int32_t hudx, int32_t hudy, int32_t flags)
 {
-	static UINT8 colors[] =
+	static uint8_t colors[] =
 	{
 		0x95, // blue (0 - default)
 		0x20, // pink (1 - shortcut)
@@ -8680,8 +8680,8 @@ static void K_drawKartMinimapWaypoint(waypoint_t *wp, UINT8 rank, INT32 hudx, IN
 		0x70, // green (4 - player)
 	};
 
-	UINT8 pal = colors[rank]; // blue
-	UINT8 size = 3;
+	uint8_t pal = colors[rank]; // blue
+	uint8_t size = 3;
 
 	if (rank == 4)
 	{
@@ -8697,10 +8697,10 @@ static void K_drawKartMinimapWaypoint(waypoint_t *wp, UINT8 rank, INT32 hudx, IN
 	K_drawKartMinimapDot(wp->mobj->x, wp->mobj->y, hudx, hudy, flags | V_NOSCALESTART, pal, size);
 }
 
-INT32 K_GetMinimapTransFlags(const boolean usingProgressBar)
+int32_t K_GetMinimapTransFlags(const dboolean usingProgressBar)
 {
-	INT32 minimaptrans = 4;
-	boolean dofade = (usingProgressBar && r_splitscreen > 0) || (!usingProgressBar && r_splitscreen >= 1);
+	int32_t minimaptrans = 4;
+	dboolean dofade = (usingProgressBar && r_splitscreen > 0) || (!usingProgressBar && r_splitscreen >= 1);
 
 	if (dofade)
 	{
@@ -8716,9 +8716,9 @@ INT32 K_GetMinimapTransFlags(const boolean usingProgressBar)
 	return minimaptrans;
 }
 
-INT32 K_GetMinimapSplitFlags(const boolean usingProgressBar)
+int32_t K_GetMinimapSplitFlags(const dboolean usingProgressBar)
 {
-	INT32 splitflags = 0;
+	int32_t splitflags = 0;
 
 	if (usingProgressBar)
 		splitflags = (V_SLIDEIN|V_SNAPTOBOTTOM);
@@ -8745,10 +8745,10 @@ INT32 K_GetMinimapSplitFlags(const boolean usingProgressBar)
 
 // modified pick from blondedradio/RadioRacers (but there are like 57 things we don't want in the commit)
 // (so gogo gadget copypaste, thanks for a good feature and saving me work i was supposed to do anyway)
-static void K_DrawKartUFOTimer(fixed_t objx, fixed_t objy, INT32 hudx, INT32 hudy, INT32 flags)
+static void K_DrawKartUFOTimer(fixed_t objx, fixed_t objy, int32_t hudx, int32_t hudy, int32_t flags)
 {
 	fixed_t amnumxpos, amnumypos;
-	INT32 amxpos, amypos;
+	int32_t amxpos, amypos;
 
 	if (exitcountdown || leveltime > g_battleufo.due || battleprisons)
 		return;
@@ -8780,8 +8780,8 @@ static void K_DrawKartUFOTimer(fixed_t objx, fixed_t objy, INT32 hudx, INT32 hud
 	// magic number
 	int16_t text_height = (kp_battleufominimap->height/2) + 2;
 
-	amxpos = amnumxpos + ((hudx - (SHORT(final_width))/2)<<FRACBITS);
-	amypos = amnumypos + ((hudy - (SHORT(text_height))/2)<<FRACBITS);
+	amxpos = amnumxpos + ((hudx - (LSBF_SHORT(final_width))/2)<<FRACBITS);
+	amypos = amnumypos + ((hudy - (LSBF_SHORT(text_height))/2)<<FRACBITS);
 
 	V_DrawCenteredThinString(amxpos/FRACUNIT, amypos/FRACUNIT, flags, va("%d", countdown));
 }
@@ -8790,26 +8790,26 @@ static void K_drawKartMinimap(void)
 {
 	patch_t *workingPic;
 
-	INT32 i = 0;
-	INT32 x, y;
+	int32_t i = 0;
+	int32_t x, y;
 
-	INT32 minimaptrans;
-	INT32 splitflags;
+	int32_t minimaptrans;
+	int32_t splitflags;
 
-	UINT16 skin = 0;
-	UINT8 *colormap = NULL;
+	uint16_t skin = 0;
+	uint8_t *colormap = NULL;
 
-	SINT8 localplayers[MAXSPLITSCREENPLAYERS];
-	SINT8 numlocalplayers = 0;
+	int8_t localplayers[MAXSPLITSCREENPLAYERS];
+	int8_t numlocalplayers = 0;
 
 	mobj_t *mobj, *next;	// for SPB drawing (or any other item(s) we may wanna draw, I dunno!)
 
 	fixed_t interpx, interpy;
 
-	boolean doprogressionbar = false;
-	boolean doencore = false;
+	dboolean doprogressionbar = false;
+	dboolean doencore = false;
 
-	UINT8 minipal;
+	uint8_t minipal;
 
 	// Draw the HUD only when playing in a level.
 	// hu_stuff needs this, unlike st_stuff.
@@ -8865,7 +8865,7 @@ static void K_drawKartMinimap(void)
 	}
 
 	// Really looking forward to never writing this loop again
-	UINT8 bestplayer = MAXPLAYERS;
+	uint8_t bestplayer = MAXPLAYERS;
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
 		if (!playeringame[i])
@@ -8886,8 +8886,8 @@ static void K_drawKartMinimap(void)
 	if (doencore)
 	{
 		V_DrawFixedPatch(
-			(x + (SHORT(workingPic->width)/2))*FRACUNIT,
-			(y - (SHORT(workingPic->height)/2))*FRACUNIT,
+			(x + (LSBF_SHORT(workingPic->width)/2))*FRACUNIT,
+			(y - (LSBF_SHORT(workingPic->height)/2))*FRACUNIT,
 			FRACUNIT,
 			splitflags|minimaptrans|V_FLIP,
 			workingPic,
@@ -8897,8 +8897,8 @@ static void K_drawKartMinimap(void)
 	else
 	{
 		V_DrawFixedPatch(
-			(x - (SHORT(workingPic->width)/2))*FRACUNIT,
-			(y - (SHORT(workingPic->height)/2))*FRACUNIT,
+			(x - (LSBF_SHORT(workingPic->width)/2))*FRACUNIT,
+			(y - (LSBF_SHORT(workingPic->height)/2))*FRACUNIT,
 			FRACUNIT,
 			splitflags|minimaptrans,
 			workingPic,
@@ -8911,10 +8911,10 @@ static void K_drawKartMinimap(void)
 
 	// let offsets transfer to the heads, too!
 	if (doencore)
-		x += SHORT(workingPic->leftoffset);
+		x += LSBF_SHORT(workingPic->leftoffset);
 	else
-		x -= SHORT(workingPic->leftoffset);
-	y -= SHORT(workingPic->topoffset);
+		x -= LSBF_SHORT(workingPic->leftoffset);
+	y -= LSBF_SHORT(workingPic->topoffset);
 
 	if (doprogressionbar == true)
 	{
@@ -8926,7 +8926,7 @@ static void K_drawKartMinimap(void)
 	{
 		if (battleovertime.enabled >= 10*TICRATE || (battleovertime.enabled & 1))
 		{
-			const INT32 prevsplitflags = splitflags;
+			const int32_t prevsplitflags = splitflags;
 			splitflags &= ~V_HUDTRANSHALF;
 			splitflags |= V_HUDTRANS;
 			colormap = R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(K_RainbowColor(leveltime)), GTC_CACHE);
@@ -9151,7 +9151,7 @@ static void K_drawKartMinimap(void)
 	{
 		if (specialstageinfo.valid == true)
 		{
-			UINT32 distancetofinish = K_GetSpecialUFODistance();
+			uint32_t distancetofinish = K_GetSpecialUFODistance();
 			if (distancetofinish > 0 && specialstageinfo.ufo != NULL && P_MobjWasRemoved(specialstageinfo.ufo) == false)
 			{
 				colormap = NULL;
@@ -9161,7 +9161,7 @@ static void K_drawKartMinimap(void)
 				}
 				else
 				{
-					UINT8 emid = 0;
+					uint8_t emid = 0;
 					if (specialstageinfo.ufo->cvmem > 7)
 						emid = 1;
 					workingPic = kp_emeraldminimap[emid];
@@ -9207,7 +9207,7 @@ static void K_drawKartMinimap(void)
 
 	for (i = 0; i < numlocalplayers; i++)
 	{
-		boolean nocontest = false;
+		dboolean nocontest = false;
 
 		if (localplayers[i] == -1)
 			continue; // this doesn't interest us
@@ -9302,7 +9302,7 @@ static void K_drawKartMinimap(void)
 
 	if ((gametyperules & GTR_PAPERITEMS) && Obj_GetNextUFOSpawner() != NULL)
 	{
-		const INT32 prevsplitflags = splitflags;
+		const int32_t prevsplitflags = splitflags;
 		mobj_t *spawner = Obj_GetNextUFOSpawner();
 		splitflags &= ~V_HUDTRANS;
 		splitflags |= V_HUDTRANSHALF;
@@ -9315,7 +9315,7 @@ static void K_drawKartMinimap(void)
 		struct MiniWaypoint
 		{
 			waypoint_t* waypoint;
-			UINT8 rank;
+			uint8_t rank;
 
 			MiniWaypoint(waypoint_t* wp) : waypoint(wp), rank(K_RankMinimapWaypoint(wp)) {}
 
@@ -9347,10 +9347,10 @@ static void K_drawKartMinimap(void)
 
 #undef PROGRESSION_BAR_WIDTH
 
-static void K_drawKartFinish(boolean finish)
+static void K_drawKartFinish(dboolean finish)
 {
-	//INT32 timer, minsplitstationary, pnum = 0, splitflags = V_SPLITSCREEN;
-	INT32 timer, minsplitstationary, pnum = 0, splitflags = V_SPLITSCREEN|V_HUDTRANS;	//SCS - RADIO
+	//int32_t timer, minsplitstationary, pnum = 0, splitflags = V_SPLITSCREEN;
+	int32_t timer, minsplitstationary, pnum = 0, splitflags = V_SPLITSCREEN|V_HUDTRANS;	//SCS - RADIO
 	patch_t **kptodraw;
 
 	if (finish)
@@ -9380,16 +9380,16 @@ static void K_drawKartFinish(boolean finish)
 
 	if (r_splitscreen >= minsplitstationary) // 3/4p, stationary FIN
 	{
-		V_DrawScaledPatch(STCD_X - (SHORT(kptodraw[pnum]->width)/2), STCD_Y - (SHORT(kptodraw[pnum]->height)/2), splitflags, kptodraw[pnum]);
+		V_DrawScaledPatch(STCD_X - (LSBF_SHORT(kptodraw[pnum]->width)/2), STCD_Y - (LSBF_SHORT(kptodraw[pnum]->height)/2), splitflags, kptodraw[pnum]);
 		return;
 	}
 
 	//else -- 1/2p, scrolling FINISH
 	{
-		INT32 x, xval, ox, interpx, pwidth;
+		int32_t x, xval, ox, interpx, pwidth;
 
 		x = ((vid.width<<FRACBITS)/vid.dupx);
-		xval = (SHORT(kptodraw[pnum]->width)<<FRACBITS);
+		xval = (LSBF_SHORT(kptodraw[pnum]->width)<<FRACBITS);
 
 		pwidth = std::max(xval, x);
 
@@ -9402,7 +9402,7 @@ static void K_drawKartFinish(boolean finish)
 			interpx = -interpx;
 
 		V_DrawFixedPatch(interpx + (STCD_X<<FRACBITS) - (pwidth / 2),
-			(STCD_Y<<FRACBITS) - (SHORT(kptodraw[pnum]->height)<<(FRACBITS-1)),
+			(STCD_Y<<FRACBITS) - (LSBF_SHORT(kptodraw[pnum]->height)<<(FRACBITS-1)),
 			FRACUNIT,
 			splitflags, kptodraw[pnum], NULL);
 	}
@@ -9410,25 +9410,25 @@ static void K_drawKartFinish(boolean finish)
 
 static void K_drawKartStartBulbs(void)
 {
-	const UINT8 start_animation[14] = {
+	const uint8_t start_animation[14] = {
 		1, 2, 3, 4, 5, 6, 7, 8,
 		7, 6,
 		9, 10, 11, 12
 	};
 
-	const UINT8 loop_animation[4] = {
+	const uint8_t loop_animation[4] = {
 		12, 13, 12, 14
 	};
 
-	const UINT8 chillloop_animation[2] = {
+	const uint8_t chillloop_animation[2] = {
 		11, 12
 	};
 
-	const UINT8 letters_order[10] = {
+	const uint8_t letters_order[10] = {
 		0, 1, 2, 3, 4, 3, 1, 5, 6, 6
 	};
 
-	const UINT8 letters_transparency[40] = {
+	const uint8_t letters_transparency[40] = {
 		0, 2, 4, 6, 8,
 		10, 10, 10, 10, 10,
 		10, 10, 10, 10, 10,
@@ -9445,8 +9445,8 @@ static void K_drawKartStartBulbs(void)
 	fixed_t starty = 48*FRACUNIT;
 	fixed_t x, y;
 
-	UINT8 numperrow = numbulbs/2;
-	UINT8 i;
+	uint8_t numperrow = numbulbs/2;
+	uint8_t i;
 
 	if (r_splitscreen >= 1)
 	{
@@ -9484,8 +9484,8 @@ static void K_drawKartStartBulbs(void)
 
 	for (i = 0; i < numbulbs; i++)
 	{
-		UINT8 patchnum = 0;
-		INT32 bulbtic = (leveltime - introtime - TICRATE) - (bulbtime * i);
+		uint8_t patchnum = 0;
+		int32_t bulbtic = (leveltime - introtime - TICRATE) - (bulbtime * i);
 
 		if (i == numperrow)
 		{
@@ -9501,7 +9501,7 @@ static void K_drawKartStartBulbs(void)
 			}
 			else
 			{
-				const INT32 length = (bulbtime * 3);
+				const int32_t length = (bulbtime * 3);
 
 				bulbtic -= 14;
 
@@ -9534,7 +9534,7 @@ static void K_drawKartStartBulbs(void)
 			}
 		}
 
-		INT32 hudtransflags = (camera[R_GetViewNumber()].chaseheight > HUDTRANS_CAMHEIGHT_MAX) ? V_HUDTRANSHALF : 0;
+		int32_t hudtransflags = (camera[R_GetViewNumber()].chaseheight > HUDTRANS_CAMHEIGHT_MAX) ? V_HUDTRANSHALF : 0;
 
 		V_DrawFixedPatch(x, y, FRACUNIT, V_SNAPTOTOP|V_SPLITSCREEN|hudtransflags,
 			(r_splitscreen ? kp_prestartbulb_split[patchnum] : kp_prestartbulb[patchnum]), NULL);
@@ -9558,8 +9558,8 @@ static void K_drawKartStartBulbs(void)
 
 	for (i = 0; i < 10; i++)
 	{
-		UINT8 patchnum = letters_order[i];
-		INT32 transflag = letters_transparency[(leveltime - i) % 40];
+		uint8_t patchnum = letters_order[i];
+		int32_t transflag = letters_transparency[(leveltime - i) % 40];
 		patch_t *patch = (r_splitscreen ? kp_prestartletters_split[patchnum] : kp_prestartletters[patchnum]);
 
 		if (transflag >= 10)
@@ -9574,11 +9574,11 @@ static void K_drawKartStartBulbs(void)
 
 		if (i < 9)
 		{
-			x += (SHORT(patch->width)) * FRACUNIT/2;
+			x += (LSBF_SHORT(patch->width)) * FRACUNIT/2;
 
 			patchnum = letters_order[i+1];
 			patch = (r_splitscreen ? kp_prestartletters_split[patchnum] : kp_prestartletters[patchnum]);
-			x += (SHORT(patch->width)) * FRACUNIT/2;
+			x += (LSBF_SHORT(patch->width)) * FRACUNIT/2;
 
 			if (r_splitscreen)
 				x -= FRACUNIT;
@@ -9588,8 +9588,8 @@ static void K_drawKartStartBulbs(void)
 
 static void K_drawKartStartCountdown(void)
 {
-	INT32 pnum = 0;
-	INT32 hudtransflags = (camera[R_GetViewNumber()].chaseheight > HUDTRANS_CAMHEIGHT_MAX) ? V_HUDTRANSHALF : 0;
+	int32_t pnum = 0;
+	int32_t hudtransflags = (camera[R_GetViewNumber()].chaseheight > HUDTRANS_CAMHEIGHT_MAX) ? V_HUDTRANSHALF : 0;
 
 	if (leveltime >= introtime && leveltime < starttime-(3*TICRATE))
 	{
@@ -9611,8 +9611,8 @@ static void K_drawKartStartCountdown(void)
 
 		if (leveltime >= starttime) // GO!
 		{
-			UINT8 i;
-			UINT8 numplayers = 0;
+			uint8_t i;
+			uint8_t numplayers = 0;
 
 			pnum++;
 
@@ -9642,15 +9642,15 @@ static void K_drawKartStartCountdown(void)
 		if (r_splitscreen) // splitscreen
 			pnum += 10;
 
-		V_DrawScaledPatch(STCD_X - (SHORT(kp_startcountdown[pnum]->width)/2), STCD_Y - (SHORT(kp_startcountdown[pnum]->height)/2), V_SPLITSCREEN|hudtransflags, kp_startcountdown[pnum]);
+		V_DrawScaledPatch(STCD_X - (LSBF_SHORT(kp_startcountdown[pnum]->width)/2), STCD_Y - (LSBF_SHORT(kp_startcountdown[pnum]->height)/2), V_SPLITSCREEN|hudtransflags, kp_startcountdown[pnum]);
 
 		// replace with cvar check
 		if (!r_splitscreen && leveltime < starttime && cv_precise_countdown.value) {			//SCS - RADIO START
 			const tic_t centiseconds = G_TicsToCentiseconds(starttime - leveltime);
-			const INT32 centi_x = (STCD_X + (SHORT(kp_startcountdown[pnum]->width)/3));
-			const INT32 centi_y = (STCD_Y + (SHORT(kp_startcountdown[pnum]->height)/2) - 10);
-			const INT32 bar_x = (STCD_X - 50);
-			const INT32 bar_y = (STCD_Y + (SHORT(kp_startcountdown[pnum]->height)/2) + 4);
+			const int32_t centi_x = (STCD_X + (LSBF_SHORT(kp_startcountdown[pnum]->width)/3));
+			const int32_t centi_y = (STCD_Y + (LSBF_SHORT(kp_startcountdown[pnum]->height)/2) - 10);
+			const int32_t bar_x = (STCD_X - 50);
+			const int32_t bar_y = (STCD_Y + (LSBF_SHORT(kp_startcountdown[pnum]->height)/2) + 4);
 
 			V_DrawStringScaled(
 				(centi_x) << FRACBITS,
@@ -9680,19 +9680,19 @@ static void K_drawKartStartCountdown(void)
 
 static void K_drawKartFirstPerson(void)
 {
-	static INT32 pnum[4], turn[4], drift[4];
-	const INT16 steerThreshold = KART_FULLTURN / 2;
-	INT32 pn = 0, tn = 0, dr = 0;
-	INT32 target = 0, splitflags = V_SNAPTOBOTTOM|V_SPLITSCREEN;
-	INT32 x = BASEVIDWIDTH/2, y = BASEVIDHEIGHT;
+	static int32_t pnum[4], turn[4], drift[4];
+	const int16_t steerThreshold = KART_FULLTURN / 2;
+	int32_t pn = 0, tn = 0, dr = 0;
+	int32_t target = 0, splitflags = V_SNAPTOBOTTOM|V_SPLITSCREEN;
+	int32_t x = BASEVIDWIDTH/2, y = BASEVIDHEIGHT;
 	fixed_t scale;
-	UINT8 *colmap = NULL;
+	uint8_t *colmap = NULL;
 
 	if (stplyr->spectator || !stplyr->mo || (stplyr->mo->renderflags & RF_DONTDRAW || stplyr->mo->state == &states[S_KART_DEAD]))
 		return;
 
 	{
-		UINT8 view = R_GetViewNumber();
+		uint8_t view = R_GetViewNumber();
 		pn = pnum[view];
 		tn = turn[view];
 		dr = drift[view];
@@ -9762,7 +9762,7 @@ static void K_drawKartFirstPerson(void)
 
 	if (stplyr->mo)
 	{
-		UINT8 driftcolor = K_DriftSparkColor(stplyr, stplyr->driftcharge);
+		uint8_t driftcolor = K_DriftSparkColor(stplyr, stplyr->driftcharge);
 		const angle_t ang = R_PointToAngle2(0, 0, stplyr->rmomx, stplyr->rmomy) - stplyr->drawangle;
 		// yes, the following is correct. no, you do not need to swap the x and y.
 		fixed_t xoffs = -P_ReturnThrustY(stplyr->mo, ang, (BASEVIDWIDTH<<(FRACBITS-2))/2);
@@ -9830,7 +9830,7 @@ static void K_drawKartFirstPerson(void)
 	V_DrawFixedPatch(x, y, scale, splitflags, kp_fpview[target], colmap);
 
 	{
-		UINT8 view = R_GetViewNumber();
+		uint8_t view = R_GetViewNumber();
 		pnum[view] = pn;
 		turn[view] = tn;
 		drift[view] = dr;
@@ -9839,8 +9839,8 @@ static void K_drawKartFirstPerson(void)
 
 static void K_drawInput(void)
 {
-	UINT8 viewnum = R_GetViewNumber();
-	boolean freecam = camera[viewnum].freecam;	//disable some hud elements w/ freecam
+	uint8_t viewnum = R_GetViewNumber();
+	dboolean freecam = camera[viewnum].freecam;	//disable some hud elements w/ freecam
 
 	// Radio
 	isDrawingInput = false;				//SCS - RADIO
@@ -9854,14 +9854,14 @@ static void K_drawInput(void)
 	// Radio
 	isDrawingInput = true;		//SCS - RADIO
 
-	INT32 def[4][3] = {
+	int32_t def[4][3] = {
 		{247, 156, V_SNAPTOBOTTOM | V_SNAPTORIGHT}, // 1p
 		{247, 56, V_SNAPTOBOTTOM | V_SNAPTORIGHT}, // 2p
 		{-2, 22, V_SNAPTOBOTTOM | V_SNAPTOLEFT}, // 4p left									//SCS EDIT
 		{290 - BASEVIDWIDTH/2, 22, V_SNAPTOBOTTOM | V_SNAPTORIGHT}, // 4p right				//SCS EDIT
 	};
-	INT32 k = r_splitscreen <= 1 ? r_splitscreen : 2 + (viewnum & 1);
-	INT32 flags = def[k][2] | V_SPLITSCREEN;
+	int32_t k = r_splitscreen <= 1 ? r_splitscreen : 2 + (viewnum & 1);
+	int32_t flags = def[k][2] | V_SPLITSCREEN;
 	//char mode = ((stplyr->pflags & PF_ANALOGSTICK) ? '4' : '2') + (r_splitscreen > 1);
 
 	char mode = ((stplyr->pflags & PF_ANALOGSTICK) ? '4' : '2');		//SCS - RADIO START
@@ -9883,7 +9883,7 @@ static void K_drawInput(void)
 	}																	//SCS - RADIO END
 	bool local = !demo.playback && P_IsMachineLocalPlayer(stplyr);
 	fixed_t slide = K_GetDialogueSlide(FRACUNIT);
-	INT32 tallySlide = []() -> INT32
+	int32_t tallySlide = []() -> int32_t
 	{
 		if (r_splitscreen <= 1)
 		{
@@ -9893,11 +9893,11 @@ static void K_drawInput(void)
 		{
 			return 0;
 		}
-		constexpr INT32 kSlideDown = 22;
+		constexpr int32_t kSlideDown = 22;
 		if (stplyr->tally.state == TALLY_ST_GOTTHRU_SLIDEIN ||
 			stplyr->tally.state == TALLY_ST_GAMEOVER_SLIDEIN)
 		{
-			return static_cast<INT32>(Easing_OutQuad(std::min<fixed_t>(stplyr->tally.transition * 2, FRACUNIT), 0, kSlideDown));
+			return static_cast<int32_t>(Easing_OutQuad(std::min<fixed_t>(stplyr->tally.transition * 2, FRACUNIT), 0, kSlideDown));
 		}
 		return kSlideDown;
 	}();
@@ -9929,14 +9929,14 @@ static void K_drawInput(void)
 static void K_drawChallengerScreen(void)
 {
 	// This is an insanely complicated animation.
-	static UINT8 anim[52] = {
+	static uint8_t anim[52] = {
 		0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13, // frame 1-14, 2 tics: HERE COMES A NEW slides in
 		14,14,14,14,14,14, // frame 15, 6 tics: pause on the W
 		15,16,17,18, // frame 16-19, 1 tic: CHALLENGER approaches screen
 		19,20,19,20,19,20,19,20,19,20, // frame 20-21, 1 tic, 5 alternating: all text vibrates from impact
 		21,22,23,24 // frame 22-25, 1 tic: CHALLENGER turns gold
 	};
-	const UINT8 offset = std::min<UINT32>(52-1u, (3*TICRATE)-mapreset);
+	const uint8_t offset = std::min<uint32_t>(52-1u, (3*TICRATE)-mapreset);
 
 	V_DrawFadeScreen(0xFF00, 16); // Fade out
 	V_DrawScaledPatch(0, 0, 0, kp_challenger[anim[offset]]);
@@ -9950,15 +9950,15 @@ static void K_drawLapStartAnim(void)
 	}
 
 	// This is an EVEN MORE insanely complicated animation.
-	const UINT8 t = stplyr->karthud[khud_lapanimation];
-	const UINT8 progress = 80 - t;
+	const uint8_t t = stplyr->karthud[khud_lapanimation];
+	const uint8_t progress = 80 - t;
 
-	const UINT8 tOld = t + 1;
-	const UINT8 progressOld = 80 - tOld;
+	const uint8_t tOld = t + 1;
+	const uint8_t progressOld = 80 - tOld;
 
 	const tic_t leveltimeOld = leveltime - 1;
 
-	UINT8 *colormap = R_GetTranslationColormap(TC_DEFAULT, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE);
+	uint8_t *colormap = R_GetTranslationColormap(TC_DEFAULT, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE);
 
 	fixed_t interpx, interpy, newval, oldval;
 
@@ -9970,7 +9970,7 @@ static void K_drawLapStartAnim(void)
 	oldval = (48 - (32 * std::max(0, progressOld - 76))) * FRACUNIT;
 	interpy = R_InterpolateFixed(oldval, newval);
 
-	INT32 hudtransflags = (camera[R_GetViewNumber()].chaseheight > HUDTRANS_CAMHEIGHT_MAX) ? V_HUDTRANSHALF : V_HUDTRANS;
+	int32_t hudtransflags = (camera[R_GetViewNumber()].chaseheight > HUDTRANS_CAMHEIGHT_MAX) ? V_HUDTRANSHALF : V_HUDTRANS;
 
 	V_DrawFixedPatch(
 		interpx, interpy,
@@ -9989,7 +9989,7 @@ static void K_drawLapStartAnim(void)
 			kp_lapanim_hand[stplyr->karthud[khud_laphand]-1], NULL);
 	}
 
-	if (stplyr->latestlap == (UINT8)(numlaps))
+	if (stplyr->latestlap == (uint8_t)(numlaps))
 	{
 		newval = (62 - (32 * std::max(0, progress - 76))) * FRACUNIT;
 		oldval = (62 - (32 * std::max(0, progressOld - 76))) * FRACUNIT;
@@ -10032,7 +10032,7 @@ static void K_drawLapStartAnim(void)
 			oldval = (188 + (32 * std::max(0, progressOld - 76))) * FRACUNIT;
 			interpx = R_InterpolateFixed(oldval, newval);
 
-			UINT32 sanitizedlaps = std::min((UINT32)99, (UINT32)stplyr->latestlap);
+			uint32_t sanitizedlaps = std::min((uint32_t)99, (uint32_t)stplyr->latestlap);
 
 			V_DrawFixedPatch(
 				interpx, // 194
@@ -10071,7 +10071,7 @@ static void K_drawTrickCool(void)
 {
 
 	tic_t timer = TICRATE - stplyr->karthud[khud_trickcool];
-	SINT8 adjustedspeedlevel = stplyr->trickspeedlevel;
+	int8_t adjustedspeedlevel = stplyr->trickspeedlevel;
 	
 	
 	if (adjustedspeedlevel > 9)
@@ -10115,7 +10115,7 @@ void K_drawKartFreePlay(void)
 	if (((leveltime-lt_endtime) % TICRATE) < TICRATE/2)
 		return;
 
-	INT32 h_snap = r_splitscreen < 2 ? V_SNAPTORIGHT | V_SLIDEIN : V_HUDTRANS;
+	int32_t h_snap = r_splitscreen < 2 ? V_SNAPTORIGHT | V_SLIDEIN : V_HUDTRANS;
 	fixed_t x = ((r_splitscreen > 1 ? BASEVIDWIDTH/4 : BASEVIDWIDTH - (LAPS_X+6)) * FRACUNIT);
 	fixed_t y = ((r_splitscreen ? BASEVIDHEIGHT/2 : BASEVIDHEIGHT) - 20) * FRACUNIT;
 
@@ -10144,18 +10144,18 @@ void K_drawKartFreePlay(void)
 }
 
 static void
-Draw_party_ping (int ss, INT32 snap)
+Draw_party_ping (int ss, int32_t snap)
 {
-	UINT32 ping = playerpingtable[displayplayers[ss]];
-	UINT32 mindelay = playerdelaytable[displayplayers[ss]];
+	uint32_t ping = playerpingtable[displayplayers[ss]];
+	uint32_t mindelay = playerdelaytable[displayplayers[ss]];
 	HU_drawMiniPing(0, 0, ping, mindelay, V_SPLITSCREEN|V_SNAPTOTOP|snap);
 }
 
 static void
 K_drawMiniPing (void)
 {
-	UINT32 f = V_SNAPTORIGHT;
-	UINT8 i = R_GetViewNumber();
+	uint32_t f = V_SNAPTORIGHT;
+	uint8_t i = R_GetViewNumber();
 
 	if (r_splitscreen > 1 && !(i & 1))
 	{
@@ -10165,15 +10165,15 @@ K_drawMiniPing (void)
 	Draw_party_ping(i, f);
 }
 
-void K_drawButton(fixed_t x, fixed_t y, INT32 flags, patch_t *button[2], boolean pressed)
+void K_drawButton(fixed_t x, fixed_t y, int32_t flags, patch_t *button[2], dboolean pressed)
 {
 	V_DrawFixedPatch(x, y, FRACUNIT, flags, button[(pressed == true) ? 1 : 0], NULL);
 }
 
-void K_drawButtonAnim(INT32 x, INT32 y, INT32 flags, patch_t *button[2], tic_t animtic)
+void K_drawButtonAnim(int32_t x, int32_t y, int32_t flags, patch_t *button[2], tic_t animtic)
 {
-	const UINT8 anim_duration = 16;
-	const boolean anim = ((animtic % (anim_duration * 2)) < anim_duration);
+	const uint8_t anim_duration = 16;
+	const dboolean anim = ((animtic % (anim_duration * 2)) < anim_duration);
 	K_drawButton(x << FRACBITS, y << FRACBITS, flags, button, anim);
 }
 
@@ -10332,7 +10332,7 @@ static void K_DrawBotDebugger(void)
 
 	V_DrawSmallString(8, 14, 0, va("Difficulty: %d / %d", bot->botvars.difficulty, MAXBOTDIFFICULTY));
 	V_DrawSmallString(8, 18, 0, va("Difficulty increase: %d", bot->botvars.diffincrease));
-	V_DrawSmallString(8, 22, 0, va("Rival / Foe: %d / %d", (UINT8)(bot->botvars.rival == true), (UINT8)(bot->botvars.foe == true)));
+	V_DrawSmallString(8, 22, 0, va("Rival / Foe: %d / %d", (uint8_t)(bot->botvars.rival == true), (uint8_t)(bot->botvars.foe == true)));
 	V_DrawSmallString(8, 26, 0, va("Rubberbanding: %.02f", FIXED_TO_FLOAT(bot->botvars.rubberband) * 100.0f));
 
 	V_DrawSmallString(8, 32, 0, va("Item delay: %d", bot->botvars.itemdelay));
@@ -10424,7 +10424,7 @@ struct messagestate_t
 	std::deque<srb2::String> messages;
 	srb2::String objective = "";
 	tic_t timer = 0;
-	boolean persist = false;
+	dboolean persist = false;
 	messagemode_t mode = MM_IN;
 	const tic_t speedyswitch = 2*TICRATE;
 	const tic_t lazyswitch = 4*TICRATE;
@@ -10503,9 +10503,9 @@ struct messagestate_t
 
 static std::vector<messagestate_t> messagestates{MAXSPLITSCREENPLAYERS};
 
-void K_AddMessage(const char *msg, boolean interrupt, boolean persist)
+void K_AddMessage(const char *msg, dboolean interrupt, dboolean persist)
 {
-	for (UINT8 i = 0; i <= r_splitscreen; i++)
+	for (uint8_t i = 0; i <= r_splitscreen; i++)
 	{
 		messagestate_t *state = &messagestates[i];
 
@@ -10531,7 +10531,7 @@ void K_ClearPersistentMessages()
 }
 
 // Return value can be used for "paired" splitscreen messages, true = was displayed
-void K_AddMessageForPlayer(player_t *player, const char *msg, boolean interrupt, boolean persist)
+void K_AddMessageForPlayer(player_t *player, const char *msg, dboolean interrupt, dboolean persist)
 {
 	if (!player)
 		return;
@@ -10591,7 +10591,7 @@ static void K_DrawMessageFeed(void)
 
 		std::string msg = state.messages[0];
 
-		UINT8 sublen = state.timer;
+		uint8_t sublen = state.timer;
 		if (state.mode == MM_IN)
 			sublen = state.timer;
 		else if (state.mode == MM_HOLD)
@@ -10607,14 +10607,14 @@ static void K_DrawMessageFeed(void)
 
 		text.font(Draw::Font::kMenu);
 
-		UINT32 vw = vid.width / vid.dupx;
-		UINT32 vh = vid.height / vid.dupy;
+		uint32_t vw = vid.width / vid.dupx;
+		uint32_t vh = vid.height / vid.dupy;
 
-		UINT32 x = vw / 2;
-		//UINT32 y = 10;
-		UINT32 y = 30;			//SCS EDIT - moving this down lower so it doesn't get blocked by the timer/Dynamite Derby timer
+		uint32_t x = vw / 2;
+		//uint32_t y = 10;
+		uint32_t y = 30;			//SCS EDIT - moving this down lower so it doesn't get blocked by the timer/Dynamite Derby timer
 
-		SINT8 shift = 0;
+		int8_t shift = 0;
 		if (r_splitscreen >= 2)
 		{
 			text.font(Draw::Font::kThin);
@@ -10637,7 +10637,7 @@ static void K_DrawMessageFeed(void)
 				y += vh / 2;
 		}
 
-		UINT16 sw = text.width();
+		uint16_t sw = text.width();
 
 		K_DrawSticker(x - sw/2, y, sw, V_SNAPTOTOP|V_SNAPTOLEFT, true);
 		Draw(x, y+shift).align(Draw::Align::kCenter).flags(V_SNAPTOTOP|V_SNAPTOLEFT).text(text);
@@ -10646,10 +10646,10 @@ static void K_DrawMessageFeed(void)
 
 void K_drawKartHUD(void)
 {
-	boolean islonesome = false;
-	UINT8 viewnum = R_GetViewNumber();
-	boolean freecam = camera[viewnum].freecam;	//disable some hud elements w/ freecam
-	INT32 flags = V_HUDTRANS|V_SLIDEIN|V_SNAPTOTOP|V_SNAPTORIGHT;
+	dboolean islonesome = false;
+	uint8_t viewnum = R_GetViewNumber();
+	dboolean freecam = camera[viewnum].freecam;	//disable some hud elements w/ freecam
+	int32_t flags = V_HUDTRANS|V_SLIDEIN|V_SNAPTOTOP|V_SNAPTORIGHT;
 
 	// Define the X and Y for each drawn object
 	// This is handled by console/menu values
@@ -10671,9 +10671,9 @@ void K_drawKartHUD(void)
 	{
 		V_DrawFadeScreen(31, 8);
 		V_DrawCenteredGamemodeString(BASEVIDWIDTH/2, BASEVIDHEIGHT/2 - 30, 0, 0, "Staff Ghost Sync Test");
-		UINT16 barw = BASEVIDWIDTH/2;
-		UINT16 barh = 8;
-		UINT16 bary = 10;
+		uint16_t barw = BASEVIDWIDTH/2;
+		uint16_t barh = 8;
+		uint16_t bary = 10;
 		V_DrawFill(BASEVIDWIDTH/2 - barw/2, BASEVIDHEIGHT/2 - barh/2 + bary, barw, barh, 199);
 		V_DrawFill(BASEVIDWIDTH/2 - barw/2 + 1, BASEVIDHEIGHT/2 - barh/2 + 1 + bary, barw * staffsync_done / staffsync_total - 2, barh - 2, 176);
 		V_DrawCenteredThinString(BASEVIDWIDTH/2, BASEVIDHEIGHT/2 + 20, 0, va("Testing ghost %d of %d (%d failed). Choppy visuals are normal!\n", staffsync_done, staffsync_total, staffsync_failed));
@@ -10688,12 +10688,12 @@ void K_drawKartHUD(void)
 			K_drawEmeraldWin(false);
 
 		// Tacitcal Normie Countermeasure
-		INT32 dfade = K_GetDialogueFade();
+		int32_t dfade = K_GetDialogueFade();
 		if (dfade && !(mapheaderinfo[gamemap-1]->levelflags & LF_NOCOMMS))
 		{
 			V_DrawFadeScreen(31, dfade); // Fade out
 
-			const INT32 gutter = (vid.width/vid.dupx) - BASEVIDWIDTH;
+			const int32_t gutter = (vid.width/vid.dupx) - BASEVIDWIDTH;
 
 			srb2::Draw normiedraw = srb2::Draw()
 					.x(-gutter/2)
@@ -10702,8 +10702,8 @@ void K_drawKartHUD(void)
 					.font(srb2::Draw::Font::kGenesis);
 
 			const char *normietext = "COMMUNICATION IN PROGRESS!! ";
-			INT32 normiew = srb2::Draw::TextElement(normietext).font(srb2::Draw::Font::kGenesis).width();
-			INT32 normiex = -((static_cast<INT32>(timeinmap)) % normiew);
+			int32_t normiew = srb2::Draw::TextElement(normietext).font(srb2::Draw::Font::kGenesis).width();
+			int32_t normiex = -((static_cast<int32_t>(timeinmap)) % normiew);
 
 			while (normiex < BASEVIDWIDTH + gutter)
 			{
@@ -10724,7 +10724,7 @@ void K_drawKartHUD(void)
 	CV_StealthSetValue(cv_descriptiveinput, 0);
 	Draw::TextElement text = Draw::TextElement().parse("Hamburger <a><b><c><x><y><z><l><r><lua1><lua2><lua3><start><left><up><right><down> Hamburger\n\nHamburger <large><a><large><b><large><c><large><x><large><y><large><z><large><l><large><r><large><lua1><large><lua2><large><lua3><large><start><large><left><large><up><large><right><large><down> Hamburger\n\nHamburger \xEB\xEF\xA0\xEB\xEF\xA1\xEB\xEF\xA2\xEB\xEF\xA3\xEB\xEF\xA4\xEB\xEF\xA5\xEB\xEF\xA6\xEB\xEF\xA7\xEB\xEF\xA8\xEB\xEF\xA9\xEB\xEF\xAA\xEB\xEF\xAB\xEB\xEF\xAC Hamburger");
 
-	UINT8 fakeoff = (stplyr - players)*40;
+	uint8_t fakeoff = (stplyr - players)*40;
 	Draw(5, 5+fakeoff).align((srb2::Draw::Align)0).font(Draw::Font::kMenu).text(text);
 	Draw(40, 80+fakeoff).align((srb2::Draw::Align)0).font(Draw::Font::kThin).text(text);
 	}
@@ -10733,7 +10733,7 @@ void K_drawKartHUD(void)
 	{
 	Draw::TextElement text = Draw::TextElement().parse("\xEELEFTSPACE\xEE\n\xEESPC\xEE \xEETAB\xEE\nA \xEF\xA0 A\nB \xEF\xA1 B\nX \xEF\xA2 X\nY \xEF\xA3 Y\nLB \xEF\xA4 LB\nRB \xEF\xA5 RB\nLT \xEF\xA6 LT\nRT \xEF\xA7 RT\nST \xEF\xA8 ST\nBK \xEF\xA9 BK\nLS \xEF\xAA LS\nRS \xEF\xAB RS\n");
 
-	UINT8 offset = 0;
+	uint8_t offset = 0;
 	Draw(160+offset, 5).align((srb2::Draw::Align)1).font(Draw::Font::kThin).text(text);
 	Draw(55+offset, 5).align((srb2::Draw::Align)1).font(Draw::Font::kMenu).text(text);
 	}
@@ -10742,7 +10742,7 @@ void K_drawKartHUD(void)
 	{
 	Draw::TextElement text = Draw::TextElement().parse("\xEELEFTSPACE\xEE\n\xEESPC\xEE \xEETAB\xEE\nA \xEB\xEF\xA0 A\nB \xEB\xEF\xA1 B\nX \xEB\xEF\xA2 X\nY \xEB\xEF\xA3 Y\nLB \xEB\xEF\xA4 LB\nRB \xEB\xEF\xA5 RB\nLT \xEB\xEF\xA6 LT\nRT \xEB\xEF\xA7 RT\nST \xEB\xEF\xA8 ST\nBK \xEB\xEF\xA9 BK\nLS \xEB\xEF\xAA LS\nRS \xEB\xEF\xAB RS\n");
 
-	UINT8 offset = 0;
+	uint8_t offset = 0;
 	Draw(160+offset, 5).align((srb2::Draw::Align)1).font(Draw::Font::kThin).text(text);
 	Draw(55+offset, 5).align((srb2::Draw::Align)1).font(Draw::Font::kMenu).text(text);
 	}
@@ -10760,7 +10760,7 @@ void K_drawKartHUD(void)
 		//if (LUA_HudEnabled(hud_names) && R_DrawPickups())
 
 		// radio
-		boolean force_show_nametags = cv_toggle_nametags.value;						//SCS - RADIO START
+		dboolean force_show_nametags = cv_toggle_nametags.value;						//SCS - RADIO START
 
 		// if the player has nametags disabled, but they're playing battle..
 		if (gametyperules & GTR_POINTLIMIT) {
@@ -10780,7 +10780,7 @@ void K_drawKartHUD(void)
 #endif
 
 		//if (LUA_HudEnabled(hud_minimap))
-		boolean showminimap = cv_toggle_race_minimap.value;							//SCS - RADIO START
+		dboolean showminimap = cv_toggle_race_minimap.value;							//SCS - RADIO START
 		// Show the minimap during battle, it's important information
 		if (!showminimap && (gametyperules & GTR_POINTLIMIT)) {
 			showminimap = true;
@@ -10831,7 +10831,7 @@ void K_drawKartHUD(void)
 				}
 			}
 
-			boolean debug_alwaysdrawsplits = false;
+			dboolean debug_alwaysdrawsplits = false;
 
 			if (
 				(
@@ -10845,11 +10845,11 @@ void K_drawKartHUD(void)
 			{
 				using srb2::Draw;
 
-				INT32 split = stplyr->karthud[khud_splittime];
-				INT32 skin = stplyr->karthud[khud_splitskin];
-				INT32 color = stplyr->karthud[khud_splitcolor];
-				INT32 ahead = stplyr->karthud[khud_splitwin];
-				INT32 pos = stplyr->karthud[khud_splitposition];
+				int32_t split = stplyr->karthud[khud_splittime];
+				int32_t skin = stplyr->karthud[khud_splitskin];
+				int32_t color = stplyr->karthud[khud_splitcolor];
+				int32_t ahead = stplyr->karthud[khud_splitwin];
+				int32_t pos = stplyr->karthud[khud_splitposition];
 
 				// debug
 				if (!stplyr->karthud[khud_splittimer])
@@ -10862,9 +10862,9 @@ void K_drawKartHUD(void)
 
 				split = std::abs(split);
 
-				UINT8 *skincolor = R_GetTranslationColormap(skin, static_cast<skincolornum_t>(color), GTC_CACHE);
+				uint8_t *skincolor = R_GetTranslationColormap(skin, static_cast<skincolornum_t>(color), GTC_CACHE);
 
-				UINT8 textcolor = SKINCOLOR_WHITE;
+				uint8_t textcolor = SKINCOLOR_WHITE;
 				switch (ahead)
 				{
 					case 2:
@@ -10954,7 +10954,7 @@ void K_drawKartHUD(void)
 				{
 					using srb2::Draw;
 					Draw row = Draw(BASEVIDWIDTH - 20, TIME_Y + 18).flags(flags).align(Draw::Align::kRight);
-					auto insert = [&](const char *label, UINT32 tics)
+					auto insert = [&](const char *label, uint32_t tics)
 					{
 						Draw::TextElement text =
 							tics != UINT32_MAX ?
@@ -11020,11 +11020,11 @@ void K_drawKartHUD(void)
 		{
 			if (demo.attract == DEMO_ATTRACT_TITLE) // Draw logo on title screen demos
 			{
-				INT32 x = BASEVIDWIDTH - 8, y = BASEVIDHEIGHT-8, snapflags = V_SNAPTOBOTTOM|V_SNAPTORIGHT|V_SLIDEIN;
+				int32_t x = BASEVIDWIDTH - 8, y = BASEVIDHEIGHT-8, snapflags = V_SNAPTOBOTTOM|V_SNAPTORIGHT|V_SLIDEIN;
 				patch_t *pat = static_cast<patch_t*>(W_CachePatchName((M_UseAlternateTitleScreen() ? "MTSJUMPR1" : "MTSBUMPR1"), PU_CACHE));
-				const UINT8 *colormap = nullptr;
+				const uint8_t *colormap = nullptr;
 
-				if (INT32 fade = F_AttractDemoExitFade())
+				if (int32_t fade = F_AttractDemoExitFade())
 				{
 					// TODO: Twodee cannot handle
 					// V_DrawCustomFadeScreen.
@@ -11037,8 +11037,8 @@ void K_drawKartHUD(void)
 					if (lighttable_t *clm = V_LoadCustomFadeMap("FADEMAP0"))
 					{
 						// This must be statically allocated for Twodee
-						static UINT8 *colormap_storage;
-						const UINT8 *fadetable = V_OffsetIntoFadeMap(clm, fade);
+						static uint8_t *colormap_storage;
+						const uint8_t *fadetable = V_OffsetIntoFadeMap(clm, fade);
 
 						if (!colormap_storage)
 							Z_MallocAlign(256, PU_STATIC, &colormap_storage, 8);
@@ -11057,12 +11057,12 @@ void K_drawKartHUD(void)
 					snapflags = 0;
 				}
 
-				V_DrawMappedPatch(x-(SHORT(pat->width)), y-(SHORT(pat->height)), snapflags, pat, colormap);
+				V_DrawMappedPatch(x-(LSBF_SHORT(pat->width)), y-(LSBF_SHORT(pat->height)), snapflags, pat, colormap);
 			}
 		}
 		else
 		{
-			boolean gametypeinfoshown = false;
+			dboolean gametypeinfoshown = false;
 
 			if (K_PlayerTallyActive(stplyr) == true)
 			{
@@ -11223,7 +11223,7 @@ void K_drawKartHUD(void)
 			V_DrawCenteredString(BASEVIDWIDTH/4, LAPS_Y+1, V_SPLITSCREEN, countstr);
 		else
 		{
-			INT32 karlen = strlen(countstr)*6; // half of 12
+			int32_t karlen = strlen(countstr)*6; // half of 12
 			V_DrawTimerString((BASEVIDWIDTH/2)-karlen, LAPS_Y+3, V_SPLITSCREEN, countstr);
 		}
 	}
@@ -11263,7 +11263,7 @@ void K_drawKartHUD(void)
 	}
 
 	if ((gametyperules & GTR_KARMA) && !r_splitscreen && (stplyr->karthud[khud_yougotem] % 2)) // * YOU GOT EM *
-		V_DrawScaledPatch(BASEVIDWIDTH/2 - (SHORT(kp_yougotem->width)/2), 32, V_HUDTRANS, kp_yougotem);
+		V_DrawScaledPatch(BASEVIDWIDTH/2 - (LSBF_SHORT(kp_yougotem->width)/2), 32, V_HUDTRANS, kp_yougotem);
 
 	// Draw FREE PLAY.
 	K_drawKartFreePlay();
@@ -11292,21 +11292,21 @@ void K_drawKartHUD(void)
 
 	if (cv_kartdebugnodes.value)
 	{
-		UINT8 p;
+		uint8_t p;
 		for (p = 0; p < MAXPLAYERS; p++)
 			V_DrawString(8, 64+(8*p), V_YELLOWMAP, va("%d - %d (%dl)", p, playernode[p], players[p].cmd.latency));
 	}
 
 	if (cv_kartdebugcolorize.value && stplyr->mo && stplyr->mo->skin)
 	{
-		INT32 x = 0, y = 0;
-		UINT16 c;
+		int32_t x = 0, y = 0;
+		uint16_t c;
 
 		for (c = 0; c < numskincolors; c++)
 		{
 			if (skincolors[c].accessible)
 			{
-				UINT8 *cm = R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(c), GTC_CACHE);
+				uint8_t *cm = R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(c), GTC_CACHE);
 				V_DrawFixedPatch(x<<FRACBITS, y<<FRACBITS, FRACUNIT>>1, 0, faceprefix[stplyr->skin][FACE_WANTED], cm);
 
 				x += 16;
@@ -11331,7 +11331,7 @@ void K_drawKartHUD(void)
 			patch_t* micactivebase = kp_voice_localactive[(leveltime / 2) % 16];
 			patch_t* micactivetop = kp_voice_localactiveoverlay[(leveltime / 2) % 16];
 
-			UINT8* micactivecolormap = NULL;
+			uint8_t* micactivecolormap = NULL;
 			if (g_local_voice_last_peak < 0.7)
 			{
 				micactivecolormap = R_GetTranslationColormap(TC_DEFAULT, SKINCOLOR_GREEN, GTC_CACHE);
@@ -11369,10 +11369,10 @@ debug:
 	K_DrawMessageFeed();
 }
 
-void K_DrawSticker(INT32 x, INT32 y, INT32 width, INT32 flags, boolean isSmall)
+void K_DrawSticker(int32_t x, int32_t y, int32_t width, int32_t flags, dboolean isSmall)
 {
 	patch_t *stickerEnd;
-	INT32 height;
+	int32_t height;
 
 	if (isSmall == true)
 	{
@@ -11390,10 +11390,10 @@ void K_DrawSticker(INT32 x, INT32 y, INT32 width, INT32 flags, boolean isSmall)
 	V_DrawFixedPatch((x + width)*FRACUNIT, y*FRACUNIT, FRACUNIT, flags|V_FLIP, stickerEnd, NULL);
 }
 
-void K_DrawMarginSticker(INT32 x, INT32 y, INT32 width, INT32 flags, boolean isSmall, boolean leftedge)
+void K_DrawMarginSticker(int32_t x, int32_t y, int32_t width, int32_t flags, dboolean isSmall, dboolean leftedge)
 {
 	patch_t *stickerEnd;
-	INT32 height;
+	int32_t height;
 
 	if (isSmall == true)
 	{
@@ -11413,7 +11413,7 @@ void K_DrawMarginSticker(INT32 x, INT32 y, INT32 width, INT32 flags, boolean isS
 		V_DrawFixedPatch((x + width)*FRACUNIT, y*FRACUNIT, FRACUNIT, flags|V_FLIP, stickerEnd, NULL);
 }
 
-INT32 K_DrawGameControl(UINT16 x, UINT16 y, UINT8 player, const char *str, UINT8 alignment, UINT8 font, UINT32 flags)
+int32_t K_DrawGameControl(uint16_t x, uint16_t y, uint8_t player, const char *str, uint8_t alignment, uint8_t font, uint32_t flags)
 {
 	using srb2::Draw;
 
@@ -11421,7 +11421,7 @@ INT32 K_DrawGameControl(UINT16 x, UINT16 y, UINT8 player, const char *str, UINT8
 
 	Draw::TextElement text = Draw::TextElement().as(player).parse(str).font(draw.fontno_to_font(font));
 
-	INT32 width = text.width();
+	int32_t width = text.width();
 
 	draw.text(text);
 

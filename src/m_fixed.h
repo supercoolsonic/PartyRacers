@@ -32,7 +32,7 @@ extern "C" {
 */
 #define FRACUNIT (1<<FRACBITS)
 #define FRACMASK (FRACUNIT -1)
-/**	\brief	Redefinition of INT32 as fixed_t
+/**	\brief	Redefinition of int32_t as fixed_t
 	unit used as fixed_t
 */
 
@@ -42,7 +42,7 @@ extern "C" {
 
 #define M_PI_FIXED (M_TAU_FIXED >> 1)
 
-typedef INT32 fixed_t;
+typedef int32_t fixed_t;
 
 /*!
   \brief convert fixed_t into floating number
@@ -143,7 +143,7 @@ FUNCMATH FUNCINLINE static ATTRINLINE fixed_t FloatToFixed(float f)
 			: "r" (a), "r" (b)
 			, "I" (FRACBITS)
 		);
-		ret = (INT64)((hi>>FRACBITS)+lo)<<FRACBITS;
+		ret = (int64_t)((hi>>FRACBITS)+lo)<<FRACBITS;
 		return ret;
 	}
 
@@ -160,7 +160,7 @@ FUNCMATH FUNCINLINE static ATTRINLINE fixed_t FloatToFixed(float f)
 			, "I" (FRACBITS)
 			//: "+l", "+h"
 		);
-		ret = (INT64)((a>>FRACBITS)+b)<<FRACBITS;
+		ret = (int64_t)((a>>FRACBITS)+b)<<FRACBITS;
 		return ret;
 	}
 
@@ -360,7 +360,7 @@ fixed_t FV2_NormalizeEx(const vector2_t *a_normal, vector2_t *a_o);
 fixed_t FV2_Normalize(vector2_t *a_normal);
 vector2_t *FV2_NegateEx(const vector2_t *a_1, vector2_t *a_o);
 vector2_t *FV2_Negate(vector2_t *a_1);
-boolean FV2_Equal(const vector2_t *a_1, const vector2_t *a_2);
+dboolean FV2_Equal(const vector2_t *a_1, const vector2_t *a_2);
 fixed_t FV2_Dot(const vector2_t *a_1, const vector2_t *a_2);
 vector2_t *FV2_Point2Vec (const vector2_t *point1, const vector2_t *point2, vector2_t *a_o);
 
@@ -387,7 +387,7 @@ fixed_t FV3_NormalizeEx(const vector3_t *a_normal, vector3_t *a_o);
 fixed_t FV3_Normalize(vector3_t *a_normal);
 vector3_t *FV3_NegateEx(const vector3_t *a_1, vector3_t *a_o);
 vector3_t *FV3_Negate(vector3_t *a_1);
-boolean FV3_Equal(const vector3_t *a_1, const vector3_t *a_2);
+dboolean FV3_Equal(const vector3_t *a_1, const vector3_t *a_2);
 fixed_t FV3_Dot(const vector3_t *a_1, const vector3_t *a_2);
 vector3_t *FV3_Cross(const vector3_t *a_1, const vector3_t *a_2, vector3_t *a_o);
 vector3_t *FV3_ClosestPointOnLine(const vector3_t *Line, const vector3_t *p, vector3_t *out);
@@ -397,12 +397,12 @@ vector3_t *FV3_Point2Vec(const vector3_t *point1, const vector3_t *point2, vecto
 fixed_t FV3_Normal(const vector3_t *a_triangle, vector3_t *a_normal);
 fixed_t FV3_Strength(const vector3_t *a_1, const vector3_t *dir);
 fixed_t FV3_PlaneDistance(const vector3_t *a_normal, const vector3_t *a_point);
-boolean FV3_IntersectedPlane(const vector3_t *a_triangle, const vector3_t *a_line, vector3_t *a_normal, fixed_t *originDistance);
+dboolean FV3_IntersectedPlane(const vector3_t *a_triangle, const vector3_t *a_line, vector3_t *a_normal, fixed_t *originDistance);
 fixed_t FV3_PlaneIntersection(const vector3_t *pOrigin, const vector3_t *pNormal, const vector3_t *rOrigin, const vector3_t *rVector);
 fixed_t FV3_IntersectRaySphere(const vector3_t *rO, const vector3_t *rV, const vector3_t *sO, fixed_t sR);
 vector3_t *FV3_IntersectionPoint(const vector3_t *vNormal, const vector3_t *vLine, fixed_t distance, vector3_t *ReturnVec);
-UINT8 FV3_PointOnLineSide(const vector3_t *point, const vector3_t *line);
-boolean FV3_PointInsideBox(const vector3_t *point, const vector3_t *box);
+uint8_t FV3_PointOnLineSide(const vector3_t *point, const vector3_t *line);
+dboolean FV3_PointInsideBox(const vector3_t *point, const vector3_t *box);
 
 struct matrix_t
 {

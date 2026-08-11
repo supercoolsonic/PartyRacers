@@ -84,28 +84,28 @@ void M_AddToJoinedIPs(char *address, char *servname);
 void M_SaveJoinedIPs(void);
 void M_LoadJoinedIPs(void);
 
-boolean FIL_WriteFile(char const *name, const void *source, size_t length);
-size_t FIL_ReadFileTag(char const *name, UINT8 **buffer, INT32 tag);
+dboolean FIL_WriteFile(char const *name, const void *source, size_t length);
+size_t FIL_ReadFileTag(char const *name, uint8_t **buffer, int32_t tag);
 #define FIL_ReadFile(n, b) FIL_ReadFileTag(n, b, PU_STATIC)
 
-boolean FIL_ConvertTextFileToBinary(const char *textfilename, const char *binfilename);
+dboolean FIL_ConvertTextFileToBinary(const char *textfilename, const char *binfilename);
 
-boolean FIL_RenameFile(const char *old_name, const char *new_name);
+dboolean FIL_RenameFile(const char *old_name, const char *new_name);
 
-boolean FIL_FileExists(const char *name);
-boolean FIL_WriteFileOK(char const *name);
-boolean FIL_ReadFileOK(char const *name);
-boolean FIL_FileOK(char const *name);
+dboolean FIL_FileExists(const char *name);
+dboolean FIL_WriteFileOK(char const *name);
+dboolean FIL_ReadFileOK(char const *name);
+dboolean FIL_FileOK(char const *name);
 
 void FIL_DefaultExtension (char *path, const char *extension);
 void FIL_ForceExtension(char *path, const char *extension);
-boolean FIL_CheckExtension(const char *in);
+dboolean FIL_CheckExtension(const char *in);
 
 #ifdef HAVE_PNG
-boolean M_SavePNG(const char *filename, const void *data, int width, int height, const UINT8 *palette);
+dboolean M_SavePNG(const char *filename, const void *data, int width, int height, const uint8_t *palette);
 #endif
 
-extern boolean takescreenshot;
+extern dboolean takescreenshot;
 void M_ScreenShot(void);
 void M_ScreenshotTicker(void);
 
@@ -119,7 +119,7 @@ void M_FirstLoadConfig(void);
 // save game config: cvars, aliases..
 void M_SaveConfig(const char *filename);
 
-INT32 axtoi(const char *hexStg);
+int32_t axtoi(const char *hexStg);
 
 const char *GetRevisionString(void);
 
@@ -140,7 +140,7 @@ void strcatbf(char *s1, const char *s2, const char *s3);
 const char *M_FileError(FILE *handle);
 
 int     M_PathParts      (const char *path);
-boolean M_IsPathAbsolute (const char *path);
+dboolean M_IsPathAbsolute (const char *path);
 void    M_MkdirEach      (const char *path, int start, int mode);
 void    M_MkdirEachUntil (const char *path, int start, int end, int mode);
 
@@ -159,11 +159,11 @@ trailing zeros, or "" if the fractional part is zero.
 const char * M_Ftrim (double);
 
 // counting bits, for weapon ammo code, usually
-FUNCMATH UINT8 M_CountBits(UINT32 num, UINT8 size);
+FUNCMATH uint8_t M_CountBits(uint32_t num, uint8_t size);
 
 extern char configfile[MAX_WADPATH];
 
-typedef INT32 floatdenormalstate_t;
+typedef int32_t floatdenormalstate_t;
 
 /** Enable floating point denormal-to-zero section, if necessary */
 floatdenormalstate_t M_EnterFloatDenormalToZero(void);
@@ -178,3 +178,4 @@ extern char configfile_radio[MAX_WADPATH];		//SCS - RADIO
 #endif
 
 #endif
+

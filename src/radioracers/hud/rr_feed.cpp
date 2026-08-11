@@ -53,7 +53,7 @@
 
 using srb2::Draw;
 const BaseFeedUpdate::PatchManager BaseFeedUpdate::patches_;
-static boolean has_feed_been_initialized = false;
+static dboolean has_feed_been_initialized = false;
 
 // === CLASSES ===
 
@@ -63,17 +63,17 @@ class PlayerFeedUpdate : public BaseFeedUpdate {
         std::string victim {"Victim"};          // Target's name
         std::string attacker {"Attacker"};      // Source's name
         ItemConfigForFeedUpdate item {};        // The item to blame
-        boolean is_self_hit {false};            // Self-hit (how emabrassing)
-        boolean is_dplayer_attacker {false};     // Is the display player the attacker?
-        UINT8 amps {0};                         // Amps awarded
-		INT32 attacker_colour {0};              // Attacker color (White by default)
-        INT32 victim_colour {0};                // Victim color (White by default)
+        dboolean is_self_hit {false};            // Self-hit (how emabrassing)
+        dboolean is_dplayer_attacker {false};     // Is the display player the attacker?
+        uint8_t amps {0};                         // Amps awarded
+		int32_t attacker_colour {0};              // Attacker color (White by default)
+        int32_t victim_colour {0};                // Victim color (White by default)
 
         // Drawer
         Draw row;
         ProcessedItemConfig c;
 
-        void draw_attacker(boolean reverse) {
+        void draw_attacker(dboolean reverse) {
             int attacker_name_width = FeedUpdateUtils::getNameWidth(attacker);
             if (reverse) {
                 if (!is_self_hit) {
@@ -86,7 +86,7 @@ class PlayerFeedUpdate : public BaseFeedUpdate {
                     row = row.x(-(attacker_name_width + c.x_offset)).colormap(c.colormap);
                 }
             } else {                
-                UINT8 *item_recolormap = (c.should_flash) ? c.colormap : c.item_recolormap;
+                uint8_t *item_recolormap = (c.should_flash) ? c.colormap : c.item_recolormap;
                 if (!is_self_hit) {
                     row.scale(FEED_UPDATE_SCALE).flags(attacker_colour).text(attacker.c_str());
                     
@@ -99,7 +99,7 @@ class PlayerFeedUpdate : public BaseFeedUpdate {
             }
         }
 
-        void draw_item(boolean reverse) {
+        void draw_item(dboolean reverse) {
             int x = 0;
             if (reverse) {
                 x = -c.width_scaled;
@@ -112,24 +112,24 @@ class PlayerFeedUpdate : public BaseFeedUpdate {
                 .patch(c.patch_name);
 
             if (reverse) {
-                row = row.x(-(c.width_scaled + c.x_offset)).colormap(static_cast<UINT8*>(NULL));
+                row = row.x(-(c.width_scaled + c.x_offset)).colormap(static_cast<uint8_t*>(NULL));
             } else {
-                row = row.x(c.width_scaled + c.x_offset).colormap(static_cast<UINT8*>(NULL));
+                row = row.x(c.width_scaled + c.x_offset).colormap(static_cast<uint8_t*>(NULL));
             }
         }
 
-        void draw_victim(boolean reverse) {
+        void draw_victim(dboolean reverse) {
             int victim_name_width = FeedUpdateUtils::getNameWidth(victim);
             if (reverse) {
                 row.x(-(victim_name_width)).scale(FEED_UPDATE_SCALE).flags(victim_colour).text(victim.c_str());
                 row = row.x(-(victim_name_width + c.x_offset)).colormap(c.colormap);
             } else {
                 row.scale(FEED_UPDATE_SCALE).flags(victim_colour).text(victim.c_str());
-                row = row.x(victim_name_width + c.x_offset).colormap(static_cast<UINT8*>(NULL));
+                row = row.x(victim_name_width + c.x_offset).colormap(static_cast<uint8_t*>(NULL));
             }
         }
 
-        void draw_amps(boolean reverse) {
+        void draw_amps(dboolean reverse) {
             if (!is_dplayer_attacker) return;
             if (!is_self_hit && amps > 0) {
                 const float amp_hud_scale = FEED_UPDATE_SCALE - .3f;
@@ -153,7 +153,7 @@ class PlayerFeedUpdate : public BaseFeedUpdate {
                     .patch(fmt::format("b_3AMP0{0}", leveltime%12));
 
                 // AMPS
-                row = row.x(3).y(2).scale(amp_text_scale).colormap(static_cast<UINT8*>(NULL));
+                row = row.x(3).y(2).scale(amp_text_scale).colormap(static_cast<uint8_t*>(NULL));
                 row.text(fmt::format("+{0}", amps));
             }
         }
@@ -190,12 +190,12 @@ class PlayerFeedUpdate : public BaseFeedUpdate {
             const std::string &v, 
             const std::string &a,
             const ItemConfigForFeedUpdate &i,
-            const boolean &self_hit,
-            const boolean &is_dplayer_attacker,
-            const boolean &about_self,
-            const UINT8 &amps,
-            const INT32 &attacker_colour,
-            const INT32 &victim_colour
+            const dboolean &self_hit,
+            const dboolean &is_dplayer_attacker,
+            const dboolean &about_self,
+            const uint8_t &amps,
+            const int32_t &attacker_colour,
+            const int32_t &victim_colour
         ): victim(v), attacker(a), item(i), is_self_hit(self_hit), is_dplayer_attacker(is_dplayer_attacker), amps(amps), attacker_colour(attacker_colour), victim_colour(victim_colour) {
             is_about_self = about_self;
         }
@@ -205,9 +205,9 @@ class PlayerFeedUpdate : public BaseFeedUpdate {
 
             // Snap to the left, bottom, etc
             FeedConfig config = get_feed().get_config();
-            INT32 hud_flags = config.hudflags;
-            boolean reverse = config.position == FEED_POSITION_RIGHT;
-            boolean center = config.position == FEED_POSITION_MIDDLE;
+            int32_t hud_flags = config.hudflags;
+            dboolean reverse = config.position == FEED_POSITION_RIGHT;
+            dboolean center = config.position == FEED_POSITION_MIDDLE;
 			
             // Check if the colours aren't an impossible value
             if (attacker_colour > V_TANMAP)
@@ -217,7 +217,7 @@ class PlayerFeedUpdate : public BaseFeedUpdate {
 
             // If the update doesn't concern the main player
             // then draw at a higher translucency
-            INT32 low_priority_trans = (!is_about_self) ? 5 : -1;
+            int32_t low_priority_trans = (!is_about_self) ? 5 : -1;
             
             if (is_entering() || is_exiting()) {
                 hud_flags |= (clamp_translucency(low_priority_trans) << V_ALPHASHIFT);
@@ -274,11 +274,11 @@ class GlobalFeedUpdate : public BaseFeedUpdate {
         ProcessedItemConfig c;
         ItemConfigForFeedUpdate item {}; 
 
-        UINT8* get_item_colormap() {
+        uint8_t* get_item_colormap() {
             return (c.rainbow) ? get_rainbow_colormap() : c.colormap;
         }
 
-        void draw_message(boolean reverse) {
+        void draw_message(dboolean reverse) {
             int message_width = FeedUpdateUtils::getNameWidth(message);
 
             if (reverse) {
@@ -289,7 +289,7 @@ class GlobalFeedUpdate : public BaseFeedUpdate {
             }
         }
 
-        void draw_item(boolean reverse) {
+        void draw_item(dboolean reverse) {
             // Then the patch
             int x = 0;
             if (reverse) {
@@ -304,13 +304,13 @@ class GlobalFeedUpdate : public BaseFeedUpdate {
 
             // Then the exclaimation point, because this is a big deal
             if (reverse) {
-                row = row.x(-(c.width_scaled + c.x_offset)).colormap(static_cast<UINT8*>(NULL));
+                row = row.x(-(c.width_scaled + c.x_offset)).colormap(static_cast<uint8_t*>(NULL));
             } else {
-                row = row.x(c.width_scaled + c.x_offset).colormap(static_cast<UINT8*>(NULL));
+                row = row.x(c.width_scaled + c.x_offset).colormap(static_cast<uint8_t*>(NULL));
             }
         }
 
-        void draw_exclaimation_point(boolean reverse) {
+        void draw_exclaimation_point(dboolean reverse) {
             if (reverse) {
                 int exclaimation_width = FeedUpdateUtils::getNameWidth("!");
                 row.x(-(exclaimation_width)).scale(FEED_UPDATE_SCALE).text("!");
@@ -343,9 +343,9 @@ class GlobalFeedUpdate : public BaseFeedUpdate {
             if (!can_draw()) return;
             
             FeedConfig config = get_feed().get_config();
-            INT32 hud_flags = config.hudflags;
-            boolean reverse = config.position == FEED_POSITION_RIGHT;
-            boolean center = config.position == FEED_POSITION_MIDDLE;
+            int32_t hud_flags = config.hudflags;
+            dboolean reverse = config.position == FEED_POSITION_RIGHT;
+            dboolean center = config.position == FEED_POSITION_MIDDLE;
             
             if (is_entering() || is_exiting()) {
                 hud_flags |= (updatetrans << V_ALPHASHIFT);
@@ -395,13 +395,13 @@ class GlobalPlayerFeedUpdate : public BaseFeedUpdate {
         ProcessedItemConfig c;
         ItemConfigForFeedUpdate item {}; 
 
-        UINT8* get_item_colormap() {
+        uint8_t* get_item_colormap() {
             if (c.rainbow)
                 return get_rainbow_colormap();
             return (c.should_flash) ? c.colormap : c.item_recolormap;
         }
 
-        void draw_player(boolean reverse) {
+        void draw_player(dboolean reverse) {
             int player_name_width = FeedUpdateUtils::getNameWidth(player);
 
             if (reverse) {
@@ -412,7 +412,7 @@ class GlobalPlayerFeedUpdate : public BaseFeedUpdate {
             }
         }
 
-        void draw_patch(boolean reverse) {
+        void draw_patch(dboolean reverse) {
             // Then the patch
             int x = 0;
             if (reverse) {
@@ -429,7 +429,7 @@ class GlobalPlayerFeedUpdate : public BaseFeedUpdate {
 
             // If in reverse, then the player name
             if (!reverse) {
-                row = row.x(c.width_scaled + c.x_offset).colormap(static_cast<UINT8*>(NULL));
+                row = row.x(c.width_scaled + c.x_offset).colormap(static_cast<uint8_t*>(NULL));
             }
         }
 
@@ -444,7 +444,7 @@ class GlobalPlayerFeedUpdate : public BaseFeedUpdate {
         GlobalPlayerFeedUpdate(
             const std::string &s,
             const ItemConfigForFeedUpdate &i,
-            const boolean &about_self
+            const dboolean &about_self
         ): player(s), item(i) {
             is_about_self = about_self;
         }
@@ -453,13 +453,13 @@ class GlobalPlayerFeedUpdate : public BaseFeedUpdate {
             if (!can_draw()) return;
             
             FeedConfig config = get_feed().get_config();
-            INT32 hud_flags = config.hudflags;
-            boolean reverse = config.position == FEED_POSITION_RIGHT;
-            boolean center = config.position == FEED_POSITION_MIDDLE;
+            int32_t hud_flags = config.hudflags;
+            dboolean reverse = config.position == FEED_POSITION_RIGHT;
+            dboolean center = config.position == FEED_POSITION_MIDDLE;
 
             // If the update doesn't concern the main player
             // then draw at a higher translucency
-            INT32 low_priority_trans = (!is_about_self) ? 5 : -1;
+            int32_t low_priority_trans = (!is_about_self) ? 5 : -1;
             
             if (is_entering() || is_exiting()) {
                 hud_flags |= (clamp_translucency(low_priority_trans) << V_ALPHASHIFT);
@@ -806,7 +806,7 @@ static playerattacks_t getPlayerAttackType(mobj_t* mo) {
     return ATTACK_NONE;
 }
 
-static boolean isPlayerMoValid(mobj_t *mo) {
+static dboolean isPlayerMoValid(mobj_t *mo) {
     return (
         mo != NULL 
         && !P_MobjWasRemoved(mo)
@@ -816,28 +816,28 @@ static boolean isPlayerMoValid(mobj_t *mo) {
     );
 }
 
-static boolean arePlayersValid(mobj_t *m1, mobj_t *m2) {
+static dboolean arePlayersValid(mobj_t *m1, mobj_t *m2) {
     return isPlayerMoValid(m1) && isPlayerMoValid(m2);
 }
 
-static boolean isFeedUpdateAboutMainPlayer(player_t *p1, player_t* p2) {
+static dboolean isFeedUpdateAboutMainPlayer(player_t *p1, player_t* p2) {
     return stplyr->spectator == false && ((p1 == stplyr) || (p2 == stplyr));
 }
 
-static boolean isDisplayPlayerAttacker(player_t* p) {
+static dboolean isDisplayPlayerAttacker(player_t* p) {
     return stplyr->spectator == false && ((p == stplyr));
 }
 
-static boolean canUseHudfeed(void) {
+static dboolean canUseHudfeed(void) {
     return !RR_IsBattle() && radioracers_usehudfeed && cv_hudfeed_enabled.value;
 }
 
-static INT32 getPlayerChatColour(player_t *p) {
+static int32_t getPlayerChatColour(player_t *p) {
     return skincolors[p->skincolor].chatcolor;
 }
 
 // Push a player interaction to the feed.
-void RR_PushPlayerDamageToFeed(mobj_t *source, mobj_t *target, mobj_t *inflictor, UINT8 amps) {
+void RR_PushPlayerDamageToFeed(mobj_t *source, mobj_t *target, mobj_t *inflictor, uint8_t amps) {
     if (!canUseHudfeed()) return;
 
     if (!inflictor || P_MobjWasRemoved(inflictor)) return;
@@ -890,8 +890,8 @@ void RR_PushPlayerDamageToFeed(mobj_t *source, mobj_t *target, mobj_t *inflictor
     std::string attacker = player_names[source_plyr-players];
     std::string victim = player_names[target_plyr-players];
 	
-    INT32 attacker_colour = getPlayerChatColour(source_plyr);
-    INT32 victim_colour = getPlayerChatColour(target_plyr);
+    int32_t attacker_colour = getPlayerChatColour(source_plyr);
+    int32_t victim_colour = getPlayerChatColour(target_plyr);
 
     // Cap off player names if they're too long
     // (maybe?)
@@ -899,7 +899,7 @@ void RR_PushPlayerDamageToFeed(mobj_t *source, mobj_t *target, mobj_t *inflictor
     if (!cv_hudfeed_show_amps.value)
         amps = 0;
         
-    const boolean self_hit = source_plyr == target_plyr;
+    const dboolean self_hit = source_plyr == target_plyr;
 
     // Push to the feed
     hudfeed.push(
@@ -933,10 +933,10 @@ void RR_PushPlayerDeathToFeed(mobj_t *source, mobj_t *target, mobj_t *inflictor)
     std::string attacker = player_names[source_plyr-players];
     std::string victim = player_names[target_plyr-players];
 	
-	INT32 attacker_colour = getPlayerChatColour(source_plyr);
-    INT32 victim_colour = getPlayerChatColour(target_plyr);
+	int32_t attacker_colour = getPlayerChatColour(source_plyr);
+    int32_t victim_colour = getPlayerChatColour(target_plyr);
 
-    const boolean self_hit = source_plyr == target_plyr;
+    const dboolean self_hit = source_plyr == target_plyr;
     
     // Push to the feed
     hudfeed.push(
@@ -954,7 +954,7 @@ void RR_PushPlayerDeathToFeed(mobj_t *source, mobj_t *target, mobj_t *inflictor)
     );
 }
 
-void RR_PushPlayerInteractionToFeed(mobj_t *source, mobj_t *target, playerattacks_t attack, UINT8 amps) {
+void RR_PushPlayerInteractionToFeed(mobj_t *source, mobj_t *target, playerattacks_t attack, uint8_t amps) {
     if (!canUseHudfeed()) return;
 
     if (attack == ATTACK_NONE) return;
@@ -972,13 +972,13 @@ void RR_PushPlayerInteractionToFeed(mobj_t *source, mobj_t *target, playerattack
     std::string attacker = player_names[source_plyr-players];
     std::string victim = player_names[target_plyr-players];
 	
-	INT32 attacker_colour = getPlayerChatColour(source_plyr);
-    INT32 victim_colour = getPlayerChatColour(target_plyr);
+	int32_t attacker_colour = getPlayerChatColour(source_plyr);
+    int32_t victim_colour = getPlayerChatColour(target_plyr);
 
     // Cap off player names if they're too long
     // (maybe?)
 
-    const boolean self_hit = source_plyr == target_plyr;
+    const dboolean self_hit = source_plyr == target_plyr;
     if (!cv_hudfeed_show_amps.value)
         amps = 0;
 
@@ -1010,12 +1010,12 @@ void RR_PushGlobalEventToFeed(player_t* player, globalfeedevent_t event) {
     hudfeed.push(std::make_unique<GlobalFeedUpdate>(player_name, itemConfig));
 }
 
-void RR_PushGlobalGradeEventToFeed(player_t* player, gp_rank_e rank, boolean perfectRace) {
+void RR_PushGlobalGradeEventToFeed(player_t* player, gp_rank_e rank, dboolean perfectRace) {
     if (!canUseHudfeed()) return;
     if (!cv_hudfeed_show_grades.value) return;
     if (rank == GRADE_INVALID) return;
 
-    const boolean showSRanks = (cv_show_s_ranks.value && perfectRace);
+    const dboolean showSRanks = (cv_show_s_ranks.value && perfectRace);
     char grade_letter = (showSRanks) ? 'S' : K_GetGradeChar(rank);
     skincolornum_t grade_rank_colormap = static_cast<skincolornum_t>(K_GetGradeColor(rank));
 

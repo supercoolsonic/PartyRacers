@@ -106,9 +106,9 @@ camera_t *mapcampointer;
 //
 // P_TeleportMove
 //
-static boolean P_TeleportMove(mobj_t *thing, fixed_t x, fixed_t y, fixed_t z)
+static dboolean P_TeleportMove(mobj_t *thing, fixed_t x, fixed_t y, fixed_t z)
 {
-	boolean startingonground = P_IsObjectOnGround(thing);
+	dboolean startingonground = P_IsObjectOnGround(thing);
 	sector_t *oldsector = thing->subsector->sector;
 
 	numspechit = 0U;
@@ -148,9 +148,9 @@ static boolean P_TeleportMove(mobj_t *thing, fixed_t x, fixed_t y, fixed_t z)
 //
 // P_SetOrigin - P_TeleportMove which RESETS interpolation values.
 //
-boolean P_SetOrigin(mobj_t *thing, fixed_t x, fixed_t y, fixed_t z)
+dboolean P_SetOrigin(mobj_t *thing, fixed_t x, fixed_t y, fixed_t z)
 {
-	boolean result = P_TeleportMove(thing, x, y, z);
+	dboolean result = P_TeleportMove(thing, x, y, z);
 
 	if (result == true)
 	{
@@ -165,7 +165,7 @@ boolean P_SetOrigin(mobj_t *thing, fixed_t x, fixed_t y, fixed_t z)
 //
 // P_MoveOrigin - P_TeleportMove which KEEPS interpolation values.
 //
-boolean P_MoveOrigin(mobj_t *thing, fixed_t x, fixed_t y, fixed_t z)
+dboolean P_MoveOrigin(mobj_t *thing, fixed_t x, fixed_t y, fixed_t z)
 {
 	return P_TeleportMove(thing, x, y, z);
 }
@@ -181,7 +181,7 @@ static void spechitint_removedups(void)
 	// Only needs to be run if there's more than 1 line crossed
 	if (numspechitint > 1U)
 	{
-		boolean valueintemp = false;
+		dboolean valueintemp = false;
 		size_t i = 0U, j = 0U;
 		size_t numspechittemp = 0U;
 		size_t *spechittemp = Z_Calloc(numspechitint * sizeof(size_t), PU_STATIC, NULL);
@@ -246,9 +246,9 @@ static void add_spechit(line_t *ld)
 	numspechit++;
 }
 
-static boolean P_SpecialIsLinedefCrossType(line_t *ld)
+static dboolean P_SpecialIsLinedefCrossType(line_t *ld)
 {
-	boolean linedefcrossspecial = false;
+	dboolean linedefcrossspecial = false;
 
 	// Take anything with any cross type for now,
 	// we'll have to filter it down later...
@@ -267,7 +267,7 @@ P_DoSpringEx
 		fixed_t vertispeed,
 		fixed_t horizspeed,
 		angle_t finalAngle,
-		UINT16 starcolor)
+		uint16_t starcolor)
 {
 	if (object->eflags & MFE_SPRUNG)
 	{
@@ -346,11 +346,11 @@ P_DoSpringEx
 // raisestate = state to change spring to on collision
 // painchance = star effect color
 //
-boolean P_DoSpring(mobj_t *spring, mobj_t *object)
+dboolean P_DoSpring(mobj_t *spring, mobj_t *object)
 {
 	fixed_t vertispeed = spring->info->mass;
 	fixed_t horizspeed = spring->info->damage;
-	UINT16 starcolor = (spring->info->painchance % numskincolors);
+	uint16_t starcolor = (spring->info->painchance % numskincolors);
 	fixed_t savemomx = object->momx;
 	fixed_t savemomy = object->momy;
 	statenum_t raisestate = spring->info->raisestate;
@@ -495,7 +495,7 @@ static void P_DoFanAndGasJet(mobj_t *spring, mobj_t *object)
 	player_t *p = object->player; // will be NULL if not a player
 	fixed_t zdist; // distance between bottoms
 	fixed_t speed = spring->info->mass; // conveniently, both fans and gas jets use this for the vertical thrust
-	SINT8 flipval = P_MobjFlip(spring); // virtually everything here centers around the thruster's gravity, not the object's!
+	int8_t flipval = P_MobjFlip(spring); // virtually everything here centers around the thruster's gravity, not the object's!
 
 	if (p && object->state == &states[object->info->painstate]) // can't use fans and gas jets when player is in pain!
 		return;
@@ -549,7 +549,7 @@ static void P_DoFanAndGasJet(mobj_t *spring, mobj_t *object)
 static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 {
 	fixed_t blockdist;
-	boolean damage = false;
+	dboolean damage = false;
 
 	if (g_tm.thing == NULL || P_MobjWasRemoved(g_tm.thing) == true)
 		return BMIT_STOP; // func just popped our g_tm.thing, cannot continue.
@@ -604,7 +604,7 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 
 		if (g_tm.thing->flags & MF_PAPERCOLLISION) // more strenuous checking to prevent clipping issues
 		{
-			INT32 check1, check2, check3, check4;
+			int32_t check1, check2, check3, check4;
 			fixed_t tmcosradius = FixedMul(g_tm.thing->radius, FINECOSINE(g_tm.thing->angle>>ANGLETOFINESHIFT));
 			fixed_t tmsinradius = FixedMul(g_tm.thing->radius, FINESINE(g_tm.thing->angle>>ANGLETOFINESHIFT));
 			if (abs(thing->x - g_tm.x) >= (abs(tmcosradius) + abs(cosradius)) || abs(thing->y - g_tm.y) >= (abs(tmsinradius) + abs(sinradius)))
@@ -658,7 +658,7 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 	}
 
 	{
-		UINT8 shouldCollide = LUA_Hook2Mobj(thing, g_tm.thing, MOBJ_HOOK(MobjCollide)); // checks hook for thing's type
+		uint8_t shouldCollide = LUA_Hook2Mobj(thing, g_tm.thing, MOBJ_HOOK(MobjCollide)); // checks hook for thing's type
 		if (P_MobjWasRemoved(g_tm.thing) || P_MobjWasRemoved(thing))
 			return BMIT_CONTINUE; // one of them was removed???
 		if (shouldCollide == 1)
@@ -696,7 +696,7 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 			return BMIT_CONTINUE; // underneath
 		if (g_tm.thing->flags & MF_SHOOTABLE && thing->health > 0)
 		{
-			UINT32 damagetype = (thing->info->mass & 0xFF);
+			uint32_t damagetype = (thing->info->mass & 0xFF);
 
 			P_DamageMobj(g_tm.thing, thing, thing, 1, damagetype);
 
@@ -715,7 +715,7 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 			return BMIT_CONTINUE; // underneath
 		if (thing->flags & MF_SHOOTABLE && g_tm.thing->health > 0)
 		{
-			UINT32 damagetype = (g_tm.thing->info->mass & 0xFF);
+			uint32_t damagetype = (g_tm.thing->info->mass & 0xFF);
 
 			P_DamageMobj(thing, g_tm.thing, g_tm.thing, 1, damagetype);
 
@@ -781,7 +781,7 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 		if (g_tm.thing->z + g_tm.thing->height < thing->z)
 			return BMIT_CONTINUE; // underneath
 
-		boolean hit = K_InstaWhipCollide(g_tm.thing, thing);
+		dboolean hit = K_InstaWhipCollide(g_tm.thing, thing);
 		if (hit && g_tm.thing && g_tm.thing->target && !P_MobjWasRemoved(g_tm.thing->target) && g_tm.thing->target->player) //SCS EDIT - I got a access violation here, with a Sol maybe? Guess I'll run the validation check again...
 		{
 			player_t *attacker = g_tm.thing->target->player;
@@ -1401,7 +1401,7 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 	// missiles can hit other things
 	if ((g_tm.thing->flags & MF_MISSILE) && !damage) // if something was already damaged, don't run this
 	{
-		UINT8 damagetype = (g_tm.thing->info->mass ^ DMG_WOMBO);
+		uint8_t damagetype = (g_tm.thing->info->mass ^ DMG_WOMBO);
 
 		// see if it went over / under
 		if (g_tm.thing->z > thing->z + thing->height)
@@ -2000,7 +2000,7 @@ static BlockItReturn_t PIT_CheckCameraLine(line_t *ld)
 	return BMIT_CONTINUE;
 }
 
-boolean P_IsLineBlocking(const line_t *ld, const mobj_t *thing)
+dboolean P_IsLineBlocking(const line_t *ld, const mobj_t *thing)
 {
 	// missiles can cross uncrossable lines
 	if ((thing->flags & MF_MISSILE))
@@ -2034,12 +2034,13 @@ boolean P_IsLineBlocking(const line_t *ld, const mobj_t *thing)
 	return false;
 }
 
-boolean P_IsLineTripWire(const line_t *ld)
+dboolean P_IsLineTripWire(const line_t *ld)
 {
 	return ld->tripwire;
 }
 
-static boolean P_UsingStepUp(mobj_t *thing)
+
+static dboolean P_UsingStepUp(mobj_t *thing)
 {
 	if (thing->flags & MF_NOCLIP)
 	{
@@ -2114,7 +2115,7 @@ static BlockItReturn_t PIT_CheckLine(line_t *ld)
 	// this line is out of the if so upper and lower textures can be hit by a splat
 
 	{
-		UINT8 shouldCollide = LUA_HookMobjLineCollide(g_tm.thing, ld); // checks hook for thing's type
+		uint8_t shouldCollide = LUA_HookMobjLineCollide(g_tm.thing, ld); // checks hook for thing's type
 		if (P_MobjWasRemoved(g_tm.thing))
 			return BMIT_CONTINUE; // one of them was removed???
 		if (shouldCollide == 1)
@@ -2275,12 +2276,12 @@ static BlockItReturn_t PIT_CheckLine(line_t *ld)
 // g_tm.ceilingz
 //     the nearest ceiling or thing's bottom over g_tm.thing
 //
-boolean P_CheckPosition(mobj_t *thing, fixed_t x, fixed_t y, TryMoveResult_t *result)
+dboolean P_CheckPosition(mobj_t *thing, fixed_t x, fixed_t y, TryMoveResult_t *result)
 {
-	INT32 thingtop = thing->z + thing->height;
-	INT32 xl, xh, yl, yh, bx, by;
+	int32_t thingtop = thing->z + thing->height;
+	int32_t xl, xh, yl, yh, bx, by;
 	subsector_t *newsubsec;
-	boolean blockval = true;
+	dboolean blockval = true;
 
 	ps_checkposition_calls++;
 
@@ -2458,7 +2459,7 @@ boolean P_CheckPosition(mobj_t *thing, fixed_t x, fixed_t y, TryMoveResult_t *re
 		{
 			for (bx = xl; bx <= xh; bx++)
 			{
-				INT32 offset;
+				int32_t offset;
 				polymaplink_t *plink; // haleyjd 02/22/06
 
 				if (bx < 0 || by < 0 || bx >= bmapwidth || by >= bmapheight)
@@ -2610,7 +2611,7 @@ static const fixed_t hoophalfheight = (56*FRACUNIT)/2;
 // P_CheckPosition optimized for the MT_HOOPCOLLIDE object. This needs to be as fast as possible!
 void P_CheckHoopPosition(mobj_t *hoopthing, fixed_t x, fixed_t y, fixed_t z, fixed_t radius)
 {
-	INT32 i;
+	int32_t i;
 
 	(void)radius; //unused
 	for (i = 0; i < MAXPLAYERS; i++)
@@ -2634,9 +2635,9 @@ void P_CheckHoopPosition(mobj_t *hoopthing, fixed_t x, fixed_t y, fixed_t z, fix
 //
 // P_CheckCameraPosition
 //
-boolean P_CheckCameraPosition(fixed_t x, fixed_t y, camera_t *thiscam)
+dboolean P_CheckCameraPosition(fixed_t x, fixed_t y, camera_t *thiscam)
 {
-	INT32 xl, xh, yl, yh, bx, by;
+	int32_t xl, xh, yl, yh, bx, by;
 	subsector_t *newsubsec;
 
 	g_tm.x = x;
@@ -2687,7 +2688,7 @@ boolean P_CheckCameraPosition(fixed_t x, fixed_t y, camera_t *thiscam)
 	{
 		ffloor_t *rover;
 		fixed_t delta1, delta2;
-		INT32 thingtop = thiscam->z + thiscam->height;
+		int32_t thingtop = thiscam->z + thiscam->height;
 
 		for (rover = newsubsec->sector->ffloors; rover; rover = rover->next)
 		{
@@ -2732,7 +2733,7 @@ boolean P_CheckCameraPosition(fixed_t x, fixed_t y, camera_t *thiscam)
 		for (by = yl; by <= yh; by++)
 			for (bx = xl; bx <= xh; bx++)
 			{
-				INT32 offset;
+				int32_t offset;
 				polymaplink_t *plink; // haleyjd 02/22/06
 
 				if (bx < 0 || by < 0 || bx >= bmapwidth || by >= bmapheight)
@@ -2815,12 +2816,12 @@ boolean P_CheckCameraPosition(fixed_t x, fixed_t y, camera_t *thiscam)
 //
 // Return true if the move succeeded and no sliding should be done.
 //
-boolean P_TryCameraMove(fixed_t x, fixed_t y, camera_t *thiscam)
+dboolean P_TryCameraMove(fixed_t x, fixed_t y, camera_t *thiscam)
 {
 	subsector_t *s = R_PointInSubsector(x, y);
-	boolean retval = true;
+	dboolean retval = true;
 
-	UINT8 i;
+	uint8_t i;
 
 	g_tm.floatok = false;
 
@@ -2978,14 +2979,14 @@ BlockItReturn_t PIT_PushableMoved(mobj_t *thing)
 	return BMIT_CONTINUE;
 }
 
-static boolean P_WaterRunning(mobj_t *thing)
+static dboolean P_WaterRunning(mobj_t *thing)
 {
 	ffloor_t *rover = thing->floorrover;
 	return rover && (rover->fofflags & FOF_SWIMMABLE) &&
 		P_IsObjectOnGround(thing);
 }
 
-static boolean P_WaterStepUp(mobj_t *thing)
+static dboolean P_WaterStepUp(mobj_t *thing)
 {
 	return (thing->waterskip > 0 || P_WaterRunning(thing));
 }
@@ -3049,12 +3050,12 @@ fixed_t P_GetThingStepUp(mobj_t *thing, fixed_t destX, fixed_t destY)
 	return maxstep;
 }
 
-static boolean
+static dboolean
 increment_move
 (		mobj_t * thing,
 		fixed_t x,
 		fixed_t y,
-		boolean allowdropoff,
+		dboolean allowdropoff,
 		fixed_t * return_stairjank,
 		TryMoveResult_t * result)
 {
@@ -3114,7 +3115,7 @@ increment_move
 			g_tm.sweep = true;
 		}
 
-		boolean move_ok = P_CheckPosition(thing, tryx, tryy, result);
+		dboolean move_ok = P_CheckPosition(thing, tryx, tryy, result);
 
 		if (P_MobjWasRemoved(thing))
 		{
@@ -3153,7 +3154,7 @@ increment_move
 
 			if (maxstep > 0)
 			{
-				const boolean flipped =
+				const dboolean flipped =
 					(thing->eflags & MFE_VERTICALFLIP) != 0;
 
 				thingtop = thing->z + thing->height;
@@ -3249,9 +3250,9 @@ increment_move
 // P_CheckMove
 // Check if a P_TryMove would be successful.
 //
-boolean P_CheckMove(mobj_t *thing, fixed_t x, fixed_t y, boolean allowdropoff, TryMoveResult_t *result)
+dboolean P_CheckMove(mobj_t *thing, fixed_t x, fixed_t y, dboolean allowdropoff, TryMoveResult_t *result)
 {
-	boolean moveok = false;
+	dboolean moveok = false;
 	mobj_t *hack = P_SpawnMobjFromMobj(thing, 0, 0, 0, MT_RAY);
 
 	hack->radius = thing->radius;
@@ -3267,7 +3268,7 @@ boolean P_CheckMove(mobj_t *thing, fixed_t x, fixed_t y, boolean allowdropoff, T
 // P_TryMove
 // Attempt to move to a new position.
 //
-boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y, boolean allowdropoff, TryMoveResult_t *result)
+dboolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y, dboolean allowdropoff, TryMoveResult_t *result)
 {
 	fixed_t oldx = thing->x;
 	fixed_t oldy = thing->y;
@@ -3290,7 +3291,7 @@ boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y, boolean allowdropoff, Try
 	// standing on top and move it, too.
 	if (thing->flags & MF_PUSHABLE)
 	{
-		INT32 bx, by, xl, xh, yl, yh;
+		int32_t bx, by, xl, xh, yl, yh;
 
 		yh = (unsigned)(thing->y + MAXRADIUS - bmaporgy)>>MAPBLOCKSHIFT;
 		yl = (unsigned)(thing->y - MAXRADIUS - bmaporgy)>>MAPBLOCKSHIFT;
@@ -3421,7 +3422,7 @@ boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y, boolean allowdropoff, Try
 	if (!(thing->flags & (MF_NOCLIP)))
 	{
 		line_t *ld = NULL;
-		INT32 side = 0, oldside = 0;
+		int32_t side = 0, oldside = 0;
 		while (numspechitint--)
 		{
 			ld = &lines[spechitint[numspechitint]];
@@ -3472,7 +3473,7 @@ boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y, boolean allowdropoff, Try
 	return true;
 }
 
-boolean P_SceneryTryMove(mobj_t *thing, fixed_t x, fixed_t y, TryMoveResult_t *result)
+dboolean P_SceneryTryMove(mobj_t *thing, fixed_t x, fixed_t y, TryMoveResult_t *result)
 {
 	fixed_t tryx, tryy;
 
@@ -3533,7 +3534,7 @@ boolean P_SceneryTryMove(mobj_t *thing, fixed_t x, fixed_t y, TryMoveResult_t *r
 //
 // PTR_GetSpecialLines
 //
-static boolean PTR_GetSpecialLines(intercept_t *in)
+static dboolean PTR_GetSpecialLines(intercept_t *in)
 {
 	line_t *ld;
 
@@ -3564,7 +3565,7 @@ void P_HitSpecialLines(mobj_t *thing, fixed_t x, fixed_t y, fixed_t momx, fixed_
 	fixed_t leadx, leady;
 	fixed_t trailx, traily;
 	line_t *ld = NULL;
-	INT32 side = 0, oldside = 0;
+	int32_t side = 0, oldside = 0;
 
 	I_Assert(thing != NULL);
 #ifdef PARANOIA
@@ -3631,15 +3632,15 @@ void P_HitSpecialLines(mobj_t *thing, fixed_t x, fixed_t y, fixed_t momx, fixed_
 // the z will be set to the lowest value
 // and false will be returned.
 //
-static boolean P_ThingHeightClip(mobj_t *thing)
+static dboolean P_ThingHeightClip(mobj_t *thing)
 {
-	boolean floormoved;
+	dboolean floormoved;
 	fixed_t oldfloorz = thing->floorz, oldz = thing->z;
 	ffloor_t *oldfloorrover = thing->floorrover;
 	ffloor_t *oldceilingrover = thing->ceilingrover;
-	boolean onfloor = P_IsObjectOnGround(thing);//(thing->z <= thing->floorz);
+	dboolean onfloor = P_IsObjectOnGround(thing);//(thing->z <= thing->floorz);
 	ffloor_t *rover = NULL;
-	boolean hitfloor = false;
+	dboolean hitfloor = false;
 
 	if (thing->flags & MF_NOCLIPHEIGHT)
 		return true;
@@ -3726,7 +3727,7 @@ static fixed_t tmxmove, tmymove;
 //
 static void P_HitCameraSlideLine(line_t *ld, camera_t *thiscam)
 {
-	INT32 side;
+	int32_t side;
 	angle_t lineangle, moveangle, deltaangle;
 	fixed_t movelen, newlen;
 
@@ -3771,7 +3772,7 @@ static void P_HitCameraSlideLine(line_t *ld, camera_t *thiscam)
 //
 static void P_HitSlideLine(line_t *ld)
 {
-	INT32 side;
+	int32_t side;
 	angle_t lineangle;
 	fixed_t nx, ny;
 	fixed_t d;
@@ -3874,7 +3875,7 @@ static void P_HitBounceLine(line_t *ld)
 //
 // PTR_SlideCameraTraverse
 //
-static boolean PTR_SlideCameraTraverse(intercept_t *in)
+static dboolean PTR_SlideCameraTraverse(intercept_t *in)
 {
 	line_t *li;
 	opening_t open = {0};
@@ -3923,7 +3924,7 @@ isblocking:
 }
 
 /*
-static boolean PTR_LineIsBlocking(line_t *li)
+static dboolean PTR_LineIsBlocking(line_t *li)
 {
 	opening_t open = {0};
 
@@ -3951,7 +3952,7 @@ static boolean PTR_LineIsBlocking(line_t *li)
 */
 
 /*
-static boolean PTR_SlideTraverse(intercept_t *in)
+static dboolean PTR_SlideTraverse(intercept_t *in)
 {
 	line_t *li;
 
@@ -3990,8 +3991,8 @@ static boolean PTR_SlideTraverse(intercept_t *in)
 void P_SlideCameraMove(camera_t *thiscam)
 {
 	fixed_t leadx, leady, trailx, traily, newx, newy;
-	INT32 hitcount = 0;
-	INT32 retval = 0;
+	int32_t hitcount = 0;
+	int32_t retval = 0;
 
 	bestslideline = NULL;
 
@@ -4140,7 +4141,7 @@ static void P_CheckLavaWall(mobj_t *mo, sector_t *sec)
 void P_SlideMove(mobj_t *mo, TryMoveResult_t *result)
 {
 	fixed_t newx, newy;
-	boolean success = false;
+	dboolean success = false;
 
 	vertex_t v1, v2; // fake vertexes
 	line_t junk; // fake linedef
@@ -4470,8 +4471,8 @@ void P_BounceMove(mobj_t *mo, TryMoveResult_t *result)
 static fixed_t bombdamage;
 static mobj_t *bombsource;
 static mobj_t *bombspot;
-static UINT8 bombdamagetype;
-static boolean bombsightcheck;
+static uint8_t bombdamagetype;
+static dboolean bombsightcheck;
 
 //
 // PIT_RadiusAttack
@@ -4522,10 +4523,10 @@ static BlockItReturn_t PIT_RadiusAttack(mobj_t *thing)
 // P_RadiusAttack
 // Source is the creature that caused the explosion at spot.
 //
-void P_RadiusAttack(mobj_t *spot, mobj_t *source, fixed_t damagedist, UINT8 damagetype, boolean sightcheck)
+void P_RadiusAttack(mobj_t *spot, mobj_t *source, fixed_t damagedist, uint8_t damagetype, dboolean sightcheck)
 {
-	INT32 x, y;
-	INT32 xl, xh, yl, yh;
+	int32_t x, y;
+	int32_t xl, xh, yl, yh;
 	fixed_t dist;
 
 	dist = FixedMul(damagedist, spot->scale) + MAXRADIUS;
@@ -4560,17 +4561,17 @@ void P_RadiusAttack(mobj_t *spot, mobj_t *source, fixed_t damagedist, UINT8 dama
 //  the way it was and call P_CheckSector (? was P_ChangeSector - Graue) again
 //  to undo the changes.
 //
-static boolean crushchange;
-static boolean nofit;
+static dboolean crushchange;
+static dboolean nofit;
 
 //
 // PIT_ChangeSector
 //
-static boolean PIT_ChangeSector(mobj_t *thing, boolean realcrush)
+static dboolean PIT_ChangeSector(mobj_t *thing, dboolean realcrush)
 {
 	mobj_t *killer = NULL;
 	//If a thing is both pushable and vulnerable, it doesn't block the crusher because it gets killed.
-	boolean immunepushable = ((thing->flags & (MF_PUSHABLE | MF_SHOOTABLE)) == MF_PUSHABLE);
+	dboolean immunepushable = ((thing->flags & (MF_PUSHABLE | MF_SHOOTABLE)) == MF_PUSHABLE);
 
 	if (P_ThingHeightClip(thing))
 	{
@@ -4602,7 +4603,7 @@ static boolean PIT_ChangeSector(mobj_t *thing, boolean realcrush)
 			ffloor_t *rover;
 			fixed_t topheight, bottomheight;
 			fixed_t delta1, delta2;
-			INT32 thingtop = thing->z + thing->height;
+			int32_t thingtop = thing->z + thing->height;
 
 			for (rover = thing->subsector->sector->ffloors; rover; rover = rover->next)
 			{
@@ -4672,7 +4673,7 @@ static boolean PIT_ChangeSector(mobj_t *thing, boolean realcrush)
 //
 // P_CheckSector
 //
-boolean P_CheckSector(sector_t *sector, boolean crunch)
+dboolean P_CheckSector(sector_t *sector, dboolean crunch)
 {
 	msecnode_t *n;
 	size_t i;
@@ -4706,7 +4707,7 @@ boolean P_CheckSector(sector_t *sector, boolean crunch)
 				continue;
 			if (po->lines[0]->backsector == sector) // Make sure you're currently checking the control sector
 			{
-				INT32 x, y;
+				int32_t x, y;
 				po->validcount = validcount;
 
 				for (y = po->blockbox[BOXBOTTOM]; y <= po->blockbox[BOXTOP]; ++y)
@@ -4816,7 +4817,7 @@ boolean P_CheckSector(sector_t *sector, boolean crunch)
 				continue;
 			if (po->lines[0]->backsector == sector) // Make sure you're currently checking the control sector
 			{
-				INT32 x, y;
+				int32_t x, y;
 				po->validcount = validcount;
 
 				for (y = po->blockbox[BOXBOTTOM]; y <= po->blockbox[BOXTOP]; ++y)
@@ -5198,7 +5199,7 @@ static inline BlockItReturn_t PIT_GetPrecipSectors(line_t *ld)
 
 void P_CreateSecNodeList(mobj_t *thing, fixed_t x, fixed_t y)
 {
-	INT32 xl, xh, yl, yh, bx, by;
+	int32_t xl, xh, yl, yh, bx, by;
 	msecnode_t *node = sector_list;
 	tm_t ptm = g_tm; /* cph - see comment at func end */
 
@@ -5269,7 +5270,7 @@ void P_CreateSecNodeList(mobj_t *thing, fixed_t x, fixed_t y)
 // More crazy crap Tails 08-25-2002
 void P_CreatePrecipSecNodeList(precipmobj_t *thing,fixed_t x,fixed_t y)
 {
-	INT32 xl, xh, yl, yh, bx, by;
+	int32_t xl, xh, yl, yh, bx, by;
 	mprecipsecnode_t *node = precipsector_list;
 	tm_t ptm = g_tm; /* cph - see comment at func end */
 

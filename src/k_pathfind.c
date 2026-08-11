@@ -22,7 +22,7 @@ static const size_t DEFAULT_CLOSEDSET_CAPACITY = 8U;
 
 
 /*--------------------------------------------------
-	static UINT32 K_NodeGetFScore(const pathfindnode_t *const node)
+	static uint32_t K_NodeGetFScore(const pathfindnode_t *const node)
 
 		Gets the FScore of a node. The FScore is the GScore plus the HScore.
 
@@ -32,9 +32,9 @@ static const size_t DEFAULT_CLOSEDSET_CAPACITY = 8U;
 	Return:-
 		The FScore of the node.
 --------------------------------------------------*/
-static UINT32 K_NodeGetFScore(const pathfindnode_t *const node)
+static uint32_t K_NodeGetFScore(const pathfindnode_t *const node)
 {
-	UINT32 fscore = UINT32_MAX;
+	uint32_t fscore = UINT32_MAX;
 
 	I_Assert(node != NULL);
 
@@ -112,7 +112,7 @@ static pathfindnode_t *K_NodesArrayContainsNodeData(
 }
 
 /*--------------------------------------------------
-	static boolean K_ClosedsetContainsNode(pathfindnode_t **closedset, pathfindnode_t *node, size_t closedsetcount)
+	static dboolean K_ClosedsetContainsNode(pathfindnode_t **closedset, pathfindnode_t *node, size_t closedsetcount)
 
 		Checks whether the Closedset contains a node. Searches from the end to the start for speed reasons.
 
@@ -124,9 +124,9 @@ static pathfindnode_t *K_NodesArrayContainsNodeData(
 	Return:-
 		True if the node is in the closed set, false if it isn't
 --------------------------------------------------*/
-static boolean K_ClosedsetContainsNode(pathfindnode_t **closedset, pathfindnode_t *node, size_t closedsetcount)
+static dboolean K_ClosedsetContainsNode(pathfindnode_t **closedset, pathfindnode_t *node, size_t closedsetcount)
 {
-	boolean nodeisinclosedset = false;
+	dboolean nodeisinclosedset = false;
 	size_t i = 0U;
 
 	I_Assert(closedset != NULL);
@@ -146,7 +146,7 @@ static boolean K_ClosedsetContainsNode(pathfindnode_t **closedset, pathfindnode_
 }
 
 /*--------------------------------------------------
-	static boolean K_PathfindSetupValid(const pathfindsetup_t *const pathfindsetup)
+	static dboolean K_PathfindSetupValid(const pathfindsetup_t *const pathfindsetup)
 
 		Checks that the setup given for pathfinding is valid and can be used.
 
@@ -156,9 +156,9 @@ static boolean K_ClosedsetContainsNode(pathfindnode_t **closedset, pathfindnode_
 	Return:-
 		True if pathfinding setup is valid, false if it isn't.
 --------------------------------------------------*/
-static boolean K_PathfindSetupValid(const pathfindsetup_t *const pathfindsetup)
+static dboolean K_PathfindSetupValid(const pathfindsetup_t *const pathfindsetup)
 {
-	boolean pathfindsetupvalid = false;
+	dboolean pathfindsetupvalid = false;
 	size_t sourcenodenumconnectednodes = 0U;
 	size_t endnodenumconnectednodes    = 0U;
 
@@ -218,9 +218,9 @@ static boolean K_PathfindSetupValid(const pathfindsetup_t *const pathfindsetup)
 	return pathfindsetupvalid;
 }
 
-static boolean K_ReconstructPath(path_t *const path, pathfindnode_t *const destinationnode)
+static dboolean K_ReconstructPath(path_t *const path, pathfindnode_t *const destinationnode)
 {
-	boolean reconstructsuccess = false;
+	dboolean reconstructsuccess = false;
 
 	I_Assert(path != NULL);
 	I_Assert(destinationnode != NULL);
@@ -279,13 +279,13 @@ static boolean K_ReconstructPath(path_t *const path, pathfindnode_t *const desti
 }
 
 /*--------------------------------------------------
-	boolean K_PathfindAStar(path_t *const path, pathfindsetup_t *const pathfindsetup)
+	dboolean K_PathfindAStar(path_t *const path, pathfindsetup_t *const pathfindsetup)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_PathfindAStar(path_t *const path, pathfindsetup_t *const pathfindsetup)
+dboolean K_PathfindAStar(path_t *const path, pathfindsetup_t *const pathfindsetup)
 {
-	boolean pathfindsuccess = false;
+	dboolean pathfindsuccess = false;
 
 	if (path == NULL)
 	{
@@ -325,13 +325,13 @@ boolean K_PathfindAStar(path_t *const path, pathfindsetup_t *const pathfindsetup
 			pathfindnode_t *connectingnode         = NULL;
 			void           **connectingnodesdata   = NULL;
 			void           *checknodedata          = NULL;
-			UINT32         *connectingnodecosts    = NULL;
+			uint32_t         *connectingnodecosts    = NULL;
 			size_t         numconnectingnodes      = 0U;
 			size_t         connectingnodeheapindex = 0U;
 			size_t         nodesarraycount         = 0U;
 			size_t         closedsetcount          = 0U;
 			size_t         i                       = 0U;
-			UINT32         tentativegscore         = 0U;
+			uint32_t         tentativegscore         = 0U;
 
 			// Set the dynamic structure capacites to defaults if they are 0
 			if (pathfindsetup->nodesarraycapacity == 0U)

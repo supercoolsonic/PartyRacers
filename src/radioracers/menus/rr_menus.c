@@ -574,7 +574,7 @@ void RumbleEvents_OnChange(void)
 {
 	if (con_startup) return;
 
-	UINT16 newstatus = (cv_morerumbleevents.value) ? IT_STRING | IT_CVAR : IT_GRAYEDOUT;
+	uint16_t newstatus = (cv_morerumbleevents.value) ? IT_STRING | IT_CVAR : IT_GRAYEDOUT;
 
 	for (int i = 3; i < 11; i++) {
 		OPTIONS_RadioRacersGameplay[i].status = newstatus;
@@ -600,7 +600,7 @@ void Roulette_OnChange(void)
 {
 	if (con_startup) return;
 
-	UINT16 newstatus = (cv_rouletteonplayer.value) ? IT_STRING | IT_CVAR : IT_GRAYEDOUT;
+	uint16_t newstatus = (cv_rouletteonplayer.value) ? IT_STRING | IT_CVAR : IT_GRAYEDOUT;
 
 	for (int i = 17; i < 21; i++) {							//SCS EDIT - changing from 16 and 20 to 17 and 21. Not sure how this ever started happening, but whatever.
 		OPTIONS_RadioRacersHud[i].status = newstatus;

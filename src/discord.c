@@ -88,9 +88,9 @@ const char *DRPC_HideUsername(const char *input)
 --------------------------------------------------*/
 static char *DRPC_XORIPString(const char *input)
 {
-	const UINT8 xor[IP_SIZE] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21};
+	const uint8_t xor[IP_SIZE] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21};
 	char *output = malloc(sizeof(char) * (IP_SIZE+1));
-	UINT8 i;
+	uint8_t i;
 
 	for (i = 0; i < IP_SIZE; i++)
 	{
@@ -196,7 +196,7 @@ static void DRPC_HandleJoin(const char *secret)
 }
 
 /*--------------------------------------------------
-	static boolean DRPC_InvitesAreAllowed(void)
+	static dboolean DRPC_InvitesAreAllowed(void)
 
 		Determines whenever or not invites or
 		ask to join requests are allowed.
@@ -207,7 +207,7 @@ static void DRPC_HandleJoin(const char *secret)
 	Return:-
 		true if invites are allowed, false otherwise.
 --------------------------------------------------*/
-static boolean DRPC_InvitesAreAllowed(void)
+static dboolean DRPC_InvitesAreAllowed(void)
 {
 	if (!Playing())
 	{
@@ -367,7 +367,7 @@ void DRPC_Init(void)
 }
 
 /*--------------------------------------------------
-	static void DRPC_GotServerIP(UINT32 address)
+	static void DRPC_GotServerIP(uint32_t address)
 
 		Callback triggered by successful STUN response.
 
@@ -377,7 +377,7 @@ void DRPC_Init(void)
 	Return:-
 		None
 --------------------------------------------------*/
-static void DRPC_GotServerIP(UINT32 address)
+static void DRPC_GotServerIP(uint32_t address)
 {
 	const unsigned char * p = (const unsigned char *)&address;
 	snprintf(self_ip, IP_SIZE, "%u.%u.%u.%u:%u", p[0], p[1], p[2], p[3], current_port);
@@ -435,12 +435,12 @@ static void DRPC_EmptyRequests(void)
 
 #ifndef DISCORD_SECRETIVE
 /*--------------------------------------------------
-	static boolean DRPC_DisplayGonerSetup(void)
+	static dboolean DRPC_DisplayGonerSetup(void)
 
 		Returns true if we're in the initial
 		tutorial game state.
 --------------------------------------------------*/
-static boolean DRPC_DisplayGonerSetup(void)
+static dboolean DRPC_DisplayGonerSetup(void)
 {
 	if (M_GameTrulyStarted())
 	{
@@ -502,7 +502,7 @@ enum {
 --------------------------------------------------*/
 void DRPC_UpdatePresence(void)
 {
-	boolean joinSecretSet = false;
+	dboolean joinSecretSet = false;
 	char *clientJoinSecret = NULL;
 
 	DiscordRichPresence discordPresence;
@@ -570,7 +570,7 @@ void DRPC_UpdatePresence(void)
 	char largeimg[128];
 	char largename[128];
 
-	UINT8 gs = DISCORD_GS_UNKNOWN;
+	uint8_t gs = DISCORD_GS_UNKNOWN;
 	if (DRPC_DisplayGonerSetup())
 	{
 		gs = DISCORD_GS_GONER;

@@ -31,15 +31,15 @@ huddrawlist_h LUA_HUD_CreateDrawList(void);
 void LUA_HUD_ClearDrawList(huddrawlist_h list);
 // Destroys the drawlist, invalidating the given handle
 void LUA_HUD_DestroyDrawList(huddrawlist_h list);
-boolean LUA_HUD_IsDrawListValid(huddrawlist_h list);
+dboolean LUA_HUD_IsDrawListValid(huddrawlist_h list);
 
 void LUA_HUD_AddDraw(
 	huddrawlist_h list,
-	INT32 x,
-	INT32 y,
+	int32_t x,
+	int32_t y,
 	patch_t *patch,
-	INT32 flags,
-	UINT8 *colormap
+	int32_t flags,
+	uint8_t *colormap
 );
 void LUA_HUD_AddDrawScaled(
 	huddrawlist_h list,
@@ -47,8 +47,8 @@ void LUA_HUD_AddDrawScaled(
 	fixed_t y,
 	fixed_t scale,
 	patch_t *patch,
-	INT32 flags,
-	UINT8 *colormap
+	int32_t flags,
+	uint8_t *colormap
 );
 void LUA_HUD_AddDrawStretched(
 	huddrawlist_h list,
@@ -57,70 +57,70 @@ void LUA_HUD_AddDrawStretched(
 	fixed_t hscale,
 	fixed_t vscale,
 	patch_t *patch,
-	INT32 flags,
-	UINT8 *colormap
+	int32_t flags,
+	uint8_t *colormap
 );
 void LUA_HUD_AddDrawNum(
 	huddrawlist_h list,
-	INT32 x,
-	INT32 y,
-	INT32 num,
-	INT32 flags
+	int32_t x,
+	int32_t y,
+	int32_t num,
+	int32_t flags
 );
 void LUA_HUD_AddDrawPaddedNum(
 	huddrawlist_h list,
-	INT32 x,
-	INT32 y,
-	INT32 num,
-	INT32 digits,
-	INT32 flags
+	int32_t x,
+	int32_t y,
+	int32_t num,
+	int32_t digits,
+	int32_t flags
 );
 void LUA_HUD_AddDrawPingNum(
 	huddrawlist_h list,
-	INT32 x,
-	INT32 y,
-	INT32 flags,
-	INT32 num,
-	UINT8 *colormap
+	int32_t x,
+	int32_t y,
+	int32_t flags,
+	int32_t num,
+	uint8_t *colormap
 );
 void LUA_HUD_AddDrawFill(
 	huddrawlist_h list,
-	INT32 x,
-	INT32 y,
-	INT32 w,
-	INT32 h,
-	INT32 c
+	int32_t x,
+	int32_t y,
+	int32_t w,
+	int32_t h,
+	int32_t c
 );
 void LUA_HUD_AddDrawString(
 	huddrawlist_h list,
 	fixed_t x,
 	fixed_t y,
 	const char *str,
-	INT32 flags,
-	INT32 align
+	int32_t flags,
+	int32_t align
 );
 void LUA_HUD_AddFadeScreen(
 	huddrawlist_h list,
-	UINT16 color,
-	UINT8 strength
+	uint16_t color,
+	uint8_t strength
 );
 void LUA_HUD_AddDrawTitleCardString(
 	huddrawlist_h list,
-	INT32 x,
-	INT32 y,
-	INT32 flags,
+	int32_t x,
+	int32_t y,
+	int32_t flags,
 	const char *str,
-	boolean bossmode,
-	INT32 timer,
-	INT32 threshold,
-	boolean p4
+	dboolean bossmode,
+	int32_t timer,
+	int32_t threshold,
+	dboolean p4
 );
 void LUA_HUD_AddDrawKartString(
 	huddrawlist_h list,
 	fixed_t x,
 	fixed_t y,
 	const char *str,
-	INT32 flags
+	int32_t flags
 );
 void LUA_HUD_AddSetClipRect(
 	huddrawlist_h list,
@@ -128,7 +128,7 @@ void LUA_HUD_AddSetClipRect(
 	fixed_t y,
 	fixed_t w,
 	fixed_t h,
-	INT32 flags
+	int32_t flags
 );
 void LUA_HUD_AddClearClipRect(
 	huddrawlist_h list

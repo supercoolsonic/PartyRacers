@@ -24,10 +24,10 @@
 
 typedef struct {
     // d_player.h
-    INT32 skin;
-    UINT16 skincolor;
-    INT32 follower;
-    UINT16 followercolor;
+    int32_t skin;
+    uint16_t skincolor;
+    int32_t follower;
+    uint16_t followercolor;
 
 } characterbookmark_t;
 

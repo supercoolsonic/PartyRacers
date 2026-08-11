@@ -137,18 +137,18 @@ Make sure this matches the actual number of states
 #define AUTORESPAWN_TIME (10*TICRATE)
 #define AUTORESPAWN_THRESHOLD (7*TICRATE)
 
-UINT8 K_SetPlayerItemAmount(player_t *player, INT32 amount);
-UINT8 K_SetPlayerBackupItemAmount(player_t *player, INT32 amount);
-UINT8 K_AdjustPlayerItemAmount(player_t *player, INT32 amount);
-UINT8 K_AdjustPlayerBackupItemAmount(player_t *player, INT32 amount);
+uint8_t K_SetPlayerItemAmount(player_t *player, int32_t amount);
+uint8_t K_SetPlayerBackupItemAmount(player_t *player, int32_t amount);
+uint8_t K_AdjustPlayerItemAmount(player_t *player, int32_t amount);
+uint8_t K_AdjustPlayerBackupItemAmount(player_t *player, int32_t amount);
 
 angle_t K_ReflectAngle(angle_t angle, angle_t against, fixed_t maxspeed, fixed_t yourspeed);
 
 void K_PopBubbleShield(player_t *player);
 
-boolean K_IsDuelItem(mobjtype_t type);
-boolean K_DuelItemAlwaysSpawns(mapthing_t *mt);
-boolean K_InRaceDuel(void);
+dboolean K_IsDuelItem(mobjtype_t type);
+dboolean K_DuelItemAlwaysSpawns(mapthing_t *mt);
+dboolean K_InRaceDuel(void);
 player_t *K_DuelOpponent(player_t *player);
 
 fixed_t K_FinalCheckpointPower(void);
@@ -159,27 +159,27 @@ fixed_t K_EffectiveGradingFactor(const player_t *player);
 void K_TimerReset(void);
 void K_TimerInit(void);
 
-UINT32 K_GetPlayerDontDrawFlag(player_t *player);
+uint32_t K_GetPlayerDontDrawFlag(player_t *player);
 void K_ReduceVFXForEveryone(mobj_t *mo);
 
-boolean K_IsPlayerLosing(player_t *player);
+dboolean K_IsPlayerLosing(player_t *player);
 fixed_t K_PlayerScamPercentage(const player_t *player, fixed_t mult);
-fixed_t K_GetKartGameSpeedScalar(SINT8 value);
+fixed_t K_GetKartGameSpeedScalar(int8_t value);
 
-INT32 K_GetShieldFromItem(INT32 item);
-SINT8 K_ItemResultToType(SINT8 getitem);
-UINT8 K_ItemResultToAmount(SINT8 getitem, const itemroulette_t *roulette);
-tic_t K_GetItemCooldown(SINT8 itemResult);
-void K_SetItemCooldown(SINT8 itemResult, tic_t time);
+int32_t K_GetShieldFromItem(int32_t item);
+int8_t K_ItemResultToType(int8_t getitem);
+uint8_t K_ItemResultToAmount(int8_t getitem, const itemroulette_t *roulette);
+tic_t K_GetItemCooldown(int8_t itemResult);
+void K_SetItemCooldown(int8_t itemResult, tic_t time);
 void K_RunItemCooldowns(void);
 
-boolean K_TimeAttackRules(void);
-boolean K_CapsuleTimeAttackRules(void);
+dboolean K_TimeAttackRules(void);
+dboolean K_CapsuleTimeAttackRules(void);
 
 fixed_t K_GetMobjWeight(mobj_t *mobj, mobj_t *against);
 void K_PlayerJustBumped(player_t *player);
-boolean K_KartBouncing(mobj_t *mobj1, mobj_t *mobj2);
-boolean K_KartSolidBounce(mobj_t *bounceMobj, mobj_t *solidMobj);
+dboolean K_KartBouncing(mobj_t *mobj1, mobj_t *mobj2);
+dboolean K_KartSolidBounce(mobj_t *bounceMobj, mobj_t *solidMobj);
 void K_KartPainEnergyFling(player_t *player);
 void K_MatchFlipFlags(mobj_t *mo, mobj_t *master);
 void K_FlipFromObject(mobj_t *mo, mobj_t *master);
@@ -197,90 +197,90 @@ void K_SpawnBumpEffect(mobj_t *mo);
 void K_KartMoveAnimation(player_t *player);
 void K_KartPlayerHUDUpdate(player_t *player);
 void K_KartResetPlayerColor(player_t *player);
-boolean K_PressingEBrake(const player_t *player);
+dboolean K_PressingEBrake(const player_t *player);
 void K_KartPlayerThink(player_t *player, ticcmd_t *cmd);
 void K_KartPlayerAfterThink(player_t *player);
 angle_t K_MomentumAngleEx(const mobj_t *mo, const fixed_t threshold);
 angle_t K_MomentumAngleReal(const mobj_t *mo);
 #define K_MomentumAngle(mo) K_MomentumAngleEx(mo, 6 * mo->scale)
-boolean K_PvPAmpReward(UINT32 award, player_t *attacker, player_t *defender);
-void K_SpawnAmps(player_t *player, UINT8 amps, mobj_t *impact);
-void K_SpawnEXP(player_t *player, UINT8 exp, mobj_t *impact);
-void K_AwardPlayerAmps(player_t *player, UINT8 amps);
+dboolean K_PvPAmpReward(uint32_t award, player_t *attacker, player_t *defender);
+void K_SpawnAmps(player_t *player, uint8_t amps, mobj_t *impact);
+void K_SpawnEXP(player_t *player, uint8_t exp, mobj_t *impact);
+void K_AwardPlayerAmps(player_t *player, uint8_t amps);
 void K_CheckpointCrossAward(player_t *player);
-void K_AwardPlayerRings(player_t *player, UINT16 rings, boolean overload);
-boolean K_Overdrive(player_t *player);
-boolean K_DefensiveOverdrive(player_t *player);
+void K_AwardPlayerRings(player_t *player, uint16_t rings, dboolean overload);
+dboolean K_Overdrive(player_t *player);
+dboolean K_DefensiveOverdrive(player_t *player);
 void K_DoInstashield(player_t *player);
 void K_DoPowerClash(mobj_t *t1, mobj_t *t2);
 void K_DoGuardBreak(mobj_t *t1, mobj_t *t2);
-void K_BattleAwardHit(player_t *player, player_t *victim, mobj_t *inflictor, UINT8 bumpersRemoved);
+void K_BattleAwardHit(player_t *player, player_t *victim, mobj_t *inflictor, uint8_t bumpersRemoved);
 void K_RemoveGrowShrink(player_t *player);
-boolean K_IsBigger(mobj_t *compare, mobj_t *other);
-void K_SpinPlayer(player_t *player, mobj_t *inflictor, mobj_t *source, INT32 type);
-void K_TumblePlayer(player_t *player, mobj_t *inflictor, mobj_t *source, boolean soften);
+dboolean K_IsBigger(mobj_t *compare, mobj_t *other);
+void K_SpinPlayer(player_t *player, mobj_t *inflictor, mobj_t *source, int32_t type);
+void K_TumblePlayer(player_t *player, mobj_t *inflictor, mobj_t *source, dboolean soften);
 void K_TumbleInterrupt(player_t *player);
 angle_t K_StumbleSlope(angle_t angle, angle_t pitch, angle_t roll);
 void K_StumblePlayer(player_t *player);
-boolean K_CheckStumble(player_t *player, angle_t oldPitch, angle_t oldRoll, boolean fromAir);
+dboolean K_CheckStumble(player_t *player, angle_t oldPitch, angle_t oldRoll, dboolean fromAir);
 void K_InitStumbleIndicator(player_t *player);
 void K_InitWavedashIndicator(player_t *player);
 void K_InitTrickIndicator(player_t *player);
 void K_UpdateStumbleIndicator(player_t *player);
 void K_UpdateWavedashIndicator(player_t *player);
 void K_UpdateTrickIndicator(player_t *player);
-INT32 K_ExplodePlayer(player_t *player, mobj_t *inflictor, mobj_t *source);
+int32_t K_ExplodePlayer(player_t *player, mobj_t *inflictor, mobj_t *source);
 void K_DebtStingPlayer(player_t *player, mobj_t *source);
-void K_GiveBumpersToPlayer(player_t *player, player_t *victim, UINT8 amount);
-void K_TakeBumpersFromPlayer(player_t *player, player_t *victim, UINT8 amount);
-void K_GivePointsToPlayer(player_t *player, player_t *victim, UINT8 amount);
+void K_GiveBumpersToPlayer(player_t *player, player_t *victim, uint8_t amount);
+void K_TakeBumpersFromPlayer(player_t *player, player_t *victim, uint8_t amount);
+void K_GivePointsToPlayer(player_t *player, player_t *victim, uint8_t amount);
 void K_MineFlashScreen(mobj_t *source);
 void K_SpawnMineExplosion(mobj_t *source, skincolornum_t color, tic_t delay);
 void K_SpawnLandMineExplosion(mobj_t *source, skincolornum_t color, tic_t delay);
 void K_RunFinishLineBeam(void);
-UINT16 K_DriftSparkColor(player_t *player, INT32 charge);
+uint16_t K_DriftSparkColor(player_t *player, int32_t charge);
 void K_SpawnBoostTrail(player_t *player);
 void K_SpawnSparkleTrail(mobj_t *mo);
 void K_SpawnSparkleTrail_OLD(mobj_t *mo);		//SCS ADD
 void K_SpawnTimeStoneSparkles(mobj_t *mo);		//SCS ADD
 void K_SpawnSuperFormSparkle(mobj_t *mo);		//SCS ADD
-UINT32 K_CalcRingBoxAward(player_t *player, UINT32 Multiplier, boolean IsSuperJackpot);		//SCS ADD
+uint32_t K_CalcRingBoxAward(player_t *player, uint32_t Multiplier, dboolean IsSuperJackpot);		//SCS ADD
 void K_SpawnWipeoutTrail(mobj_t *mo);
 void K_SpawnFireworkTrail(mobj_t *mo);
 void K_SpawnDraftDust(mobj_t *mo);
 void K_SpawnMagicianParticles(mobj_t *mo, int spread);
 void K_DriftDustHandling(mobj_t *spawner);
 void K_Squish(mobj_t *mo);
-mobj_t *K_ThrowKartItemEx(player_t *player, boolean missile, mobjtype_t mapthing, INT32 defaultDir, INT32 altthrow, angle_t angleOffset, fixed_t tossX, fixed_t tossY);
-mobj_t *K_ThrowKartItem(player_t *player, boolean missile, mobjtype_t mapthing, INT32 defaultDir, INT32 altthrow, angle_t angleOffset);
+mobj_t *K_ThrowKartItemEx(player_t *player, dboolean missile, mobjtype_t mapthing, int32_t defaultDir, int32_t altthrow, angle_t angleOffset, fixed_t tossX, fixed_t tossY);
+mobj_t *K_ThrowKartItem(player_t *player, dboolean missile, mobjtype_t mapthing, int32_t defaultDir, int32_t altthrow, angle_t angleOffset);
 void K_PuntMine(mobj_t *mine, mobj_t *punter);
-void K_DoSneaker(player_t *player, INT32 type);
-void K_DoPogoSpring(mobj_t *mo, fixed_t vertispeed, UINT8 sound);
-void K_DoYellowPogoSpring(mobj_t *mo, fixed_t vertispeed, UINT8 sound);
+void K_DoSneaker(player_t *player, int32_t type);
+void K_DoPogoSpring(mobj_t *mo, fixed_t vertispeed, uint8_t sound);
+void K_DoYellowPogoSpring(mobj_t *mo, fixed_t vertispeed, uint8_t sound);
 void K_DoInvincibility(player_t *player, tic_t time);
 void K_KillBananaChain(mobj_t *banana, mobj_t *inflictor, mobj_t *source);
-void K_UpdateHnextList(player_t *player, boolean clean);
+void K_UpdateHnextList(player_t *player, dboolean clean);
 void K_DropHnextList(player_t *player);
 void K_RepairOrbitChain(mobj_t *orbit);
-void K_CalculateBananaSlope(mobj_t *mobj, fixed_t x, fixed_t y, fixed_t z, fixed_t radius, fixed_t height, boolean flip, boolean player);
+void K_CalculateBananaSlope(mobj_t *mobj, fixed_t x, fixed_t y, fixed_t z, fixed_t radius, fixed_t height, dboolean flip, dboolean player);
 mobj_t *K_FindJawzTarget(mobj_t *actor, player_t *source, angle_t range);
-INT32 K_GetKartRingPower(const player_t *player, boolean boosted);
-INT32 K_GetFullKartRingPower(const player_t *player, boolean boosted);
-boolean K_CheckPlayersRespawnColliding(INT32 playernum, fixed_t x, fixed_t y);
-INT16 K_UpdateSteeringValue(INT16 inputSteering, INT16 destSteering);
-INT16 K_GetKartTurnValue(const player_t *player, INT16 turnvalue);
-INT32 K_GetUnderwaterTurnAdjust(const player_t *player);
-INT32 K_GetKartDriftSparkValue(const player_t *player);
-INT32 K_StairJankFlip(INT32 value);
-INT32 K_GetKartDriftSparkValueForStage(const player_t *player, UINT8 stage);
+int32_t K_GetKartRingPower(const player_t *player, dboolean boosted);
+int32_t K_GetFullKartRingPower(const player_t *player, dboolean boosted);
+dboolean K_CheckPlayersRespawnColliding(int32_t playernum, fixed_t x, fixed_t y);
+int16_t K_UpdateSteeringValue(int16_t inputSteering, int16_t destSteering);
+int16_t K_GetKartTurnValue(const player_t *player, int16_t turnvalue);
+int32_t K_GetUnderwaterTurnAdjust(const player_t *player);
+int32_t K_GetKartDriftSparkValue(const player_t *player);
+int32_t K_StairJankFlip(int32_t value);
+int32_t K_GetKartDriftSparkValueForStage(const player_t *player, uint8_t stage);
 void K_SpawnDriftBoostExplosion(player_t *player, int stage);
-void K_SpawnDriftElectricSparks(player_t *player, int color, boolean shockwave);
+void K_SpawnDriftElectricSparks(player_t *player, int color, dboolean shockwave);
 void K_KartUpdatePosition(player_t *player);
 void K_UpdateAllPlayerPositions(void);
-SINT8 K_GetTotallyRandomResult(UINT8 useodds);
-mobj_t *K_CreatePaperItem(fixed_t x, fixed_t y, fixed_t z, angle_t angle, SINT8 flip, UINT8 type, UINT16 amount);
-mobj_t *K_FlingPaperItem(fixed_t x, fixed_t y, fixed_t z, angle_t angle, SINT8 flip, UINT8 type, UINT16 amount);
-void K_DropPaperItem(player_t *player, UINT8 itemtype, UINT16 itemamount);
+int8_t K_GetTotallyRandomResult(uint8_t useodds);
+mobj_t *K_CreatePaperItem(fixed_t x, fixed_t y, fixed_t z, angle_t angle, int8_t flip, uint8_t type, uint16_t amount);
+mobj_t *K_FlingPaperItem(fixed_t x, fixed_t y, fixed_t z, angle_t angle, int8_t flip, uint8_t type, uint16_t amount);
+void K_DropPaperItem(player_t *player, uint8_t itemtype, uint16_t itemamount);
 void K_PopPlayerShield(player_t *player);
 void K_PickpocketHyuChainDestroy(player_t *player);					//SCS ADD
 void K_DropItems(player_t *player);
@@ -290,57 +290,57 @@ void K_StripItems(player_t *player);
 void K_StripItemsExceptBackup(player_t *player);
 void K_StripOther(player_t *player);
 void K_MomentumToFacing(player_t *player);
-boolean K_ApplyOffroad(const player_t *player);
-boolean K_SlopeResistance(const player_t *player);
+dboolean K_ApplyOffroad(const player_t *player);
+dboolean K_SlopeResistance(const player_t *player);
 fixed_t K_PlayerTripwireSpeedThreshold(const player_t *player);
 tripwirepass_t K_TripwirePassConditions(const player_t *player);
-boolean K_TripwirePass(const player_t *player);
-boolean K_MovingHorizontally(mobj_t *mobj);
-boolean K_WaterRun(mobj_t *mobj);
-boolean K_WaterSkip(mobj_t *mobj);
+dboolean K_TripwirePass(const player_t *player);
+dboolean K_MovingHorizontally(mobj_t *mobj);
+dboolean K_WaterRun(mobj_t *mobj);
+dboolean K_WaterSkip(mobj_t *mobj);
 void K_SpawnWaterRunParticles(mobj_t *mobj);
-boolean K_IsRidingFloatingTop(const player_t *player);
-boolean K_IsHoldingDownTop(const player_t *player);
+dboolean K_IsRidingFloatingTop(const player_t *player);
+dboolean K_IsHoldingDownTop(const player_t *player);
 mobj_t *K_GetGardenTop(const player_t *player);
 void K_ApplyTripWire(player_t *player, tripwirestate_t state);
-INT16 K_GetSpindashChargeTime(const player_t *player);
+int16_t K_GetSpindashChargeTime(const player_t *player);
 fixed_t K_GetSpindashChargeSpeed(const player_t *player);
 fixed_t K_GrowShrinkSpeedMul(const player_t *player);
-fixed_t K_GetKartSpeedFromStat(UINT8 kartspeed);
-fixed_t K_GetKartSpeed(const player_t *player, boolean doboostpower, boolean dorubberbanding);
+fixed_t K_GetKartSpeedFromStat(uint8_t kartspeed);
+fixed_t K_GetKartSpeed(const player_t *player, dboolean doboostpower, dboolean dorubberbanding);
 fixed_t K_GetKartAccel(const player_t *player);
-UINT16 K_GetKartFlashing(const player_t *player);
-boolean K_PlayerShrinkCheat(const player_t *player);
+uint16_t K_GetKartFlashing(const player_t *player);
+dboolean K_PlayerShrinkCheat(const player_t *player);
 void K_UpdateShrinkCheat(player_t *player);
-boolean K_KartKickstart(const player_t *player);
-UINT16 K_GetKartButtons(const player_t *player);
-SINT8 K_GetForwardMove(const player_t *player);
+dboolean K_KartKickstart(const player_t *player);
+uint16_t K_GetKartButtons(const player_t *player);
+int8_t K_GetForwardMove(const player_t *player);
 fixed_t K_GetNewSpeed(const player_t *player);
 fixed_t K_3dKartMovement(const player_t *player);
-boolean K_PlayerEBrake(const player_t *player);
-boolean K_PlayerGuard(const player_t *player);
-SINT8 K_Sliptiding(const player_t *player);
-boolean K_FastFallBounce(player_t *player);
+dboolean K_PlayerEBrake(const player_t *player);
+dboolean K_PlayerGuard(const player_t *player);
+int8_t K_Sliptiding(const player_t *player);
+dboolean K_FastFallBounce(player_t *player);
 void K_DappleEmployment(player_t *player);
 fixed_t K_PlayerBaseFriction(const player_t *player, fixed_t original);
 void K_AdjustPlayerFriction(player_t *player);
-void K_MoveKartPlayer(player_t *player, boolean onground);
-void K_CheckSpectateStatus(boolean considermapreset);
-UINT8 K_GetInvincibilityItemFrame(void);
-UINT8 K_GetMasterEmeraldItemFrame(void); //SCS ADD
-UINT8 K_GetPickpocketHyudoroItemFrame(void); //SCS ADD
-UINT8 K_GetTimeStoneItemFrame(void);		//SCS ADD
-UINT8 K_GetOrbinautItemFrame(UINT8 count);
-UINT8 K_GetBananaItemFrame(UINT8 count);	//SCS ADD
-UINT8 K_GetSneakerItemFrame(UINT8 count);	//SCS ADD
-UINT8 K_GetJawzItemFrame(UINT8 count);	//SCS ADD
-UINT8 K_GetIcedusItemFrame(UINT8 count); //SCS ADD
-UINT8 K_GetSolItemFrame(UINT8 count); //SCS ADD
-UINT8 K_RingCapBonusItemFrame(void); //SCS ADD
+void K_MoveKartPlayer(player_t *player, dboolean onground);
+void K_CheckSpectateStatus(dboolean considermapreset);
+uint8_t K_GetInvincibilityItemFrame(void);
+uint8_t K_GetMasterEmeraldItemFrame(void); //SCS ADD
+uint8_t K_GetPickpocketHyudoroItemFrame(void); //SCS ADD
+uint8_t K_GetTimeStoneItemFrame(void);		//SCS ADD
+uint8_t K_GetOrbinautItemFrame(uint8_t count);
+uint8_t K_GetBananaItemFrame(uint8_t count);	//SCS ADD
+uint8_t K_GetSneakerItemFrame(uint8_t count);	//SCS ADD
+uint8_t K_GetJawzItemFrame(uint8_t count);	//SCS ADD
+uint8_t K_GetIcedusItemFrame(uint8_t count); //SCS ADD
+uint8_t K_GetSolItemFrame(uint8_t count); //SCS ADD
+uint8_t K_RingCapBonusItemFrame(void); //SCS ADD
 void K_SpawnRingCapIncreaseMessage(player_t *player); //SCS ADD
 
-UINT8 GetTotalInGameRacers(void);	//SCS ADD
-boolean K_IsSPBInGame(void);
+uint8_t GetTotalInGameRacers(void);	//SCS ADD
+dboolean K_IsSPBInGame(void);
 void K_KartEbrakeVisuals(player_t *p);
 void K_HandleDirectionalInfluence(player_t *player);
 fixed_t K_DefaultPlayerRadius(player_t *player);
@@ -355,78 +355,78 @@ void K_TryHurtSoundExchange(mobj_t *victim, mobj_t *attacker);
 void K_PlayPowerGloatSound(mobj_t *source);
 
 fixed_t K_GetItemScaleConst(fixed_t scale);
-fixed_t K_ItemScaleFromConst(UINT8 item_scale_const);
+fixed_t K_ItemScaleFromConst(uint8_t item_scale_const);
 fixed_t K_ItemScaleForPlayer(player_t *player);
 void K_SetItemOut(player_t *player);
 void K_UnsetItemOut(player_t *player);
 
-void K_UpdateMobjItemOverlay(mobj_t *part, SINT8 itemType, UINT8 itemCount);
+void K_UpdateMobjItemOverlay(mobj_t *part, int8_t itemType, uint8_t itemCount);
 
 void K_EggmanTransfer(player_t *source, player_t *victim);
 
 tic_t K_TimeLimitForGametype(void);
-UINT32 K_PointLimitForGametype(void);
+uint32_t K_PointLimitForGametype(void);
 
-boolean K_Cooperative(void);
+dboolean K_Cooperative(void);
 
 // lat: used for when the player is in some weird state where it wouldn't be wise for it to be overwritten by another object that does similarly wacky shit.
-boolean K_isPlayerInSpecialState(player_t *p);
+dboolean K_isPlayerInSpecialState(player_t *p);
 
 void K_SetTireGrease(player_t *player, tic_t tics);
 
-boolean K_IsPlayingDisplayPlayer(player_t *player);
+dboolean K_IsPlayingDisplayPlayer(player_t *player);
 
-boolean K_PlayerCanPunt(player_t *player);
+dboolean K_PlayerCanPunt(player_t *player);
 void K_MakeObjectReappear(mobj_t *mo);
 
 void K_BumperInflate(player_t *player);
 
-boolean K_ThunderDome(void);
+dboolean K_ThunderDome(void);
 
-boolean K_PlayerCanUseItem(player_t *player);
+dboolean K_PlayerCanUseItem(player_t *player);
 
-fixed_t K_GetGradingFactorAdjustment(player_t *player, UINT32 gradingpoint);
-fixed_t K_GetGradingFactorMinMax(player_t *player, boolean max);
-UINT16 K_GetEXP(player_t *player);
+fixed_t K_GetGradingFactorAdjustment(player_t *player, uint32_t gradingpoint);
+fixed_t K_GetGradingFactorMinMax(player_t *player, dboolean max);
+uint16_t K_GetEXP(player_t *player);
 
-UINT32 K_GetNumGradingPoints(void);
+uint32_t K_GetNumGradingPoints(void);
 
-boolean K_LegacyRingboost(const player_t *player);
-
-void K_BotHitPenalty(player_t *player);
-
-boolean K_IsPickMeUpItem(mobjtype_t type);
-
-boolean K_TryPickMeUp(mobj_t *m1, mobj_t *m2, boolean allowHostile);
-
-fixed_t K_TeamComebackMultiplier(player_t *player);
-
-void K_ApplyStun(player_t *player, mobj_t *inflictor, mobj_t *source, INT32 damage, UINT8 damagetype);
-
-boolean K_CanSuperTransfer(player_t *player);
-
-fixed_t K_GetGradingFactorMinMax(player_t *player, boolean max);																//SCS - RADIO START
-UINT16 K_GetEXP(player_t *player);
-
-UINT32 K_GetNumGradingPoints(void);
-
-boolean K_LegacyRingboost(const player_t *player);
+dboolean K_LegacyRingboost(const player_t *player);
 
 void K_BotHitPenalty(player_t *player);
 
-boolean K_IsPickMeUpItem(mobjtype_t type);
+dboolean K_IsPickMeUpItem(mobjtype_t type);
 
-boolean K_TryPickMeUp(mobj_t *m1, mobj_t *m2, boolean allowHostile);
+dboolean K_TryPickMeUp(mobj_t *m1, mobj_t *m2, dboolean allowHostile);
 
 fixed_t K_TeamComebackMultiplier(player_t *player);
 
-void K_ApplyStun(player_t *player, mobj_t *inflictor, mobj_t *source, INT32 damage, UINT8 damagetype);
+void K_ApplyStun(player_t *player, mobj_t *inflictor, mobj_t *source, int32_t damage, uint8_t damagetype);
 
-boolean K_CanSuperTransfer(player_t *player);
+dboolean K_CanSuperTransfer(player_t *player);
+
+fixed_t K_GetGradingFactorMinMax(player_t *player, dboolean max);																//SCS - RADIO START
+uint16_t K_GetEXP(player_t *player);
+
+uint32_t K_GetNumGradingPoints(void);
+
+dboolean K_LegacyRingboost(const player_t *player);
+
+void K_BotHitPenalty(player_t *player);
+
+dboolean K_IsPickMeUpItem(mobjtype_t type);
+
+dboolean K_TryPickMeUp(mobj_t *m1, mobj_t *m2, dboolean allowHostile);
+
+fixed_t K_TeamComebackMultiplier(player_t *player);
+
+void K_ApplyStun(player_t *player, mobj_t *inflictor, mobj_t *source, int32_t damage, uint8_t damagetype);
+
+dboolean K_CanSuperTransfer(player_t *player);
 
 // RadioRacers: This only works for single-player, no splitscreen. But it can be adapted to work WITH splitscreen easily.
-extern boolean localPlayerJustBootyBounced;
-extern boolean localPlayerJustWavedashed;																					//SCS - RADIO END
+extern dboolean localPlayerJustBootyBounced;
+extern dboolean localPlayerJustWavedashed;																					//SCS - RADIO END
 
 #ifdef __cplusplus
 } // extern "C"

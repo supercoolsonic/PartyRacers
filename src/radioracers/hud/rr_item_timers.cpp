@@ -47,11 +47,11 @@ const std::vector solfirewheel_patches = {"SFWHEEL1", "SFWHEEL2"};									//SCS
 
 struct ItemTimer
 {
-    INT32 time; // Timer.. time
+    int32_t time; // Timer.. time
     std::string patch; // Item graphic
     std::optional<float> patch_scale; // Item scale
     std::pair<int, int> offsets; // Patch offset (x, y)
-    std::optional<UINT16> colormap; // Colormap
+    std::optional<uint16_t> colormap; // Colormap
 
     // Straight from Icon struct in powerup.cpp, thank you Jartha xoxoxo
     bool operator<(const ItemTimer& b) const { return time < b.time; }
@@ -61,7 +61,7 @@ struct ItemTimer
 // STRUCTS
 
 
-static UINT16 getDriftSparkColor(void) {
+static uint16_t getDriftSparkColor(void) {
     if (stplyr->driftboost > 125) { // Rainbow sparks
         return K_RainbowColor(leveltime);
     } else if (stplyr->driftboost > 85) { // Blue sparks
@@ -197,7 +197,7 @@ std::vector<ItemTimer> getTimers(void) {
 	
     // Stacked Boosts
     timers.push_back({											//SCS ADD
-        INT32(stplyr->numboosts*10), 
+        int32_t(stplyr->numboosts*10), 
         stackedboost_patches[leveltime % stackedboost_patches.size()],
         0.4,
         {6, 7}
@@ -237,7 +237,7 @@ std::vector<ItemTimer> getTimers(void) {
             const int letter = 'A' + (powerup - FIRSTPOWERUP); 
 
             timers.push_back({
-                static_cast<INT32>(K_PowerUpRemaining(stplyr, powerup)),
+                static_cast<int32_t>(K_PowerUpRemaining(stplyr, powerup)),
                 fmt::format("PWRS{0:c}L{0:c}R", letter),
                 {},
                 {15, 18},
@@ -266,8 +266,8 @@ void RR_DrawItemTimers(void)
 
     std::vector<ItemTimer> timers = getTimers();
 
-    INT32 start_x = HARD_X;
-    INT32 x_offset = -SHIFT_X;
+    int32_t start_x = HARD_X;
+    int32_t x_offset = -SHIFT_X;
     for (const ItemTimer& t : timers) {
         if (t.time <= 0)
             continue;
@@ -275,9 +275,9 @@ void RR_DrawItemTimers(void)
     }
     start_x -= (x_offset / 2);
 
-    const INT32 draw_flags = V_SNAPTOBOTTOM;
-    const boolean usingProgressionBar = (gametype == GT_SPECIAL || (modeattacking & ATTACKING_SPB));
-    INT32 start_y = ((HARD_Y * FRACUNIT) + (cv_gingeritemtimersoffset.value)) >> FRACBITS;
+    const int32_t draw_flags = V_SNAPTOBOTTOM;
+    const dboolean usingProgressionBar = (gametype == GT_SPECIAL || (modeattacking & ATTACKING_SPB));
+    int32_t start_y = ((HARD_Y * FRACUNIT) + (cv_gingeritemtimersoffset.value)) >> FRACBITS;
     
     // Enforcing a higher position for the timers during attacking modes
     // So players don't have to keep hotswapping their timer positions between modes
@@ -291,9 +291,9 @@ void RR_DrawItemTimers(void)
     for (const ItemTimer& t : timers) {
         if (t.time <= 0) continue;
 
-        const INT32 centiseconds = G_TicsToCentiseconds(t.time);
-        const INT32 seconds = G_TicsToSeconds(t.time);
-        INT32 extra_flags = draw_flags;
+        const int32_t centiseconds = G_TicsToCentiseconds(t.time);
+        const int32_t seconds = G_TicsToSeconds(t.time);
+        int32_t extra_flags = draw_flags;
 
         // Slow fade out
         if (seconds == 0 && centiseconds <= 9) {                
@@ -316,7 +316,7 @@ void RR_DrawItemTimers(void)
             .patch(t.patch);
 
         // Then the time
-        const INT32 timer_text_y = (cv_gingeritemtimersbiggertext.value) ? 5 : 10;
+        const int32_t timer_text_y = (cv_gingeritemtimersbiggertext.value) ? 5 : 10;
         const float timer_text_scale = (cv_gingeritemtimersbiggertext.value) ? 0.9 : 0.7;
         timer_row
             .y(timer_text_y)

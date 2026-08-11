@@ -9,7 +9,10 @@
 /// \file radioracers/util/rr_util.c
 /// \brief Util functions
 
+
 #include "../../doomtype.h"
+
+#include <ctype.h>
 
 #include "../../fastcmp.h"
 #include "../../deh_tables.h"
@@ -27,13 +30,13 @@
 #include "../../r_textures.h"
 #include "../../r_fps.h"
 
-boolean shouldApplyEncore(void)
+dboolean shouldApplyEncore(void)
 {
     // Check the encoremode flag first, THEN the clientside flag.
     return (encoremode || localencore) || (shouldUseHaki());
 }
 
-boolean shouldUseHaki(void)
+dboolean shouldUseHaki(void)
 {
     // Prefer to use a function rather then just checking for 'hakimode' everywhere.
     if (netgame) {
@@ -83,11 +86,11 @@ void RR_AnnounceBattleWinner(player_t *player, battle_win_type_t type)
     HU_DoCEcho(va(BATTLE_WIN_MESSAGES[type], player_names[player-players]));    
 }
 
-boolean RR_IsBattle(void) {
+dboolean RR_IsBattle(void) {
     return (gametyperules & GTR_BUMPERS);
 }
 
-void RR_PlayCountdownJingle(INT16 timer, player_t *player) {
+void RR_PlayCountdownJingle(int16_t timer, player_t *player) {
     if (!cv_powersound.value)
         return;
 
@@ -108,21 +111,21 @@ void RR_PlayCountdownJingle(INT16 timer, player_t *player) {
     }
 }
 
-static boolean isGTopArrow(mobj_t* mo)			//SCS ADD
+static dboolean isGTopArrow(mobj_t* mo)			//SCS ADD
 {
     return (mo->type == MT_GARDENTOPARROW);
 }	
-static boolean isRing(mobj_t* mo)
+static dboolean isRing(mobj_t* mo)
 {
     return (mo->type == MT_RING || mo->type == MT_FLINGRING);
 }
-static boolean isRingBox(mobj_t* mo)
+static dboolean isRingBox(mobj_t* mo)
 {
     statenum_t specialstate = mo->state - states;
     return (mo->type == MT_RANDOMITEM) && (specialstate >= S_RINGBOX1 && specialstate <= S_RINGBOX12);
 }
 
-static boolean canGhost(void)
+static dboolean canGhost(void)
 {
     if (netgame && !cv_accessibility_rings_hide.enablefornetgames) {
         return false;
@@ -130,7 +133,7 @@ static boolean canGhost(void)
     return cv_accessibility_rings_hide.value && r_splitscreen == 0;
 }
 
-boolean RR_ShouldShowEmeraldsInMinimap(void)
+dboolean RR_ShouldShowEmeraldsInMinimap(void)
 {
     if (netgame && !cv_battle_toggle_emerald_on_minimap.enablefornetgames) {
         return false;
@@ -138,35 +141,35 @@ boolean RR_ShouldShowEmeraldsInMinimap(void)
     return cv_battle_toggle_emerald_on_minimap.value;
 }
 
-boolean RR_ShouldGhostGardenArrowTop(mobj_t *mo)		//SCS ADD
+dboolean RR_ShouldGhostGardenArrowTop(mobj_t *mo)		//SCS ADD
 {
     return isGTopArrow(mo) &&
     !(P_MobjWasRemoved(mo)) && 
     (cv_toggle_gardentoparrows.value == 2 || cv_toggle_gardentoparrows.value == 4);
 }		
 
-boolean RR_ShouldGhostGardenArrowFloor(mobj_t *mo)		//SCS ADD
+dboolean RR_ShouldGhostGardenArrowFloor(mobj_t *mo)		//SCS ADD
 {
     return isGTopArrow(mo) &&
     !(P_MobjWasRemoved(mo)) && 
     (cv_toggle_gardentoparrows.value == 1 || cv_toggle_gardentoparrows.value == 4);
 }		
 
-boolean RR_ShouldGhostRing(mobj_t *mo)
+dboolean RR_ShouldGhostRing(mobj_t *mo)
 {
     return canGhost() &&
     isRing(mo) && 
     !(!P_MobjWasRemoved(mo->target) && mo->target->type == MT_PLAYER) && 
     (IS_BEING_CHASED_BY_SPB(stplyr) || (RINGTOTAL(stplyr) >= stplyr->ringlimit && !((stplyr)->timestonefrozen))); //SCS EDIT - Don't ghost rings if we have the Time Stone active, since we get to keep picking them up to add to superring
 }											
-boolean RR_ShouldGhostRingboxes(mobj_t *mo)
+dboolean RR_ShouldGhostRingboxes(mobj_t *mo)
 {
     return canGhost() &&
     isRingBox(mo) && 
     (IS_BEING_CHASED_BY_SPB(stplyr));
 }
 
-boolean RR_ShouldGhostItemCapsuleParts(mobj_t *mo)
+dboolean RR_ShouldGhostItemCapsuleParts(mobj_t *mo)
 {
     return canGhost() &&
     (
@@ -176,7 +179,7 @@ boolean RR_ShouldGhostItemCapsuleParts(mobj_t *mo)
     IS_BEING_CHASED_BY_SPB(stplyr);
 }
 
-boolean RR_ShouldGhostItemCapsuleNumbers(mobj_t *mo)
+dboolean RR_ShouldGhostItemCapsuleNumbers(mobj_t *mo)
 {
     // isSuperRingItemNumber is only set to true in p_mobj.c in P_RefreshItemCapsuleParts
     return canGhost() && 
@@ -191,17 +194,17 @@ boolean RR_ShouldGhostItemCapsuleNumbers(mobj_t *mo)
  * To *better* convey this to the player, 
  * re-colour the aura VFX with the colour as their drift sparks.
  */
-boolean RR_ShouldRecolorVoltage(mobj_t *mo) 
+dboolean RR_ShouldRecolorVoltage(mobj_t *mo) 
 {
-    boolean isVoltage = (mo->type == MT_CHARGEAURA);
-    boolean hasValidTarget = !P_MobjWasRemoved(mo->target) 
+    dboolean isVoltage = (mo->type == MT_CHARGEAURA);
+    dboolean hasValidTarget = !P_MobjWasRemoved(mo->target) 
 				&& mo->target->player
 				&& mo->target->player == stplyr;
 
     return cv_obvious_voltage.value && r_splitscreen == 0 && isVoltage && hasValidTarget;
 }
 
-INT32 RR_FetchAlternateTripwire(INT32 original_textnum)
+int32_t RR_FetchAlternateTripwire(int32_t original_textnum)
 {
     if (!found_radioracers || !radioracers_usealternatetripwire || !cv_obvious_tripwire.value || r_splitscreen > 0) 
         return original_textnum;
@@ -211,35 +214,35 @@ INT32 RR_FetchAlternateTripwire(INT32 original_textnum)
     texname[8] = '\0';
 
     // Static
-    boolean is_short_tripwire_texture = strstr(texname, "TRIPWLOW") != NULL;
-    boolean is_short_2x_tripwire_texture = strstr(texname, "2RIPWLOW") != NULL;
-    boolean is_short_4x_tripwire_texture = strstr(texname, "4RIPWLOW") != NULL;
+    dboolean is_short_tripwire_texture = strstr(texname, "TRIPWLOW") != NULL;
+    dboolean is_short_2x_tripwire_texture = strstr(texname, "2RIPWLOW") != NULL;
+    dboolean is_short_4x_tripwire_texture = strstr(texname, "4RIPWLOW") != NULL;
 
-    boolean is_tall_tripwire_texture = strstr(texname, "TRIPWIRE") != NULL;
-    boolean is_tall_2x_tripwire_texture = strstr(texname, "2RIPWIRE") != NULL;
-    boolean is_tall_4x_tripwire_texture = strstr(texname, "4RIPWIRE") != NULL;
+    dboolean is_tall_tripwire_texture = strstr(texname, "TRIPWIRE") != NULL;
+    dboolean is_tall_2x_tripwire_texture = strstr(texname, "2RIPWIRE") != NULL;
+    dboolean is_tall_4x_tripwire_texture = strstr(texname, "4RIPWIRE") != NULL;
 
-    boolean is_vertical_tripwire = strstr(texname, "VRIPWIRE") != NULL;
+    dboolean is_vertical_tripwire = strstr(texname, "VRIPWIRE") != NULL;
 
     // Animated
-    boolean is_short_tripwire_animated_texture = strstr(texname, "TWLOW") != NULL;
-    boolean is_short_2x_tripwire_animated_texture = strstr(texname, "2WLOW") != NULL;
-    boolean is_short_4x_tripwire_animated_texture = strstr(texname, "4WLOW") != NULL;
+    dboolean is_short_tripwire_animated_texture = strstr(texname, "TWLOW") != NULL;
+    dboolean is_short_2x_tripwire_animated_texture = strstr(texname, "2WLOW") != NULL;
+    dboolean is_short_4x_tripwire_animated_texture = strstr(texname, "4WLOW") != NULL;
 
-    boolean is_tall_tripwire_animated_texture = strstr(texname, "TWIRE") != NULL;
-    boolean is_tall_2x_tripwire_animated_texture = strstr(texname, "2WIRE") != NULL;
-    boolean is_tall_4x_tripwire_animated_texture = strstr(texname, "4WIRE") != NULL;
+    dboolean is_tall_tripwire_animated_texture = strstr(texname, "TWIRE") != NULL;
+    dboolean is_tall_2x_tripwire_animated_texture = strstr(texname, "2WIRE") != NULL;
+    dboolean is_tall_4x_tripwire_animated_texture = strstr(texname, "4WIRE") != NULL;
 
-    boolean is_vertical_tripwire_animated_texture = strstr(texname, "VWIRE") != NULL;
+    dboolean is_vertical_tripwire_animated_texture = strstr(texname, "VWIRE") != NULL;
 
-    boolean is_short_tripwire = (is_short_tripwire_texture || is_short_2x_tripwire_texture || is_short_4x_tripwire_texture);
-    boolean is_short_tripwire_animated = (is_short_tripwire_animated_texture || is_short_2x_tripwire_animated_texture || is_short_4x_tripwire_animated_texture);
+    dboolean is_short_tripwire = (is_short_tripwire_texture || is_short_2x_tripwire_texture || is_short_4x_tripwire_texture);
+    dboolean is_short_tripwire_animated = (is_short_tripwire_animated_texture || is_short_2x_tripwire_animated_texture || is_short_4x_tripwire_animated_texture);
     
-    boolean is_tall_tripwire = (is_tall_tripwire_texture || is_tall_2x_tripwire_texture || is_tall_4x_tripwire_texture);
-    boolean is_tall_tripwire_animated = (is_tall_tripwire_animated_texture || is_tall_2x_tripwire_animated_texture || is_tall_4x_tripwire_animated_texture);
+    dboolean is_tall_tripwire = (is_tall_tripwire_texture || is_tall_2x_tripwire_texture || is_tall_4x_tripwire_texture);
+    dboolean is_tall_tripwire_animated = (is_tall_tripwire_animated_texture || is_tall_2x_tripwire_animated_texture || is_tall_4x_tripwire_animated_texture);
 
-    boolean is_tripwire = (is_short_tripwire || is_tall_tripwire || is_vertical_tripwire);
-    boolean is_animated_tripwire = (is_short_tripwire_animated || is_tall_tripwire_animated || is_vertical_tripwire_animated_texture);
+    dboolean is_tripwire = (is_short_tripwire || is_tall_tripwire || is_vertical_tripwire);
+    dboolean is_animated_tripwire = (is_short_tripwire_animated || is_tall_tripwire_animated || is_vertical_tripwire_animated_texture);
 
     // Is this actually a tripwire texture?
     if (!is_tripwire && !is_animated_tripwire) {
@@ -343,7 +346,7 @@ INT32 RR_FetchAlternateTripwire(INT32 original_textnum)
     return original_textnum;
 }
 
-void RR_GetTrackingCoordinatesForPlayer(trackingResult_t *result, boolean playerHasMobj) {
+void RR_GetTrackingCoordinatesForPlayer(trackingResult_t *result, dboolean playerHasMobj) {
     vector3_t v;
 
     if (playerHasMobj)
@@ -369,9 +372,9 @@ int scaleInt(int value, fixed_t scale)
 }
 
 // Uplifted from deh_soc.c
-UINT16 get_skincolornum(const char *word)
+uint16_t get_skincolornum(const char *word)
 { // Returns the value of SKINCOLOR_ enumerations
-	UINT16 i;
+	uint16_t i;
 	if (*word >= '0' && *word <= '9')
 		return atoi(word);
 	if (fastncmp("SKINCOLOR_",word,10))

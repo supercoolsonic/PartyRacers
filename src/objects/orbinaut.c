@@ -51,7 +51,7 @@ enum {
 
 void Obj_OrbinautThink(mobj_t *th)
 {
-	boolean grounded = P_IsObjectOnGround(th);
+	dboolean grounded = P_IsObjectOnGround(th);
 
 	if (th->fuse > 0 && th->fuse <= TICRATE)
 	{
@@ -116,7 +116,7 @@ void Obj_OrbinautThink(mobj_t *th)
 
 		if (th->health <= 5)
 		{
-			INT32 i;
+			int32_t i;
 			for (i = 5; i >= th->health; i--)
 			{
 				finalspeed = FixedMul(finalspeed, FRACUNIT-FRACUNIT/4);
@@ -164,7 +164,7 @@ void Obj_OrbinautThink(mobj_t *th)
 
 void Obj_IcedusThink(mobj_t *th)						//SCS ADD
 {
-	boolean grounded = P_IsObjectOnGround(th);
+	dboolean grounded = P_IsObjectOnGround(th);
 
 	if (th->fuse > 0 && th->fuse <= TICRATE)
 	{
@@ -202,7 +202,7 @@ void Obj_IcedusThink(mobj_t *th)						//SCS ADD
 
 		/*if (th->health <= 5)		//We don't slow down until we hit something
 		{
-			INT32 i;
+			int32_t i;
 			for (i = 5; i >= th->health; i--)
 			{
 				finalspeed = FixedMul(finalspeed, FRACUNIT-FRACUNIT/4);
@@ -244,7 +244,7 @@ void Obj_IcedusThink(mobj_t *th)						//SCS ADD
 
 void Obj_SolFireThink(mobj_t *th)						//SCS ADD
 {
-	boolean grounded = P_IsObjectOnGround(th);
+	dboolean grounded = P_IsObjectOnGround(th);
 
 	if (th->fuse > 0 && th->fuse <= TICRATE)
 	{
@@ -282,7 +282,7 @@ void Obj_SolFireThink(mobj_t *th)						//SCS ADD
 
 		/*if (th->health <= 5)		//We don't slow down until we hit something
 		{
-			INT32 i;
+			int32_t i;
 			for (i = 5; i >= th->health; i--)
 			{
 				finalspeed = FixedMul(finalspeed, FRACUNIT-FRACUNIT/4);
@@ -322,11 +322,11 @@ void Obj_SolFireThink(mobj_t *th)						//SCS ADD
 	}*/
 }
 
-boolean Obj_OrbinautJawzCollide(mobj_t *t1, mobj_t *t2)
+dboolean Obj_OrbinautJawzCollide(mobj_t *t1, mobj_t *t2)
 {
-	boolean damageitem = false;
-	boolean tumbleitem = false;
-	boolean sprung = false;
+	dboolean damageitem = false;
+	dboolean tumbleitem = false;
+	dboolean sprung = false;
 
 	if (t1->health <= 0 || t2->health <= 0)
 	{
@@ -485,7 +485,7 @@ void Obj_OrbinautThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir)
 	{
 		th->color = orbinaut_owner(th)->player->skincolor;
 
-		const boolean ownerwaterrun = K_WaterRun(orbinaut_owner(th));
+		const dboolean ownerwaterrun = K_WaterRun(orbinaut_owner(th));
 
 		if (dir >= 0 && ownerwaterrun)
 		{
@@ -523,7 +523,7 @@ void Obj_SolFireThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir)						//SCS A
 	{
 		th->color = orbinaut_owner(th)->player->skincolor;
 
-		//const boolean ownerwaterrun = K_WaterRun(orbinaut_owner(th)); //Shouldn't be needed. Sols and Icedus should have anti-grav
+		//const dboolean ownerwaterrun = K_WaterRun(orbinaut_owner(th)); //Shouldn't be needed. Sols and Icedus should have anti-grav
 
 		if (dir >= 0)
 		{
@@ -551,7 +551,7 @@ void Obj_IcedusCrystalThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir)						/
 	{
 		th->color = orbinaut_owner(th)->player->skincolor;
 
-		//const boolean ownerwaterrun = K_WaterRun(orbinaut_owner(th)); //Shouldn't be needed. Sols and Icedus should have anti-grav
+		//const dboolean ownerwaterrun = K_WaterRun(orbinaut_owner(th)); //Shouldn't be needed. Sols and Icedus should have anti-grav
 
 		if (dir >= 0)
 		{
@@ -687,7 +687,7 @@ void Obj_OrbinautJawzMoveHeld(player_t *player)
 	}
 }
 
-boolean Obj_GachaBomWasTossed(mobj_t *th)
+dboolean Obj_GachaBomWasTossed(mobj_t *th)
 {
 	return (orbinaut_flags(th) & ORBI_TOSSED) == ORBI_TOSSED;
 }
@@ -697,7 +697,7 @@ void Obj_OrbinautDrop(mobj_t *th)
 	orbinaut_flags(th) |= ORBI_DROPPED;
 }
 
-boolean Obj_OrbinautCanRunOnWater(mobj_t *th)
+dboolean Obj_OrbinautCanRunOnWater(mobj_t *th)
 {
 	return (orbinaut_flags(th) & ORBI_WATERSKI) == ORBI_WATERSKI;
 }

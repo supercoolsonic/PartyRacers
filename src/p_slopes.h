@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 extern pslope_t *slopelist;
-extern UINT16 slopecount;
+extern uint16_t slopecount;
 
 typedef enum
 {
@@ -31,7 +31,7 @@ typedef enum
 	TMSP_BACKCEILING,
 } textmapslopeplane_t;
 
-typedef INT32 textmapslopecopy_t;
+typedef int32_t textmapslopecopy_t;
 #define TMSC_FRONTTOBACKFLOOR   (1)
 #define TMSC_BACKTOFRONTFLOOR   (1<<1)
 #define TMSC_FRONTTOBACKCEILING (1<<2)
@@ -44,16 +44,16 @@ typedef enum
 	TMS_BACK,
 } textmapside_t;
 
-typedef INT32 textmapslopeflags_t;
+typedef int32_t textmapslopeflags_t;
 #define TMSL_NOPHYSICS (1)
 #define TMSL_DYNAMIC   (1<<1)
 #define TMSL_COPY      (1<<2)
 
-typedef INT32 textmapslopeanchor_t;
+typedef int32_t textmapslopeanchor_t;
 #define TMSA_FLOOR   (1)
 #define TMSA_CEILING (1<<1)
 
-typedef INT32 textmapslopeanchorflags_t;
+typedef int32_t textmapslopeanchorflags_t;
 #define TMSAF_NOPHYSICS (1)
 #define TMSAF_DYNAMIC   (1<<1)
 #define TMSAF_BACKSIDE  (1<<2)
@@ -65,7 +65,7 @@ void P_UpdateSlopeLightOffset(pslope_t *slope);
 void P_CalculateSlopeNormal(pslope_t *slope);
 void P_ReconfigureViaVertexes(pslope_t *slope, const vector3_t v1, const vector3_t v2, const vector3_t v3);
 void P_InitSlopes(void);
-void P_SpawnSlopes(const boolean fromsave);
+void P_SpawnSlopes(const dboolean fromsave);
 
 //
 // P_CopySectorSlope
@@ -74,7 +74,7 @@ void P_SpawnSlopes(const boolean fromsave);
 //
 void P_CopySectorSlope(line_t *line);
 
-pslope_t *P_SlopeById(UINT16 id);
+pslope_t *P_SlopeById(uint16_t id);
 
 // Returns the height of the sloped plane at (x, y) as a fixed_t
 fixed_t P_GetSlopeZAt(const pslope_t *slope, fixed_t x, fixed_t y);
@@ -94,8 +94,8 @@ fixed_t P_GetFFloorBottomZAt(const ffloor_t *ffloor, fixed_t x, fixed_t y);
 fixed_t P_GetLightZAt(const lightlist_t *light, fixed_t x, fixed_t y);
 
 // Lots of physics-based bullshit
-boolean P_CanApplySlopePhysics(mobj_t *mo, pslope_t *slope);
-boolean P_CanApplySlopeLaunch(mobj_t *mo, pslope_t *slope);
+dboolean P_CanApplySlopePhysics(mobj_t *mo, pslope_t *slope);
+dboolean P_CanApplySlopeLaunch(mobj_t *mo, pslope_t *slope);
 void P_QuantizeMomentumToSlope(vector3_t *momentum, pslope_t *slope);
 void P_ReverseQuantizeMomentumToSlope(vector3_t *momentum, pslope_t *slope);
 void P_SlopeLaunch(mobj_t *mo);
@@ -131,7 +131,7 @@ struct dynvertexplanethink_t
 	vector3_t vex[3];
 	fixed_t origsecheights[3];
 	fixed_t origvecheights[3];
-	UINT8 relative;
+	uint8_t relative;
 };
 
 void T_DynamicSlopeLine (dynlineplanethink_t* th);

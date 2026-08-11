@@ -52,7 +52,7 @@ void Obj_EggBallSpawnerThink(mobj_t *mo)
 
 void Obj_EggBallThink(mobj_t *mo)
 {
-	const boolean onground = P_IsObjectOnGround(mo);
+	const dboolean onground = P_IsObjectOnGround(mo);
 
 	if (mo->eflags & MFE_JUSTHITFLOOR)
 	{
@@ -64,7 +64,7 @@ void Obj_EggBallThink(mobj_t *mo)
 
 		if (mo->threshold && mo->threshold < -10*mapobjectscale)
 		{
-			UINT8 i;
+			uint8_t i;
 
 			mo->momz = (fixed_t)(-mo->threshold)/8;
 

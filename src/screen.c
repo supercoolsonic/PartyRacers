@@ -56,8 +56,8 @@
 // global video state
 // ------------------
 viddef_t vid;
-INT32 setmodeneeded; //video mode change needed if > 0 (the mode number to set + 1)
-UINT8 setrenderneeded = 0;
+int32_t setmodeneeded; //video mode change needed if > 0 (the mode number to set + 1)
+uint8_t setrenderneeded = 0;
 
 CV_PossibleValue_t cv_renderer_t[] = {
 	{1, "Software"},
@@ -71,8 +71,8 @@ CV_PossibleValue_t cv_renderer_t[] = {
 //                           SCREEN VARIABLES
 // =========================================================================
 
-INT32 scr_bpp; // current video mode bytes per pixel
-UINT8 *scr_borderpatch; // flat used to fill the reduced view borders set at ST_Init()
+int32_t scr_bpp; // current video mode bytes per pixel
+uint8_t *scr_borderpatch; // flat used to fill the reduced view borders set at ST_Init()
 
 // =========================================================================
 
@@ -193,7 +193,7 @@ void SCR_SetDrawFuncs(void)
 	R_SetSpanFunc(BASEDRAWFUNC, false, false);
 }
 
-void R_SetColumnFunc(size_t id, boolean brightmapped)
+void R_SetColumnFunc(size_t id, dboolean brightmapped)
 {
 	I_Assert(id < COLDRAWFUNC_MAX);
 
@@ -213,7 +213,7 @@ void R_SetColumnFunc(size_t id, boolean brightmapped)
 	}
 }
 
-void R_SetSpanFunc(size_t id, boolean npo2, boolean brightmapped)
+void R_SetSpanFunc(size_t id, dboolean npo2, dboolean brightmapped)
 {
 	I_Assert(id < SPANDRAWFUNC_MAX);
 
@@ -246,7 +246,7 @@ void R_SetSpanFunc(size_t id, boolean npo2, boolean brightmapped)
 	}
 }
 
-boolean R_SetSpanFuncFlat(size_t id)
+dboolean R_SetSpanFuncFlat(size_t id)
 {
 	I_Assert(id < SPANDRAWFUNC_MAX);
 
@@ -260,7 +260,7 @@ boolean R_SetSpanFuncFlat(size_t id)
 	return true;
 }
 
-boolean R_CheckColumnFunc(size_t id)
+dboolean R_CheckColumnFunc(size_t id)
 {
 	size_t i;
 
@@ -312,7 +312,7 @@ void SCR_SetMode(void)
 
 	SCR_SetDrawFuncs();
 
-	// set the apprpriate drawer for the sky (tall or INT16)
+	// set the apprpriate drawer for the sky (tall or int16_t)
 	setmodeneeded = 0;
 	setrenderneeded = 0;
 }
@@ -380,7 +380,7 @@ void SCR_Recalc(void)
 
 void SCR_CheckDefaultMode(void)
 {
-	INT32 scr_forcex, scr_forcey; // resolution asked from the cmd-line
+	int32_t scr_forcex, scr_forcey; // resolution asked from the cmd-line
 
 	if (dedicated)
 		return;
@@ -472,7 +472,7 @@ void SCR_ChangeRenderer(void)
 	setrenderneeded = cv_renderer.value;
 }
 
-boolean SCR_IsAspectCorrect(INT32 width, INT32 height)
+dboolean SCR_IsAspectCorrect(int32_t width, int32_t height)
 {
 	return
 	 (  width % BASEVIDWIDTH == 0
@@ -493,7 +493,7 @@ static double total_frame_time = 0.0;
 static int frame_index;
 #endif
 
-static boolean fps_init = false;
+static dboolean fps_init = false;
 static precise_t fps_enter = 0;
 
 void SCR_CalculateFPS(void)
@@ -509,7 +509,7 @@ void SCR_CalculateFPS(void)
 	}
 
 	fps_finish = I_GetPreciseTime();
-	frameElapsed = (double)((INT64)(fps_finish - fps_enter)) / I_GetPrecisePrecision();
+	frameElapsed = (double)((int64_t)(fps_finish - fps_enter)) / I_GetPrecisePrecision();
 	fps_enter = fps_finish;
 
 #ifdef USE_FPS_SAMPLES
@@ -528,12 +528,12 @@ void SCR_CalculateFPS(void)
 
 void SCR_DisplayTicRate(void)
 {
-	const UINT8 *ticcntcolor = NULL;
-	UINT32 cap = R_GetFramerateCap();
-	UINT32 benchmark = (cap == 0) ? I_GetRefreshRate() : cap;
-	INT32 x = 317;
-	const boolean isActuallyDrawingInput = isDrawingInput && cv_inputdisplaytogglesize.value;	//SCS - RADIO START?
-	const boolean isDrawingPing = isPingDrawn && cv_hud_displaypingbesideticrate.value && r_splitscreen == 0;
+	const uint8_t *ticcntcolor = NULL;
+	uint32_t cap = R_GetFramerateCap();
+	uint32_t benchmark = (cap == 0) ? I_GetRefreshRate() : cap;
+	int32_t x = 317;
+	const dboolean isActuallyDrawingInput = isDrawingInput && cv_inputdisplaytogglesize.value;	//SCS - RADIO START?
+	const dboolean isDrawingPing = isPingDrawn && cv_hud_displaypingbesideticrate.value && r_splitscreen == 0;
 
 	if (r_splitscreen <= 1 && isDrawingPing)			//SCS EDIT - don't shift position in 3P/4P splitscreen
 	{
@@ -555,8 +555,8 @@ void SCR_DisplayTicRate(void)
 
 	if (cap != 0)
 	{
-		UINT32 digits = 1;
-		UINT32 c2 = cap;
+		uint32_t digits = 1;
+		uint32_t c2 = cap;
 
 		while (c2 > 0)
 		{
@@ -592,12 +592,12 @@ void SCR_DisplayLocalPing(void)
 		return;
 	}
 
-	UINT32 mindelay = playerdelaytable[consoleplayer];
-	UINT32 ping = playerpingtable[consoleplayer];
-	UINT32 pl = playerpacketlosstable[consoleplayer];
+	uint32_t mindelay = playerdelaytable[consoleplayer];
+	uint32_t ping = playerpingtable[consoleplayer];
+	uint32_t pl = playerpacketlosstable[consoleplayer];
 
-	INT32 dispx = 307;																							//SCS - RADIO START
-	INT32 dispy = cv_ticrate.value ? 170 : 181;
+	int32_t dispx = 307;																							//SCS - RADIO START
+	int32_t dispy = cv_ticrate.value ? 170 : 181;
 
 	if (cv_hud_displaypingbesideticrate.value)
 	{
@@ -616,9 +616,9 @@ void SCR_DisplayLocalPing(void)
 
 void SCR_ClosedCaptions(void)
 {
-	UINT8 i;
-	boolean gamestopped = (paused || P_AutoPause());
-	INT32 basey = BASEVIDHEIGHT;
+	uint8_t i;
+	dboolean gamestopped = (paused || P_AutoPause());
+	int32_t basey = BASEVIDHEIGHT;
 
 	if (gamestate != wipegamestate)
 		return;
@@ -633,9 +633,9 @@ void SCR_ClosedCaptions(void)
 
 	for (i = 0; i < NUMCAPTIONS; i++)
 	{
-		INT32 flags, y;
+		int32_t flags, y;
 		char dot;
-		boolean music;
+		dboolean music;
 
 		if (!closedcaptions[i].s)
 			continue;
@@ -674,7 +674,7 @@ void SCR_ClosedCaptions(void)
 
 void SCR_DisplayMarathonInfo(void)
 {
-	INT32 flags = V_SNAPTOBOTTOM;
+	int32_t flags = V_SNAPTOBOTTOM;
 	static tic_t entertic, oldentertics = 0, antisplice[2] = {48,0};
 	const char *str;
 #if 0 // eh, this probably isn't going to be a problem

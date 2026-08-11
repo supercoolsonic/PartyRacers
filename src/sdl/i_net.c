@@ -43,8 +43,8 @@ static UDPsocket mysocket = NULL;
 static SDLNet_SocketSet myset = NULL;
 
 static size_t numbans = 0;
-static boolean NET_bannednode[MAXNETNODES+1]; /// \note do we really need the +1?
-static boolean init_SDLNet_driver = false;
+static dboolean NET_bannednode[MAXNETNODES+1]; /// \note do we really need the +1?
+static dboolean init_SDLNet_driver = false;
 
 static const char *NET_AddrToStr(IPaddress* sk)
 {
@@ -54,7 +54,7 @@ static const char *NET_AddrToStr(IPaddress* sk)
 	return s;
 }
 
-static const char *NET_GetNodeAddress(INT32 node)
+static const char *NET_GetNodeAddress(int32_t node)
 {
 	if (!nodeconnected[node])
 		return NULL;
@@ -68,20 +68,20 @@ static const char *NET_GetBanAddress(size_t ban)
 	return NET_AddrToStr(&banned[ban]);
 }
 
-static boolean NET_cmpaddr(IPaddress* a, IPaddress* b)
+static dboolean NET_cmpaddr(IPaddress* a, IPaddress* b)
 {
 	return (a->host == b->host && (b->port == 0 || a->port == b->port));
 }
 
-static boolean NET_CanGet(void)
+static dboolean NET_CanGet(void)
 {
 	return myset?(SDLNet_CheckSockets(myset,0)  == 1):false;
 }
 
 static void NET_Get(void)
 {
-	INT32 mystatus;
-	INT32 newnode;
+	int32_t mystatus;
+	int32_t newnode;
 	mypacket.len = MAXPACKETLENGTH;
 	if (!NET_CanGet())
 	{
@@ -133,7 +133,7 @@ static void NET_Get(void)
 }
 
 #if 0
-static boolean NET_CanSend(void)
+static dboolean NET_CanSend(void)
 {
 	return true;
 }
@@ -150,7 +150,7 @@ static void NET_Send(void)
 	}
 }
 
-static void NET_FreeNodenum(INT32 numnode)
+static void NET_FreeNodenum(int32_t numnode)
 {
 	// can't disconnect from self :)
 	if (!numnode)
@@ -230,10 +230,10 @@ static void NET_CloseSocket(void)
 	mysocket = NULL;
 }
 
-static SINT8 NET_NetMakeNodewPort(const char *hostname, const char *port)
+static int8_t NET_NetMakeNodewPort(const char *hostname, const char *port)
 {
-	INT32 newnode;
-	UINT16 portnum = sock_port;
+	int32_t newnode;
+	uint16_t portnum = sock_port;
 	IPaddress hostnameIP;
 
 	// retrieve portnum from address!
@@ -253,11 +253,11 @@ static SINT8 NET_NetMakeNodewPort(const char *hostname, const char *port)
 	}
 	newnode++;
 	M_Memcpy(&clientaddress[newnode],&hostnameIP,sizeof (IPaddress));
-	return (SINT8)newnode;
+	return (int8_t)newnode;
 }
 
 
-static boolean NET_OpenSocket(void)
+static dboolean NET_OpenSocket(void)
 {
 	memset(clientaddress, 0, sizeof (clientaddress));
 
@@ -293,7 +293,7 @@ static boolean NET_OpenSocket(void)
 	return true;
 }
 
-static boolean NET_Ban(INT32 node)
+static dboolean NET_Ban(int32_t node)
 {
 	if (numbans == MAXBANS)
 		return false;
@@ -304,7 +304,7 @@ static boolean NET_Ban(INT32 node)
 	return true;
 }
 
-static boolean NET_SetBanAddress(const char *address, const char *mask)
+static dboolean NET_SetBanAddress(const char *address, const char *mask)
 {
 	(void)mask;
 	if (bans == MAXBANS)
@@ -326,11 +326,11 @@ static void NET_ClearBans(void)
 // I_InitNetwork
 // Only required for DOS, so this is more a dummy
 //
-boolean I_InitNetwork(void)
+dboolean I_InitNetwork(void)
 {
 #ifdef HAVE_SDLNET
 	char serverhostname[255];
-	boolean ret = false;
+	dboolean ret = false;
 	SDL_version SDLcompiled;
 	const SDL_version *SDLlinked = SDLNet_Linked_Version();
 	SDL_NET_VERSION(&SDLcompiled)
@@ -349,7 +349,7 @@ boolean I_InitNetwork(void)
 	if (M_CheckParm("-udpport"))
 	{
 		if (M_IsNextParm())
-			sock_port = (UINT16)atoi(M_GetNextParm());
+			sock_port = (uint16_t)atoi(M_GetNextParm());
 		else
 			sock_port = 0;
 	}
@@ -368,7 +368,7 @@ boolean I_InitNetwork(void)
 		// particular number here.
 		// FIXME: for dedicated server, numnodes needs to be set to 0 upon start
 /*		if (M_IsNextParm())
-			doomcom->numnodes = (INT16)atoi(M_GetNextParm());
+			doomcom->numnodes = (int16_t)atoi(M_GetNextParm());
 		else */if (dedicated)
 			doomcom->numnodes = 0;
 		else

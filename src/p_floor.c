@@ -32,8 +32,8 @@
 //
 // Move a plane (floor or ceiling) and check for crushing
 //
-result_e T_MovePlane(sector_t *sector, fixed_t speed, fixed_t dest, boolean crush,
-	boolean ceiling, INT32 direction)
+result_e T_MovePlane(sector_t *sector, fixed_t speed, fixed_t dest, dboolean crush,
+	dboolean ceiling, int32_t direction)
 {
 	fixed_t lastpos;
 	fixed_t destheight; // used to keep floors/ceilings from moving through each other
@@ -165,7 +165,7 @@ result_e T_MovePlane(sector_t *sector, fixed_t speed, fixed_t dest, boolean crus
 void T_MoveFloor(floormove_t *movefloor)
 {
 	result_e res = 0;
-	boolean remove = false;
+	dboolean remove = false;
 
 	if (movefloor->delaytimer)
 	{
@@ -269,7 +269,7 @@ void T_MoveFloor(floormove_t *movefloor)
 void T_MoveElevator(elevator_t *elevator)
 {
 	result_e res1 = 0, res2 = 0, res = 0;
-	boolean dontupdate = false;
+	dboolean dontupdate = false;
 	fixed_t oldfloor, oldceiling;
 
 	if (elevator->delaytimer)
@@ -586,8 +586,8 @@ void T_BounceCheese(bouncecheese_t *bouncer)
 	fixed_t waterheight;
 	fixed_t floorheight;
 	sector_t *actionsector;
-	boolean remove;
-	INT32 i;
+	dboolean remove;
+	int32_t i;
 
 	if (bouncer->sector->crumblestate == CRUMBLE_RESTORE || bouncer->sector->crumblestate == CRUMBLE_WAIT
 		|| bouncer->sector->crumblestate == CRUMBLE_ACTIVATED) // Oops! Crumbler says to remove yourself!
@@ -724,7 +724,7 @@ void T_StartCrumble(crumble_t *crumble)
 {
 	ffloor_t *rover;
 	sector_t *sector;
-	INT32 i;
+	int32_t i;
 	mtag_t tag = crumble->sourceline->args[0];
 
 	// Once done, the no-return thinker just sits there,
@@ -897,7 +897,7 @@ void T_StartCrumble(crumble_t *crumble)
 //
 void T_MarioBlock(mariothink_t *block)
 {
-	INT32 i;
+	int32_t i;
 
 	T_MovePlane
 	(
@@ -932,7 +932,7 @@ void T_MarioBlock(mariothink_t *block)
 		block->sector->ceilspeed = 0;
 		block->direction = 0;
 	}
-	TAG_ITER_SECTORS((INT16)block->tag, i)
+	TAG_ITER_SECTORS((int16_t)block->tag, i)
 		P_RecalcPrecipInSector(&sectors[i]);
 }
 
@@ -941,17 +941,17 @@ void T_FloatSector(floatthink_t *floater)
 	fixed_t cheeseheight;
 	fixed_t waterheight;
 	sector_t *actionsector;
-	INT32 secnum;
+	int32_t secnum;
 
 	// Just find the first sector with the tag.
 	// Doesn't work with multiple sectors that have different floor/ceiling heights.
-	if ((secnum = Tag_Iterate_Sectors((INT16)floater->tag, 0)) < 0)
+	if ((secnum = Tag_Iterate_Sectors((int16_t)floater->tag, 0)) < 0)
 		return;
 	actionsector = &sectors[secnum];
 
 	cheeseheight = (floater->sector->ceilingheight + floater->sector->floorheight)>>1;
 
-	//boolean floatanyway = false; // Ignore the crumblestate setting.
+	//dboolean floatanyway = false; // Ignore the crumblestate setting.
 	waterheight = P_SectorCheckWater(actionsector, floater->sector); // find the highest suitable water block around
 
 	if (waterheight == cheeseheight) // same height, no floating needed
@@ -1036,7 +1036,7 @@ void T_ThwompSector(thwomp_t *thwomp)
 	fixed_t thwompx, thwompy;
 	sector_t *actionsector;
 	ffloor_t *rover = NULL;
-	INT32 secnum;
+	int32_t secnum;
 	fixed_t speed;
 
 	if (thwompsactive == false)
@@ -1058,7 +1058,7 @@ void T_ThwompSector(thwomp_t *thwomp)
 
 	// Just find the first sector with the tag.
 	// Doesn't work with multiple sectors that have different floor/ceiling heights.
-	if ((secnum = Tag_Iterate_Sectors((INT16)thwomp->tag, 0)) < 0)
+	if ((secnum = Tag_Iterate_Sectors((int16_t)thwomp->tag, 0)) < 0)
 		return;
 
 	actionsector = &sectors[secnum];
@@ -1167,7 +1167,7 @@ void T_ThwompSector(thwomp_t *thwomp)
 	P_RecalcPrecipInSector(actionsector);
 }
 
-static boolean T_SectorHasEnemies(sector_t *sec)
+static dboolean T_SectorHasEnemies(sector_t *sec)
 {
 	msecnode_t *node = sec->touching_thinglist; // things touching this sector
 	mobj_t *mo;
@@ -1197,8 +1197,8 @@ void T_NoEnemiesSector(noenemies_t *nobaddies)
 {
 	size_t i;
 	sector_t *sec = NULL;
-	INT32 secnum = -1;
-	boolean FOFsector = false;
+	int32_t secnum = -1;
+	dboolean FOFsector = false;
 	mtag_t tag = nobaddies->sourceline->args[0];
 
 	TAG_ITER_SECTORS(tag, secnum)
@@ -1210,7 +1210,7 @@ void T_NoEnemiesSector(noenemies_t *nobaddies)
 		// Check the lines of this sector, to see if it is a FOF control sector.
 		for (i = 0; i < sec->linecount; i++)
 		{
-			INT32 targetsecnum = -1;
+			int32_t targetsecnum = -1;
 
 			if (sec->lines[i]->special < 100 || sec->lines[i]->special >= 300)
 				continue;
@@ -1235,7 +1235,7 @@ void T_NoEnemiesSector(noenemies_t *nobaddies)
 	P_RemoveThinker(&nobaddies->thinker);
 }
 
-static boolean P_CheckAllTrigger(eachtime_t *eachtime)
+static dboolean P_CheckAllTrigger(eachtime_t *eachtime)
 {
 	size_t i;
 
@@ -1251,10 +1251,10 @@ static boolean P_CheckAllTrigger(eachtime_t *eachtime)
 void T_EachTimeThinker(eachtime_t *eachtime)
 {
 	size_t i;
-	boolean oldPlayersInArea[MAXPLAYERS];
+	dboolean oldPlayersInArea[MAXPLAYERS];
 	sector_t *caller[MAXPLAYERS];
-	boolean allPlayersChecked = false;
-	boolean allPlayersTrigger = false;
+	dboolean allPlayersChecked = false;
+	dboolean allPlayersTrigger = false;
 
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
@@ -1264,7 +1264,7 @@ void T_EachTimeThinker(eachtime_t *eachtime)
 	}
 
 	// Easy check... nothing has changed
-	if (!memcmp(eachtime->playersInArea, oldPlayersInArea, sizeof(boolean)*MAXPLAYERS))
+	if (!memcmp(eachtime->playersInArea, oldPlayersInArea, sizeof(dboolean)*MAXPLAYERS))
 		return;
 
 	// Trigger for every player who has entered (and exited, if triggerOnExit)
@@ -1314,13 +1314,13 @@ void T_RaiseSector(raise_t *raise)
 	msecnode_t *node;
 	mobj_t *thing;
 	sector_t *sector;
-	INT32 i;
-	boolean playeronme = false, active = false;
-	boolean moveUp;
+	int32_t i;
+	dboolean playeronme = false, active = false;
+	dboolean moveUp;
 	fixed_t ceilingdestination, floordestination;
 	fixed_t speed, origspeed;
 	fixed_t distToNearestEndpoint;
-	INT32 direction;
+	int32_t direction;
 	result_e res = 0;
 	mtag_t tag = raise->tag;
 
@@ -1462,8 +1462,8 @@ void T_CameraScanner(elevator_t *elevator)
 {
 	// leveltime is compared to make multiple scanners in one map function correctly.
 	static tic_t lastleveltime = 32000; // any number other than 0 should do here
-	static boolean camerascanned[MAXSPLITSCREENPLAYERS];
-	UINT8 i;
+	static dboolean camerascanned[MAXSPLITSCREENPLAYERS];
+	uint8_t i;
 
 	if (leveltime != lastleveltime) // Back on the first camera scanner
 	{
@@ -1506,7 +1506,7 @@ void T_CameraScanner(elevator_t *elevator)
 void T_PlaneDisplace(planedisplace_t *pd)
 {
 	sector_t *control, *target;
-	INT32 direction;
+	int32_t direction;
 	fixed_t diff;
 
 	control = &sectors[pd->control];
@@ -1639,7 +1639,7 @@ static floormove_t *CreateFloorThinker(sector_t *sec)
 
 void EV_DoRaiseFloorToNearestFast(mtag_t tag)
 {
-	INT32 secnum = -1;
+	int32_t secnum = -1;
 	sector_t *sec;
 
 	TAG_ITER_SECTORS(tag, secnum)
@@ -1664,7 +1664,7 @@ void EV_DoRaiseFloorToNearestFast(mtag_t tag)
 
 void EV_DoInstantLowerFloor(mtag_t tag)
 {
-	INT32 secnum = -1;
+	int32_t secnum = -1;
 	sector_t *sec;
 
 	TAG_ITER_SECTORS(tag, secnum)
@@ -1687,9 +1687,9 @@ void EV_DoInstantLowerFloor(mtag_t tag)
 	}
 }
 
-void EV_DoInstantMoveFloorByHeight(mtag_t tag, fixed_t height, INT32 texture)
+void EV_DoInstantMoveFloorByHeight(mtag_t tag, fixed_t height, int32_t texture)
 {
-	INT32 secnum = -1;
+	int32_t secnum = -1;
 	sector_t *sec;
 
 	TAG_ITER_SECTORS(tag, secnum)
@@ -1719,11 +1719,11 @@ void EV_DoInstantMoveFloorByHeight(mtag_t tag, fixed_t height, INT32 texture)
 	}
 }
 
-void EV_DoMoveFloorByHeight(mtag_t tag, fixed_t height, fixed_t speed, mtag_t chain, INT32 texture)
+void EV_DoMoveFloorByHeight(mtag_t tag, fixed_t height, fixed_t speed, mtag_t chain, int32_t texture)
 {
-	INT32 secnum = -1;
+	int32_t secnum = -1;
 	sector_t *sec;
-	boolean firstone = true;
+	dboolean firstone = true;
 
 	TAG_ITER_SECTORS(tag, secnum)
 	{
@@ -1750,7 +1750,7 @@ void EV_DoMoveFloorByHeight(mtag_t tag, fixed_t height, fixed_t speed, mtag_t ch
 		// chained linedef executing ability
 		// Only set it on one of the moving sectors (the smallest numbered)
 		if (chain)
-			dofloor->tag = firstone ? (INT16)chain : -1;
+			dofloor->tag = firstone ? (int16_t)chain : -1;
 
 		// flat changing ability
 		dofloor->texture = texture;
@@ -1759,9 +1759,9 @@ void EV_DoMoveFloorByHeight(mtag_t tag, fixed_t height, fixed_t speed, mtag_t ch
 	}
 }
 
-void EV_DoMoveFloorByDistance(mtag_t tag, fixed_t distance, fixed_t speed, boolean instant)
+void EV_DoMoveFloorByDistance(mtag_t tag, fixed_t distance, fixed_t speed, dboolean instant)
 {
-	INT32 secnum = -1;
+	int32_t secnum = -1;
 	sector_t *sec;
 
 	TAG_ITER_SECTORS(tag, secnum)
@@ -1792,9 +1792,9 @@ void EV_DoMoveFloorByDistance(mtag_t tag, fixed_t distance, fixed_t speed, boole
 	}
 }
 
-void EV_DoBounceFloor(mtag_t tag, boolean crush, fixed_t crushHeight, fixed_t crushSpeed, fixed_t returnHeight, fixed_t returnSpeed, INT32 delayInit, INT32 delay)
+void EV_DoBounceFloor(mtag_t tag, dboolean crush, fixed_t crushHeight, fixed_t crushSpeed, fixed_t returnHeight, fixed_t returnSpeed, int32_t delayInit, int32_t delay)
 {
-	INT32 secnum = -1;
+	int32_t secnum = -1;
 	sector_t *sec;
 
 	TAG_ITER_SECTORS(tag, secnum)
@@ -1834,7 +1834,7 @@ void EV_DoBounceFloor(mtag_t tag, boolean crush, fixed_t crushHeight, fixed_t cr
 
 void EV_DoCrushFloorOnce(mtag_t tag, fixed_t speed)
 {
-	INT32 secnum = -1;
+	int32_t secnum = -1;
 	sector_t *sec;
 
 	TAG_ITER_SECTORS(tag, secnum)
@@ -1936,7 +1936,7 @@ static elevator_t *CreateElevatorThinker(sector_t *sec)
 
 void EV_DoElevateDown(mtag_t tag)
 {
-	INT32 secnum = -1;
+	int32_t secnum = -1;
 	sector_t *sec;
 
 	TAG_ITER_SECTORS(tag, secnum)
@@ -1962,7 +1962,7 @@ void EV_DoElevateDown(mtag_t tag)
 
 void EV_DoElevateUp(mtag_t tag)
 {
-	INT32 secnum = -1;
+	int32_t secnum = -1;
 	sector_t *sec;
 
 	TAG_ITER_SECTORS(tag, secnum)
@@ -1988,7 +1988,7 @@ void EV_DoElevateUp(mtag_t tag)
 
 void EV_DoElevateHighest(mtag_t tag)
 {
-	INT32 secnum = -1;
+	int32_t secnum = -1;
 	sector_t *sec;
 
 	TAG_ITER_SECTORS(tag, secnum)
@@ -2012,9 +2012,9 @@ void EV_DoElevateHighest(mtag_t tag)
 	}
 }
 
-void EV_DoContinuousElevator(mtag_t tag, fixed_t speed, INT32 delayInit, INT32 delay, boolean lowFirst)
+void EV_DoContinuousElevator(mtag_t tag, fixed_t speed, int32_t delayInit, int32_t delay, dboolean lowFirst)
 {
-	INT32 secnum = -1;
+	int32_t secnum = -1;
 	sector_t *sec;
 
 	TAG_ITER_SECTORS(tag, secnum)
@@ -2057,7 +2057,7 @@ void EV_DoContinuousElevator(mtag_t tag, fixed_t speed, INT32 delayInit, INT32 d
 
 void EV_DoBridgeFall(mtag_t tag)
 {
-	INT32 secnum = -1;
+	int32_t secnum = -1;
 	sector_t *sec;
 
 	TAG_ITER_SECTORS(tag, secnum)
@@ -2087,7 +2087,7 @@ void EV_CrumbleChain(sector_t *sec, ffloor_t *rover)
 	fixed_t leftx, rightx, topy, bottomy, topz, bottomz, widthfactor, heightfactor, a, b, c, spacing;
 	mobjtype_t type;
 	tic_t lifetime;
-	boolean fromcenter;
+	dboolean fromcenter;
 
 	sector_t *controlsec = rover->master->frontsector;
 	mtag_t tag = Tag_FGet(&controlsec->tags);
@@ -2121,7 +2121,7 @@ void EV_CrumbleChain(sector_t *sec, ffloor_t *rover)
 
 	if (tag != 0)
 	{
-		INT32 tagline = Tag_FindLineSpecial(14, tag);
+		int32_t tagline = Tag_FindLineSpecial(14, tag);
 		if (tagline != -1)
 		{
 			if (lines[tagline].stringargs[0])
@@ -2235,7 +2235,7 @@ void EV_BounceSector(sector_t *sec, fixed_t momz, line_t *sourceline)
 }
 
 // For T_ContinuousFalling special
-void EV_DoContinuousFall(sector_t *sec, sector_t *backsector, fixed_t spd, boolean backwards)
+void EV_DoContinuousFall(sector_t *sec, sector_t *backsector, fixed_t spd, dboolean backwards)
 {
 	continuousfall_t *faller;
 
@@ -2266,12 +2266,12 @@ void EV_DoContinuousFall(sector_t *sec, sector_t *backsector, fixed_t spd, boole
 }
 
 // Some other 3dfloor special things Tails 03-11-2002 (Search p_mobj.c for description)
-INT32 EV_StartCrumble(sector_t *sec, ffloor_t *rover, boolean floating,
-	player_t *player, fixed_t origalpha, boolean crumblereturn)
+int32_t EV_StartCrumble(sector_t *sec, ffloor_t *rover, dboolean floating,
+	player_t *player, fixed_t origalpha, dboolean crumblereturn)
 {
 	crumble_t *crumble;
 	sector_t *foundsec;
-	INT32 i;
+	int32_t i;
 	mtag_t tag = rover->master->args[0];
 
 	// If floor is already activated, skip it
@@ -2370,7 +2370,7 @@ void EV_MarioBlock(ffloor_t *rover, sector_t *sector, mobj_t *puncher)
 		block->direction = 1;
 		block->floorstartheight = block->sector->floorheight;
 		block->ceilingstartheight = block->sector->ceilingheight;
-		block->tag = (INT16)rover->master->args[0];
+		block->tag = (int16_t)rover->master->args[0];
 
 		// interpolation
 		R_CreateInterpolator_SectorPlane(&block->thinker, roversec, false);

@@ -43,7 +43,7 @@ void K_ResetBossInfo(void)
 --------------------------------------------------*/
 void K_BossInfoTicker(void)
 {
-	UINT8 i;
+	uint8_t i;
 
 	if (bossinfo.valid == false)
 		return;
@@ -103,12 +103,12 @@ void K_BossInfoTicker(void)
 }
 
 /*--------------------------------------------------
-	void K_InitBossHealthBar(const char *enemyname, const char *subtitle, sfxenum_t titlesound, fixed_t pinchmagnitude, UINT8 divisions)
+	void K_InitBossHealthBar(const char *enemyname, const char *subtitle, sfxenum_t titlesound, fixed_t pinchmagnitude, uint8_t divisions)
 
 		See header file for description.
 --------------------------------------------------*/
 
-void K_InitBossHealthBar(const char *enemyname, const char *subtitle, sfxenum_t titlesound, fixed_t pinchmagnitude, UINT8 divisions)
+void K_InitBossHealthBar(const char *enemyname, const char *subtitle, sfxenum_t titlesound, fixed_t pinchmagnitude, uint8_t divisions)
 {
 	if (!(gametyperules & GTR_BOSS))
 	{
@@ -186,13 +186,13 @@ void K_UpdateBossHealthBar(fixed_t magnitude, tic_t jitterlen)
 }
 
 /*--------------------------------------------------
-	void K_DeclareWeakspot(mobj_t *weakspot, spottype_t spottype, boolean minimap)
+	void K_DeclareWeakspot(mobj_t *weakspot, spottype_t spottype, dboolean minimap)
 
 		See header file for description.
 --------------------------------------------------*/
-void K_DeclareWeakspot(mobj_t *spot, spottype_t spottype, UINT16 color, boolean minimap)
+void K_DeclareWeakspot(mobj_t *spot, spottype_t spottype, uint16_t color, dboolean minimap)
 {
-	UINT8 i;
+	uint8_t i;
 
 	if (bossinfo.valid == false)
 		return;
@@ -228,12 +228,12 @@ void K_DeclareWeakspot(mobj_t *spot, spottype_t spottype, UINT16 color, boolean 
 }
 
 /*--------------------------------------------------
-	boolean K_CheckBossIntro(void);
+	dboolean K_CheckBossIntro(void);
 
 		See header file for description.
 --------------------------------------------------*/
 
-boolean K_CheckBossIntro(void)
+dboolean K_CheckBossIntro(void)
 {
 	if (bossinfo.valid == false)
 		return false;

@@ -232,7 +232,7 @@ static int lib_polyobj_moveXY(lua_State *L)
 	polyobj_t *po = *((polyobj_t **)luaL_checkudata(L, 1, META_POLYOBJ));
 	fixed_t x = luaL_checkfixed(L, 2);
 	fixed_t y = luaL_checkfixed(L, 3);
-	boolean checkmobjs = lua_opttrueboolean(L, 4);
+	dboolean checkmobjs = lua_opttrueboolean(L, 4);
 	NOHUD
 	INLEVEL
 	if (!po)
@@ -245,9 +245,9 @@ static int lib_polyobj_rotate(lua_State *L)
 {
 	polyobj_t *po = *((polyobj_t **)luaL_checkudata(L, 1, META_POLYOBJ));
 	angle_t delta = luaL_checkangle(L, 2);
-	boolean turnplayers = lua_opttrueboolean(L, 3);
-	boolean turnothers = lua_opttrueboolean(L, 4);
-	boolean checkmobjs = lua_opttrueboolean(L, 5);
+	dboolean turnplayers = lua_opttrueboolean(L, 3);
+	dboolean turnothers = lua_opttrueboolean(L, 4);
+	dboolean checkmobjs = lua_opttrueboolean(L, 5);
 	NOHUD
 	INLEVEL
 	if (!po)
@@ -379,7 +379,7 @@ static int polyobj_num(lua_State *L)
 
 static int lib_iteratePolyObjects(lua_State *L)
 {
-	INT32 i = -1;
+	int32_t i = -1;
 	if (lua_gettop(L) < 2)
 	{
 		//return luaL_error(L, "Don't call PolyObjects.iterate() directly, use it as 'for polyobj in PolyObjects.iterate do <block> end'.");
@@ -389,7 +389,7 @@ static int lib_iteratePolyObjects(lua_State *L)
 	lua_settop(L, 2);
 	lua_remove(L, 1); // state is unused.
 	if (!lua_isnil(L, 1))
-		i = (INT32)(*((polyobj_t **)luaL_checkudata(L, 1, META_POLYOBJ)) - PolyObjects);
+		i = (int32_t)(*((polyobj_t **)luaL_checkudata(L, 1, META_POLYOBJ)) - PolyObjects);
 	for (i++; i < numPolyObjects; i++)
 	{
 		LUA_PushUserdata(L, &PolyObjects[i], META_POLYOBJ);
@@ -400,7 +400,7 @@ static int lib_iteratePolyObjects(lua_State *L)
 
 static int lib_PolyObject_getfornum(lua_State *L)
 {
-	INT32 id = (INT32)luaL_checkinteger(L, 1);
+	int32_t id = (int32_t)luaL_checkinteger(L, 1);
 
 	if (!numPolyObjects)
 		return 0; // if there's no PolyObjects then bail out here
@@ -412,7 +412,7 @@ static int lib_PolyObject_getfornum(lua_State *L)
 static int lib_getPolyObject(lua_State *L)
 {
 	const char *field;
-	INT32 i;
+	int32_t i;
 
 	// find PolyObject by number
 	if (lua_type(L, 2) == LUA_TNUMBER)

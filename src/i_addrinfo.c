@@ -246,7 +246,7 @@ int I_getaddrinfo(const char *node, const char *service,
 	for (i = 0, j = 0; i < ailen; i++, j++)
 	{
 		ai = *res+i;
-		addr[i].sin_port = htons((UINT16)sockport);
+		addr[i].sin_port = htons((uint16_t)sockport);
 		if (nodename)
 		{
 			memcpy(&addr[i].sin_addr, nodename->h_addr_list[j], ai->ai_addrlen);
@@ -303,7 +303,7 @@ void I_freeaddrinfo(struct my_addrinfo *res)
 #ifdef TESTCASE
 #include <stdio.h>
 
-#ifdef USE_WINSOCK2
+#ifdef _WIN32
 #define inet_ntop inet_ntopA
 #define HAVE_NTOP
 static const char* inet_ntopA(int af, const void *cp, char *buf, socklen_t len)

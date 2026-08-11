@@ -41,8 +41,8 @@ extern consvar_t cv_addons_md5, cv_addons_showall, cv_addons_search_case, cv_add
 
 */
 
-filestatus_t filesearch(char *filename, const char *startpath, const char *priorityfolder, const UINT8 *wantedmd5sum,
-	boolean completepath, int maxsearchdepth);
+filestatus_t filesearch(char *filename, const char *startpath, const char *priorityfolder, const uint8_t *wantedmd5sum,
+	dboolean completepath, int maxsearchdepth);
 
 #define menudepth 20
 
@@ -55,7 +55,7 @@ extern char menusearch[MAXSTRINGLENGTH+1];
 extern char **dirmenu;
 extern size_t sizedirmenu;
 extern size_t dir_on[menudepth];
-extern UINT8 refreshdirmenu;
+extern uint8_t refreshdirmenu;
 extern char *refreshdirname;
 
 typedef enum
@@ -105,9 +105,9 @@ typedef enum
 	REFRESHDIR_GAMEDATA = 64
 } refreshdir_enum;
 
-void closefilemenu(boolean validsize);
+void closefilemenu(dboolean validsize);
 void searchfilemenu(char *tempname);
-boolean preparefilemenu(boolean samedepth, boolean replayhut);
+dboolean preparefilemenu(dboolean samedepth, dboolean replayhut);
 
 #ifdef __cplusplus
 } // extern "C"

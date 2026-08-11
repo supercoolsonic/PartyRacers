@@ -76,13 +76,13 @@ enum
 
 static player_t *get_pohbee_owner(mobj_t *pohbee)
 {
-	UINT8 p = pohbee_owner(pohbee);
+	uint8_t p = pohbee_owner(pohbee);
 	return p < MAXPLAYERS && playeringame[p] ? &players[p] : NULL;
 }
 
 static skincolornum_t ShrinkLaserColor(mobj_t *pohbee)
 {
-	UINT8 laserState = LASER_SHRINK;
+	uint8_t laserState = LASER_SHRINK;
 	player_t *owner = get_pohbee_owner(pohbee);
 
 	if (owner != NULL && P_IsDisplayPlayer(owner) == true)
@@ -108,7 +108,7 @@ static skincolornum_t ShrinkLaserColor(mobj_t *pohbee)
 	}
 }
 
-static boolean ShrinkLaserActive(mobj_t *pohbee)
+static dboolean ShrinkLaserActive(mobj_t *pohbee)
 {
 	return (pohbee_mode(pohbee) == POHBEE_MODE_ACT);
 }
@@ -142,11 +142,11 @@ static void PohbeeSpawn(mobj_t *pohbee)
 	fixed_t newY = pohbee->y;
 	fixed_t newZ = pohbee->z;
 
-	boolean finalize = false;
+	dboolean finalize = false;
 
-	const boolean useshortcuts = false;
-	const boolean huntbackwards = false;
-	boolean pathfindsuccess = false;
+	const dboolean useshortcuts = false;
+	const dboolean huntbackwards = false;
+	dboolean pathfindsuccess = false;
 	path_t pathtofinish = {0};
 	size_t pathIndex = 0;
 
@@ -231,7 +231,7 @@ static void PohbeeSpawn(mobj_t *pohbee)
 
 			// Now moving to the next waypoint.
 			curWaypoint = (waypoint_t *)pathtofinish.array[pathIndex].nodedata;
-			pohbee_waypoint_cur(pohbee) = (INT32)K_GetWaypointHeapIndex(curWaypoint);
+			pohbee_waypoint_cur(pohbee) = (int32_t)K_GetWaypointHeapIndex(curWaypoint);
 		}
 	}
 
@@ -530,11 +530,11 @@ void Obj_ShrinkGunRemoved(mobj_t *gun)
 	P_SetTarget(&gun_chains(gun), NULL);
 }
 
-boolean Obj_ShrinkLaserCollide(mobj_t *gun, mobj_t *victim)
+dboolean Obj_ShrinkLaserCollide(mobj_t *gun, mobj_t *victim)
 {
 	mobj_t *pohbee = gun_pohbee(gun);
 	player_t *owner = NULL;
-	INT32 prevTimer = 0;
+	int32_t prevTimer = 0;
 
 	if (pohbee == NULL || P_MobjWasRemoved(pohbee) == true)
 	{
@@ -574,7 +574,7 @@ boolean Obj_ShrinkLaserCollide(mobj_t *gun, mobj_t *victim)
 			K_RemoveGrowShrink(victim->player);
 		}
 
-		UINT8 oldGrow = max(victim->player->growshrinktimer, 0);
+		uint8_t oldGrow = max(victim->player->growshrinktimer, 0);
 		fixed_t easePercent = min(oldGrow * FRACUNIT / 6*TICRATE, FRACUNIT);
 		victim->player->growshrinktimer += Easing_OutSine(easePercent, 6*TICRATE, 2*TICRATE);
 
@@ -653,10 +653,10 @@ boolean Obj_ShrinkLaserCollide(mobj_t *gun, mobj_t *victim)
 	return true;
 }
 
-static waypoint_t *GetPohbeeWaypoint(waypoint_t *anchor, const UINT32 traveldist, const boolean huntbackwards)
+static waypoint_t *GetPohbeeWaypoint(waypoint_t *anchor, const uint32_t traveldist, const dboolean huntbackwards)
 {
-	const boolean useshortcuts = false;
-	boolean pathfindsuccess = false;
+	const dboolean useshortcuts = false;
+	dboolean pathfindsuccess = false;
 	path_t pathtofinish = {0};
 	waypoint_t *ret = NULL;
 
@@ -682,27 +682,27 @@ static waypoint_t *GetPohbeeWaypoint(waypoint_t *anchor, const UINT32 traveldist
 
 static waypoint_t *GetPohbeeStart(waypoint_t *anchor)
 {
-	const UINT32 traveldist = FixedMul(POHBEE_DIST >> 1, mapobjectscale) / FRACUNIT;
-	const boolean huntbackwards = true;
+	const uint32_t traveldist = FixedMul(POHBEE_DIST >> 1, mapobjectscale) / FRACUNIT;
+	const dboolean huntbackwards = true;
 
 	return GetPohbeeWaypoint(anchor, traveldist, huntbackwards);
 }
 
 static waypoint_t *GetPohbeeEnd(waypoint_t *anchor)
 {
-	const UINT32 traveldist = FixedMul(POHBEE_DIST, mapobjectscale) / FRACUNIT;
-	const boolean huntbackwards = false;
+	const uint32_t traveldist = FixedMul(POHBEE_DIST, mapobjectscale) / FRACUNIT;
+	const dboolean huntbackwards = false;
 
 	return GetPohbeeWaypoint(anchor, traveldist, huntbackwards);
 }
 
-static void CreatePohbee(player_t *owner, waypoint_t *start, waypoint_t *end, UINT8 numLasers)
+static void CreatePohbee(player_t *owner, waypoint_t *start, waypoint_t *end, uint8_t numLasers)
 {
 	mobj_t *pohbee = NULL;
 
 	fixed_t size = 0;
-	INT32 baseSegs = INT32_MAX;
-	INT32 segVal = INT32_MAX;
+	int32_t baseSegs = INT32_MAX;
+	int32_t segVal = INT32_MAX;
 	mobj_t *prevGun = NULL;
 
 	size_t i, j;
@@ -726,7 +726,7 @@ static void CreatePohbee(player_t *owner, waypoint_t *start, waypoint_t *end, UI
 	pohbee_owner(pohbee) = owner - players;
 
 	// Flip the Poh-Bee if its target waypoint is flipped.
-	const boolean waypointflipped = P_IsObjectFlipped(end->mobj);
+	const dboolean waypointflipped = P_IsObjectFlipped(end->mobj);
 	if (waypointflipped != P_IsObjectFlipped(pohbee))
 	{
 		pohbee->flags2 ^= MF2_OBJECTFLIP;
@@ -741,14 +741,14 @@ static void CreatePohbee(player_t *owner, waypoint_t *start, waypoint_t *end, UI
 	pohbee_timer(pohbee) = POHBEE_TIME;
 	pohbee_height(pohbee) = size;
 
-	pohbee_waypoint_cur(pohbee) = (INT32)K_GetWaypointHeapIndex(start);
-	pohbee_waypoint_dest(pohbee) = (INT32)K_GetWaypointHeapIndex(end);
+	pohbee_waypoint_cur(pohbee) = (int32_t)K_GetWaypointHeapIndex(start);
+	pohbee_waypoint_dest(pohbee) = (int32_t)K_GetWaypointHeapIndex(end);
 
 	prevGun = pohbee;
 
 	for (i = 0; i < numLasers; i++)
 	{
-		const UINT8 numSegs = segVal * (i + 1);
+		const uint8_t numSegs = segVal * (i + 1);
 
 		mobj_t *gun = P_SpawnMobjFromMobj(pohbee, 0, 0, 0, MT_SHRINK_GUN);
 		mobj_t *overlay = NULL;
@@ -788,13 +788,13 @@ static void CreatePohbee(player_t *owner, waypoint_t *start, waypoint_t *end, UI
 
 void Obj_CreateShrinkPohbees(player_t *owner)
 {
-	UINT8 ownerPos = 1;
+	uint8_t ownerPos = 1;
 
 	struct {
 		waypoint_t *start;
 		waypoint_t *end;
-		UINT8 lasers;
-		boolean first;
+		uint8_t lasers;
+		dboolean first;
 	} pohbees[MAXPLAYERS];
 	size_t numPohbees = 0;
 

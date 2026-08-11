@@ -245,17 +245,17 @@ void RR_DrawGradeEmote(player_grade_info_t grade_info)
     }
 }
 
-boolean RR_ShouldDrawEmoteTally(void)
+dboolean RR_ShouldDrawEmoteTally(void)
 {
     return flipping_state != FLIPPING_NOT_DOING;
 }
 
-boolean RR_IsEmoteTallyPossible(gp_rank_e grade)
+dboolean RR_IsEmoteTallyPossible(gp_rank_e grade)
 {
     return false;
     if (GRADE_FLIPPING_STATE[grade] == FLIPPING_NONE) {    
         std::vector<emote_t>* array = RANK_EMOTES_LOOKUP[grade];
-        boolean is_possible = !array->empty();
+        dboolean is_possible = !array->empty();
     
         if (!is_possible)
             GRADE_FLIPPING_STATE[grade] = FLIPPING_NOT_DOING;

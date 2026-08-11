@@ -19,9 +19,9 @@
  * So, copy them here. Also, less work involved with rebasing.
  */
 
-static UINT8 V_GetButtonCodeWidth(UINT8 c)
+static uint8_t V_GetButtonCodeWidth(uint8_t c)
 {
-	UINT8 x = 0;
+	uint8_t x = 0;
 
 	switch (c & 0x0F)
 	{
@@ -64,11 +64,11 @@ typedef struct
 	fixed_t chw;
 	fixed_t spacew;
 	fixed_t lfh;
-	fixed_t (*dim_fn)(fixed_t, fixed_t, INT32, INT32, fixed_t*);
-	UINT8 button_yofs;
+	fixed_t (*dim_fn)(fixed_t, fixed_t, int32_t, int32_t, fixed_t*);
+	uint8_t button_yofs;
 } fontspec_t;
 
-static inline fixed_t FixedCharacterDim(fixed_t scale, fixed_t chw, INT32 hchw, INT32 dupx, fixed_t* cwp)
+static inline fixed_t FixedCharacterDim(fixed_t scale, fixed_t chw, int32_t hchw, int32_t dupx, fixed_t* cwp)
 {
 	(void) scale;
 	(void) hchw;
@@ -77,7 +77,7 @@ static inline fixed_t FixedCharacterDim(fixed_t scale, fixed_t chw, INT32 hchw, 
 	return 0;
 }
 
-static inline fixed_t VariableCharacterDim(fixed_t scale, fixed_t chw, INT32 hchw, INT32 dupx, fixed_t* cwp)
+static inline fixed_t VariableCharacterDim(fixed_t scale, fixed_t chw, int32_t hchw, int32_t dupx, fixed_t* cwp)
 {
 	(void) chw;
 	(void) hchw;
@@ -86,9 +86,9 @@ static inline fixed_t VariableCharacterDim(fixed_t scale, fixed_t chw, INT32 hch
 	return 0;
 }
 
-static inline fixed_t CenteredCharacterDim(fixed_t scale, fixed_t chw, INT32 hchw, INT32 dupx, fixed_t* cwp)
+static inline fixed_t CenteredCharacterDim(fixed_t scale, fixed_t chw, int32_t hchw, int32_t dupx, fixed_t* cwp)
 {
-	INT32 cxoff;
+	int32_t cxoff;
 	/*
 	For example, center a 4 wide patch to 8 width:
 	4/2   = 2
@@ -101,62 +101,62 @@ static inline fixed_t CenteredCharacterDim(fixed_t scale, fixed_t chw, INT32 hch
 	return FixedMul((cxoff * dupx) << FRACBITS, scale);
 }
 
-static inline fixed_t BunchedCharacterDim(fixed_t scale, fixed_t chw, INT32 hchw, INT32 dupx, fixed_t* cwp)
+static inline fixed_t BunchedCharacterDim(fixed_t scale, fixed_t chw, int32_t hchw, int32_t dupx, fixed_t* cwp)
 {
 	(void) chw;
 	(void) hchw;
 	(void) dupx;
-	(*cwp) = FixedMul(std::max<INT32>(1, (*cwp) - 1) << FRACBITS, scale);
+	(*cwp) = FixedMul(std::max<int32_t>(1, (*cwp) - 1) << FRACBITS, scale);
 	return 0;
 }
 
-static inline fixed_t MenuCharacterDim(fixed_t scale, fixed_t chw, INT32 hchw, INT32 dupx, fixed_t* cwp)
+static inline fixed_t MenuCharacterDim(fixed_t scale, fixed_t chw, int32_t hchw, int32_t dupx, fixed_t* cwp)
 {
 	(void) chw;
 	(void) hchw;
 	(void) dupx;
-	(*cwp) = FixedMul(std::max<INT32>(1, (*cwp) - 2) << FRACBITS, scale);
+	(*cwp) = FixedMul(std::max<int32_t>(1, (*cwp) - 2) << FRACBITS, scale);
 	return 0;
 }
 
-static inline fixed_t GamemodeCharacterDim(fixed_t scale, fixed_t chw, INT32 hchw, INT32 dupx, fixed_t* cwp)
+static inline fixed_t GamemodeCharacterDim(fixed_t scale, fixed_t chw, int32_t hchw, int32_t dupx, fixed_t* cwp)
 {
 	(void) chw;
 	(void) hchw;
 	(void) dupx;
-	(*cwp) = FixedMul(std::max<INT32>(1, (*cwp) - 2) << FRACBITS, scale);
+	(*cwp) = FixedMul(std::max<int32_t>(1, (*cwp) - 2) << FRACBITS, scale);
 	return 0;
 }
 
-static inline fixed_t FileCharacterDim(fixed_t scale, fixed_t chw, INT32 hchw, INT32 dupx, fixed_t* cwp)
+static inline fixed_t FileCharacterDim(fixed_t scale, fixed_t chw, int32_t hchw, int32_t dupx, fixed_t* cwp)
 {
 	(void) chw;
 	(void) hchw;
 	(void) dupx;
-	(*cwp) = FixedMul(std::max<INT32>(1, (*cwp) - 3) << FRACBITS, scale);
+	(*cwp) = FixedMul(std::max<int32_t>(1, (*cwp) - 3) << FRACBITS, scale);
 	return 0;
 }
 
-static inline fixed_t LSTitleCharacterDim(fixed_t scale, fixed_t chw, INT32 hchw, INT32 dupx, fixed_t* cwp)
+static inline fixed_t LSTitleCharacterDim(fixed_t scale, fixed_t chw, int32_t hchw, int32_t dupx, fixed_t* cwp)
 {
 	(void) chw;
 	(void) hchw;
 	(void) dupx;
-	(*cwp) = FixedMul(std::max<INT32>(1, (*cwp) - 4) << FRACBITS, scale);
+	(*cwp) = FixedMul(std::max<int32_t>(1, (*cwp) - 4) << FRACBITS, scale);
 	return 0;
 }
 
-static boolean V_CharacterValid(font_t* font, int c)
+static dboolean V_CharacterValid(font_t* font, int c)
 {
 	return (c >= 0 && c < font->size && font->font[c] != NULL);
 }
 
-boolean V_CharacterValidEx(font_t* font, int c)
+dboolean V_CharacterValidEx(font_t* font, int c)
 {
 	return V_CharacterValid(font, c);
 }
 
-static void V_GetFontSpecification(int fontno, INT32 flags, fontspec_t* result)
+static void V_GetFontSpecification(int fontno, int32_t flags, fontspec_t* result)
 {
 	/*
 	Hardcoded until a better system can be implemented
@@ -167,7 +167,7 @@ static void V_GetFontSpecification(int fontno, INT32 flags, fontspec_t* result)
 	result->chw = 0;
 	result->button_yofs = 0;
 
-	const INT32 spacing = (flags & V_SPACINGMASK);
+	const int32_t spacing = (flags & V_SPACINGMASK);
 
 	switch (fontno)
 	{
@@ -366,7 +366,7 @@ static void V_GetFontSpecification(int fontno, INT32 flags, fontspec_t* result)
 	}
 }
 
-static INT32 getEmotePatchWidth(patch_t* emote_patch, boolean contains_text = true)
+static int32_t getEmotePatchWidth(patch_t* emote_patch, dboolean contains_text = true)
 {
     float_t scale = GET_CHAT_EMOTE_SCALE(emote_patch->height, contains_text);
     float_t scaled_width = emote_patch->width * scale;
@@ -374,10 +374,10 @@ static INT32 getEmotePatchWidth(patch_t* emote_patch, boolean contains_text = tr
     return static_cast<int>(scaled_width + EMOTE_PADDING);
 }
 
-static INT32 getAtlasEmotePatchWidth(int atlas_id, boolean contains_text = true)
+static int32_t getAtlasEmotePatchWidth(int atlas_id, dboolean contains_text = true)
 {
-    INT32 height = EMOTE_ATLASES[atlas_id]->height;
-    INT32 width = EMOTE_ATLASES[atlas_id]->width;
+    int32_t height = EMOTE_ATLASES[atlas_id]->height;
+    int32_t width = EMOTE_ATLASES[atlas_id]->width;
 
     float_t scale = GET_CHAT_EMOTE_SCALE(height, contains_text);
     float_t scaled_width = width * scale;
@@ -385,7 +385,7 @@ static INT32 getAtlasEmotePatchWidth(int atlas_id, boolean contains_text = true)
     return static_cast<int>(scaled_width + EMOTE_PADDING);
 }
 
-static INT32 getEmotePatchWidthDirectly(emote_t* emote, boolean contains_text = true)
+static int32_t getEmotePatchWidthDirectly(emote_t* emote, dboolean contains_text = true)
 {
     /**
      * Use the very first frame of an emote.
@@ -395,7 +395,7 @@ static INT32 getEmotePatchWidthDirectly(emote_t* emote, boolean contains_text = 
      *  that's not our problem.
      */
 	
-	INT32 width = -1;
+	int32_t width = -1;
 	if (emote->atlas_id == -1) {
 		patch_t* emote_patch = static_cast<patch_t*>(W_CachePatchNum(emote->frames[0], PU_HUDGFX));
 		width = getEmotePatchWidth(emote_patch, contains_text);
@@ -410,12 +410,12 @@ word_wrap_results_t V_RR_ScaledWordWrap(
 	fixed_t scale,
 	fixed_t spacescale,
 	fixed_t lfscale,
-	INT32 flags,
+	int32_t flags,
 	int fontno,
 	const char* s,
 	patch_t** found_emote_patches = nullptr,
     int* found_emote_atlases = nullptr,
-	boolean contains_text = true
+	dboolean contains_text = true
 )
 {
     /**
@@ -423,13 +423,13 @@ word_wrap_results_t V_RR_ScaledWordWrap(
      */
     size_t emote_tracker_idx = 0;
 
-	INT32 hchw; /* half-width for centering */
+	int32_t hchw; /* half-width for centering */
 
-	INT32 dupx;
+	int32_t dupx;
 
 	font_t* font;
 
-	boolean uppercase;
+	dboolean uppercase;
 
 	fixed_t cx;
 	fixed_t right;
@@ -518,7 +518,7 @@ word_wrap_results_t V_RR_ScaledWordWrap(
             // RADIO: Emote logic
             if (found_emote_patches != nullptr || found_emote_atlases != nullptr)
             {
-				INT32 emote_w = -1;
+				int32_t emote_w = -1;
 
 				if (found_emote_atlases != nullptr) {
 					if (found_emote_atlases[emote_tracker_idx] != -1) 
@@ -677,14 +677,14 @@ void V_RR_DrawStringScaled(
 	fixed_t scale,
 	fixed_t spacescale,
 	fixed_t lfscale,
-	INT32 flags,
-	const UINT8* colormap,
+	int32_t flags,
+	const uint8_t* colormap,
 	int fontno,
 	const char* s,
     int chat_log_index,
 	std::vector<int> lines_with_emotes,
 	chat_log_type_t log_type,
-	boolean contains_text = true,
+	dboolean contains_text = true,
 	int top_offset = 0,
 	int bottom_offset = 0
 )
@@ -693,28 +693,28 @@ void V_RR_DrawStringScaled(
      * RADIO: Yeah, here.
      */
     size_t emote_tracker_idx = 0;
-    boolean line_has_emote = false;
-	boolean check_for_emotes = false;
-	boolean previous_line_had_emote = false;
-	boolean previous_line_checked = false;
+    dboolean line_has_emote = false;
+	dboolean check_for_emotes = false;
+	dboolean previous_line_had_emote = false;
+	dboolean previous_line_checked = false;
 	fixed_t __PADDING = (contains_text) ? EMOTE_LINE_PADDING_TEXT : EMOTE_LINE_PADDING;
     
-	INT32 hchw; /* half-width for centering */
+	int32_t hchw; /* half-width for centering */
 
-	INT32 dupx;
-	INT32 dupy;
+	int32_t dupx;
+	int32_t dupy;
 
 	fixed_t right;
 	fixed_t bot;
 
 	font_t* font;
 
-	boolean uppercase;
-	boolean notcolored;
+	dboolean uppercase;
+	dboolean notcolored;
 
-	boolean dance;
-	boolean nodanceoverride;
-	INT32 dancecounter;
+	dboolean dance;
+	dboolean nodanceoverride;
+	int32_t dancecounter;
 
 	fixed_t cx, cy;
 
@@ -922,7 +922,7 @@ void V_RR_DrawStringScaled(
 						);
 					}
                     
-                    INT32 width = getEmotePatchWidthDirectly(emote, contains_text);
+                    int32_t width = getEmotePatchWidthDirectly(emote, contains_text);
                     cw = SHORT(width) * dupx;
 
                     // CONS_Printf("[DRAW] font space width %d\n", fontspec.spacew/FRACUNIT);
@@ -998,11 +998,11 @@ fixed_t V_RR_StringScaledWidth(
 		fixed_t      scale,
 		fixed_t spacescale,
 		fixed_t    lfscale,
-		INT32      flags,
+		int32_t      flags,
 		int        fontno,
 		const char *s,
 		int chat_log_index,
-		boolean contains_text = true
+		dboolean contains_text = true
 )
 {
 	/**
@@ -1010,13 +1010,13 @@ fixed_t V_RR_StringScaledWidth(
      */
     size_t emote_tracker_idx = 0;
 
-	INT32     hchw;/* half-width for centering */
+	int32_t     hchw;/* half-width for centering */
 
-	INT32     dupx;
+	int32_t     dupx;
 
 	font_t   *font;
 
-	boolean uppercase;
+	dboolean uppercase;
 
 	fixed_t cx;
 	fixed_t right;
@@ -1081,7 +1081,7 @@ fixed_t V_RR_StringScaledWidth(
 
 					emote_t* emote = emote_fetch_map[chat_log_type_t::CLT_MINI](chat_log_index, emote_tracker_idx);
 
-                    INT32 width = getEmotePatchWidthDirectly(emote, contains_text);
+                    int32_t width = getEmotePatchWidthDirectly(emote, contains_text);
                     cw = SHORT(width) * dupx;
 
 					cx += cw;

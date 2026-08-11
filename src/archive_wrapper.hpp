@@ -38,7 +38,7 @@ protected:
 	void write(const U& n) = delete;
 
 private:
-	UINT8*& p_;
+	uint8_t*& p_;
 };
 
 #define READ_SPEC(T, arg) \
@@ -47,16 +47,16 @@ private:
 #define WRITE_SPEC(T, arg) \
 	template <> void ArchiveWrapperBase::write<T, T>(const T& arg)
 
-#define MACRO_PAIR(T) \
-	READ_SPEC(T, n) { n = READ ## T(p_); } \
-	WRITE_SPEC(T, n) { WRITE ## T(p_, n); }
+#define MACRO_PAIR(T, U) \
+	READ_SPEC(U, n) { n = READ ## T(p_); } \
+	WRITE_SPEC(U, n) { WRITE ## T(p_, n); }
 
-MACRO_PAIR(UINT8)
-MACRO_PAIR(SINT8)
-MACRO_PAIR(UINT16)
-MACRO_PAIR(INT16)
-MACRO_PAIR(UINT32)
-MACRO_PAIR(INT32)
+MACRO_PAIR(UINT8, uint8_t)
+MACRO_PAIR(SINT8, int8_t)
+MACRO_PAIR(UINT16, uint16_t)
+MACRO_PAIR(INT16, int16_t)
+MACRO_PAIR(UINT32, uint32_t)
+MACRO_PAIR(INT32, int32_t)
 
 READ_SPEC(vector2_t, n)
 {
@@ -84,18 +84,18 @@ WRITE_SPEC(vector3_t, n)
 	write<fixed_t>(n.z);
 }
 
-// Specializations for boolean, so it can stored as char
+// Specializations for dboolean, so it can stored as char
 // instead of int.
 
 template <>
-void ArchiveWrapperBase::read<bool, boolean>(boolean& n)
+void ArchiveWrapperBase::read<bool, dboolean>(dboolean& n)
 {
 	SRB2_ASSERT(n == true || n == false);
 	n = READUINT8(p_);
 }
 
 template <>
-void ArchiveWrapperBase::write<bool, boolean>(const boolean& n)
+void ArchiveWrapperBase::write<bool, dboolean>(const dboolean& n)
 {
 	SRB2_ASSERT(n == true || n == false);
 	WRITEUINT8(p_, n);

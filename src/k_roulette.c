@@ -80,7 +80,7 @@
 #define ROULETTE_SPEED_TIMEATTACK (9)
 #define ROULETTE_SPEED_VERSUS_SLOWEST (12)
 
-static UINT32 K_DynamicItemOddsRace[NUMKARTRESULTS-1][2] =
+static uint32_t K_DynamicItemOddsRace[NUMKARTRESULTS-1][2] =
 {
 	// distance, duplication tolerance
 	{24, 7}, // sneaker
@@ -144,7 +144,7 @@ static UINT32 K_DynamicItemOddsRace[NUMKARTRESULTS-1][2] =
 	{25, 2}, // quadsol							//SCS ADD END
 };																															//SCS -Adjusted some odds around here, and made all but 1 item available in the roulette
 
-static UINT32 K_DynamicItemOddsBattle[NUMKARTRESULTS-1][2] =
+static uint32_t K_DynamicItemOddsBattle[NUMKARTRESULTS-1][2] =
 {
 	// distance, duplication tolerance
 	{20, 1}, // sneaker
@@ -208,7 +208,7 @@ static UINT32 K_DynamicItemOddsBattle[NUMKARTRESULTS-1][2] =
 	{10, 1}, // quadsol									//SCS ADD END
 };
 
-static UINT32 K_DynamicItemOddsSpecial[NUMKARTRESULTS-1][2] =
+static uint32_t K_DynamicItemOddsSpecial[NUMKARTRESULTS-1][2] =
 {
 	// distance, duplication tolerance
 	{15, 2}, // sneaker
@@ -273,7 +273,7 @@ static UINT32 K_DynamicItemOddsSpecial[NUMKARTRESULTS-1][2] =
 };
 
 
-static UINT8 K_KartLegacyBattleOdds[NUMKARTRESULTS-1][2] =
+static uint8_t K_KartLegacyBattleOdds[NUMKARTRESULTS-1][2] =
 {
 	{ 0, 1 }, // Sneaker
 	{ 0, 0 }, // Rocket Sneaker
@@ -387,6 +387,7 @@ static kartslotmachine_t K_KartItemReelRingBox[] =
 	KSM_JACKPOT,
 	KSM__MAX
 };
+
 static sfxenum_t ringboxsound[] =
 {
 	sfx_slot00,
@@ -398,11 +399,11 @@ static sfxenum_t ringboxsound[] =
 };
 
 /*--------------------------------------------------
-	boolean K_ItemEnabled(kartitems_t item)
+	dboolean K_ItemEnabled(kartitems_t item)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_ItemEnabled(kartitems_t item)
+dboolean K_ItemEnabled(kartitems_t item)
 {
 	if (item < 1 || item >= NUMKARTRESULTS)
 	{
@@ -421,11 +422,11 @@ boolean K_ItemEnabled(kartitems_t item)
 }
 
 /*--------------------------------------------------
-	boolean K_ItemSingularity(kartitems_t item)
+	dboolean K_ItemSingularity(kartitems_t item)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_ItemSingularity(kartitems_t item)
+dboolean K_ItemSingularity(kartitems_t item)
 {
 	switch (item)
 	{
@@ -545,13 +546,13 @@ botItemPriority_e K_GetBotItemPriority(kartitems_t result)
 }
 
 /*--------------------------------------------------
-	static fixed_t K_ItemOddsScale(UINT8 playerCount)
+	static fixed_t K_ItemOddsScale(uint8_t playerCount)
 
 		See header file for description.
 --------------------------------------------------*/
-fixed_t K_ItemOddsScale(UINT8 playerCount)
+fixed_t K_ItemOddsScale(uint8_t playerCount)
 {
-	const UINT8 basePlayer = 8; // The player count we design most of the game around.
+	const uint8_t basePlayer = 8; // The player count we design most of the game around.
 	fixed_t playerScaling = 0;
 
 	if (playerCount < 2)
@@ -579,7 +580,7 @@ fixed_t K_ItemOddsScale(UINT8 playerCount)
 }
 
 /*--------------------------------------------------
-	UINT32 K_UndoMapScaling(UINT32 distance)
+	uint32_t K_UndoMapScaling(uint32_t distance)
 
 		Takes a raw map distance and adjusts it to
 		be in x1 scale.
@@ -590,7 +591,7 @@ fixed_t K_ItemOddsScale(UINT8 playerCount)
 	Return:-
 		Distance unscaled by mapobjectscale.
 --------------------------------------------------*/
-UINT32 K_UndoMapScaling(UINT32 distance)
+uint32_t K_UndoMapScaling(uint32_t distance)
 {
 	if (mapobjectscale != FRACUNIT)
 	{
@@ -602,7 +603,7 @@ UINT32 K_UndoMapScaling(UINT32 distance)
 }
 
 /*--------------------------------------------------
-	UINT32 K_ScaleItemDistance(UINT32 distance, UINT8 numPlayers)
+	uint32_t K_ScaleItemDistance(uint32_t distance, uint8_t numPlayers)
 
 		Adjust item distance for lobby-size scaling
 		as well as Frantic Items.
@@ -615,7 +616,7 @@ UINT32 K_UndoMapScaling(UINT32 distance)
 	Return:-
 		New distance after scaling.
 --------------------------------------------------*/
-UINT32 K_ScaleItemDistance(INT32 distance, UINT8 numPlayers)
+uint32_t K_ScaleItemDistance(int32_t distance, uint8_t numPlayers)
 {
 #if 0								//SCS NOTE - This might be a little too crazy lol
 	if (franticitems == true)
@@ -634,9 +635,9 @@ UINT32 K_ScaleItemDistance(INT32 distance, UINT8 numPlayers)
 	return distance;
 }
 
-static UINT32 K_GetUnscaledFirstDistance(const player_t *player)
+static uint32_t K_GetUnscaledFirstDistance(const player_t *player)
 {
-	UINT32 pdis = 0;
+	uint32_t pdis = 0;
 
 	if (player == NULL)
 	{
@@ -645,7 +646,7 @@ static UINT32 K_GetUnscaledFirstDistance(const player_t *player)
 
 	if (specialstageinfo.valid == true)
 	{
-		UINT32 ufoDis = K_GetSpecialUFODistance();
+		uint32_t ufoDis = K_GetSpecialUFODistance();
 
 		if (player->distancetofinish <= ufoDis)
 		{
@@ -660,7 +661,7 @@ static UINT32 K_GetUnscaledFirstDistance(const player_t *player)
 	}
 	else
 	{
-		UINT8 i;
+		uint8_t i;
 		for (i = 0; i < MAXPLAYERS; i++)
 		{
 			if (playeringame[i] && !players[i].spectator
@@ -690,13 +691,13 @@ static UINT32 K_GetUnscaledFirstDistance(const player_t *player)
 
 
 /*--------------------------------------------------
-	static UINT32 K_GetItemRouletteDistance(const player_t *player, UINT8 numPlayers)
+	static uint32_t K_GetItemRouletteDistance(const player_t *player, uint8_t numPlayers)
 
 		See header file for description.
 --------------------------------------------------*/
-UINT32 K_GetItemRouletteDistance(const player_t *player, UINT8 numPlayers)
+uint32_t K_GetItemRouletteDistance(const player_t *player, uint8_t numPlayers)
 {
-	UINT32 pdis = K_GetUnscaledFirstDistance(player);
+	uint32_t pdis = K_GetUnscaledFirstDistance(player);
 	pdis = K_ScaleItemDistance(pdis, numPlayers);
 
 	if (player->bot && (player->botvars.rival || cv_levelskull.value))
@@ -709,13 +710,13 @@ UINT32 K_GetItemRouletteDistance(const player_t *player, UINT8 numPlayers)
 }
 
 /*--------------------------------------------------
-	boolean K_DenyShieldOdds(kartitems_t item)
+	dboolean K_DenyShieldOdds(kartitems_t item)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_DenyShieldOdds(kartitems_t item)
+dboolean K_DenyShieldOdds(kartitems_t item)
 {
-	const INT32 shieldType = K_GetShieldFromItem(item);
+	const int32_t shieldType = K_GetShieldFromItem(item);
 	size_t i;
 
 	if ((gametyperules & GTR_CIRCUIT) == 0)
@@ -745,7 +746,7 @@ boolean K_DenyShieldOdds(kartitems_t item)
 	return false;
 }
 
-static boolean K_DenyAutoRouletteOdds(kartitems_t item)
+static dboolean K_DenyAutoRouletteOdds(kartitems_t item)
 {
 	// Deny items that are too hard for newbies
 	switch (item)
@@ -758,7 +759,7 @@ static boolean K_DenyAutoRouletteOdds(kartitems_t item)
 }
 
 /*--------------------------------------------------
-	static fixed_t K_PercentSPBOdds(const itemroulette_t *roulette, UINT8 position)
+	static fixed_t K_PercentSPBOdds(const itemroulette_t *roulette, uint8_t position)
 
 	Provide odds of SPB according to distances of first and
 	second place players.
@@ -772,7 +773,7 @@ static boolean K_DenyAutoRouletteOdds(kartitems_t item)
 	Return:-
 		New item odds.
 --------------------------------------------------*/
-static fixed_t K_PercentSPBOdds(const itemroulette_t *roulette, UINT8 position)
+static fixed_t K_PercentSPBOdds(const itemroulette_t *roulette, uint8_t position)
 {
 	I_Assert(roulette != NULL);
 
@@ -787,8 +788,8 @@ static fixed_t K_PercentSPBOdds(const itemroulette_t *roulette, UINT8 position)
 		{
 			//CONS_Printf("We're using the farther distance for SPB\n");
 
-			const UINT32 dist = max(0, ((signed)roulette->secondToFirst) - SPBSTARTDIST2);
-			const UINT32 distRange = SPBFORCEDIST2 - SPBSTARTDIST2;
+			const uint32_t dist = max(0, ((signed)roulette->secondToFirst) - SPBSTARTDIST2);
+			const uint32_t distRange = SPBFORCEDIST2 - SPBSTARTDIST2;
 		
 			fixed_t multiplier = FixedDiv(dist, distRange);
 
@@ -806,9 +807,8 @@ static fixed_t K_PercentSPBOdds(const itemroulette_t *roulette, UINT8 position)
 		}
 		else
 		{
-			const UINT32 dist = max(0, ((signed)roulette->secondToFirst) - SPBSTARTDIST);
-			const UINT32 distRange = SPBFORCEDIST - SPBSTARTDIST;
-		
+			const uint32_t dist = max(0, ((signed)roulette->secondToFirst) - SPBSTARTDIST);
+			const uint32_t distRange = SPBFORCEDIST - SPBSTARTDIST;
 			fixed_t multiplier = FixedDiv(dist, distRange);
 
 			if (multiplier < 0)
@@ -828,12 +828,12 @@ static fixed_t K_PercentSPBOdds(const itemroulette_t *roulette, UINT8 position)
 
 
 /*--------------------------------------------------
-	INT32 K_KartGetBattleOdds(const player_t *player, UINT8 pos, kartitems_t item)
+	int32_t K_KartGetBattleOdds(const player_t *player, uint8_t pos, kartitems_t item)
 
 		See header file for description.
 --------------------------------------------------*/
 
-INT32 K_KartGetBattleOdds(const player_t *player, UINT8 pos, kartitems_t item)
+int32_t K_KartGetBattleOdds(const player_t *player, uint8_t pos, kartitems_t item)
 {
 	(void)player;
 
@@ -849,11 +849,11 @@ INT32 K_KartGetBattleOdds(const player_t *player, UINT8 pos, kartitems_t item)
 }
 
 /*--------------------------------------------------
-	static boolean K_ForcedSPB(const player_t *player, itemroulette_t *const roulette)
+	static dboolean K_ForcedSPB(const player_t *player, itemroulette_t *const roulette)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_ForcedSPB(const player_t *player, itemroulette_t *const roulette)
+dboolean K_ForcedSPB(const player_t *player, itemroulette_t *const roulette)
 {
 	if (K_ItemEnabled(KITEM_SPB) == false)
 	{
@@ -923,7 +923,7 @@ void K_InitRoulette(itemroulette_t *const roulette)
 	{
 		roulette->itemList.cap = 32;
 		roulette->itemList.items = Z_Calloc(
-			sizeof(SINT8) * roulette->itemList.cap,
+			sizeof(int8_t) * roulette->itemList.cap,
 			PU_STATIC,
 			NULL
 		);
@@ -969,7 +969,7 @@ void K_InitRoulette(itemroulette_t *const roulette)
 
 		if (specialstageinfo.valid == true)
 		{
-			UINT32 dis = K_UndoMapScaling(players[i].distancetofinish);
+			uint32_t dis = K_UndoMapScaling(players[i].distancetofinish);
 			if (dis < roulette->secondDist)
 			{
 				roulette->secondDist = dis;
@@ -1006,11 +1006,11 @@ void K_InitRoulette(itemroulette_t *const roulette)
 }
 
 /*--------------------------------------------------
-	void K_PushToRouletteItemList(itemroulette_t *const roulette, INT32 item)
+	void K_PushToRouletteItemList(itemroulette_t *const roulette, int32_t item)
 
 		See header file for description.
 --------------------------------------------------*/
-void K_PushToRouletteItemList(itemroulette_t *const roulette, INT32 item)
+void K_PushToRouletteItemList(itemroulette_t *const roulette, int32_t item)
 {
 #ifdef ITEM_LIST_SIZE
 	if (roulette->itemList.len >= ITEM_LIST_SIZE)
@@ -1038,7 +1038,7 @@ void K_PushToRouletteItemList(itemroulette_t *const roulette, INT32 item)
 		roulette->itemList.cap *= 2;
 		roulette->itemList.items = Z_Realloc(
 			roulette->itemList.items,
-			sizeof(SINT8) * roulette->itemList.cap,
+			sizeof(int8_t) * roulette->itemList.cap,
 			PU_STATIC,
 			NULL
 		);
@@ -1150,7 +1150,7 @@ void K_CalculateRouletteSpeed(itemroulette_t *const roulette)
 // Honestly, the "power item" class is kind of a vestigial concept,
 // but we'll faithfully port it over since it's not hurting anything so far
 // (and it's at least ostensibly a Rival balancing mechanism, wheee).
-static boolean K_IsItemPower(kartitems_t item)
+static dboolean K_IsItemPower(kartitems_t item)
 {
 	switch (item)
 	{
@@ -1194,7 +1194,7 @@ static boolean K_IsItemPower(kartitems_t item)
 	}
 }
 
-static boolean K_IsItemFirstOnly(kartitems_t item)
+static dboolean K_IsItemFirstOnly(kartitems_t item)
 {
 	switch (item)
 	{
@@ -1211,7 +1211,7 @@ static boolean K_IsItemFirstOnly(kartitems_t item)
 	}
 }
 
-static boolean K_IsItemFirstPermitted(kartitems_t item)
+static dboolean K_IsItemFirstPermitted(kartitems_t item)
 {
 	if (K_IsItemFirstOnly(item))
 		return true;
@@ -1229,7 +1229,7 @@ static boolean K_IsItemFirstPermitted(kartitems_t item)
 	}
 }
 
-ATTRUNUSED static boolean K_IsItemUselessAlone(kartitems_t item)
+ATTRUNUSED static dboolean K_IsItemUselessAlone(kartitems_t item)
 {
 	switch (item)
 	{
@@ -1260,7 +1260,7 @@ ATTRUNUSED static boolean K_IsItemUselessAlone(kartitems_t item)
 	}
 }
 
-static boolean K_IsItemSpeed(kartitems_t item)
+static dboolean K_IsItemSpeed(kartitems_t item)
 {
 	switch (item)
 	{
@@ -1296,7 +1296,7 @@ static fixed_t K_RequiredXPForItem(kartitems_t item)
 }
 */
 // Which items are disallowed for this player's specific placement?
-static boolean K_ShouldPlayerAllowItem(kartitems_t item, const player_t *player)
+static dboolean K_ShouldPlayerAllowItem(kartitems_t item, const player_t *player)
 {
 	if (!(gametyperules & GTR_CIRCUIT))
 		return true;
@@ -1324,15 +1324,15 @@ static boolean K_ShouldPlayerAllowItem(kartitems_t item, const player_t *player)
 }
 
 // Which items are disallowed because it's the wrong time for them?
-static boolean K_TimingPermitsItem(kartitems_t item, const itemroulette_t *roulette)
+static dboolean K_TimingPermitsItem(kartitems_t item, const itemroulette_t *roulette)
 {
 	if (!(gametyperules & GTR_CIRCUIT))
 		return true;
 	if (specialstageinfo.valid == true)
 		return true;
 
-	boolean notNearEnd = false;
-	boolean cooldownOnStart = false;
+	dboolean notNearEnd = false;
+	dboolean cooldownOnStart = false;
 
 	switch (item)
 	{
@@ -1424,11 +1424,11 @@ static void K_FixEmptyRoulette(const player_t *player, itemroulette_t *const rou
 }
 
 /*--------------------------------------------------
-	void K_FillItemRouletteData(const player_t *player, itemroulette_t *const roulette, boolean ringbox)
+	void K_FillItemRouletteData(const player_t *player, itemroulette_t *const roulette, dboolean ringbox)
 
 		See header file for description.
 --------------------------------------------------*/
-void K_FillItemRoulette(player_t *const player, itemroulette_t *const roulette, boolean ringbox)
+void K_FillItemRoulette(player_t *const player, itemroulette_t *const roulette, dboolean ringbox)
 {
 	K_InitRoulette(roulette);
 
@@ -1466,17 +1466,17 @@ void K_FillItemRoulette(player_t *const player, itemroulette_t *const roulette, 
 }
 
 /*--------------------------------------------------
-	void K_FillItemRouletteData(const player_t *player, itemroulette_t *const roulette, boolean ringbox, boolean dryrun)
+	void K_FillItemRouletteData(const player_t *player, itemroulette_t *const roulette, dboolean ringbox, dboolean dryrun)
 
 		See header file for description.
 --------------------------------------------------*/
-void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, boolean ringbox, boolean dryrun)
+void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, dboolean ringbox, dboolean dryrun)
 {
-	UINT32 spawnChance[NUMKARTRESULTS] = {0};
-	UINT32 totalSpawnChance = 0;
+	uint32_t spawnChance[NUMKARTRESULTS] = {0};
+	uint32_t totalSpawnChance = 0;
 	size_t rngRoll = 0;
 
-	UINT8 numItems = 0;
+	uint8_t numItems = 0;
 	kartitems_t singleItem = KITEM_SAD;
 
 	size_t i, j;
@@ -1488,8 +1488,8 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 
 	if (ringbox == true)
 	{
+		// If this is being invoked by a Ring Box, it should literally never produce items.
 		kartslotmachine_t *presetlist = K_KartItemReelRingBox;
-		
 		roulette->ringbox = true;
 
 		for (i = 0; presetlist[i] != KSM__MAX; i++)
@@ -1647,14 +1647,14 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 	// 5: Skim any items that are much weaker than the reel's average out of the roulette
 	// 6: Cram it all in
 
-	UINT32 powers[NUMKARTRESULTS]; // how strong is each item? think of this as a "target distance" for this item to spawn at
-	UINT32 deltas[NUMKARTRESULTS]; // how different is that strength from target?
-	UINT32 candidates[NUMKARTRESULTS]; // how many of this item should we try to insert?
-	UINT32 dupetolerance[NUMKARTRESULTS]; // how willing are we to select this item after already selecting it? higher values = lower dupe penalty
-	boolean permit[NUMKARTRESULTS]; // is this item allowed?
+	uint32_t powers[NUMKARTRESULTS]; // how strong is each item? think of this as a "target distance" for this item to spawn at
+	uint32_t deltas[NUMKARTRESULTS]; // how different is that strength from target?
+	uint32_t candidates[NUMKARTRESULTS]; // how many of this item should we try to insert?
+	uint32_t dupetolerance[NUMKARTRESULTS]; // how willing are we to select this item after already selecting it? higher values = lower dupe penalty
+	dboolean permit[NUMKARTRESULTS]; // is this item allowed?
 
-	UINT32 lonelinessSuppressor = DISTVAR; // This close to 1st? Dampen loneliness (you have a target!)
-	UINT32 maxEXPDistanceCut = 3*DISTVAR; // The maximum amount you can be displaced by EXP
+	uint32_t lonelinessSuppressor = DISTVAR; // This close to 1st? Dampen loneliness (you have a target!)
+	uint32_t maxEXPDistanceCut = 3*DISTVAR; // The maximum amount you can be displaced by EXP
 
 	// If we're too close to 1st in absolute units, crush our top-end item odds down.
 	fixed_t crowdingFirst = 0;
@@ -1695,14 +1695,14 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 	if (franticitems)
 		largegamescaler = 100; // Except in Frantic, where you know what you're getting
 
-	UINT32 targetpower = 100 * roulette->dist / largegamescaler; // fill roulette with items around this value!
+	uint32_t targetpower = 100 * roulette->dist / largegamescaler; // fill roulette with items around this value!
 	if (!(specialstageinfo.valid))
 		targetpower = Easing_Linear(crowdingFirst, targetpower, targetpower/2);
 
-	boolean rival = (player->bot && (player->botvars.rival || cv_levelskull.value));
-	boolean filterweakitems = false; // strip unusually weak items from reel?				//SCS EDIT - Changing this to false to fix funky item odds - Eggmark wasn't appearing outside of 1st, Quad Orbi was cannabalizing Triple Orbi, etc.
-	UINT8 reelsize = 15; // How many items to attempt to add in prepass?
-	UINT32 humanscaler = 250; // Scaler that converts "useodds" style distances in odds tables to raw distances. Affects general item distance scale.
+	dboolean rival = (player->bot && (player->botvars.rival || cv_levelskull.value));
+	dboolean filterweakitems = false; // strip unusually weak items from reel?				//SCS EDIT - Changing this to false to fix funky item odds - Eggmark wasn't appearing outside of 1st, Quad Orbi was cannabalizing Triple Orbi, etc.
+	uint8_t reelsize = 15; // How many items to attempt to add in prepass?
+	uint32_t humanscaler = 250; // Scaler that converts "useodds" style distances in odds tables to raw distances. Affects general item distance scale.
 	
 
 
@@ -1732,7 +1732,7 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 	// == ODDS TIME
 	// Set up the right item odds for the gametype we're in.
 
-	UINT32 maxpower = 0; // Clamp target power to the lowest item that exists, or some of the math gets hard to reason about.
+	uint32_t maxpower = 0; // Clamp target power to the lowest item that exists, or some of the math gets hard to reason about.
 
 	for (i = 1; i < NUMKARTRESULTS; i++)
 	{
@@ -1798,7 +1798,7 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 	// This can appear anywhere from 0 to its specified distance, to pad the
 	// reels with non-disruptive catchup (since we have a ton of offensive items
 	// and not many front/mid speed items).
-	boolean canfiltersuperring = true;
+	dboolean canfiltersuperring = true;
 	if ((gametyperules & GTR_CIRCUIT) && (specialstageinfo.valid == false) && K_ItemEnabled(KITEM_SUPERRING))
 	{
 		if (targetpower > powers[KITEM_SUPERRING])
@@ -1818,9 +1818,9 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 	// A lot of items suck if no players are nearby to interact with them.
 	// Should we bias towards items that get us back to the action?
 	// This will set the "loneliness" percentage to be used later.
-	UINT32 lonelinessThreshold = 4*DISTVAR; // How far away can we be before items are considered useless?
-	UINT32 toFront = lonelinessThreshold; // Distance to the player trying to kill us.
-	UINT32 toBack = lonelinessThreshold; // Distance to the player we are trying to kill.
+	uint32_t lonelinessThreshold = 4*DISTVAR; // How far away can we be before items are considered useless?
+	uint32_t toFront = lonelinessThreshold; // Distance to the player trying to kill us.
+	uint32_t toBack = lonelinessThreshold; // Distance to the player we are trying to kill.
 	fixed_t loneliness = 0;
 
 	if (player->position > 1) // Loneliness is expected when frontrunnning, don't influence their item table.
@@ -1902,16 +1902,16 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 
 	// == ITEM SELECTION
 	// All the prep work's done: let's pick out a sampler platter of items until we fill the reel.
-	UINT8 added = 0; // How many items added so far?
-	UINT32 totalreelpower = 0; // How much total item power in the reel? Used for an average later.
+	uint8_t added = 0; // How many items added so far?
+	uint32_t totalreelpower = 0; // How much total item power in the reel? Used for an average later.
 
-	UINT32 basepenalty = 4*DISTVAR; // How much to penalize repicked items, to ensure item variety.
+	uint32_t basepenalty = 4*DISTVAR; // How much to penalize repicked items, to ensure item variety.
 	// BUT, keep the item distribution tighter if we're close to the frontrunner...
-	UINT32 penalty = Easing_Linear(crowdingFirst, basepenalty, basepenalty/2);
+	uint32_t penalty = Easing_Linear(crowdingFirst, basepenalty, basepenalty/2);
 	if (player->position == 1) // ...unless we ARE the frontrunner.
 		penalty = basepenalty;
 		
-	INT32 trueringcappower = powers[KITEM_RINGCAPBONUS];	
+	int32_t trueringcappower = powers[KITEM_RINGCAPBONUS];	
 		
 	if (permit[KITEM_RINGCAPBONUS] && powers[KITEM_RINGCAPBONUS] != 0)				//SCS ADD START
 	{
@@ -1928,7 +1928,7 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 
 	for (i = 0; i < reelsize; i++)
 	{
-		UINT32 lowestdelta = INT32_MAX;
+		uint32_t lowestdelta = INT32_MAX;
 		size_t bestitem = 0;
 
 		// Each rep, get the legal item with the lowest delta...
@@ -1952,7 +1952,7 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 		// Impose a penalty to this item's delta, to bias against selecting it again.
 		// This is naively slashed by an item's "duplicate tolerance":
 		// lower tolerance means that an item is less likely to be reselected (it's "rarer").
-		UINT32 deltapenalty = penalty*(1+candidates[bestitem])/dupetolerance[bestitem];
+		uint32_t deltapenalty = penalty*(1+candidates[bestitem])/dupetolerance[bestitem];
 
 		// Power items get better odds in frantic, or if you're the rival.
 		// (For the rival, this is way more likely to matter at lower skills, where they're
@@ -1972,14 +1972,14 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 		// Draw complex odds debugger. This one breaks down all the calcs in order.
 		if (cv_kartdebugdistribution.value > 1)
 		{
-			UINT16 BASE_X = 18;
-			UINT16 BASE_Y = 5+12*i;
-			INT32 FLAGS = V_SNAPTOTOP|V_SNAPTOLEFT;
+			uint16_t BASE_X = 18;
+			uint16_t BASE_Y = 5+12*i;
+			int32_t FLAGS = V_SNAPTOTOP|V_SNAPTOLEFT;
 			V_DrawRightAlignedThinString(BASE_X + 35, BASE_Y, FLAGS, va("P%d", powers[bestitem]/humanscaler));
 			V_DrawRightAlignedThinString(BASE_X + 65, BASE_Y, FLAGS, va("D%d", deltas[bestitem]/humanscaler));
 			V_DrawRightAlignedThinString(BASE_X + 20, BASE_Y, FLAGS, va("%d", dupetolerance[bestitem]));
 			V_DrawFixedPatch(BASE_X*FRACUNIT, (BASE_Y-7)*FRACUNIT, (FRACUNIT >> 1), FLAGS, K_GetSmallStaticCachedItemPatch(bestitem), NULL);
-			UINT8 amount = K_ItemResultToAmount(bestitem, roulette);
+			uint8_t amount = K_ItemResultToAmount(bestitem, roulette);
 			if (amount > 1)
 				V_DrawThinString(BASE_X, BASE_Y, FLAGS, va("x%d", amount));
 		}
@@ -2006,9 +2006,9 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 	if (player->position <= 1)
 		filterweakitems = false;
 
-	UINT8 debugcount = 0; // For the "simple" odds debugger.
-	UINT32 meanreelpower = totalreelpower/max(added, 1); // Average power for the "moth filter".
-	UINT32 maxreduction = -1 * min(2 * DISTVAR, meanreelpower/2);
+	uint8_t debugcount = 0; // For the "simple" odds debugger.
+	uint32_t meanreelpower = totalreelpower/max(added, 1); // Average power for the "moth filter".
+	uint32_t maxreduction = -1 * min(2 * DISTVAR, meanreelpower/2);
 
 	// == PREP FOR ADDING TO THE ROULETTE REEL
 	// Sal's prior work for this is rock-solid.
@@ -2020,7 +2020,7 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 		// This can happen in regions of the odds with a lot of items that
 		// don't really like to be duplicated. Favor the player; high-rolling
 		// feels exciting, low-rolling feels punishing!
-		boolean reject = (filterweakitems) && (powers[i] + DISTVAR < meanreelpower);
+		dboolean reject = (filterweakitems) && (powers[i] + DISTVAR < meanreelpower);
 
 		// If we're far away from interactions, be extra aggressive about tossing attack items.
 		if (filterweakitems && !reject && !K_IsItemSpeed(i))
@@ -2043,9 +2043,9 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 		// This one is just to watch the distribution for vibes as you drive around.
 		if (cv_kartdebugdistribution.value && candidates[i])
 		{
-			UINT16 BASE_X = 280;
-			UINT16 BASE_Y = 5+12*debugcount;
-			INT32 FLAGS = V_SNAPTOTOP|V_SNAPTORIGHT;
+			uint16_t BASE_X = 280;
+			uint16_t BASE_Y = 5+12*debugcount;
+			int32_t FLAGS = V_SNAPTOTOP|V_SNAPTORIGHT;
 			
 			if (reject)
 				FLAGS |= V_TRANSLUCENT;
@@ -2053,9 +2053,9 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 			V_DrawRightAlignedThinString(BASE_X - 12, 5+12, FLAGS, va("FB %d / %d", toFront, toBack));
 			V_DrawRightAlignedThinString(BASE_X - 12, 5+24, FLAGS, va("L %d / CF %d", loneliness, crowdingFirst));
 			V_DrawRightAlignedThinString(BASE_X - 12, 5+36, FLAGS, va("D %d / %d", roulette->preexpdist, roulette->dist));
-			for(UINT8 k = 0; k < candidates[i]; k++)
+			for(uint8_t k = 0; k < candidates[i]; k++)
 				V_DrawFixedPatch((BASE_X + 3*k)*FRACUNIT, (BASE_Y-7)*FRACUNIT, (FRACUNIT >> 1), FLAGS, K_GetSmallStaticCachedItemPatch(i), NULL);
-			UINT8 amount = K_ItemResultToAmount(i, roulette);
+			uint8_t amount = K_ItemResultToAmount(i, roulette);
 			if (amount > 1)
 				V_DrawThinString(BASE_X, BASE_Y, FLAGS, va("x%d", amount));
 
@@ -2125,7 +2125,7 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, bo
 
 		See header file for description.
 --------------------------------------------------*/
-void K_StartItemRoulette(player_t *const player, boolean ringbox)
+void K_StartItemRoulette(player_t *const player, dboolean ringbox)
 {
 	itemroulette_t *const roulette = &player->itemRoulette;
 	size_t i;
@@ -2178,11 +2178,11 @@ void K_StopRoulette(itemroulette_t *const roulette)
 }
 
 /*--------------------------------------------------
-	fixed_t K_GetRouletteOffset(itemroulette_t *const roulette, fixed_t renderDelta, UINT8 fudge)
+	fixed_t K_GetRouletteOffset(itemroulette_t *const roulette, fixed_t renderDelta, uint8_t fudge)
 
 		See header file for description.
 --------------------------------------------------*/
-fixed_t K_GetRouletteOffset(itemroulette_t *const roulette, fixed_t renderDelta, UINT8 fudge)
+fixed_t K_GetRouletteOffset(itemroulette_t *const roulette, fixed_t renderDelta, uint8_t fudge)
 {
 	const fixed_t curTic = (roulette->tics << FRACBITS) - renderDelta;
 	const fixed_t midTic = roulette->speed * (FRACUNIT >> 1);
@@ -2203,7 +2203,7 @@ fixed_t K_GetRouletteOffset(itemroulette_t *const roulette, fixed_t renderDelta,
 
 		See header file for description.
 --------------------------------------------------*/
-fixed_t K_GetSlotOffset(itemroulette_t *const roulette, fixed_t renderDelta, UINT8 fudge)
+fixed_t K_GetSlotOffset(itemroulette_t *const roulette, fixed_t renderDelta, uint8_t fudge)
 {
 	const fixed_t curTic = (roulette->tics << FRACBITS) - renderDelta;
 	const fixed_t midTic = roulette->speed * (FRACUNIT >> 1);
@@ -2258,9 +2258,10 @@ void K_KartGetItemResult(player_t *const player, kartitems_t getitem)
 	player->botvars.itemconfirm = 0;
 
 	player->itemtype = K_ItemResultToType(getitem);
-	UINT8 itemamount = K_ItemResultToAmount(getitem, &player->itemRoulette);
+	uint8_t itemamount = K_ItemResultToAmount(getitem, &player->itemRoulette);
 	if (cv_kartdebugitem.value != KITEM_NONE && cv_kartdebugitem.value == player->itemtype && cv_kartdebugamount.value > 1)
 		itemamount = cv_kartdebugamount.value;
+	
 	K_SetPlayerItemAmount(player, itemamount);
 
 	if (player->itemtype == KITEM_SPB)
@@ -2275,7 +2276,7 @@ void K_KartGetItemResult(player_t *const player, kartitems_t getitem)
 void K_KartItemRoulette(player_t *const player, ticcmd_t *const cmd)
 {
 	itemroulette_t *const roulette = &player->itemRoulette;
-	boolean confirmItem = false;
+	dboolean confirmItem = false;
 
 	if (roulette->reserved > 0)
 	{
@@ -2342,16 +2343,16 @@ void K_KartItemRoulette(player_t *const player, ticcmd_t *const cmd)
 		}
 		else
 		{
-			UINT8 baseFudge = player->cmd.latency; // max(0, player->cmd.latency - 2);
+			uint8_t baseFudge = player->cmd.latency; // max(0, player->cmd.latency - 2);
 			if (roulette->autoroulette)
 			{
 				baseFudge = 0; // We didn't manually stop this, you jackwagon
 			}
 
-			UINT8 fudgedDelay = baseFudge;
+			uint8_t fudgedDelay = baseFudge;
 			while (fudgedDelay > 0)
 			{
-				UINT8 gap = (roulette->speed - roulette->tics); // How long has the roulette been on this entry?
+				uint8_t gap = (roulette->speed - roulette->tics); // How long has the roulette been on this entry?
 				if (fudgedDelay > gap) // Did the roulette tick over in-flight?
 				{
 					fudgedDelay = fudgedDelay - gap; // We're compensating for this gap's worth of delay, so cut it down.
@@ -2368,7 +2369,7 @@ void K_KartItemRoulette(player_t *const player, ticcmd_t *const cmd)
 			//roulette->tics = (roulette->tics + fudgedDelay) % roulette->speed;		//SCS EDIT - disabling this because it seems unreliable
 			roulette->tics = (roulette->tics) % roulette->speed;
 
-			INT32 finalItem = roulette->itemList.items[ roulette->index ];
+			int32_t finalItem = roulette->itemList.items[ roulette->index ];
 
 			if (roulette->ringbox == true)
 			{
@@ -2393,7 +2394,7 @@ void K_KartItemRoulette(player_t *const player, ticcmd_t *const cmd)
 				{
 					// Hi modders! Boost your treble and Loudness Normalize to 0 LUFS.
 					// I'm a responsible audio engineer. -Tyron 2023-07-30
-					UINT8 volume = (finalItem > 2) ? (15 * finalItem + 60) : 80;
+					uint8_t volume = (finalItem > 2) ? (15 * finalItem + 60) : 80;
 					S_StartSoundAtVolume(NULL, ringboxsound[finalItem], volume);
 				}
 				else

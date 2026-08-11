@@ -121,7 +121,7 @@ struct Visual : Mobj
 			renderflags |= RF_ADD;
 
 			fixed_t transpercent = K_PlayerScamPercentage(bubble()->follow()->player, BUBBLESCAM);
-			UINT8 transfactor = (transpercent * NUMTRANSMAPS) / FRACUNIT;
+			uint8_t transfactor = (transpercent * NUMTRANSMAPS) / FRACUNIT;
 
 			if (transfactor < 10)
 				renderflags |= ((10-transfactor) << RF_TRANSSHIFT);
@@ -146,7 +146,7 @@ void Obj_SpawnBubbleShieldVisuals(mobj_t *bubble)
 	Visual::spawn(static_cast<Bubble*>(bubble), S_BUBE1, 1, -3); //Backlit outline
 }
 
-boolean Obj_TickBubbleShieldVisual(mobj_t *mobj)
+dboolean Obj_TickBubbleShieldVisual(mobj_t *mobj)
 {
 	return static_cast<Visual*>(mobj)->tick();
 }

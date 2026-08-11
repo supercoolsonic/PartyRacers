@@ -37,14 +37,14 @@ void RadioHudfeedMenu_Init(void);
 void RRM_DrawCharacterBookmarks(void);
 void RRM_BookmarkTick(void);
 void RRM_BookmarkInit(void);
-boolean RRM_BookmarkHandler(INT32 choice);
-boolean RRM_BookmarkQuit(void);
-void RRM_BookmarkSelect(INT32 choice);
+dboolean RRM_BookmarkHandler(int32_t choice);
+dboolean RRM_BookmarkQuit(void);
+void RRM_BookmarkSelect(int32_t choice);
 
 typedef struct
 {
     tic_t follower_tics;
-    UINT8 follower_frame;
+    uint8_t follower_frame;
     state_t *follower_state;
 } bookmark_menu_follower_anim_t;
 
@@ -63,9 +63,9 @@ extern struct bookmarkmenu_s
     tic_t follower_timer;
     tic_t stage_timer;
     size_t current_page;
-    boolean show_info;
-	boolean selected;
-    UINT8 stage;
+    dboolean show_info;
+	dboolean selected;
+    uint8_t stage;
 } bookmarkmenu;
 
 #ifdef __cplusplus

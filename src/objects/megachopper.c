@@ -68,9 +68,9 @@ void Obj_MegaChopperThink(mobj_t *th)
 	
 	angle_t newangle = th->target->angle + th->angle;
 	
-	UINT32 newx = th->target->x + th->target->momx + (FixedMul(th->target->scale, th->scale), FINECOSINE((newangle) >> ANGLETOFINESHIFT));
+	uint32_t newx = th->target->x + th->target->momx + (FixedMul(th->target->scale, th->scale), FINECOSINE((newangle) >> ANGLETOFINESHIFT));
 
-	UINT32 newy = th->target->y + th->target->momy + (FixedMul(th->target->scale, th->scale), FINESINE((newangle) >> ANGLETOFINESHIFT));
+	uint32_t newy = th->target->y + th->target->momy + (FixedMul(th->target->scale, th->scale), FINESINE((newangle) >> ANGLETOFINESHIFT));
 			
 	th->momx = 0;
 	th->momy = 0;

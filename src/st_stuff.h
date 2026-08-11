@@ -32,7 +32,7 @@ extern "C" {
 //
 
 // Called by main loop.
-void ST_Ticker(boolean run);
+void ST_Ticker(dboolean run);
 
 #ifdef HAVE_DISCORDRPC
 // Called when you have Discord asks
@@ -58,7 +58,7 @@ void ST_UnloadGraphics(void);
 void ST_LoadGraphics(void);
 
 // face load graphics, called when skin changes
-void ST_LoadFaceGraphics(INT32 playernum);
+void ST_LoadFaceGraphics(int32_t playernum);
 void ST_ReloadSkinFaceGraphics(void);
 
 void ST_doPaletteStuff(void);
@@ -70,32 +70,32 @@ void ST_drawTitleCard(void);
 void ST_preDrawTitleCard(void);
 void ST_preLevelTitleCardDrawer(void);
 
-patch_t *ST_getRoundPicture(boolean small);
+patch_t *ST_getRoundPicture(dboolean small);
 
 extern tic_t lt_ticker, lt_lasttic;
 extern tic_t lt_exitticker, lt_endtime;
 extern tic_t lt_fade;
 
-void ST_DrawServerSplash(boolean timelimited);
-void ST_DrawSaveReplayHint(INT32 flags);
+void ST_DrawServerSplash(dboolean timelimited);
+void ST_DrawSaveReplayHint(int32_t flags);
 
 // return if player a is in the same team as player b
-boolean ST_SameTeam(player_t *a, player_t *b);
+dboolean ST_SameTeam(player_t *a, player_t *b);
 
 //--------------------
 // status bar overlay
 //--------------------
 
-extern boolean st_overlay; // sb overlay on or off when fullscreen
-extern INT32 st_palette; // 0 is default, any others are special palettes.
-extern UINT32 st_translucency; // HUD fading for elements not attached to specific players
+extern dboolean st_overlay; // sb overlay on or off when fullscreen
+extern int32_t st_palette; // 0 is default, any others are special palettes.
+extern uint32_t st_translucency; // HUD fading for elements not attached to specific players
 extern fixed_t st_fadein; // transitioning value per player, FRACUNIT = fully in view
 
 extern lumpnum_t st_borderpatchnum;
 // patches, also used in intermission
 extern patch_t *faceprefix[MAXSKINS][NUMFACES];
 
-extern UINT16 objectsdrawn;
+extern uint16_t objectsdrawn;
 
 #ifdef __cplusplus
 } // extern "C"
