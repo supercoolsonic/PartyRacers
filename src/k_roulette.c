@@ -2374,7 +2374,7 @@ void K_KartItemRoulette(player_t *const player, ticcmd_t *const cmd)
 			if (roulette->ringbox == true)
 			{
 				player->ringboxdelay = TICRATE;
-				player->ringboxaward = finalItem;
+				player->ringboxaward = finalItem+1;	//SCS EDIT - bumping up by 1 so BAR can show up in slot item spy properly
 				//player->karthud[khud_rouletteoffset] = K_GetSlotOffset(roulette, FRACUNIT, baseFudge); 		//SCS EDIT
 				player->karthud[khud_rouletteoffset] = K_GetSlotOffset(roulette, FRACUNIT, 0);
 			}

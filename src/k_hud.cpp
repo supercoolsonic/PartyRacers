@@ -165,6 +165,8 @@ static patch_t *kp_itemx;
 
 static patch_t *kp_itemlistmeter[6];		//SCS ADD
 static patch_t *kp_itemlistmetersmall[4];	//SCS ADD
+static patch_t *kp_itemspyportraitrand[47];	//SCS ADD
+static patch_t *kp_itemspyportraitslot[6];	//SCS ADD
 
 static patch_t *kp_sadface[3];
 static patch_t *kp_sneaker[5];			//SCS EDIT
@@ -698,6 +700,69 @@ void K_LoadKartHUDGraphics(void)
 		
 	}
 	
+	/*snprintf(buffer, sizeof(buffer), "ISPYRNx");
+	for (i = 0; i < 9; i++)
+	{
+		buffer[7] = '1'+i;
+		HU_UpdatePatch(&kp_itemspyportraitrand[i], "%s", buffer);
+		
+	}*/
+	HU_UpdatePatch(&kp_itemspyportraitrand[0], "ISPYRN1");
+	HU_UpdatePatch(&kp_itemspyportraitrand[1], "ISPYRN2");
+	HU_UpdatePatch(&kp_itemspyportraitrand[2], "ISPYRN3");
+	HU_UpdatePatch(&kp_itemspyportraitrand[3], "ISPYRN4");
+	HU_UpdatePatch(&kp_itemspyportraitrand[4], "ISPYRN5");
+	HU_UpdatePatch(&kp_itemspyportraitrand[5], "ISPYRN6");
+	HU_UpdatePatch(&kp_itemspyportraitrand[6], "ISPYRN7");
+	HU_UpdatePatch(&kp_itemspyportraitrand[7], "ISPYRN8");
+	HU_UpdatePatch(&kp_itemspyportraitrand[8], "ISPYRN9");
+	HU_UpdatePatch(&kp_itemspyportraitrand[9], "ISPYRN10");
+	HU_UpdatePatch(&kp_itemspyportraitrand[10], "ISPYRN11");
+	HU_UpdatePatch(&kp_itemspyportraitrand[11], "ISPYRN12");
+	HU_UpdatePatch(&kp_itemspyportraitrand[12], "ISPYRN13");
+	HU_UpdatePatch(&kp_itemspyportraitrand[13], "ISPYRN14");
+	HU_UpdatePatch(&kp_itemspyportraitrand[14], "ISPYRN15");
+	HU_UpdatePatch(&kp_itemspyportraitrand[15], "ISPYRN16");
+	HU_UpdatePatch(&kp_itemspyportraitrand[16], "ISPYRN17");
+	HU_UpdatePatch(&kp_itemspyportraitrand[17], "ISPYRN18");
+	HU_UpdatePatch(&kp_itemspyportraitrand[18], "ISPYRN19");
+	HU_UpdatePatch(&kp_itemspyportraitrand[19], "ISPYRN20");
+	HU_UpdatePatch(&kp_itemspyportraitrand[20], "ISPYRN21");
+	HU_UpdatePatch(&kp_itemspyportraitrand[21], "ISPYRN22");
+	HU_UpdatePatch(&kp_itemspyportraitrand[22], "ISPYRN23");
+	HU_UpdatePatch(&kp_itemspyportraitrand[23], "ISPYRN24");
+	HU_UpdatePatch(&kp_itemspyportraitrand[24], "ISPYRN25");
+	HU_UpdatePatch(&kp_itemspyportraitrand[25], "ISPYRN26");
+	HU_UpdatePatch(&kp_itemspyportraitrand[26], "ISPYRN27");
+	HU_UpdatePatch(&kp_itemspyportraitrand[27], "ISPYRN28");
+	HU_UpdatePatch(&kp_itemspyportraitrand[28], "ISPYRN29");
+	HU_UpdatePatch(&kp_itemspyportraitrand[29], "ISPYRN30");
+	HU_UpdatePatch(&kp_itemspyportraitrand[30], "ISPYRN31");
+	HU_UpdatePatch(&kp_itemspyportraitrand[31], "ISPYRN32");
+	HU_UpdatePatch(&kp_itemspyportraitrand[32], "ISPYRN33");
+	HU_UpdatePatch(&kp_itemspyportraitrand[33], "ISPYRN34");
+	HU_UpdatePatch(&kp_itemspyportraitrand[34], "ISPYRN35");
+	HU_UpdatePatch(&kp_itemspyportraitrand[35], "ISPYRN36");
+	HU_UpdatePatch(&kp_itemspyportraitrand[36], "ISPYRN37");
+	HU_UpdatePatch(&kp_itemspyportraitrand[37], "ISPYRN38");
+	HU_UpdatePatch(&kp_itemspyportraitrand[38], "ISPYRN39");
+	HU_UpdatePatch(&kp_itemspyportraitrand[39], "ISPYRN40");
+	HU_UpdatePatch(&kp_itemspyportraitrand[40], "ISPYRN41");
+	HU_UpdatePatch(&kp_itemspyportraitrand[41], "ISPYRN42");
+	HU_UpdatePatch(&kp_itemspyportraitrand[42], "ISPYRN43");
+	HU_UpdatePatch(&kp_itemspyportraitrand[43], "ISPYRN44");
+	HU_UpdatePatch(&kp_itemspyportraitrand[44], "ISPYRN45");
+	HU_UpdatePatch(&kp_itemspyportraitrand[45], "ISPYRN46");
+	HU_UpdatePatch(&kp_itemspyportraitrand[46], "ISPYRN47");
+	
+	snprintf(buffer, sizeof(buffer), "ISPYSTRx");
+	for (i = 0; i < 6; i++)
+	{
+		buffer[7] = '1'+i;
+		HU_UpdatePatch(&kp_itemspyportraitslot[i], "%s", buffer);
+		
+	}
+	
 	//Octus Ink Blotches
 	HU_UpdatePatch(&kp_inkblotches[0], "INK_K_ISBG");
 	HU_UpdatePatch(&kp_inkblotches[1], "INK_K_ITBG");
@@ -920,12 +985,6 @@ void K_LoadKartHUDGraphics(void)
 	}
 	HU_UpdatePatch(&kp_yellowspogospring[1], "K_ISYOGO");
 	HU_UpdatePatch(&kp_bluepogospring[1], "K_ISBOGO");
-	snprintf(buffer, sizeof(buffer), "K_ISTSNx");
-	for (i = 0; i < 9; i++)
-	{
-		buffer[7] = '1'+i;
-		HU_UpdatePatch(&kp_timestone[i+10], "%s", buffer);
-	}
 	
 	snprintf(buffer, sizeof(buffer), "K_ISBONx");
 	for (i = 0; i < 4; i++)
@@ -934,7 +993,14 @@ void K_LoadKartHUDGraphics(void)
 		HU_UpdatePatch(&kp_ringbonus[i+4], "%s", buffer);
 	}
 	
+	snprintf(buffer, sizeof(buffer), "K_ISTSNx");
+	for (i = 0; i < 9; i++)
+	{
+		buffer[7] = '1'+i;
+		HU_UpdatePatch(&kp_timestone[i+10], "%s", buffer);
+	}
 	HU_UpdatePatch(&kp_timestone[19], "K_ISTSN10");
+	
 	HU_UpdatePatch(&kp_normalshield[1], "K_ISSHLD");
 	HU_UpdatePatch(&kp_megachopper[1], "K_ISMCHP");
 	HU_UpdatePatch(&kp_armashield[1], "K_ISARMA");
@@ -956,19 +1022,19 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_jackpot[1], "K_SBJACK");
 	
 
-	HU_UpdatePatch(&kp_bar[2], "K_ISBAR1");					//SCS ADD START
+	HU_UpdatePatch(&kp_bar[2], "K_ISBAR");					//SCS ADD START
 	HU_UpdatePatch(&kp_doublebar[2], "K_ISBAR2");
 	HU_UpdatePatch(&kp_triplebar[2], "K_ISBAR3");
 	HU_UpdatePatch(&kp_slotring[2], "K_ISBING");
 	HU_UpdatePatch(&kp_seven[2], "K_ISSEVE");
 	HU_UpdatePatch(&kp_jackpot[2], "K_ISJACK");
 	
-	HU_UpdatePatch(&kp_bar[3], "K_ISPYBAR1");
-	HU_UpdatePatch(&kp_doublebar[3], "K_ISPYBAR2");
-	HU_UpdatePatch(&kp_triplebar[3], "K_ISPYBAR3");
-	HU_UpdatePatch(&kp_slotring[3], "K_ISPYRING");
-	HU_UpdatePatch(&kp_seven[3], "K_ISPYSEVE");
-	HU_UpdatePatch(&kp_jackpot[3], "K_ISPYJACK");			//SCS ADD END
+	HU_UpdatePatch(&kp_bar[3], "ISPYBAR");
+	HU_UpdatePatch(&kp_doublebar[3], "ISPYBAR2");
+	HU_UpdatePatch(&kp_triplebar[3], "ISPYBAR3");
+	HU_UpdatePatch(&kp_slotring[3], "ISPYSRNG");
+	HU_UpdatePatch(&kp_seven[3], "ISPYSEVE");
+	HU_UpdatePatch(&kp_jackpot[3], "ISPYJACK");				//SCS ADD END
 
 	snprintf(buffer, sizeof(buffer), "FSMFSxxx");
 	for (i = 0; i < 120; i++)
@@ -1544,6 +1610,127 @@ const char *K_GetItemPatch(uint8_t item, dboolean tiny)
 			return (tiny ? "K_ISBON1" : "K_ITBON1");		//SCS ADD END
 		default:
 			return (tiny ? "K_ISSAD" : "K_ITSAD");
+	}
+}
+
+static patch_t *K_GetItemPatch_RaceFaces(uint8_t item)	//SCS ADD
+{
+	switch (item)
+	{
+		case KITEM_SNEAKER:
+			return kp_sneaker[4];
+		case KITEM_ROCKETSNEAKER:
+			return kp_rocketsneaker[2];
+		case KITEM_INVINCIBILITY:
+			return kp_invincibility[((leveltime % (6*3)) / 3) + 13];
+		case KITEM_BANANA:
+			return kp_banana[5];
+		case KITEM_EGGMAN:
+			return kp_eggman[2];
+		case KITEM_ORBINAUT:
+			return kp_orbinaut[5];
+		case KITEM_JAWZ:
+			return kp_jawz[3];
+		case KITEM_MINE:
+			return kp_mine[2];
+		case KITEM_LANDMINE:
+			return kp_landmine[2];
+		case KITEM_BALLHOG:
+			return kp_ballhog[2];
+		case KITEM_SPB:
+			return kp_selfpropelledbomb[2];
+		case KITEM_GROW:
+			return kp_grow[2];
+		case KITEM_SHRINK:
+			return kp_shrink[2];
+		case KITEM_LIGHTNINGSHIELD:
+			return kp_lightningshield[2];
+		case KITEM_BUBBLESHIELD:
+			return kp_bubbleshield[2];
+		case KITEM_FLAMESHIELD:
+			return kp_flameshield[2];
+		case KITEM_HYUDORO:
+			return kp_hyudoro[2];
+		case KITEM_POGOSPRING:
+			return kp_pogospring[2];
+		case KITEM_SUPERRING:
+			return kp_superring[2];
+		case KITEM_KITCHENSINK:
+			return kp_kitchensink[2];
+		case KITEM_DROPTARGET:
+			return kp_droptarget[2];
+		case KITEM_GARDENTOP:
+			return kp_gardentop[2];
+		case KITEM_GACHABOM:
+			return kp_gachabom[2];
+		case KITEM_TOXOMISTER:
+			return kp_toxomister[2];
+		case KITEM_STONESHOE:
+			return kp_stoneshoe[2];
+		case KITEM_SUPERJACKPOT:
+			return kp_sjackpot[2];
+		case KITEM_WRECKINGBALL:
+			return kp_wreckball[2];
+		case KITEM_MASTEREMERALD:
+			return kp_masteremerald[((leveltime % (6*3)) / 3) + 12];
+		case KITEM_PICKPOCKETHYU:
+			return kp_pickpockethyu[((leveltime % (3*3)) / 3) + 12];
+		case KITEM_YOGOSPRING:
+			return kp_yellowspogospring[2];
+		case KITEM_TIMESTONE:
+			return kp_timestone[((leveltime % (6*3)) / 3) + 20];
+		case KITEM_BOGOSPRING:
+			return kp_bluepogospring[2];
+		case KITEM_NORMALSHIELD:
+			return kp_normalshield[2];
+		case KITEM_MEGACHOPPER:
+			return kp_megachopper[2];
+		case KITEM_ARMASHIELD:
+			return kp_armashield[2];
+		case KITEM_ABURNERJAWZ:		
+			return kp_aburnerjawz[2];
+		case KITEM_PRESSUREMINE:
+			return kp_pressuremine[2];
+		case KITEM_CHAMBLASTER:
+			return kp_chamblaster[2];
+		case KITEM_EGGBLASTER:
+			return kp_eggblaster[2];
+		case KITEM_RINGGUN:
+			return kp_ringgun[2];
+		case KITEM_BUTLERHYU:
+			return kp_butlerhyu[2];
+		case KITEM_OCTUS:
+			return kp_octus[2];
+		case KITEM_ICEDUS:
+			return kp_icedus[5];
+		case KITEM_SLICER:
+			return kp_slicer[2];
+		case KITEM_SOL:
+			return kp_sol[5];
+		case KITEM_RINGCAPBONUS:
+			return kp_ringbonus[((leveltime % (4*3)) / 3) + 8];
+		default:
+			return kp_sadface[1];		//there is no ISPYSAD...
+	}
+}
+
+static patch_t *K_GetSlotPatch_RaceFaces(uint8_t slot)	//SCS ADD
+{
+	switch (slot)
+	{
+		case 6:
+			return kp_jackpot[3];
+		case 5:
+			return kp_seven[3];
+		case 4:
+			return kp_slotring[3];
+		case 3:
+			return kp_triplebar[3];
+		case 2:
+			return kp_doublebar[3];
+		case 1:
+		default:
+			return kp_bar[3];
 	}
 }
 
@@ -2981,7 +3168,7 @@ static void K_drawBackupItem(void)
 	patch_t *localmemer = kp_masteremerald[((leveltime % (6*3)) / 3) + 6 + (tiny ? 5 : 0) + tiny];			//SCS ADD
 	patch_t *localpickpocket = kp_pickpockethyu[((leveltime % (3*3)) / 3) + 9 + (tiny ? 2 : 0) + tiny];		//SCS ADD
 	patch_t *localtimestone = kp_timestone[((leveltime % (10*3)) / 3) + 10 + (tiny ? 9 : 0) + tiny];			//SCS ADD
-	patch_t *localringbonus = kp_ringbonus[((leveltime % (4*3)) / 3) + 4 + (tiny ? 8 : 0) + tiny];			//SCS ADD
+	patch_t *localringbonus = kp_ringbonus[((leveltime % (4*3)) / 3) + 4 + (tiny ? 3 : 0) + tiny];			//SCS ADD
 	int32_t fx = 0, fy = 0, fflags = 0, tx = 0, ty = 0;	// final coords for hud and flags...
 	const int32_t numberdisplaymin = 2;
 	skincolornum_t localcolor[3] = { static_cast<skincolornum_t>(stplyr->skincolor) };
@@ -3093,7 +3280,7 @@ static void K_drawBackupItem(void)
 	dboolean transflag = V_HUDTRANS;
 	
 	// Radio
-	dboolean drawingOnPlayer = (cv_rouletteonplayer.value == 1 && r_splitscreen == 0 && stplyr->itemtype == KITEM_NONE && !stplyr->ringboxdelay);				//SCS - RADIO START			//SCS EDIT - Only draw the backup item next to me while the roulette is spinning
+	dboolean drawingOnPlayer = (cv_rouletteonplayer.value == 1 && r_splitscreen == 0 && stplyr->itemtype == KITEM_NONE && !stplyr->ringboxdelay);	//SCS - RADIO START		//SCS EDIT - Only draw the backup item next to me while the roulette is spinning
 	const fixed_t baseHudScaleFixed = (drawingOnPlayer) ? RR_getItemBoxHudScale() : FRACUNIT;
 	const float_t baseHudScaleFloat = RR_getItemBoxHudScaleFloat();
 	int32_t backupitemflags = transflag|V_SLIDEIN|fflags;
@@ -4031,6 +4218,29 @@ void PositionFacesInfo::draw_1p()
 
 		if (i == strank)
 			V_DrawScaledPatch(FACE_X + (shakeoffset/8), Y, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, kp_facehighlight[(leveltime / 4) % 8]);	//SCS EDIT
+		
+		if (cv_toggle_itemspytype.value == 2 && r_splitscreen < 1)	//SCS ADD START
+		{
+			if (!(gametyperules & GTR_POINTLIMIT) && (players[rankplayer[i]].itemtype != KITEM_NONE || (players[rankplayer[i]].itemRoulette.active && !players[rankplayer[i]].itemRoulette.ringbox)))	//Not playing Battle 
+			{	
+				if (players[rankplayer[i]].itemtype == KITEM_NONE)	//item roulette is spinning...
+					V_DrawMappedPatch(FACE_X + xoff + 9, Y + yoff - 1, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, kp_itemspyportraitrand[(leveltime % (48 - 1))], NULL);
+				else												//item roulette has a result
+					V_DrawMappedPatch(FACE_X + xoff + 9, Y + yoff - 1, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, K_GetItemPatch_RaceFaces(players[rankplayer[i]].itemtype), NULL);
+				
+				if (players[rankplayer[i]].itemamount > 1)
+					V_DrawStringScaled((FACE_X + xoff + 24)<<FRACBITS, (Y + yoff + 9)<<FRACBITS, FRACUNIT, FRACUNIT, FRACUNIT, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, NULL, TINY_FONT, va("x%d", players[rankplayer[i]].itemamount));
+				
+			}
+			else if (players[rankplayer[i]].itemRoulette.active && players[rankplayer[i]].itemRoulette.ringbox == true && !players[rankplayer[i]].ringboxaward)	//slot roulette is spinning...
+			{
+				V_DrawMappedPatch(FACE_X + xoff + 9, Y + yoff - 7, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, kp_itemspyportraitslot[(leveltime % (7 - 1))], NULL);
+			}
+			else if (players[rankplayer[i]].ringboxaward) //slot roulette has a result
+			{
+				V_DrawMappedPatch(FACE_X + xoff + 9, Y + yoff - 7, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, K_GetSlotPatch_RaceFaces(players[rankplayer[i]].ringboxaward), NULL);
+			}				
+		}										//SCS ADD END
 
 		if ((gametyperules & GTR_BUMPERS) && (players[rankplayer[i]].pflags & PF_ELIMINATED))
 			V_DrawScaledPatch(FACE_X-4, Y-3, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, kp_ranknobumpers);
@@ -8058,14 +8268,10 @@ static void K_DrawNameTagItemSpy(int32_t x, int32_t y, player_t *p, int32_t flag
 				box.patch(kp_doublebar[tiny ? 3 : 2]);
 				break;
 			}
-			//default:
 			case 0:												//BAR
-			{
-				box.patch(kp_bar[tiny ? 3 : 2]);
-				break;
-			}
 			default:
 			{
+				box.patch(kp_bar[tiny ? 3 : 2]);
 				break;
 			}
 		}
@@ -8074,39 +8280,35 @@ static void K_DrawNameTagItemSpy(int32_t x, int32_t y, player_t *p, int32_t flag
 	{
 		switch (p->ringboxaward)
 		{
-			case 5:												//JACKPOT
+			case 6:												//JACKPOT
 			{
 				box.patch(kp_jackpot[tiny ? 3 : 2]);
 				break;
 			}
-			case 4:												//7
+			case 5:												//7
 			{
 				box.patch(kp_seven[tiny ? 3 : 2]);
 				break;
 			}
-			case 3:												//RING
+			case 4:												//RING
 			{
 				box.patch(kp_slotring[tiny ? 3 : 2]);
 				break;
 			}
-			case 2:												//BAR x3
+			case 3:												//BAR x3
 			{
 				box.patch(kp_triplebar[tiny ? 3 : 2]);
 				break;
 			}
-			case 1:												//BAR x2
+			case 2:												//BAR x2
 			{
 				box.patch(kp_doublebar[tiny ? 3 : 2]);
 				break;
 			}
-			//default:
-			case 0:												//BAR
-			{
-				box.patch(kp_bar[tiny ? 3 : 2]);
-				break;
-			}
+			case 1:												//BAR
 			default:
 			{
+				box.patch(kp_bar[tiny ? 3 : 2]);
 				break;
 			}
 		}		
@@ -8187,7 +8389,9 @@ static void K_DrawRivalTagForPlayer(fixed_t x, fixed_t y, player_t *p, uint32_t 
 			bary += (vid.height - (BASEVIDHEIGHT * vid.dupy)) / 2;
 		}
 
-		K_DrawNameTagItemSpy(barx, bary, p, flags);
+		if ((gametyperules & GTR_SPHERES) || (cv_toggle_itemspytype.value == 1) || (r_splitscreen >= 1 && cv_toggle_itemspytype.value != 3))	//SCS ADD
+			K_DrawNameTagItemSpy(barx, bary, p, flags);
+			
 	}
 
 	uint8_t blink = ((leveltime / 7) & 1);
@@ -8218,7 +8422,9 @@ static void K_DrawCPUTagForPlayer(fixed_t x, fixed_t y, player_t *p, uint32_t fl
 			bary += (vid.height - (BASEVIDHEIGHT * vid.dupy)) / 2;
 		}
 
-		K_DrawNameTagItemSpy(barx, bary, p, flags);
+		if ((gametyperules & GTR_SPHERES) || (cv_toggle_itemspytype.value == 1) || (r_splitscreen >= 1 && cv_toggle_itemspytype.value != 3))	//SCS ADD
+			K_DrawNameTagItemSpy(barx, bary, p, flags);
+			
 	}
 
 	uint8_t *foecol = R_GetTranslationColormap(TC_RAINBOW, static_cast<skincolornum_t>(SKINCOLOR_RED), GTC_CACHE);
@@ -8287,7 +8493,9 @@ static void K_DrawNameTagForPlayer(fixed_t x, fixed_t y, player_t *p, uint32_t f
 	if ((p->itemtype != KITEM_NONE && p->itemamount != 0)
 		|| (p->itemRoulette.active == true) || (p->ringboxaward)) //&& p->itemRoulette.ringbox == false))	//SCS EDIT - I wanna see the slot roulette too
 	{
-		K_DrawNameTagItemSpy(barx, bary, p, hadflags);
+		if ((gametyperules & GTR_SPHERES) || (cv_toggle_itemspytype.value == 1) || (r_splitscreen >= 1 && cv_toggle_itemspytype.value != 3))	//SCS ADD
+			K_DrawNameTagItemSpy(barx, bary, p, hadflags);
+		
 	}
 
 	if (gametyperules & GTR_SPHERES)

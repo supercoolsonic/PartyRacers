@@ -16065,8 +16065,8 @@ uint32_t K_CalcRingBoxAward(player_t *player, uint32_t Multiplier, dboolean IsSu
 	if (IsSuperJackpot)
 		award = 40;
 	else
-		award = 6*player->ringboxaward + 10;			//SCS bumping up the multiply from 5 to 6 to get better payments. Ringboxes feel so nerfed now, so this might help it feel better.
-
+		award = 6*(max(player->ringboxaward-1, 0)) + 10;		//SCS bumping up the multiply from 5 to 6 to get better payments. Ringboxes feel so nerfed now, so this might help it feel better.		//SCS EDIT - Later - Doing a max check because base value
+																																																						//	 was bumped up by 1 for slot HUD
 	if (!modeattacking)
 		award = 23 * award / 20; // 115% Payout Increase
 	if (!K_ThunderDome())
