@@ -25,16 +25,16 @@ extern "C" {
 
 extern void *GLUhandle;
 
-boolean OglSdlSurface(INT32 w, INT32 h);
+dboolean OglSdlSurface(int32_t w, int32_t h);
 
-void OglSdlFinishUpdate(boolean vidwait);
+void OglSdlFinishUpdate(dboolean vidwait);
 
 extern SDL_GLContext sdlglcontext;
 extern Uint16      realwidth;
 extern Uint16      realheight;
 
 #ifdef HWRENDER
-boolean LoadGL(void);
+dboolean LoadGL(void);
 #endif
 
 #ifdef _CREATE_DLL_

@@ -17,10 +17,10 @@
 
 struct playerkickmenu_s playerkickmenu;
 
-static void M_PlayerMuteHandler(INT32 choice)													//SCS - RADIO START
+static void M_PlayerMuteHandler(int32_t choice)													//SCS - RADIO START
 {
-	const UINT8 pid = 0;
-	boolean playerSelected = false;
+	const uint8_t pid = 0;
+	dboolean playerSelected = false;
 
 	// RadioRacers: Still don't understand this variable.
 	(void)choice;
@@ -75,11 +75,11 @@ static void M_PlayerMuteHandler(INT32 choice)													//SCS - RADIO START
 	} 
 }																									//SCS - RADIO END
 
-static void M_PlayerKickHandler(INT32 choice)
+static void M_PlayerKickHandler(int32_t choice)
 {
-	const UINT8 pid = 0;
+	const uint8_t pid = 0;
 
-	UINT8 kicktype = UINT8_MAX;
+	uint8_t kicktype = UINT8_MAX;
 
 	(void)choice;
 
@@ -224,7 +224,7 @@ menu_t PAUSE_MuteHandlerDef = {
 	NULL,
 };
 
-void M_MuteHandler(INT32 choice)
+void M_MuteHandler(int32_t choice)
 {
 	playerkickmenu.purpose = PKM_MUTE; // RadioRacers: The purpose of the menu is to MUTE players.
 	PAUSE_MuteHandlerDef.prevMenu = currentMenu;
@@ -232,7 +232,7 @@ void M_MuteHandler(INT32 choice)
 	M_SetupNextMenu(&PAUSE_MuteHandlerDef, true);
 }																											//SCS - RADIO END
 
-void M_KickHandler(INT32 choice)
+void M_KickHandler(int32_t choice)
 {
 	playerkickmenu.adminpowered = (choice >= 0);
 	playerkickmenu.purpose = PKM_KICK; // RadioRacers: The purpose of the menu is to KICK players.			//SCS - RADIO

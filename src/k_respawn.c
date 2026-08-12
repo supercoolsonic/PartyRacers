@@ -27,11 +27,11 @@
 #include "radioracers/rr_hud.h"			//SCS - RADIO
 
 /*--------------------------------------------------
-	fixed_t K_RespawnOffset(player_t *player, boolean flip)
+	fixed_t K_RespawnOffset(player_t *player, dboolean flip)
 
 		See header file for description.
 --------------------------------------------------*/
-fixed_t K_RespawnOffset(player_t *player, boolean flip)
+fixed_t K_RespawnOffset(player_t *player, dboolean flip)
 {
 	fixed_t z = 0;
 
@@ -82,7 +82,7 @@ void K_RespawnAtWaypoint(player_t *player, waypoint_t *waypoint)
 	player->respawn.pointx = waypoint->mobj->x;
 	player->respawn.pointy = waypoint->mobj->y;
 	player->respawn.pointz = waypoint->mobj->z;
-	player->respawn.flip = (waypoint->mobj->flags2 & MF2_OBJECTFLIP) ? true : false; // K_RespawnOffset wants a boolean!
+	player->respawn.flip = (waypoint->mobj->flags2 & MF2_OBJECTFLIP) ? true : false; // K_RespawnOffset wants a dboolean!
 	player->respawn.pointz += K_RespawnOffset(player, player->respawn.flip);
 
 	if (waypoint->onaline)
@@ -129,7 +129,7 @@ void K_DoFault(player_t *player)
 --------------------------------------------------*/
 void K_DoIngameRespawn(player_t *player)
 {
-	boolean faultstartfaulting = false;
+	dboolean faultstartfaulting = false;
 
 	if (!player->mo || P_MobjWasRemoved(player->mo))
 	{
@@ -213,14 +213,14 @@ void K_DoIngameRespawn(player_t *player)
 		{
 			waypoint_t *prevWP = player->respawn.wp;
 
-			const UINT32 dist = (player->airtime * 48);
+			const uint32_t dist = (player->airtime * 48);
 			player->respawn.distanceleft = (dist * mapobjectscale) / FRACUNIT;
 
 			K_RespawnAtWaypoint(player, prevWP);
 		}
 		else
 		{
-			const UINT32 dist = RESPAWN_DIST + (player->airtime * 48);
+			const uint32_t dist = RESPAWN_DIST + (player->airtime * 48);
 			player->respawn.distanceleft = (dist * mapobjectscale) / FRACUNIT;
 			K_RespawnAtWaypoint(player, player->respawn.wp);
 		}
@@ -235,7 +235,7 @@ void K_DoIngameRespawn(player_t *player)
 		&& Obj_GetCheckpointRespawnPosition(checkpoint, &pos))
 	{
 		player->respawn.wp = NULL;
-		player->respawn.flip = (checkpoint->flags2 & MF2_OBJECTFLIP) ? true : false; // K_RespawnOffset wants a boolean!
+		player->respawn.flip = (checkpoint->flags2 & MF2_OBJECTFLIP) ? true : false; // K_RespawnOffset wants a dboolean!
 		player->respawn.pointx = pos.x;
 		player->respawn.pointy = pos.y;
 		player->respawn.pointz = pos.z + K_RespawnOffset(player, player->respawn.flip);
@@ -246,9 +246,9 @@ void K_DoIngameRespawn(player_t *player)
 	}
 	else
 	{
-		UINT32 bestdist = UINT32_MAX;
+		uint32_t bestdist = UINT32_MAX;
 		mapthing_t *beststart = NULL;
-		UINT8 numstarts = 0;
+		uint8_t numstarts = 0;
 		mapthing_t **starts;
 
 		if (gametyperules & GTR_BATTLESTARTS)
@@ -264,14 +264,14 @@ void K_DoIngameRespawn(player_t *player)
 
 		if (numstarts > 0)
 		{
-			UINT8 i = 0;
+			uint8_t i = 0;
 
 			if (gametype == GT_TUTORIAL)
 			{
 				// In tutorial, spawnpoints are player ID locked.
 				// ...but returning from Test Track can do funny things,
 				// so we use relative ID instead of literal slot number.
-				UINT8 spos = 0;
+				uint8_t spos = 0;
 				for (; i < MAXPLAYERS; i++)
 				{
 					if (i == player-players)
@@ -285,12 +285,12 @@ void K_DoIngameRespawn(player_t *player)
 			}
 			else for (i = 0; i < numstarts; i++)
 			{
-				UINT32 dist = UINT32_MAX;
+				uint32_t dist = UINT32_MAX;
 				mapthing_t *checkstart = NULL;
 
 				checkstart = starts[i];
 
-				dist = (UINT32)P_AproxDistance((player->mo->x >> FRACBITS) - checkstart->x,
+				dist = (uint32_t)P_AproxDistance((player->mo->x >> FRACBITS) - checkstart->x,
 					(player->mo->y >> FRACBITS) - checkstart->y);
 
 				if (dist < bestdist)
@@ -412,17 +412,17 @@ static void K_MovePlayerToRespawnPoint(player_t *player)
 {
 	const int airCompensation = 128;
 	fixed_t realstepamt = (64 * mapobjectscale);
-	UINT32 returntime = TICRATE;
+	uint32_t returntime = TICRATE;
 	fixed_t stepamt;
 
 	vector3_t dest, step, laser;
 	angle_t stepha, stepva;
 	fixed_t dist, fulldist;
 
-	UINT8 lasersteps = 4;
-	UINT32 laserdist;
+	uint8_t lasersteps = 4;
+	uint32_t laserdist;
 	waypoint_t *laserwp;
-	boolean laserflip;
+	dboolean laserflip;
 
 	/* speed up if in the air for a long time */
 	realstepamt += FixedMul(realstepamt,
@@ -663,7 +663,7 @@ static void K_MovePlayerToRespawnPoint(player_t *player)
 			dest.x = laserwp->mobj->x;
 			dest.y = laserwp->mobj->y;
 			dest.z = laserwp->mobj->z;
-			laserflip = (laserwp->mobj->flags2 & MF2_OBJECTFLIP) ? true : false; // K_RespawnOffset wants a boolean!
+			laserflip = (laserwp->mobj->flags2 & MF2_OBJECTFLIP) ? true : false; // K_RespawnOffset wants a dboolean!
 
 			if (laserflip == true)
 			{
@@ -755,9 +755,9 @@ static void K_DropDashWait(player_t *player)
 
 	if (leveltime % 8 == 0)
 	{
-		const UINT8 ns = 8;
+		const uint8_t ns = 8;
 		const angle_t sidediff = FixedAngle((360 / ns) * FRACUNIT);
-		UINT8 i;
+		uint8_t i;
 
 		if (!mapreset)
 		{
@@ -803,7 +803,7 @@ static void K_DropDashWait(player_t *player)
 
 
 /*--------------------------------------------------
-	static boolean K_CanDropDash(player_t *player)
+	static dboolean K_CanDropDash(player_t *player)
 
 		Checks if you can use the Drop Dash maneuver.
 
@@ -813,9 +813,9 @@ static void K_DropDashWait(player_t *player)
 	Return:-
 		Whether a Drop Dash should be allowed.
 --------------------------------------------------*/
-static boolean K_CanDropDash(player_t *player)
+static dboolean K_CanDropDash(player_t *player)
 {
-	const UINT16 buttons = K_GetKartButtons(player);
+	const uint16_t buttons = K_GetKartButtons(player);
 
 	if (!(buttons & BT_ACCELERATE))
 	{
@@ -851,7 +851,7 @@ static boolean K_CanDropDash(player_t *player)
 --------------------------------------------------*/
 static void K_HandleDropDash(player_t *player)
 {
-	const UINT16 buttons = K_GetKartButtons(player);
+	const uint16_t buttons = K_GetKartButtons(player);
 
 	if (player->growshrinktimer < 0)
 	{

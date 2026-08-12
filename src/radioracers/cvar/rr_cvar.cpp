@@ -16,11 +16,11 @@
 
 void KartLocalEncore_OnChange(void)
 {
-    localencore = (boolean)cv_applylocalencore.value;
+    localencore = (dboolean)cv_applylocalencore.value;
     CONS_Printf(M_GetText("Encore Mode palettes will be \x82%s\x80 next round.\n"), cv_applylocalencore.string);
 }
 
-static boolean FakeNetCvar_OnChange(consvar_t* cvar)
+static dboolean FakeNetCvar_OnChange(consvar_t* cvar)
 {
     if (netgame && !cvar->enablefornetgames) {
         CONS_Alert(
@@ -52,7 +52,7 @@ void KartHaki_OnChange(void)
         return;
     }
 	
-    hakimode = (boolean)cv_applyhaki.value;
+    hakimode = (dboolean)cv_applyhaki.value;
 
     if (hakimode == 1) {
         // Missing the lump needed for this effect to work!
@@ -83,7 +83,7 @@ void AccessibilityRings_OnChange(void)
 
 void KartExtraPowerSound_OnChange(void)
 {
-    boolean extra_power_sound = (boolean)cv_powersoundjoke.value;
+    dboolean extra_power_sound = (dboolean)cv_powersoundjoke.value;
     if (extra_power_sound)
     {
         if ((!found_radioracers || radio_last_powerup_jingle_sound == sfx_None) ) {
@@ -105,9 +105,9 @@ static void resetCvarWithNotice(consvar_t *cvar) {
     CV_StealthSetValue(cvar, 0);
 }
 
-static boolean RR_MissingWad_OnChange(consvar_t *cvar)
+static dboolean RR_MissingWad_OnChange(consvar_t *cvar)
 {
-    boolean enabled = (boolean)cvar->value;
+    dboolean enabled = (dboolean)cvar->value;
     if (!found_radioracers && enabled) {
         CONS_Alert(
             CONS_NOTICE,
@@ -126,7 +126,7 @@ void RR_ObviousTripwire_OnChange(void) {
 }
 
 void RR_Hudfeed_OnChange(void) {
-    boolean enabled = (boolean)(cv_hudfeed_enabled.value);
+    dboolean enabled = (dboolean)(cv_hudfeed_enabled.value);
     if (enabled) {
         if (!found_radioracers || !radioracers_usehudfeed) {
             resetCvarWithNotice(&cv_hudfeed_enabled);

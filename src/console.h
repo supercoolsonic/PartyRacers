@@ -24,17 +24,17 @@ extern "C" {
 
 void CON_Init(void);
 
-boolean CON_Responder(event_t *ev);
+dboolean CON_Responder(event_t *ev);
 
 #ifdef HAVE_THREADS
 extern I_mutex con_mutex;
 #endif
 
 // set true when screen size has changed, to adapt console
-extern boolean con_recalc;
+extern dboolean con_recalc;
 
 // console being displayed at game startup
-extern boolean con_startup;
+extern dboolean con_startup;
 
 // when modifying the below, you must also adjust d_main and console.c
 typedef enum
@@ -56,26 +56,26 @@ typedef enum
 extern con_loadprogress_t con_startup_loadprogress;
 
 // top clip value for view render: do not draw part of view hidden by console
-extern INT32 con_clipviewtop;
+extern int32_t con_clipviewtop;
 
 // 0 means console if off, or moving out
-extern INT32 con_destlines;
+extern int32_t con_destlines;
 
-extern INT32 con_clearlines; // lines of top of screen to refresh
-extern boolean con_hudupdate; // hud messages have changed, need refresh
-extern UINT32 con_scalefactor; // console text scale factor
+extern int32_t con_clearlines; // lines of top of screen to refresh
+extern dboolean con_hudupdate; // hud messages have changed, need refresh
+extern uint32_t con_scalefactor; // console text scale factor
 
 extern consvar_t cons_hudtime, cons_hudlines, cons_speed, cons_height, cons_backpic, cons_backcolor;
 
-extern UINT8 *yellowmap, *purplemap, *greenmap, *bluemap, *graymap, *redmap, *orangemap,\
+extern uint8_t *yellowmap, *purplemap, *greenmap, *bluemap, *graymap, *redmap, *orangemap,\
  *skymap, *goldmap, *lavendermap, *aquamap, *magentamap, *pinkmap, *brownmap, *tanmap;
 
 // Console bg color (auto updated to match)
-extern UINT8 *consolebgmap;
-extern UINT8 *promptbgmap;
+extern uint8_t *consolebgmap;
+extern uint8_t *promptbgmap;
 
-INT32 CON_ShiftChar(INT32 ch);
-void CON_SetupBackColormapEx(INT32 color, boolean prompt);
+int32_t CON_ShiftChar(int32_t ch);
+void CON_SetupBackColormapEx(int32_t color, dboolean prompt);
 void CON_SetupBackColormap(void);
 void CON_ClearHUD(void); // clear heads up messages
 
@@ -87,7 +87,7 @@ void CONS_Error(const char *msg); // print out error msg, and wait a key
 void CON_ToggleOff(void);
 
 // Is console down?
-boolean CON_Ready(void);
+dboolean CON_Ready(void);
 
 void CON_LogMessage(const char *msg);
 

@@ -82,7 +82,7 @@ void Obj_SpawnArmaShieldVisuals(mobj_t *shield)
 	Visual::spawn(static_cast<Shield*>(shield));
 }
 
-boolean Obj_TickArmaShieldVisual(mobj_t *mobj)
+dboolean Obj_TickArmaShieldVisual(mobj_t *mobj)
 {
 	return static_cast<Visual*>(mobj)->tick();
 }

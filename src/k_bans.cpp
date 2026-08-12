@@ -60,7 +60,7 @@ static void load_bans_array_v1(const JsonArray& array)
 		srb2::String public_key = object.at("public_key").get<srb2::String>();
 		srb2::String ip_address = object.at("ip_address").get<srb2::String>();
 		time_t expires = object.at("expires").get<int64_t>();
-		UINT8 subnet_mask = object.at("subnet_mask").get<UINT8>();
+		uint8_t subnet_mask = object.at("subnet_mask").get<uint8_t>();
 		srb2::String username = object.at("username").get<srb2::String>();
 		srb2::String reason = object.at("reason").get<srb2::String>();
 
@@ -189,7 +189,7 @@ void SV_SaveBans(void)
 }
 
 mysockaddr_t convertedaddress;
-static mysockaddr_t* SV_NodeToBanAddress(UINT8 node)
+static mysockaddr_t* SV_NodeToBanAddress(uint8_t node)
 {
 	convertedaddress = SOCK_DirectNodeToAddr(node);
 
@@ -209,7 +209,7 @@ static mysockaddr_t* SV_NodeToBanAddress(UINT8 node)
 	return &convertedaddress;
 }
 
-static boolean SV_IsBanEnforced(banrecord_t *ban)
+static dboolean SV_IsBanEnforced(banrecord_t *ban)
 {
 	if (ban->deleted)
 		return false;
@@ -218,7 +218,7 @@ static boolean SV_IsBanEnforced(banrecord_t *ban)
 	return true;
 }
 
-banrecord_t* SV_GetBanByAddress(UINT8 node)
+banrecord_t* SV_GetBanByAddress(uint8_t node)
 {
 	mysockaddr_t* address = SV_NodeToBanAddress(node);
 
@@ -235,7 +235,7 @@ banrecord_t* SV_GetBanByAddress(UINT8 node)
 
 banrecord_t* SV_GetBanByKey(uint8_t* key)
 {
-	UINT32 hash;
+	uint32_t hash;
 
 	hash = quickncasehash((char*) key, PUBKEYLENGTH);
 
@@ -254,10 +254,10 @@ banrecord_t* SV_GetBanByKey(uint8_t* key)
 	return NULL;
 }
 
-void SV_BanPlayer(INT32 pnum, time_t minutes, char* reason)
+void SV_BanPlayer(int32_t pnum, time_t minutes, char* reason)
 {
 	mysockaddr_t targetaddress;
-	UINT8 node = playernode[pnum];
+	uint8_t node = playernode[pnum];
 	time_t expires = 0;
 
 	memcpy(&targetaddress, SV_NodeToBanAddress(node), sizeof(mysockaddr_t));
@@ -268,7 +268,7 @@ void SV_BanPlayer(INT32 pnum, time_t minutes, char* reason)
 	SV_Ban(targetaddress, 0, players[pnum].public_key, expires, player_names[pnum], reason);
 }
 
-boolean SV_BanIP(const char *address, UINT8 mask, uint8_t* public_key, time_t expires, const char* username, const char* reason)
+dboolean SV_BanIP(const char *address, uint8_t mask, uint8_t* public_key, time_t expires, const char* username, const char* reason)
 {
 	struct my_addrinfo *ai, *runp, hints;
 
@@ -296,7 +296,7 @@ boolean SV_BanIP(const char *address, UINT8 mask, uint8_t* public_key, time_t ex
 
 static char noreason[] = "N/A";
 static char nouser[] = "[Direct IP ban]";
-void SV_Ban(mysockaddr_t address, UINT8 mask, uint8_t* public_key, time_t expires, const char* username, const char* reason)
+void SV_Ban(mysockaddr_t address, uint8_t mask, uint8_t* public_key, time_t expires, const char* username, const char* reason)
 {
 	if (reason == NULL || strlen(reason) == 0)
 		reason = noreason;
@@ -323,7 +323,7 @@ void SV_Ban(mysockaddr_t address, UINT8 mask, uint8_t* public_key, time_t expire
 	SV_SaveBans();
 }
 
-static void SV_BanSearch(boolean remove)
+static void SV_BanSearch(dboolean remove)
 {
 	const char* filtertarget = (COM_Argc() > 1) ? COM_Argv(1) : NULL;
 
@@ -334,9 +334,9 @@ static void SV_BanSearch(boolean remove)
 	}
 
 	time_t now = time(NULL);
-	UINT32 records = 0;
-	UINT32 matchedrecords = 0;
-	boolean force = COM_CheckPartialParm("-f");
+	uint32_t records = 0;
+	uint32_t matchedrecords = 0;
+	dboolean force = COM_CheckPartialParm("-f");
 
 	// First pass: What records are we even looking for?
 	for (banrecord_t& ban : bans)
@@ -359,7 +359,7 @@ static void SV_BanSearch(boolean remove)
 		matchedrecords++;
 	}
 
-	boolean saferemove = remove && (matchedrecords <= 1 || force);
+	dboolean saferemove = remove && (matchedrecords <= 1 || force);
 
 	// Second pass: Report and/or act on records.
 	for (banrecord_t& ban : bans)
@@ -450,7 +450,7 @@ void Command_BanIP(void)
 	if (COM_Argc() > 2)
 		strncpy(reason, COM_Argv(2), MAXBANREASON);
 
-	UINT8 nummask = atoi(mask);
+	uint8_t nummask = atoi(mask);
 
 	if (SV_BanIP(address, nummask, NULL, 0, NULL, reason))
 	{

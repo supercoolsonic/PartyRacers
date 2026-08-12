@@ -253,7 +253,7 @@ endif()
 
 if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 	target_compile_definitions(SRB2SDL2 PRIVATE -DLINUX)
-	if(${SRB2_SYSTEM_BITS} EQUAL 8)
+	if(CMAKE_SIZEOF_VOID_P EQUAL 8)
 		target_compile_definitions(SRB2SDL2 PRIVATE -DLINUX64)
 	endif()
 endif()

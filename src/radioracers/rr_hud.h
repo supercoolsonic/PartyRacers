@@ -39,8 +39,8 @@ typedef struct
     int atlas_column;
 
     char name[EMOTE_NAME_SIZE+1];
-    boolean animated;
-    INT32 frame_delay; 
+    dboolean animated;
+    int32_t frame_delay; 
     lumpnum_t* frames;
     size_t frame_count;
     char rank[2];       // A? B? C? D? E? ... S?
@@ -109,72 +109,72 @@ extern "C" {
 #define EMOTE_FAVOURITES_FILE "rr_favemotes.txt" // accidentially named this fortnite.txt
 
 // For the chat
-extern boolean is_emote_preview_on;
-extern boolean is_emote_menu_on;
+extern dboolean is_emote_preview_on;
+extern dboolean is_emote_menu_on;
 
 typedef struct
 {
-    UINT32 chat_nummsg_log;
+    uint32_t chat_nummsg_log;
 
-    INT32 charheight;
-    INT32 x;
-    INT32 y;
-    INT32 chat_topy;
-    INT32 chat_bottomy;
+    int32_t charheight;
+    int32_t x;
+    int32_t y;
+    int32_t chat_topy;
+    int32_t chat_bottomy;
 
-    INT32 boxw;
+    int32_t boxw;
     fixed_t scale;
-    INT32 flags;
+    int32_t flags;
     char (*chat_log)[255]; // Yuck
 } chat_log_parameters_t;
 
 typedef struct
 {
-    INT32 charheight;
-    INT32 *x;
-    INT32 *y;
+    int32_t charheight;
+    int32_t *x;
+    int32_t *y;
 
-    INT32 boxw;
+    int32_t boxw;
     fixed_t scale;
-    UINT32 chat_nummsg_min;
+    uint32_t chat_nummsg_min;
 } chat_mini_log_parameters_t;
 
 typedef struct
 {
-    INT16 x;
-    INT16 y;
-    INT16 typelines;
-    INT32 charheight;
+    int16_t x;
+    int16_t y;
+    int16_t typelines;
+    int32_t charheight;
 } chat_box_parameters_t;
 
 typedef struct
 {
-    INT32 boxw;
+    int32_t boxw;
     fixed_t scale;
-    INT32 flags;
-    INT32 y;
-    INT32 chatx;
-    INT32 charheight;
+    int32_t flags;
+    int32_t y;
+    int32_t chatx;
+    int32_t charheight;
     const char* talk;
 } chat_input_parameters_t;
 
-extern void RR_UpdateEmoteChatLogs(UINT32 chat_mini_log, UINT32 chat_log);
-extern void RR_RemoveEmoteChatMiniLog(UINT32 chat_mini_log);
-extern void RR_RemoveEmoteChatLog(UINT32 chat_log);
+extern void RR_UpdateEmoteChatLogs(uint32_t chat_mini_log, uint32_t chat_log);
+extern void RR_RemoveEmoteChatMiniLog(uint32_t chat_mini_log);
+extern void RR_RemoveEmoteChatLog(uint32_t chat_log);
 extern void RR_UpdateEmoteChatInputLog(void);
 extern void RR_RemoveEmoteChatInputLog(void);
-extern INT32 RR_Parse_ChatLog(chat_log_parameters_t parameters);
+extern int32_t RR_Parse_ChatLog(chat_log_parameters_t parameters);
 extern void RR_Draw_ChatMiniLog(chat_mini_log_parameters_t parameters);
-extern INT16 RR_DrawChatInput(chat_input_parameters_t p, INT32 *y);
-extern boolean RR_CheckChatDeleteEmoteForInput(void);
-extern INT32 RR_Parse_ChatMiniLog_For_Lines(
+extern int16_t RR_DrawChatInput(chat_input_parameters_t p, int32_t *y);
+extern dboolean RR_CheckChatDeleteEmoteForInput(void);
+extern int32_t RR_Parse_ChatMiniLog_For_Lines(
     size_t i, 
     fixed_t scale,
-    INT32 boxw
+    int32_t boxw
 );
-extern void RR_CheckChatInputForEmotePreview(INT32 c);
+extern void RR_CheckChatInputForEmotePreview(int32_t c);
 extern void RR_CheckChatDeleteForEmotePreview(void);
-extern void RR_CheckChatInputForEmoteMenu(INT32 c);
+extern void RR_CheckChatInputForEmoteMenu(int32_t c);
 extern void RR_CheckChatDeleteForEmoteMenu(void);
 extern void RR_CheckChatEnterforEmoteMenu(void);
 extern void RR_ToggleEmoteMenu(void);
@@ -185,15 +185,15 @@ extern void RR_ResetEmoteMenuInfo(void);
 extern void RR_ResetAllEmoteChatInfo(void);
 extern void RR_SelectEmoteFromPreview(void);
 extern void RR_DrawChatEmotePreview(
-    INT16 x,
-    INT16 y,
-    INT32 w
+    int16_t x,
+    int16_t y,
+    int32_t w
 );
 extern void RR_DrawChatEmoteMenu(
-    INT16 x,
-    INT16 y
+    int16_t x,
+    int16_t y
 );
-extern void RR_CheckEmoteMenuMovement(INT32 c);
+extern void RR_CheckEmoteMenuMovement(int32_t c);
 extern void RR_EmoteUsageCheckOnSend(const char* msg);
 extern void RR_UpdateFavouriteEmotes(void);
 
@@ -210,7 +210,7 @@ typedef struct
 {
     fixed_t x;
     fixed_t y;
-    boolean valid_coords;
+    dboolean valid_coords;
 } itembox_tracking_coordinates_t;
 
 typedef struct 
@@ -224,7 +224,7 @@ typedef struct
 extern void RR_EmoteTally_Tick(void);
 
 // Mini HUD
-extern INT32 LAPS_MINI_Y;
+extern int32_t LAPS_MINI_Y;
 
 /**
  * HUD TRACKING
@@ -266,8 +266,8 @@ extern void RR_drawKartEmeralds(void);
  * Tally
  */
 extern void RR_InitGradeEmoteTally(void);
-extern boolean RR_ShouldDrawEmoteTally(void);
-extern boolean RR_IsEmoteTallyPossible(gp_rank_e grade);
+extern dboolean RR_ShouldDrawEmoteTally(void);
+extern dboolean RR_IsEmoteTallyPossible(gp_rank_e grade);
 
 /**
  * Race HUD
@@ -300,8 +300,8 @@ void RR_DrawGradeEmote(player_grade_info_t grade_info);
 /**
  * Timer
  */
-extern void RR_DrawKartMiniTimestamp(tic_t drawtime, INT32 TX, INT32 TY, INT32 splitflags, UINT8 mode);
-extern void RR_DrawMiniTimestamp(tic_t time, INT32 x, INT32 y, INT32 flags, float sc);
+extern void RR_DrawKartMiniTimestamp(tic_t drawtime, int32_t TX, int32_t TY, int32_t splitflags, uint8_t mode);
+extern void RR_DrawMiniTimestamp(tic_t time, int32_t x, int32_t y, int32_t flags, float sc);
 
 /**
  * Item timers
@@ -350,11 +350,11 @@ typedef enum
     EVENT_GRADE
 } globalfeedevent_t;
 
-extern void RR_PushPlayerDamageToFeed(mobj_t *source, mobj_t *target, mobj_t *inflictor, UINT8 amps);
+extern void RR_PushPlayerDamageToFeed(mobj_t *source, mobj_t *target, mobj_t *inflictor, uint8_t amps);
 extern void RR_PushPlayerDeathToFeed(mobj_t *source, mobj_t *target, mobj_t *inflictor);
-extern void RR_PushPlayerInteractionToFeed(mobj_t *source, mobj_t *target, playerattacks_t attack, UINT8 amps);
+extern void RR_PushPlayerInteractionToFeed(mobj_t *source, mobj_t *target, playerattacks_t attack, uint8_t amps);
 extern void RR_PushGlobalEventToFeed(player_t* player, globalfeedevent_t event);
-extern void RR_PushGlobalGradeEventToFeed(player_t* player, gp_rank_e rank, boolean perfectRace);
+extern void RR_PushGlobalGradeEventToFeed(player_t* player, gp_rank_e rank, dboolean perfectRace);
 extern void RR_PushGlobalFaultEventToFeed(player_t* player);
 extern void RR_DrawHudFeed(void);
 extern void RR_TickHudFeed(void);

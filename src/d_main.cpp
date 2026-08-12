@@ -118,16 +118,16 @@ extern "C" consvar_t cv_lua_profile, cv_menuframeskip;
 int    VERSION;
 int SUBVERSION;
 
-UINT8 comprevision_abbrev_bin[GIT_SHA_ABBREV];
+uint8_t comprevision_abbrev_bin[GIT_SHA_ABBREV];
 
 #ifdef HAVE_DISCORDRPC
 #include "discord.h"
 #endif
 
 // platform independant focus loss
-UINT8 window_notinfocus = false;
-INT32 window_x;
-INT32 window_y;
+uint8_t window_notinfocus = false;
+int32_t window_x;
+int32_t window_y;
 
 //
 // DEMO LOOP
@@ -139,30 +139,30 @@ static initmultiplefilesentry_t optionalwads[MAX_WADFILES];		//SCS - RADIO
 static size_t num_startuppwads = 0;
 static initmultiplefilesentry_t startuppwads[MAX_WADFILES];
 
-boolean devparm = false; // started game with -devparm
+dboolean devparm = false; // started game with -devparm
 
-boolean g_singletics = false; // timedemo
-boolean lastdraw = false;
+dboolean g_singletics = false; // timedemo
+dboolean lastdraw = false;
 
 tic_t g_fast_forward = 0;
 tic_t g_fast_forward_clock_stop = INFTICS;
 
 postimg_t postimgtype[MAXSPLITSCREENPLAYERS];
-INT32 postimgparam[MAXSPLITSCREENPLAYERS];
+int32_t postimgparam[MAXSPLITSCREENPLAYERS];
 
 // These variables are in effect
 // whether the respective sound system is disabled
 // or they're init'ed, but the player just toggled them
 
-boolean sound_disabled = false;
-boolean digital_disabled = false;
-boolean g_voice_disabled = false;
+dboolean sound_disabled = false;
+dboolean digital_disabled = false;
+dboolean g_voice_disabled = false;
 
 #ifdef DEBUGFILE
-INT32 debugload = 0;
+int32_t debugload = 0;
 #endif
 
-UINT16 numskincolors = SKINCOLOR_FIRSTFREESLOT;
+uint16_t numskincolors = SKINCOLOR_FIRSTFREESLOT;
 menucolor_t *menucolorhead, *menucolortail;
 
 char savegamename[256];
@@ -170,7 +170,7 @@ char gpbackup[256];
 
 char srb2home[256] = ".";
 char srb2path[256] = ".";
-boolean usehome = true;
+dboolean usehome = true;
 const char *pandf = "%s" PATHSEP "%s";
 const char *spandf = "%s" PATHSEP "%s" PATHSEP "%s"; // subdirs wooo
 char addonsdir[MAX_WADPATH];
@@ -184,9 +184,9 @@ char downloaddir[sizeof addonsdir + sizeof DOWNLOADDIR_PART] = "DOWNLOAD";
 // referenced from i_system.c for I_GetKey()
 
 event_t events[MAXEVENTS];
-INT32 eventhead, eventtail;
+int32_t eventhead, eventtail;
 
-boolean dedicated = false;
+dboolean dedicated = false;
 
 //
 // D_PostEvent
@@ -200,10 +200,10 @@ void D_PostEvent(const event_t *ev)
 
 // modifier keys
 // Now handled in I_OsPolling
-UINT8 shiftdown = 0; // 0x1 left, 0x2 right
-UINT8 ctrldown = 0; // 0x1 left, 0x2 right
-UINT8 altdown = 0; // 0x1 left, 0x2 right
-boolean capslock = 0;	// gee i wonder what this does.
+uint8_t shiftdown = 0; // 0x1 left, 0x2 right
+uint8_t ctrldown = 0; // 0x1 left, 0x2 right
+uint8_t altdown = 0; // 0x1 left, 0x2 right
+dboolean capslock = 0;	// gee i wonder what this does.
 
 static void HandleGamepadDeviceAdded(event_t *ev)
 {
@@ -226,11 +226,11 @@ static void HandleGamepadDeviceRemoved(event_t *ev)
 	I_Assert(ev->type == ev_gamepad_device_removed);
 	CONS_Alert(CONS_NOTICE, "Gamepad device %d disconnected\n", ev->device);
 
-	boolean playerinterrupted = false;
+	dboolean playerinterrupted = false;
 
 	for (i = 0; i < MAXSPLITSCREENPLAYERS; i++)
 	{
-		INT32 device = G_GetDeviceForPlayer(i);
+		int32_t device = G_GetDeviceForPlayer(i);
 		if (device == ev->device)
 		{
 			G_SetDeviceForPlayer(i, -1);
@@ -269,12 +269,12 @@ void HandleGamepadDeviceEvents(event_t *ev)
 // D_ProcessEvents
 // Send all the events of the given timestamp down the responder chain
 //
-void D_ProcessEvents(boolean callresponders)
+void D_ProcessEvents(dboolean callresponders)
 {
 	event_t *ev;
 	int i;
 
-	boolean eaten;
+	dboolean eaten;
 
 	G_ResetAllDeviceResponding();
 
@@ -282,8 +282,8 @@ void D_ProcessEvents(boolean callresponders)
 	// eventhead was evaluating true when they were equal,
 	// but only when using the Y button to restart a Time
 	// Attack??
-	INT32 tail = eventtail;
-	INT32 head = eventhead;
+	int32_t tail = eventtail;
+	int32_t head = eventhead;
 
 	eventtail = eventhead;
 
@@ -349,16 +349,16 @@ void D_ProcessEvents(boolean callresponders)
 // added comment : there is a wipe eatch change of the gamestate
 gamestate_t wipegamestate = GS_LEVEL;
 // -1: Default; 0-n: Wipe index; INT16_MAX: do not wipe
-INT16 wipetypepre = -1;
-INT16 wipetypepost = -1;
+int16_t wipetypepre = -1;
+int16_t wipetypepost = -1;
 
 static bool D_Display(bool world)
 {
 	bool ranwipe = false;
-	boolean forcerefresh = false;
-	static boolean wipe = false;
-	INT32 wipedefindex = 0;
-	UINT8 i;
+	dboolean forcerefresh = false;
+	static dboolean wipe = false;
+	int32_t wipedefindex = 0;
+	uint8_t i;
 
 	ZoneScoped;
 
@@ -675,7 +675,7 @@ static bool D_Display(bool world)
 
 				if (demo.attract == DEMO_ATTRACT_CREDITS)
 				{
-					INT32 val = F_CreditsDemoExitFade();
+					int32_t val = F_CreditsDemoExitFade();
 					if (val >= 0)
 					{
 						V_DrawCustomFadeScreen("FADEMAP0", val);
@@ -683,7 +683,7 @@ static bool D_Display(bool world)
 				}
 				else if (demo.attract == DEMO_ATTRACT_TITLE)
 				{
-					if (INT32 fade = F_AttractDemoExitFade())
+					if (int32_t fade = F_AttractDemoExitFade())
 					{
 						V_DrawCustomFadeScreen("FADEMAP0", fade);
 					}
@@ -862,8 +862,8 @@ void D_SRB2Loop(void)
 	double deltatics = 0.0;
 	double deltasecs = 0.0;
 
-	boolean interp = false;
-	boolean doDisplay = false;
+	dboolean interp = false;
+	dboolean doDisplay = false;
 	int frameskip = 0;
 	bool skiplaggyworld = false;
 	double sincelastworld = 0.0;
@@ -1044,7 +1044,7 @@ void D_SRB2Loop(void)
 			{
 				auto none_freecam = []
 				{
-					for (UINT8 i = 0; i <= r_splitscreen; ++i)
+					for (uint8_t i = 0; i <= r_splitscreen; ++i)
 					{
 						if (camera[i].freecam || (players[displayplayers[i]].spectator && !K_DirectorIsAvailable(i)))
 							return false;
@@ -1109,7 +1109,7 @@ void D_SRB2Loop(void)
 
 		// Use the time before sleep for frameskip calculations:
 		// post-sleep time is literally being intentionally wasted
-		deltasecs = (double)((INT64)(finishprecise - enterprecise)) / I_GetPrecisePrecision();
+		deltasecs = (double)((int64_t)(finishprecise - enterprecise)) / I_GetPrecisePrecision();
 		deltatics = deltasecs * NEWTICRATE;
 
 		// If time spent this game loop exceeds a single tic,
@@ -1188,19 +1188,19 @@ void D_SRB2Loop(void)
 
 		if (!singletics)
 		{
-			INT64 elapsed = (INT64)(finishprecise - enterprecise);
+			int64_t elapsed = (int64_t)(finishprecise - enterprecise);
 
 			// in the case of "match refresh rate" + vsync, don't sleep at all
-			const boolean vsync_with_match_refresh = cv_vidwait.value && cv_fpscap.value == 0;
+			const dboolean vsync_with_match_refresh = cv_vidwait.value && cv_fpscap.value == 0;
 
-			if (elapsed > 0 && (INT64)capbudget > elapsed && !vsync_with_match_refresh)
+			if (elapsed > 0 && (int64_t)capbudget > elapsed && !vsync_with_match_refresh)
 			{
 				I_SleepDuration(capbudget - (finishprecise - enterprecise));
 			}
 		}
 		// Capture the time once more to get the real delta time.
 		finishprecise = I_GetPreciseTime();
-		deltasecs = (double)((INT64)(finishprecise - enterprecise)) / I_GetPrecisePrecision();
+		deltasecs = (double)((int64_t)(finishprecise - enterprecise)) / I_GetPrecisePrecision();
 		deltatics = deltasecs * NEWTICRATE;
 	}
 }
@@ -1214,7 +1214,7 @@ void D_SRB2Loop(void)
 //
 void D_ClearState(void)
 {
-	INT32 i;
+	int32_t i;
 
 	// okay, stop now
 	// (otherwise the game still thinks we're playing!)
@@ -1287,7 +1287,7 @@ void D_ClearState(void)
 	demo.waitingfortally = false;
 }
 
-static boolean g_deferredtitle = false;
+static dboolean g_deferredtitle = false;
 
 //
 // D_StartTitle
@@ -1304,12 +1304,12 @@ void D_StartTitle(void)
 	g_deferredtitle = false;
 }
 
-void D_SetDeferredStartTitle(boolean deferred)
+void D_SetDeferredStartTitle(dboolean deferred)
 {
 	g_deferredtitle = deferred;
 }
 
-boolean D_IsDeferredStartTitle(void)
+dboolean D_IsDeferredStartTitle(void)
 {
 	return g_deferredtitle;
 }
@@ -1385,7 +1385,7 @@ static void ChangeDirForUrlHandler(void)
 // Identify the SRB2 version, and IWAD file to use.
 // ==========================================================================
 
-static boolean AddIWAD(void)
+static dboolean AddIWAD(void)
 {
 	char * path = va(pandf,srb2path,"bios.pk3");
 
@@ -1499,7 +1499,7 @@ static void IdentifyVersion(void)
 static void
 D_AbbrevCommit (void)
 {
-	UINT8 i;
+	uint8_t i;
 
 	for (i = 0; i < GIT_SHA_ABBREV; ++i)
 	{
@@ -1549,14 +1549,14 @@ static void Command_crash(void)
 //
 void D_SRB2Main(void)
 {
-	INT32 i, j, p;
+	int32_t i, j, p;
 #ifdef DEVELOP
-	INT32 pstartmap = 1; // default to first loaded map (Test Run)
+	int32_t pstartmap = 1; // default to first loaded map (Test Run)
 #else
-	INT32 pstartmap = 0; // default to random map (0 is not a valid map number)
+	int32_t pstartmap = 0; // default to random map (0 is not a valid map number)
 #endif
-	boolean autostart = false;
-	INT32 newgametype = -1;
+	dboolean autostart = false;
+	int32_t newgametype = -1;
 
 	/* break the version string into version numbers, for netplay */
 	D_ConvertVersionNumbers();
@@ -1806,7 +1806,7 @@ void D_SRB2Main(void)
 	W_InitMultipleFiles(optionalwads, num_optionalwads, false);
 	D_CleanFile(optionalwads, num_optionalwads);
 	
-	UINT16 optionalwads_count = numwadfiles - num_optionalwads;
+	uint16_t optionalwads_count = numwadfiles - num_optionalwads;
 	if(found_radioracers)
 	{
 		wadfiles[optionalwads_count++]->important = false;
@@ -2057,7 +2057,7 @@ void D_SRB2Main(void)
 	// Set up splitscreen players before joining!
 	if (!dedicated && (M_CheckParm("-splitscreen") && M_IsNextParm()))
 	{
-		UINT8 num = atoi(M_GetNextParm());
+		uint8_t num = atoi(M_GetNextParm());
 		if (num >= 1 && num <= 4)
 		{
 			CV_StealthSetValue(&cv_splitplayers, num);
@@ -2160,7 +2160,7 @@ void D_SRB2Main(void)
 			profile_t *pr = PR_GetProfile(cv_ttlprofilen.value);
 			if (pr != NULL)
 			{
-				INT32 importskin = R_SkinAvailableEx(pr->skinname, false);
+				int32_t importskin = R_SkinAvailableEx(pr->skinname, false);
 				if (importskin != -1)
 				{
 					skins[importskin]->records.wins = pr->wins;
@@ -2203,22 +2203,22 @@ void D_SRB2Main(void)
 
 		if (M_CheckParm("-profile"))
 		{
-			UINT8 num = atoi(M_GetNextParm());
+			uint8_t num = atoi(M_GetNextParm());
 			PR_ApplyProfile(num, 0);
 		}
 		if (M_CheckParm("-profile2"))
 		{
-			UINT8 num = atoi(M_GetNextParm());
+			uint8_t num = atoi(M_GetNextParm());
 			PR_ApplyProfile(num, 1);
 		}
 		if (M_CheckParm("-profile3"))
 		{
-			UINT8 num = atoi(M_GetNextParm());
+			uint8_t num = atoi(M_GetNextParm());
 			PR_ApplyProfile(num, 2);
 		}
 		if (M_CheckParm("-profile4"))
 		{
-			UINT8 num = atoi(M_GetNextParm());
+			uint8_t num = atoi(M_GetNextParm());
 			PR_ApplyProfile(num, 3);
 		}
 	}
@@ -2249,7 +2249,7 @@ void D_SRB2Main(void)
 			{
 				j = atoi(sgametype); // assume they gave us a gametype number, which is okay too
 				if (j >= 0 && j < numgametypes)
-					newgametype = (INT16)j;
+					newgametype = (int16_t)j;
 			}
 
 			if (newgametype != -1)
@@ -2262,14 +2262,14 @@ void D_SRB2Main(void)
 
 		if (M_CheckParm("-skill") && M_IsNextParm())
 		{
-			INT16 newskill = -1;
+			int16_t newskill = -1;
 			const char *sskill = M_GetNextParm();
 
 			for (j = 0; gpdifficulty_cons_t[j].strvalue; j++)
 			{
 				if (!strcasecmp(gpdifficulty_cons_t[j].strvalue, sskill))
 				{
-					newskill = (INT16)gpdifficulty_cons_t[j].value;
+					newskill = (int16_t)gpdifficulty_cons_t[j].value;
 					break;
 				}
 			}
@@ -2278,7 +2278,7 @@ void D_SRB2Main(void)
 			{
 				j = atoi(sskill); // assume they gave us a skill number, which is okay too
 				if (j >= KARTSPEED_EASY && j <= KARTGP_MASTER)
-					newskill = (INT16)j;
+					newskill = (int16_t)j;
 			}
 
 			// Invalidate if locked.
@@ -2420,7 +2420,7 @@ void D_TakeMapSnapshots(void)
 {
 	// This function sucks ass!
 
-	const INT32 old_mode = vid.modenum;
+	const int32_t old_mode = vid.modenum;
 	player_t *const player = &players[consoleplayer];
 	mobj_t *newViewMobj = NULL;
 

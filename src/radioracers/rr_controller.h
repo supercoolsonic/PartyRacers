@@ -32,28 +32,28 @@ typedef enum
     EVT_SPINDASH_VIOLENT
 } rumbleevent_e ;
 
-extern boolean RR_ShouldUseMoreRumbleEvents(void);
+extern dboolean RR_ShouldUseMoreRumbleEvents(void);
 extern rumbleevent_e RR_GetRumbleEvent(const player_t *player);
 extern uint16_t RR_GetRumbleStrength(const rumbleevent_e event);
 
 // All the event checks
-boolean RR_RumbleJustBumpedWall(const player_t *player);                    // Bumped Wall
-boolean RR_RumbleIsSpindashingGently(const player_t *player);               // Spindashing Gently
-boolean RR_RumbleIsSpindashingViolently(const player_t *player);            // Spindashing Violently
-boolean RR_RumbleRingCollected(const player_t *player);                     // Ring picked up
-boolean RR_RumbleRingConsumed(const player_t *player);                      // Ring used
-boolean RR_RumbleJustDrifted(const player_t *player);                       // Drifts
-boolean RR_RumbleJustFastFallBounced(const player_t *player);               // Fast Fall Bounce
-boolean RR_RumbleJustWaveDashed(const player_t *player);                    // Wavedash/Sliptide
-boolean RR_RumbleChargingTailWhip(const player_t *player);                  // Charging Tailwhip
-boolean RR_RumbleOverchargingTailWhip(const player_t *player);              // Overcharging Tailwhip
+dboolean RR_RumbleJustBumpedWall(const player_t *player);                    // Bumped Wall
+dboolean RR_RumbleIsSpindashingGently(const player_t *player);               // Spindashing Gently
+dboolean RR_RumbleIsSpindashingViolently(const player_t *player);            // Spindashing Violently
+dboolean RR_RumbleRingCollected(const player_t *player);                     // Ring picked up
+dboolean RR_RumbleRingConsumed(const player_t *player);                      // Ring used
+dboolean RR_RumbleJustDrifted(const player_t *player);                       // Drifts
+dboolean RR_RumbleJustFastFallBounced(const player_t *player);               // Fast Fall Bounce
+dboolean RR_RumbleJustWaveDashed(const player_t *player);                    // Wavedash/Sliptide
+dboolean RR_RumbleChargingTailWhip(const player_t *player);                  // Charging Tailwhip
+dboolean RR_RumbleOverchargingTailWhip(const player_t *player);              // Overcharging Tailwhip
 
 // Extra variables for checking events for rumble triggers
-extern boolean localPlayerJustBootyBounced;
+extern dboolean localPlayerJustBootyBounced;
 extern int16_t localPlayerWavedashClickTimer;
 
 // mimicking `pickuprings` behaviour
-extern UINT8 localPlayerPickupSpheres; 
+extern uint8_t localPlayerPickupSpheres; 
 extern int16_t localPlayerPickupSpheresDelay;
 
 #ifdef __cplusplus

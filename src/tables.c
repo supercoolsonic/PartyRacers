@@ -38,12 +38,12 @@ unsigned SlopeDiv(unsigned num, unsigned den)
 	return ans <= SLOPERANGE ? ans : SLOPERANGE;
 }
 
-UINT64 SlopeDivEx(unsigned int num, unsigned int den)
+uint64_t SlopeDivEx(unsigned int num, unsigned int den)
 {
-	UINT64 ans;
+	uint64_t ans;
 	if (den < 512)
 		return SLOPERANGE;
-	ans = ((UINT64)num<<3)/(den>>8);
+	ans = ((uint64_t)num<<3)/(den>>8);
 	return ans <= SLOPERANGE ? ans : SLOPERANGE;
 }
 
@@ -71,7 +71,7 @@ static FUNCMATH angle_t AngleAdj(const fixed_t fa, const fixed_t wf,
                                  angle_t ra)
 {
 	const angle_t adj = 0x77;
-	const boolean fan = fa < 0;
+	const dboolean fan = fa < 0;
 	const fixed_t sl = FixedDiv(fa, wf*2);
 	const fixed_t lb = fa % (wf*2);
 	const fixed_t lo = (wf*2)-lb;
@@ -180,10 +180,10 @@ angle_t AngleDelta(angle_t a1, angle_t a2)
 	return delta;
 }
 
-INT32 AngleDeltaSigned(angle_t a1, angle_t a2)
+int32_t AngleDeltaSigned(angle_t a1, angle_t a2)
 {
 	// Silly but easy way to do it through integer conversion.
-	return (INT32)(a1) - (INT32)(a2);
+	return (int32_t)(a1) - (int32_t)(a2);
 }
 
 float AngleToFloat(angle_t x)
@@ -262,10 +262,10 @@ angle_t FV3_AngleBetweenVectors(const vector3_t *Vector1, const vector3_t *Vecto
 //
 // This checks to see if a point is inside the ranges of a polygon
 //
-boolean FV2_InsidePolygon(const vector2_t *vIntersection, const vector2_t *Poly, const INT32 vertexCount)
+dboolean FV2_InsidePolygon(const vector2_t *vIntersection, const vector2_t *Poly, const int32_t vertexCount)
 {
-	INT32 i;
-	UINT64 Angle = 0;					// Initialize the angle
+	int32_t i;
+	uint64_t Angle = 0;					// Initialize the angle
 	vector2_t vA, vB;					// Create temp vectors
 
 	// Just because we intersected the plane, doesn't mean we were anywhere near the polygon.
@@ -304,10 +304,10 @@ boolean FV2_InsidePolygon(const vector2_t *vIntersection, const vector2_t *Poly,
 	return 0; // If you get here, it obviously wasn't inside the polygon.
 }
 
-boolean FV3_InsidePolygon(const vector3_t *vIntersection, const vector3_t *Poly, const INT32 vertexCount)
+dboolean FV3_InsidePolygon(const vector3_t *vIntersection, const vector3_t *Poly, const int32_t vertexCount)
 {
-	INT32 i;
-	UINT64 Angle = 0;					// Initialize the angle
+	int32_t i;
+	uint64_t Angle = 0;					// Initialize the angle
 	vector3_t vA, vB;					// Create temp vectors
 
 	// Just because we intersected the plane, doesn't mean we were anywhere near the polygon.
@@ -351,7 +351,7 @@ boolean FV3_InsidePolygon(const vector3_t *vIntersection, const vector3_t *Poly,
 //
 // This checks if a line is intersecting a polygon
 //
-boolean FV3_IntersectedPolygon(const vector3_t *vPoly, const vector3_t *vLine, const INT32 vertexCount, vector3_t *collisionPoint)
+dboolean FV3_IntersectedPolygon(const vector3_t *vPoly, const vector3_t *vLine, const int32_t vertexCount, vector3_t *collisionPoint)
 {
 	vector3_t vNormal, vIntersection;
 	fixed_t originDistance = 0*FRACUNIT;

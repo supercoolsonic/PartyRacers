@@ -32,9 +32,9 @@ typedef struct perfstatcol perfstatcol_t;
 typedef struct perfstatrow perfstatrow_t;
 
 struct perfstatcol {
-	INT32 lores_x;
-	INT32 hires_x;
-	INT32 color;
+	int32_t lores_x;
+	int32_t hires_x;
+	int32_t color;
 	perfstatrow_t * rows;
 };
 
@@ -70,7 +70,7 @@ int thinkframe_hooks_capacity = 16;
 
 ps_botinfo_t ps_bots[MAXPLAYERS];
 
-static INT32 draw_row;
+static int32_t draw_row;
 
 void PS_SetThinkFrameHookInfo(int index, precise_t time_taken, char* short_src)
 {
@@ -106,7 +106,7 @@ static void PS_SetFrameTime(void)
 	ps_prevframetime = currenttime;
 }
 
-static boolean M_HighResolution(void)
+static dboolean M_HighResolution(void)
 {
 	return (vid.width >= 640 && vid.height >= 400);
 }
@@ -118,9 +118,9 @@ enum {
 
 static void M_DrawPerfString(perfstatcol_t *col, int type)
 {
-	const boolean hires = M_HighResolution();
+	const dboolean hires = M_HighResolution();
 
-	INT32 draw_flags = V_MONOSPACE | col->color;
+	int32_t draw_flags = V_MONOSPACE | col->color;
 
 	perfstatrow_t * row;
 
@@ -165,7 +165,7 @@ static void M_DrawPerfCount(perfstatcol_t *col)
 
 static void M_DrawRenderStats(void)
 {
-	const boolean hires = M_HighResolution();
+	const dboolean hires = M_HighResolution();
 
 	const int half_row = hires ? 5 : 4;
 
@@ -260,7 +260,7 @@ static void M_DrawRenderStats(void)
 	perfstatcol_t     batchcalls_col = {220, 200, V_PURPLEMAP,     batchcalls_row};
 
 
-	boolean rendering = G_GamestateUsesLevel();
+	dboolean rendering = G_GamestateUsesLevel();
 
 	draw_row = 10;
 	M_DrawPerfTiming(&frametime_col);
@@ -634,7 +634,7 @@ void M_DrawPerfStats(void)
 			// text writing position
 			int x = 2;
 			int y = 4;
-			UINT32 text_color;
+			uint32_t text_color;
 			char tempbuffer[LUA_IDSIZE];
 			char last_mod_name[LUA_IDSIZE];
 			last_mod_name[0] = '\0';

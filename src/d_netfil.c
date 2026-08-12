@@ -42,7 +42,7 @@
 #include <errno.h>
 
 // Prototypes
-static boolean AddFileToSendQueue(INT32 node, const char *filename, UINT8 fileid);
+static dboolean AddFileToSendQueue(int32_t node, const char *filename, uint8_t fileid);
 
 #ifdef HAVE_CURL
 static size_t curlwrite_data(void *ptr, size_t size, size_t nmemb, FILE *stream);
@@ -52,14 +52,14 @@ static int curlprogress_callback(void *clientp, curl_off_t dltotal, curl_off_t d
 // Sender structure
 typedef struct filetx_s
 {
-	INT32 ram;
+	int32_t ram;
 	union {
 		char *filename; // Name of the file
 		char *ram; // Pointer to the data in RAM
 	} id;
-	UINT32 size; // Size of the file
-	UINT8 fileid;
-	INT32 node; // Destination
+	uint32_t size; // Size of the file
+	uint8_t fileid;
+	int32_t node; // Destination
 	struct filetx_s *next; // Next file in the list
 } filetx_t;
 
@@ -67,11 +67,11 @@ typedef struct filetx_s
 typedef struct filetran_s
 {
 	filetx_t *txlist; // Linked list of all files for the node
-	UINT8 iteration;
-	UINT8 ackediteration;
-	UINT32 position; // The current position in the file
-	boolean *ackedfragments;
-	UINT32 ackedsize;
+	uint8_t iteration;
+	uint8_t ackediteration;
+	uint32_t position; // The current position in the file
+	dboolean *ackedfragments;
+	uint32_t ackedsize;
 	FILE *currentfile; // The file currently being sent/received
 	tic_t dontsenduntil;
 } filetran_t;
@@ -81,7 +81,7 @@ static filetran_t transfer[MAXNETNODES];
 // Write time of file: utime
 
 // Receiver structure
-INT32 fileneedednum; // Number of files needed to join the server
+int32_t fileneedednum; // Number of files needed to join the server
 fileneeded_t fileneeded[MAX_WADFILES]; // List of needed files
 static tic_t lasttimeackpacketsent = 0;
 #ifdef HAVE_THREADS
@@ -92,40 +92,40 @@ static I_mutex downloadmutex;
 typedef struct
 {
 	char filename[MAX_WADPATH];
-	UINT8 md5sum[16];
-	boolean *receivedfragments;
-	UINT32 fragmentsize;
-	UINT32 currentsize;
+	uint8_t md5sum[16];
+	dboolean *receivedfragments;
+	uint32_t fragmentsize;
+	uint32_t currentsize;
 } pauseddownload_t;
 static pauseddownload_t *pauseddownload = NULL;
 
 // for cl loading screen
-INT32 lastfilenum = -1;
-INT32 downloadcompletednum = 0;
-UINT32 downloadcompletedsize = 0;
-INT32 totalfilesrequestednum = 0;
-UINT32 totalfilesrequestedsize = 0;
+int32_t lastfilenum = -1;
+int32_t downloadcompletednum = 0;
+uint32_t downloadcompletedsize = 0;
+int32_t totalfilesrequestednum = 0;
+uint32_t totalfilesrequestedsize = 0;
 
 #ifdef HAVE_CURL
 static CURL *http_handle;
 static CURLM *multi_handle;
-boolean curl_running = false;
-boolean curl_failedwebdownload = false;
+dboolean curl_running = false;
+dboolean curl_failedwebdownload = false;
 static curl_off_t curl_dlnow;
 static curl_off_t curl_dltotal;
 static time_t curl_starttime;
-INT32 curl_transfers = 0;
+int32_t curl_transfers = 0;
 static int curl_runninghandles = 0;
-static UINT32 curl_origfilesize;
-static UINT32 curl_origtotalfilesize;
+static uint32_t curl_origfilesize;
+static uint32_t curl_origtotalfilesize;
 static char *curl_realname = NULL;
 fileneeded_t *curl_curfile = NULL;
 HTTP_login *curl_logins;
 #endif
 
 luafiletransfer_t *luafiletransfers = NULL;
-boolean waitingforluafiletransfer = false;
-boolean waitingforluafilecommand = false;
+dboolean waitingforluafiletransfer = false;
+dboolean waitingforluafilecommand = false;
 char luafiledir[256 + 16] = "luafiles";
 
 /** Fills a serverinfo packet with information about wad files loaded.
@@ -134,14 +134,14 @@ char luafiledir[256 + 16] = "luafiles";
   * Used to have size limiting built in - now handled via W_LoadWadFile in w_wad.c
   *
   */
-UINT8 *PutFileNeeded(UINT16 firstfile)
+uint8_t *PutFileNeeded(uint16_t firstfile)
 {
 	size_t i;
-	UINT8 count = 0;
-	UINT8 *p_start = netbuffer->packettype == PT_MOREFILESNEEDED ? netbuffer->u.filesneededcfg.files : netbuffer->u.serverinfo.fileneeded;
-	UINT8 *p = p_start;
+	uint8_t count = 0;
+	uint8_t *p_start = netbuffer->packettype == PT_MOREFILESNEEDED ? netbuffer->u.filesneededcfg.files : netbuffer->u.serverinfo.fileneeded;
+	uint8_t *p = p_start;
 	char wadfilename[MAX_WADPATH] = "";
-	UINT8 filestatus;
+	uint8_t filestatus;
 
 #ifdef DEVELOP
 	i = 0;
@@ -187,7 +187,7 @@ UINT8 *PutFileNeeded(UINT16 firstfile)
 		// Store in the upper four bits
 		if (!cv_downloading.value)
 			filestatus += (2 << 4); // Won't send
-		else if (cv_maxsend.value == -1 || wadfiles[i]->filesize <= (UINT32)cv_maxsend.value * 1024)
+		else if (cv_maxsend.value == -1 || wadfiles[i]->filesize <= (uint32_t)cv_maxsend.value * 1024)
 			filestatus += (1 << 4); // Will send if requested
 		// else
 			// filestatus += (0 << 4); -- Won't send, too big
@@ -213,20 +213,20 @@ UINT8 *PutFileNeeded(UINT16 firstfile)
   * \param fileneededstr The memory block containing the list of needed files
   * \param firstfile The first file index to read from
   */
-void D_ParseFileneeded(INT32 fileneedednum_parm, UINT8 *fileneededstr, UINT16 firstfile)
+void D_ParseFileneeded(int32_t fileneedednum_parm, uint8_t *fileneededstr, uint16_t firstfile)
 {
-	INT32 i;
-	UINT8 *p;
-	UINT8 filestatus;
+	int32_t i;
+	uint8_t *p;
+	uint8_t filestatus;
 
 	fileneedednum = firstfile + fileneedednum_parm;
-	p = (UINT8 *)fileneededstr;
+	p = (uint8_t *)fileneededstr;
 	for (i = firstfile; i < fileneedednum; i++)
 	{
 		fileneeded[i].status = FS_NOTCHECKED; // We haven't even started looking for the file yet
 		fileneeded[i].justdownloaded = false;
 		filestatus = READUINT8(p); // The first byte is the file status
-		fileneeded[i].willsend = (UINT8)(filestatus >> 4);
+		fileneeded[i].willsend = (uint8_t)(filestatus >> 4);
 		fileneeded[i].totalsize = READUINT32(p); // The four next bytes are the file size
 		fileneeded[i].file = NULL; // The file isn't open yet
 		READSTRINGN(p, fileneeded[i].filename, MAX_WADPATH); // The next bytes are the file name
@@ -244,18 +244,18 @@ void D_ParseFileneeded(INT32 fileneedednum_parm, UINT8 *fileneededstr, UINT16 fi
   * \param fileneededstr The memory block containing the list of needed files
   * \param firstfile The first file index to read from
   */
-UINT32 D_ParseFilesize(INT32 fileneedednum_parm, UINT8 *fileneededstr, UINT16 firstfile)					//SCS - RADIO START
+uint32_t D_ParseFilesize(int32_t fileneedednum_parm, uint8_t *fileneededstr, uint16_t firstfile)					//SCS - RADIO START
 {
 	// Just copying what D_ParseFileneeded already does
 	// Would extract to a static function, but a very small amount of code is being repeated here
 
-	UINT32 total = 0;
+	uint32_t total = 0;
 
-	INT32 i;
-	UINT8 *p;
+	int32_t i;
+	uint8_t *p;
 	
 	fileneedednum = firstfile + fileneedednum_parm;
-	p = (UINT8 *)fileneededstr;
+	p = (uint8_t *)fileneededstr;
 
 	for (i = firstfile; i < fileneedednum; i++)
 	{
@@ -288,9 +288,9 @@ void CL_PrepareDownloadSaveGame(const char *tmpsave)
   * \return True if we can download all the files
   *
   */
-boolean CL_CheckDownloadable(void)
+dboolean CL_CheckDownloadable(void)
 {
-	UINT8 i,dlstatus = 0;
+	uint8_t i,dlstatus = 0;
 
 	for (i = 0; i < fileneedednum; i++)
 		if (fileneeded[i].status != FS_FOUND && fileneeded[i].status != FS_OPEN)
@@ -329,7 +329,7 @@ boolean CL_CheckDownloadable(void)
 					CONS_Printf(M_GetText(" not found, md5: "));
 
 			{
-				INT32 j;
+				int32_t j;
 				char md5tmp[33];
 				for (j = 0; j < 16; j++)
 					snprintf(&md5tmp[j*2], 3, "%02x", fileneeded[i].md5sum[j]);
@@ -359,7 +359,7 @@ boolean CL_CheckDownloadable(void)
   * \return True if the transfer can be resumed
   *
   */
-static boolean CL_CanResumeDownload(fileneeded_t *file)
+static dboolean CL_CanResumeDownload(fileneeded_t *file)
 {
 	return pauseddownload
 		&& !strcmp(pauseddownload->filename, file->filename) // Same name
@@ -388,14 +388,14 @@ void CL_AbortDownloadResume(void)
   * \note Sends a PT_REQUESTFILE packet
   *
   */
-boolean CL_SendFileRequest(void)
+dboolean CL_SendFileRequest(void)
 {
 	char *p;
-	INT32 i;
-	INT64 totalfreespaceneeded = 0, availablefreespace;
-	INT32 skippedafile = -1;
+	int32_t i;
+	int64_t totalfreespaceneeded = 0, availablefreespace;
+	int32_t skippedafile = -1;
 #ifdef MORELEGACYDOWNLOADER
-	boolean firstloop = true;
+	dboolean firstloop = true;
 #endif
 
 #ifdef PARANOIA
@@ -455,7 +455,7 @@ tryagain:
 
 			// Figure out if we'd overrun our buffer.
 			checklen = strlen(fileneeded[i].filename)+2; // plus the fileid (and terminator, in case this is last)
-			if ((UINT8 *)(p + checklen) >= netbuffer->u.textcmd + MAXTEXTCMD)
+			if ((uint8_t *)(p + checklen) >= netbuffer->u.textcmd + MAXTEXTCMD)
 			{
 				skippedafile = i;
 				// we might have a shorter file that can fit in the remaining space, and file ID permits out-of-order data
@@ -526,11 +526,11 @@ tryagain:
 
 // get request filepak and put it on the send queue
 // returns false if a requested file was not found or cannot be sent
-boolean PT_RequestFile(INT32 node)
+dboolean PT_RequestFile(int32_t node)
 {
 	char wad[MAX_WADPATH+1];
-	UINT8 *p = netbuffer->u.textcmd;
-	UINT8 id;
+	uint8_t *p = netbuffer->u.textcmd;
+	uint8_t id;
 	while (p < netbuffer->u.textcmd + MAXTEXTCMD) // Don't allow hacked client to overflow
 	{
 		id = READUINT8(p);
@@ -557,13 +557,13 @@ boolean PT_RequestFile(INT32 node)
   * 		4 still checking, continuing next tic
   *
   */
-INT32 CL_CheckFiles(void)
+int32_t CL_CheckFiles(void)
 {
-	INT32 i, j;
+	int32_t i, j;
 	char wadfilename[MAX_WADPATH];
 	size_t packetsize = 0;
 	size_t filestoload = 0;
-	boolean downloadrequired = false;
+	dboolean downloadrequired = false;
 
 //	if (M_CheckParm("-nofiles"))
 //		return 1;
@@ -669,9 +669,9 @@ INT32 CL_CheckFiles(void)
 }
 
 // Load it now
-boolean CL_LoadServerFiles(void)
+dboolean CL_LoadServerFiles(void)
 {
-	INT32 i;
+	int32_t i;
 
 //	if (M_CheckParm("-nofiles"))
 //		return;
@@ -719,7 +719,7 @@ void AddLuaFileTransfer(const char *filename, const char *mode)
 {
 	luafiletransfer_t **prevnext; // A pointer to the "next" field of the last transfer in the list
 	luafiletransfer_t *filetransfer;
-	static INT32 id;
+	static int32_t id;
 
 	// Find the last transfer in the list and set a pointer to its "next" field
 	prevnext = &luafiletransfers;
@@ -770,8 +770,8 @@ void AddLuaFileTransfer(const char *filename, const char *mode)
 
 static void SV_PrepareSendLuaFileToNextNode(void)
 {
-	INT32 i;
-	UINT8 success = 1;
+	int32_t i;
+	uint8_t success = 1;
 
     // Find a client to send the file to
 	for (i = 1; i < MAXNETNODES; i++)
@@ -796,7 +796,7 @@ static void SV_PrepareSendLuaFileToNextNode(void)
 void SV_PrepareSendLuaFile(void)
 {
 	char *binfilename;
-	INT32 i;
+	int32_t i;
 
 	luafiletransfers->ongoing = true;
 
@@ -827,12 +827,12 @@ void SV_PrepareSendLuaFile(void)
 	else
 	{
 		// Send a net command with 0 as its first byte to indicate the file couldn't be opened
-		UINT8 success = 0;
+		uint8_t success = 0;
 		SendNetXCmd(XD_LUAFILE, &success, 1);
 	}
 }
 
-void SV_HandleLuaFileSent(UINT8 node)
+void SV_HandleLuaFileSent(uint8_t node)
 {
 	luafiletransfers->nodestatus[node] = LFTNS_SENT;
 	SV_PrepareSendLuaFileToNextNode();
@@ -861,7 +861,7 @@ void RemoveAllLuaFileTransfers(void)
 		RemoveLuaFileTransfer();
 }
 
-void SV_AbortLuaFileTransfer(INT32 node)
+void SV_AbortLuaFileTransfer(int32_t node)
 {
 	if (luafiletransfers)
 	{
@@ -910,7 +910,7 @@ void CL_PrepareDownloadLuaFile(void)
 
 // Number of files to send
 // Little optimization to quickly test if there is a file in the queue
-static INT32 filestosend = 0;
+static int32_t filestosend = 0;
 
 /** Adds a file to the file list for a node
   *
@@ -921,11 +921,11 @@ static INT32 filestosend = 0;
   * \sa AddLuaFileToSendQueue
   *
   */
-static boolean AddFileToSendQueue(INT32 node, const char *filename, UINT8 fileid)
+static dboolean AddFileToSendQueue(int32_t node, const char *filename, uint8_t fileid)
 {
 	filetx_t **q; // A pointer to the "next" field of the last file in the list
 	filetx_t *p; // The new file request
-	INT32 i;
+	int32_t i;
 	char wadfilename[MAX_WADPATH];
 
 	if (cv_noticedownload.value)
@@ -982,7 +982,7 @@ static boolean AddFileToSendQueue(INT32 node, const char *filename, UINT8 fileid
 	}
 
 	// Handle huge file requests (i.e. bigger than cv_maxsend.value KB)
-	if (cv_maxsend.value != -1 && wadfiles[i]->filesize > (UINT32)cv_maxsend.value * 1024)
+	if (cv_maxsend.value != -1 && wadfiles[i]->filesize > (uint32_t)cv_maxsend.value * 1024)
 	{
 		// Too big
 		// Don't inform client (client sucks, man)
@@ -1012,7 +1012,7 @@ static boolean AddFileToSendQueue(INT32 node, const char *filename, UINT8 fileid
   * \sa AddLuaFileToSendQueue
   *
   */
-void AddRamToSendQueue(INT32 node, void *data, size_t size, freemethod_t freemethod, UINT8 fileid)
+void AddRamToSendQueue(int32_t node, void *data, size_t size, freemethod_t freemethod, uint8_t fileid)
 {
 	filetx_t **q; // A pointer to the "next" field of the last file in the list
 	filetx_t *p; // The new file request
@@ -1032,7 +1032,7 @@ void AddRamToSendQueue(INT32 node, void *data, size_t size, freemethod_t freemet
 
 	p->ram = freemethod; // Remember how to free the memory block for when we're done sending it
 	p->id.ram = data;
-	p->size = (UINT32)size;
+	p->size = (uint32_t)size;
 	p->fileid = fileid;
 	p->next = NULL; // End of list
 
@@ -1049,11 +1049,11 @@ void AddRamToSendQueue(INT32 node, void *data, size_t size, freemethod_t freemet
   * \sa AddRamToSendQueue
   *
   */
-boolean AddLuaFileToSendQueue(INT32 node, const char *filename)
+dboolean AddLuaFileToSendQueue(int32_t node, const char *filename)
 {
 	filetx_t **q; // A pointer to the "next" field of the last file in the list
 	filetx_t *p; // The new file request
-	//INT32 i;
+	//int32_t i;
 	//char wadfilename[MAX_WADPATH];
 
 	luafiletransfers->nodestatus[node] = LFTNS_SENDING;
@@ -1093,7 +1093,7 @@ boolean AddLuaFileToSendQueue(INT32 node, const char *filename)
   * \param node The destination
   *
   */
-static void SV_EndFileSend(INT32 node)
+static void SV_EndFileSend(int32_t node)
 {
 	filetx_t *p = transfer[node].txlist;
 
@@ -1137,11 +1137,11 @@ static void SV_EndFileSend(INT32 node)
   */
 void FileSendTicker(void)
 {
-	static INT32 currentnode = 0;
+	static int32_t currentnode = 0;
 	filetx_pak *p;
 	size_t fragmentsize;
 	filetx_t *f;
-	INT32 packetsent, ram, i, j;
+	int32_t packetsent, ram, i, j;
 
 	// If someone is taking too long to download, kick them with a timeout
 	// to prevent blocking the rest of the server...
@@ -1166,7 +1166,7 @@ void FileSendTicker(void)
 
 	netbuffer->packettype = PT_FILEFRAGMENT;
 
-	// (((sendbytes-nowsentbyte)*TICRATE)/(I_GetTime()-starttime)<(UINT32)net_bandwidth)
+	// (((sendbytes-nowsentbyte)*TICRATE)/(I_GetTime()-starttime)<(uint32_t)net_bandwidth)
 	while (packetsent-- && filestosend != 0)
 	{
 		for (i = currentnode, j = 0; j < MAXNETNODES;
@@ -1207,7 +1207,7 @@ void FileSendTicker(void)
 				if (filesize == -1)
 					I_Error("Error getting filesize of %s", f->id.filename);
 
-				f->size = (UINT32)filesize;
+				f->size = (uint32_t)filesize;
 				fseek(transfer[i].currentfile, 0, SEEK_SET);
 			}
 			else // Sending RAM
@@ -1260,15 +1260,15 @@ void FileSendTicker(void)
 				I_Error("FileSendTicker: can't read %s byte on %s at %d because %s", sizeu1(fragmentsize), f->id.filename, transfer[i].position, M_FileError(transfer[i].currentfile));
 		}
 		p->iteration = transfer[i].iteration;
-		p->position = LONG(transfer[i].position);
+		p->position = LSBF_LONG(transfer[i].position);
 		p->fileid = f->fileid;
-		p->filesize = LONG(f->size);
-		p->size = SHORT((UINT16)FILEFRAGMENTSIZE);
+		p->filesize = LSBF_LONG(f->size);
+		p->size = LSBF_SHORT((uint16_t)FILEFRAGMENTSIZE);
 
 		// Send the packet
 		if (HSendPacket(i, false, 0, FILETXHEADER + fragmentsize)) // Don't use the default acknowledgement system
 		{ // Success
-			transfer[i].position = (UINT32)(transfer[i].position + fragmentsize);
+			transfer[i].position = (uint32_t)(transfer[i].position + fragmentsize);
 			if (transfer[i].position >= f->size)
 			{
 				if (transfer[i].ackediteration < transfer[i].iteration)
@@ -1289,9 +1289,9 @@ void FileSendTicker(void)
 void PT_FileAck(void)
 {
 	fileack_pak *packet = (void*)&netbuffer->u.fileack;
-	INT32 node = doomcom->remotenode;
+	int32_t node = doomcom->remotenode;
 	filetran_t *trans = &transfer[node];
-	INT32 i, j;
+	int32_t i, j;
 
 	// Wrong file id? Ignore it, it's probably a late packet
 	if (!(trans->txlist && packet->fileid == trans->txlist->fileid))
@@ -1315,17 +1315,17 @@ void PT_FileAck(void)
 		fileacksegment_t *segment = &packet->segments[i];
 
 		for (j = 0; j < 32; j++)
-			if (LONG(segment->acks) & (1 << j))
+			if (LSBF_LONG(segment->acks) & (1 << j))
 			{
-				if (LONG(segment->start) * FILEFRAGMENTSIZE >= trans->txlist->size)
+				if (LSBF_LONG(segment->start) * FILEFRAGMENTSIZE >= trans->txlist->size)
 				{
 					Net_CloseConnection(node);
 					return;
 				}
 
-				if (!trans->ackedfragments[LONG(segment->start) + j])
+				if (!trans->ackedfragments[LSBF_LONG(segment->start) + j])
 				{
-					trans->ackedfragments[LONG(segment->start) + j] = true;
+					trans->ackedfragments[LSBF_LONG(segment->start) + j] = true;
 					trans->ackedsize += FILEFRAGMENTSIZE;
 
 					// If the last missing fragment was acked, finish!
@@ -1349,7 +1349,7 @@ void PT_FileReceived(void)
 
 // Someone knocked on the door with their public key.
 // Give them a challenge to sign in their PT_CLIENTJOIN.
-void PT_ClientKey(INT32 node)
+void PT_ClientKey(int32_t node)
 {
 	clientkey_pak *packet = (void*)&netbuffer->u.clientkey;
 
@@ -1363,10 +1363,10 @@ void PT_ClientKey(INT32 node)
 	HSendPacket(node, false, 0, sizeof (serverchallenge_pak));
 }
 
-static void SendAckPacket(fileack_pak *packet, UINT8 fileid)
+static void SendAckPacket(fileack_pak *packet, uint8_t fileid)
 {
 	size_t packetsize;
-	INT32 i;
+	int32_t i;
 
 	packetsize = sizeof(*packet) + packet->numsegments * sizeof(*packet->segments);
 
@@ -1374,8 +1374,8 @@ static void SendAckPacket(fileack_pak *packet, UINT8 fileid)
 	packet->fileid = fileid;
 	for (i = 0; i < packet->numsegments; i++)
 	{
-		packet->segments[i].start = LONG(packet->segments[i].start);
-		packet->segments[i].acks = LONG(packet->segments[i].acks);
+		packet->segments[i].start = LSBF_LONG(packet->segments[i].start);
+		packet->segments[i].acks = LSBF_LONG(packet->segments[i].acks);
 	}
 
 	// Send the packet
@@ -1387,7 +1387,7 @@ static void SendAckPacket(fileack_pak *packet, UINT8 fileid)
 	memset(packet, 0, sizeof(*packet) + 512);
 }
 
-static void AddFragmentToAckPacket(fileack_pak *packet, UINT8 iteration, UINT32 fragmentpos, UINT8 fileid)
+static void AddFragmentToAckPacket(fileack_pak *packet, uint8_t iteration, uint32_t fragmentpos, uint8_t fileid)
 {
 	fileacksegment_t *segment = &packet->segments[packet->numsegments - 1];
 
@@ -1412,7 +1412,7 @@ static void AddFragmentToAckPacket(fileack_pak *packet, UINT8 iteration, UINT32 
 
 void FileReceiveTicker(void)
 {
-	INT32 i;
+	int32_t i;
 
 	for (i = 0; i < fileneedednum; i++)
 	{
@@ -1428,7 +1428,7 @@ void FileReceiveTicker(void)
 			if (file->ackresendposition != UINT32_MAX && file->status == FS_DOWNLOADING)
 			{
 				// Acknowledge ~70 MB/s, whichs means the client sends ~18 KB/s
-				INT32 j;
+				int32_t j;
 				for (j = 0; j < 2048; j++)
 				{
 					if (file->receivedfragments[file->ackresendposition])
@@ -1449,11 +1449,11 @@ void FileReceiveTicker(void)
 void PT_FileFragment(void)
 {
 	filetx_pak *pak = (void*)&netbuffer->u.filetxpak;
-	INT32 filenum = pak->fileid;
+	int32_t filenum = pak->fileid;
 	fileneeded_t *file = &fileneeded[filenum];
-	UINT32 fragmentpos = LONG(pak->position);
-	UINT16 fragmentsize = SHORT(pak->size);
-	UINT16 boundedfragmentsize = doomcom->datalength - BASEPACKETSIZE - sizeof(netbuffer->u.filetxpak);
+	uint32_t fragmentpos = LSBF_LONG(pak->position);
+	uint16_t fragmentsize = LSBF_SHORT(pak->size);
+	uint16_t boundedfragmentsize = doomcom->datalength - BASEPACKETSIZE - sizeof(netbuffer->u.filetxpak);
 	char *filename;
 
 	filename = va("%s", file->filename);
@@ -1525,7 +1525,7 @@ void PT_FileFragment(void)
 			CONS_Printf("\r%s...\n",filename);
 
 			file->currentsize = 0;
-			file->totalsize = LONG(pak->filesize);
+			file->totalsize = LSBF_LONG(pak->filesize);
 			file->ackresendposition = UINT32_MAX; // Only used for resumed downloads
 
 			file->receivedfragments = calloc(file->totalsize / fragmentsize + 1, sizeof(*file->receivedfragments));
@@ -1623,7 +1623,7 @@ void PT_FileFragment(void)
  * \return True if the node is downloading a file
  *
  */
-boolean SendingFile(INT32 node)
+dboolean SendingFile(int32_t node)
 {
 	return transfer[node].txlist != NULL;
 }
@@ -1634,7 +1634,7 @@ boolean SendingFile(INT32 node)
   * \sa SV_EndFileSend
   *
   */
-void SV_AbortSendFiles(INT32 node)
+void SV_AbortSendFiles(int32_t node)
 {
 	while (transfer[node].txlist)
 		SV_EndFileSend(node);
@@ -1642,7 +1642,7 @@ void SV_AbortSendFiles(INT32 node)
 
 void CloseNetFile(void)
 {
-	INT32 i;
+	int32_t i;
 	// Is sending?
 	for (i = 0; i < MAXNETNODES; i++)
 		SV_AbortSendFiles(i);
@@ -1678,15 +1678,15 @@ void CloseNetFile(void)
 
 void Command_Downloads_f(void)
 {
-	INT32 node;
+	int32_t node;
 
 	for (node = 0; node < MAXNETNODES; node++)
 		if (transfer[node].txlist
 		&& transfer[node].txlist->ram == SF_FILE) // Node is downloading a file?
 		{
 			const char *name = transfer[node].txlist->id.filename;
-			UINT32 position = transfer[node].ackedsize;
-			UINT32 size = transfer[node].txlist->size;
+			uint32_t position = transfer[node].ackedsize;
+			uint32_t size = transfer[node].txlist->size;
 			char ratecolor;
 
 			// Avoid division by zero errors
@@ -1705,7 +1705,7 @@ void Command_Downloads_f(void)
 
 			CONS_Printf("%2d  %c%s  ", node, ratecolor, name); // Node and file name
 			CONS_Printf("\x80%uK\x84/\x80%uK ", position / 1024, size / 1024); // Progress in kB
-			CONS_Printf("\x80(%c%u%%\x80)  ", ratecolor, (UINT32)(100.0 * position / size)); // Progress in %
+			CONS_Printf("\x80(%c%u%%\x80)  ", ratecolor, (uint32_t)(100.0 * position / size)); // Progress in %
 			CONS_Printf("%s\n", I_GetNodeAddress(node)); // Address and newline
 		}
 }
@@ -1747,14 +1747,14 @@ size_t nameonlylength(const char *s)
 #define O_BINARY 0
 #endif
 
-filestatus_t checkfilemd5(char *filename, const UINT8 *wantedmd5sum)
+filestatus_t checkfilemd5(char *filename, const uint8_t *wantedmd5sum)
 {
 #if defined (NOMD5)
 	(void)wantedmd5sum;
 	(void)filename;
 #else
 	FILE *fhandle;
-	UINT8 md5sum[16];
+	uint8_t md5sum[16];
 
 	if (!wantedmd5sum)
 		return FS_FOUND;
@@ -1777,10 +1777,10 @@ filestatus_t checkfilemd5(char *filename, const UINT8 *wantedmd5sum)
 // Rewritten by Monster Iestyn to be less stupid
 // Note: if completepath is true, "filename" is modified, but only if FS_FOUND is going to be returned
 // (Don't worry about WinCE's version of filesearch, nobody cares about that OS anymore)
-filestatus_t findfile(char *filename, const char *priorityfolder, const UINT8 *wantedmd5sum, boolean completepath)
+filestatus_t findfile(char *filename, const char *priorityfolder, const uint8_t *wantedmd5sum, dboolean completepath)
 {
 	filestatus_t homecheck; // store result of last file search
-	boolean badmd5 = false; // store whether md5 was bad from either of the first two searches (if nothing was found in the third)
+	dboolean badmd5 = false; // store whether md5 was bad from either of the first two searches (if nothing was found in the third)
 
 	// first, check SRB2's "home" directory (if non-'.')
 	if (strcmp(srb2home, "."))
@@ -1944,7 +1944,7 @@ void CURLGetFile(void)
 	const char *easy_handle_error;
 
 #ifdef HAVE_THREADS
-	boolean running = true;
+	dboolean running = true;
 
 	I_lock_mutex(&downloadmutex);
 	while (running && curl_running)

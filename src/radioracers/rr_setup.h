@@ -20,17 +20,17 @@ extern "C" {
 #endif
 
 // Music
-extern UINT8 radio_maxrandompositionmus;
-extern UINT8 radio_mapmusrng;
+extern uint8_t radio_maxrandompositionmus;
+extern uint8_t radio_mapmusrng;
 
-extern boolean found_radioracers;
-extern boolean found_radioracers_plus;
-extern boolean radioracers_usemuteicons;
-extern boolean radioracers_usebookmarkicons;
-extern boolean radioracers_usehakiencore;
-extern boolean radioracers_useendkey;
-extern boolean radioracers_usehudfeed;
-extern boolean radioracers_usealternatetripwire;
+extern dboolean found_radioracers;
+extern dboolean found_radioracers_plus;
+extern dboolean radioracers_usemuteicons;
+extern dboolean radioracers_usebookmarkicons;
+extern dboolean radioracers_usehakiencore;
+extern dboolean radioracers_useendkey;
+extern dboolean radioracers_usehudfeed;
+extern dboolean radioracers_usealternatetripwire;
 
 /**
  * Textures in this game are stored by ID, not name, which is sensible.
@@ -39,21 +39,21 @@ extern boolean radioracers_usealternatetripwire;
 
 // Base texture IDs
 
-extern INT32 RADIO_BADWIRE_SHORT_TEX_ID;
-extern INT32 RADIO_BADWIRE_2X_SHORT_TEX_ID;
-extern INT32 RADIO_BADWIRE_4X_SHORT_TEX_ID;
-extern INT32 RADIO_BADWIRE_TALL_TEX_ID;
-extern INT32 RADIO_BADWIRE_2X_TALL_TEX_ID;
-extern INT32 RADIO_BADWIRE_4X_TALL_TEX_ID;
-extern INT32 RADIO_BADWIRE_VERTICAL_TEX_ID;
+extern int32_t RADIO_BADWIRE_SHORT_TEX_ID;
+extern int32_t RADIO_BADWIRE_2X_SHORT_TEX_ID;
+extern int32_t RADIO_BADWIRE_4X_SHORT_TEX_ID;
+extern int32_t RADIO_BADWIRE_TALL_TEX_ID;
+extern int32_t RADIO_BADWIRE_2X_TALL_TEX_ID;
+extern int32_t RADIO_BADWIRE_4X_TALL_TEX_ID;
+extern int32_t RADIO_BADWIRE_VERTICAL_TEX_ID;
 
-extern INT32 RADIO_GOODWIRE_SHORT_TEX_ID;
-extern INT32 RADIO_GOODWIRE_2X_SHORT_TEX_ID;
-extern INT32 RADIO_GOODWIRE_4X_SHORT_TEX_ID;
-extern INT32 RADIO_GOODWIRE_TALL_TEX_ID;
-extern INT32 RADIO_GOODWIRE_2X_TALL_TEX_ID;
-extern INT32 RADIO_GOODWIRE_4X_TALL_TEX_ID;
-extern INT32 RADIO_GOODWIRE_VERTICAL_TEX_ID;
+extern int32_t RADIO_GOODWIRE_SHORT_TEX_ID;
+extern int32_t RADIO_GOODWIRE_2X_SHORT_TEX_ID;
+extern int32_t RADIO_GOODWIRE_4X_SHORT_TEX_ID;
+extern int32_t RADIO_GOODWIRE_TALL_TEX_ID;
+extern int32_t RADIO_GOODWIRE_2X_TALL_TEX_ID;
+extern int32_t RADIO_GOODWIRE_4X_TALL_TEX_ID;
+extern int32_t RADIO_GOODWIRE_VERTICAL_TEX_ID;
 
 // Texture name
 extern const char* RADIO_BADWIRE_SHORT_TEX_NAME;
@@ -78,8 +78,8 @@ extern sfxenum_t radio_last_powerup_jingle_sound;
 extern sfxenum_t radio_s_rank_voiceline;
 extern sfxenum_t radio_perfectboost_line;
 extern void RR_Init(void);
-extern void RR_CheckForServerConfig(UINT16 wadnum);
-extern void RR_AddAllEmotes(UINT16 wadnum);
+extern void RR_CheckForServerConfig(uint16_t wadnum);
+extern void RR_AddAllEmotes(uint16_t wadnum);
 extern void RR_CleanupEmoteFrames(void);
 extern void RR_SaveEmoteUsage(void);
 extern void RR_resetRadioFakeNetCvars(void);

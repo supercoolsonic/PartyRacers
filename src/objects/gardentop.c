@@ -84,7 +84,7 @@ get_top_rider_player (mobj_t *top)
 	return get_rider_player(top_rider(top));
 }
 
-static inline boolean
+static inline dboolean
 is_top_grind_input (mobj_t *top)
 {
 	player_t *player = get_top_rider_player(top);
@@ -92,7 +92,7 @@ is_top_grind_input (mobj_t *top)
 	return player && K_IsHoldingDownTop(player);
 }
 
-static inline boolean
+static inline dboolean
 is_top_grinding (mobj_t *top)
 {
 	if (top_float(top) > 0)
@@ -112,10 +112,10 @@ grind_spark_base_scale (player_t *player)
 		/ GARDENTOP_MAXGRINDTIME;
 }
 
-static inline INT32
+static inline int32_t
 get_player_steer_tilt
 (		player_t * player,
-		INT32 stages)
+		int32_t stages)
 {
 	return player->steering
 		* stages
@@ -141,7 +141,7 @@ goofy_shake (fixed_t n)
 static inline void
 init_top
 (		mobj_t * top,
-		INT32 mode)
+		int32_t mode)
 {
 	top_mode(top) = mode;
 	top_float(top) = 0;
@@ -170,11 +170,11 @@ spawn_spark
 static void
 spawn_spark_circle
 (		mobj_t * top,
-		UINT8 n)
+		uint8_t n)
 {
 	const angle_t a = ANGLE_MAX / n;
 
-	UINT8 i;
+	uint8_t i;
 
 	for (i = 0; i < n; ++i)
 	{
@@ -232,7 +232,7 @@ spawn_grind_spark (mobj_t *top)
 //static void
 static mobj_t *
 //spawn_arrow (mobj_t *top)
-spawn_arrow (mobj_t *top, UINT32 ff, UINT8 kind)	//SCS EDIT RESTORE
+spawn_arrow (mobj_t *top, uint32_t ff, uint8_t kind)	//SCS EDIT RESTORE
 {
 	mobj_t *arrow = P_SpawnMobjFromMobj(
 			top, 0, 0, 0, MT_GARDENTOPARROW);
@@ -368,7 +368,7 @@ tilt (mobj_t *top)
 {
 	player_t *player = get_top_rider_player(top);
 
-	INT32 tilt = top->rollangle;
+	int32_t tilt = top->rollangle;
 
 	if (is_top_grind_input(top))
 	{
@@ -769,7 +769,7 @@ Obj_GardenTopArrowThink (mobj_t *arrow)
 	}
 }
 
-boolean
+dboolean
 Obj_GardenTopPlayerIsGrinding (const player_t *player)
 {
 	mobj_t *top = K_GetGardenTop(player);
@@ -777,7 +777,7 @@ Obj_GardenTopPlayerIsGrinding (const player_t *player)
 	return top ? is_top_grinding(top) : false;
 }
 
-boolean
+dboolean
 Obj_GardenTopPlayerNeedsHelp (const mobj_t *top)
 {
 	if (top && top_mode(top) != TOP_ANCHORED)

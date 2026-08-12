@@ -40,11 +40,11 @@ static void DrawSPBAttack_Bar(void)
 {
     if (modeattacking & ATTACKING_SPB && stplyr->SPBdistance > 0)
 	{
-		UINT8 *colormap = R_GetTranslationColormap(stplyr->skin, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE);
-		INT32 ybar = 180;
-		INT32 widthbar = 120, xbar = 160 - widthbar/2, currentx;
-		INT32 barflags = V_SNAPTOBOTTOM|V_SLIDEIN;
-		INT32 transflags = ((6)<<FF_TRANSSHIFT);
+		uint8_t *colormap = R_GetTranslationColormap(stplyr->skin, static_cast<skincolornum_t>(stplyr->skincolor), GTC_CACHE);
+		int32_t ybar = 180;
+		int32_t widthbar = 120, xbar = 160 - widthbar/2, currentx;
+		int32_t barflags = V_SNAPTOBOTTOM|V_SLIDEIN;
+		int32_t transflags = ((6)<<FF_TRANSSHIFT);
 
 		V_DrawScaledPatch(xbar, ybar - 2, barflags|transflags, 
             static_cast<patch_t*>(W_CachePatchName("MINIPROG", PU_HUDGFX))
@@ -70,7 +70,7 @@ static void DrawSPBAttack_Bar(void)
 	}
 }
 
-void RR_DrawKartMiniTimestamp(tic_t drawtime, INT32 TX, INT32 TY, INT32 splitflags, UINT8 mode)
+void RR_DrawKartMiniTimestamp(tic_t drawtime, int32_t TX, int32_t TY, int32_t splitflags, uint8_t mode)
 {
     if (r_splitscreen)
         return;
@@ -78,7 +78,7 @@ void RR_DrawKartMiniTimestamp(tic_t drawtime, INT32 TX, INT32 TY, INT32 splitfla
     // Mostly copying the logic from RR_DrawKartTimestamp, just tweaking it to accomodate the thin-timer font
     TX += 80;
 
-    INT32 jitter = 0;
+    int32_t jitter = 0;
     drawtime = K_TranslateTimer(drawtime, mode, &jitter);
 
     using srb2::Draw;
@@ -143,8 +143,8 @@ void RR_DrawKartMiniTimestamp(tic_t drawtime, INT32 TX, INT32 TY, INT32 splitfla
 	if ((modeattacking || (mode == 1))
     && !demo.playback)
     {
-        INT32 workx = TX + 96, worky = TY+18;
-        UINT8 i = stickermedalinfo.visiblecount;
+        int32_t workx = TX + 96, worky = TY+18;
+        uint8_t i = stickermedalinfo.visiblecount;
 
         if (stickermedalinfo.targettext[0] != '\0')
         {
@@ -204,7 +204,7 @@ void RR_DrawKartMiniTimestamp(tic_t drawtime, INT32 TX, INT32 TY, INT32 splitfla
     DrawSPBAttack_Bar();
 }
 
-void RR_DrawMiniTimestamp(tic_t time, INT32 x, INT32 y, INT32 flags, float sc)
+void RR_DrawMiniTimestamp(tic_t time, int32_t x, int32_t y, int32_t flags, float sc)
 {
     srb2::Draw mini_timer = srb2::Draw(x, y).flags(flags).font(srb2::Draw::Font::kZVote).scale(sc);
     

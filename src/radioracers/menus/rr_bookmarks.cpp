@@ -31,8 +31,8 @@
 
 struct bookmarkmenu_s bookmarkmenu;
 std::vector<characterbookmarkparent_t> char_bookmarks;
-UINT8 bookmark_page;
-INT16 bookmark_idx;
+uint8_t bookmark_page;
+int16_t bookmark_idx;
 
 enum preview_debug_message_type_e {
 	PREVIEW_ERROR = 0,
@@ -74,7 +74,7 @@ static characterbookmarkparent_t M_BuildBookmarkForPlayer(player_t* p)
     if (follower_present) {
         strlcpy(new_bookmark.follower_name, followers[p->followerskin].name, SKINNAMESIZE+1);
 
-        UINT16 actual_follower_color = K_GetEffectiveFollowerColor(
+        uint16_t actual_follower_color = K_GetEffectiveFollowerColor(
 			p->followercolor,
 			&followers[p->followerskin],
 			p->skincolor,
@@ -142,7 +142,7 @@ static void M_NextPage(void)
     }
 }
 
-static void M_DrawPreviewSilhouette(INT16 x, INT16 y)
+static void M_DrawPreviewSilhouette(int16_t x, int16_t y)
 {
     M_DrawCharacterSprite(
         x+40,
@@ -156,7 +156,7 @@ static void M_DrawPreviewSilhouette(INT16 x, INT16 y)
     );
 }
 
-static UINT8* M_GetWarningColormap(void)
+static uint8_t* M_GetWarningColormap(void)
 {
     return R_GetTranslationColormap(
          TC_DEFAULT, 
@@ -165,7 +165,7 @@ static UINT8* M_GetWarningColormap(void)
     );
 }
 
-static UINT8* M_GetErrorColormap(void)
+static uint8_t* M_GetErrorColormap(void)
 {
     return R_GetTranslationColormap(
         TC_DEFAULT, 
@@ -174,7 +174,7 @@ static UINT8* M_GetErrorColormap(void)
     );
 }
 
-static UINT8* M_GetBookmarkSkinColormap(characterbookmarkparent_t* bookmark_parent) {
+static uint8_t* M_GetBookmarkSkinColormap(characterbookmarkparent_t* bookmark_parent) {
     skincolornum_t charcolornum = SKINCOLOR_NONE;
 
     if (bookmark_parent->skincolor_present && bookmark_parent->skincolor_usable) {
@@ -190,7 +190,7 @@ static UINT8* M_GetBookmarkSkinColormap(characterbookmarkparent_t* bookmark_pare
     );
 }
 
-static UINT8* M_GetBookmarkFollowerColormap(characterbookmarkparent_t* bookmark_parent) {
+static uint8_t* M_GetBookmarkFollowerColormap(characterbookmarkparent_t* bookmark_parent) {
     skincolornum_t followercolornum = followers[bookmark_parent->bookmark.follower].defaultcolor;
 
     if (bookmark_parent->followercolor_present && bookmark_parent->followercolor_usable) {
@@ -209,7 +209,7 @@ static size_t M_GetPageOffset(void)
     return bookmarkmenu.current_page * (ROWS*COLUMNS);
 }
 
-static characterbookmarkparent_t* FetchBookmarkParent(INT16 index)
+static characterbookmarkparent_t* FetchBookmarkParent(int16_t index)
 {
     if (char_bookmarks.empty())
         return NULL;
@@ -256,30 +256,30 @@ static bool IsBookmarkIncomplete(characterbookmarkparent_t *parent)
     return incomplete;
 }
 
-static boolean IsFollowerValid(INT32 followernum)
+static dboolean IsFollowerValid(int32_t followernum)
 {
     return !(followernum < 0 || followernum >= numfollowers);
 }
 
-static bool VerifyBookmarkSkin(INT32 *skin, const char* name)
+static bool VerifyBookmarkSkin(int32_t *skin, const char* name)
 {
     *skin = R_SkinAvailableEx(name, false);
     return *skin > -1 && R_SkinUsable(g_localplayers[0], *skin, false);
 }
 
-static bool VerifyBookmarkSkinColor(UINT16 *color, const char* name)
+static bool VerifyBookmarkSkinColor(uint16_t *color, const char* name)
 {
     *color = get_skincolornum(name);
     return K_ColorUsable(static_cast<skincolornum_t>(*color), false, true);
 }
 
-static bool VerifyBookmarkFollowerSkin(INT32 *follower_skin, const char* name)
+static bool VerifyBookmarkFollowerSkin(int32_t *follower_skin, const char* name)
 {
     *follower_skin = K_FollowerAvailable(name);
     return *follower_skin > -1 && K_FollowerUsable(*follower_skin);
 }
 
-static bool VerifyBookmarkFollowerSkinColor(UINT16 *color, const char* name)
+static bool VerifyBookmarkFollowerSkinColor(uint16_t *color, const char* name)
 {
     *color = get_skincolornum(name);
     return K_ColorUsable(static_cast<skincolornum_t>(*color), true, true);
@@ -340,7 +340,7 @@ menu_t BOOKMARKS_MainDef = {
 /**
 MENU HANDLERS
 **/
-void RRM_BookmarkSelect(INT32 choice) {
+void RRM_BookmarkSelect(int32_t choice) {
     (void)choice;
     
     BOOKMARKS_MainDef.prevMenu = currentMenu;
@@ -437,7 +437,7 @@ static void M_BookmarkApply(void)
     } else {
         charcolornum = static_cast<skincolornum_t>(skins[bookmark->skin]->prefcolor);
     }
-    CV_StealthSetValue(&cv_playercolor[0], static_cast<INT16>(charcolornum));
+    CV_StealthSetValue(&cv_playercolor[0], static_cast<int16_t>(charcolornum));
     
     // Follower
     skincolornum_t followercolornum = SKINCOLOR_GREEN;
@@ -460,7 +460,7 @@ static void M_BookmarkApply(void)
     CV_StealthSet(&cv_skin[0], skins[bookmark->skin]->name);
 
     // Follower Color
-    CV_SetValue(&cv_followercolor[0], static_cast<INT16>(followercolornum));
+    CV_SetValue(&cv_followercolor[0], static_cast<int16_t>(followercolornum));
 
     bookmarkmenu.stage = BMENU_STAGE_APPLIED_BOOKMARK;
 
@@ -484,10 +484,10 @@ static void M_HandleBookmarkApply(void)
     bookmarkmenu.selected = true;
 }
 
-boolean RRM_BookmarkHandler(INT32 choice) {
+dboolean RRM_BookmarkHandler(int32_t choice) {
     (void)choice;
 
-    const UINT8 pid = 0;
+    const uint8_t pid = 0;
 
     size_t current_row = bookmark_idx / COLUMNS;
     size_t current_col = bookmark_idx % COLUMNS;
@@ -568,7 +568,7 @@ boolean RRM_BookmarkHandler(INT32 choice) {
     return false;
 }
 
-boolean RRM_BookmarkQuit(void)
+dboolean RRM_BookmarkQuit(void)
 {
 	return true;
 }
@@ -588,7 +588,7 @@ void RRM_BookmarkInit(void) {
 }
 
 // Uplifted from play-char-select.c
-static void AnimateFollowerForMenu(INT32 followerskin, bookmark_menu_follower_anim_t *menu) {
+static void AnimateFollowerForMenu(int32_t followerskin, bookmark_menu_follower_anim_t *menu) {
     if (!(followerskin < 0 || followerskin >= numfollowers)) {
 
         if (menu->follower_state == NULL) {
@@ -659,23 +659,23 @@ HUD DRAWING
 **/
 
 // Uplifted from k_menudraw.c
-static boolean M_DrawFollowerSprite(
-    INT16 x, 
-    INT16 y, 
-    INT32 num, 
-    UINT8 *colormap, 
-    INT32 addflags,
+static dboolean M_DrawFollowerSprite(
+    int16_t x, 
+    int16_t y, 
+    int32_t num, 
+    uint8_t *colormap, 
+    int32_t addflags,
     bookmark_menu_follower_anim_t *follower_anim
 )
 {
 	spritedef_t *sprdef;
 	spriteframe_t *sprframe;
 	patch_t *patch;
-	INT32 followernum;
+	int32_t followernum;
 	state_t *usestate;
-	UINT32 useframe;
+	uint32_t useframe;
 	follower_t *fl;
-	UINT8 rotation = 7;
+	uint8_t rotation = 7;
 
     followernum = num;
 
@@ -726,7 +726,7 @@ static boolean M_DrawFollowerSprite(
 	return true;
 }
 
-static void M_DrawBackgroundForCharAndFollower(INT16 x, INT16 y)
+static void M_DrawBackgroundForCharAndFollower(int16_t x, int16_t y)
 {
     if (!bookmarkmenu.show_info)
         return;
@@ -746,15 +746,15 @@ static void M_DrawBackgroundForCharAndFollower(INT16 x, INT16 y)
 }
 
 static void M_DrawCurrentCharAndFollower(
-    INT16 x,
-    INT16 y,
+    int16_t x,
+    int16_t y,
     player_t* p
 ) {
     // Draw the character first
     if (p->skin < 0 || p->skin > numskins)
         return;
 
-    UINT8 *charcolormap = R_GetTranslationColormap(
+    uint8_t *charcolormap = R_GetTranslationColormap(
         p->skin, 
         static_cast<skincolornum_t>(p->skincolor), 
         GTC_CACHE
@@ -762,10 +762,10 @@ static void M_DrawCurrentCharAndFollower(
 
     const bool hasfollower = IsFollowerValid(p->followerskin);
 
-    INT16 namex = x+39;
-    INT16 iconx = (hasfollower) ? namex - 16: namex - (16/2);
-    INT16 icony = y+93;
-    INT16 namey = icony+16+5;
+    int16_t namex = x+39;
+    int16_t iconx = (hasfollower) ? namex - 16: namex - (16/2);
+    int16_t icony = y+93;
+    int16_t namey = icony+16+5;
 
     // Background for name and followers
     M_DrawBackgroundForCharAndFollower(x, namey);
@@ -783,10 +783,10 @@ static void M_DrawCurrentCharAndFollower(
     
     // Then the follower
     if (hasfollower) {
-        INT16 followernamey = namey+10;
+        int16_t followernamey = namey+10;
         iconx += 16 + 1;
 
-        UINT16 fcolor = K_GetEffectiveFollowerColor(
+        uint16_t fcolor = K_GetEffectiveFollowerColor(
             p->followercolor,
             &followers[p->followerskin],
             p->skincolor,
@@ -807,12 +807,12 @@ static void M_DrawCurrentCharAndFollower(
     }
 }
 
-static void M_DrawPreviewCharAndFollower(INT16 x, INT16 y, characterbookmarkparent_t* current_bookmark_parent) {
+static void M_DrawPreviewCharAndFollower(int16_t x, int16_t y, characterbookmarkparent_t* current_bookmark_parent) {
     
-    INT16 namex = x+39;
-    INT16 iconx = namex - 16;
-    INT16 icony = y+93;
-    INT16 namey = icony+16+5;
+    int16_t namex = x+39;
+    int16_t iconx = namex - 16;
+    int16_t icony = y+93;
+    int16_t namey = icony+16+5;
 
     if(current_bookmark_parent == NULL)
         return;
@@ -840,8 +840,8 @@ static void M_DrawPreviewCharAndFollower(INT16 x, INT16 y, characterbookmarkpare
     if (!has_follower) 
         namey += 5;
 
-    UINT8* charcolormap = NULL;
-    INT32 skinstringflags = V_YELLOWMAP;
+    uint8_t* charcolormap = NULL;
+    int32_t skinstringflags = V_YELLOWMAP;
     
     const char* skinstring = "Character not found";
     patch_t* defaultskinicon = static_cast<patch_t*>(W_CachePatchName("K_NOBLNS", PU_CACHE));
@@ -875,14 +875,14 @@ static void M_DrawPreviewCharAndFollower(INT16 x, INT16 y, characterbookmarkpare
         V_DrawCenteredThinString(namex, namey, skinstringflags, skinstring);
 
     // Now the follower (if present)
-    UINT8* followercolormap = NULL;
-    INT32 followerskinstringflags = V_YELLOWMAP;
+    uint8_t* followercolormap = NULL;
+    int32_t followerskinstringflags = V_YELLOWMAP;
     const char* followerskinstring = "Follower not found";
 
     patch_t* followerskinicon = defaultskinicon;
     
-    INT16 followernamey = namey+10;
-    INT16 followericonx = iconx + 16 + 1;
+    int16_t followernamey = namey+10;
+    int16_t followericonx = iconx + 16 + 1;
     if (has_follower) {
         if (current_bookmark_parent->follower_usable) {
             followercolormap = M_GetBookmarkFollowerColormap(current_bookmark_parent);
@@ -917,7 +917,7 @@ static void M_DrawPreviewCharAndFollower(INT16 x, INT16 y, characterbookmarkpare
 
 }
 
-static void M_DrawPreviewWarningsAndErrors(INT16 y, characterbookmarkparent_t* current_bookmark_parent)
+static void M_DrawPreviewWarningsAndErrors(int16_t y, characterbookmarkparent_t* current_bookmark_parent)
 {
     // Handled in other places
     if (current_bookmark_parent == NULL || !current_bookmark_parent->valid)
@@ -959,7 +959,7 @@ static void M_DrawPreviewWarningsAndErrors(INT16 y, characterbookmarkparent_t* c
         }
     }
 
-    auto draw_message = [&](const char* message, fixed_t y, INT32 flags) {
+    auto draw_message = [&](const char* message, fixed_t y, int32_t flags) {
         fixed_t error_x = (BASEVIDWIDTH - 8) << FRACBITS;
         error_x -= V_StringScaledWidth(FRACUNIT/2, FRACUNIT, FRACUNIT, 0, TINY_FONT, message);
 
@@ -976,9 +976,9 @@ static void M_DrawPreviewWarningsAndErrors(INT16 y, characterbookmarkparent_t* c
         );
     };
 
-    INT16 message_y = y - 10;
+    int16_t message_y = y - 10;
     for (auto& debug_message: messages) {
-        INT32 flags = (debug_message.type == PREVIEW_ERROR) ? V_REDMAP : V_YELLOWMAP;
+        int32_t flags = (debug_message.type == PREVIEW_ERROR) ? V_REDMAP : V_YELLOWMAP;
         draw_message(
             debug_message.message.c_str(), (message_y) << FRACBITS, flags);
         message_y -= 6;
@@ -986,9 +986,9 @@ static void M_DrawPreviewWarningsAndErrors(INT16 y, characterbookmarkparent_t* c
 
 }
 
-static void M_DrawPreviewCharacterCard(INT16 x, INT16 y, characterbookmarkparent_t* current_bookmark_parent) {
-    UINT8 *charcolormap;
-    INT32 addflags = 0;
+static void M_DrawPreviewCharacterCard(int16_t x, int16_t y, characterbookmarkparent_t* current_bookmark_parent) {
+    uint8_t *charcolormap;
+    int32_t addflags = 0;
 
     const bool bookmarked_applied = bookmarkmenu.stage == BMENU_STAGE_APPLIED_BOOKMARK;
     if (bookmarked_applied)
@@ -1048,7 +1048,7 @@ static void M_DrawPreviewCharacterCard(INT16 x, INT16 y, characterbookmarkparent
         // Draw the follower
         const bool has_follower = current_bookmark_parent->follower_present && current_bookmark_parent->follower_usable;
         if (has_follower) {
-            UINT8 *follower_colormap = M_GetBookmarkFollowerColormap(current_bookmark_parent);
+            uint8_t *follower_colormap = M_GetBookmarkFollowerColormap(current_bookmark_parent);
         
             M_DrawFollowerSprite(
                 x+20,
@@ -1072,16 +1072,16 @@ static void M_DrawPreviewCharacterCard(INT16 x, INT16 y, characterbookmarkparent
 }
 
 
-static void M_DrawCharacterCard(INT16 x, INT16 y, player_t *p) {
+static void M_DrawCharacterCard(int16_t x, int16_t y, player_t *p) {
     if (p->skin < 0 || p->skin > numskins)
         return;
 
-    INT32 addflags = 0;
+    int32_t addflags = 0;
     const bool has_bookmarked = bookmarkmenu.stage >= BMENU_STAGE_BOOKMARKED && bookmarkmenu.stage < BMENU_STAGE_APPLIED_BOOKMARK;
     if (has_bookmarked)
         addflags = V_TRANSLUCENT;
 
-    UINT8 *charcolormap = R_GetTranslationColormap(
+    uint8_t *charcolormap = R_GetTranslationColormap(
         p->skin, 
         static_cast<skincolornum_t>(p->skincolor), 
         GTC_CACHE
@@ -1116,14 +1116,14 @@ static void M_DrawCharacterCard(INT16 x, INT16 y, player_t *p) {
     const bool has_follower = IsFollowerValid(p->followerskin);
 
     if (has_follower) {
-        UINT16 followercolor = K_GetEffectiveFollowerColor(
+        uint16_t followercolor = K_GetEffectiveFollowerColor(
             p->followercolor,
             &followers[p->followerskin],
             p->skincolor,
             skins[p->skin]
         );
 
-        UINT8 *follower_colormap = R_GetTranslationColormap(
+        uint8_t *follower_colormap = R_GetTranslationColormap(
             TC_DEFAULT, 
             static_cast<skincolornum_t>(followercolor), 
             GTC_MENUCACHE
@@ -1147,11 +1147,11 @@ static void M_DrawCharacterCard(INT16 x, INT16 y, player_t *p) {
         V_DrawCenteredString(x+39, y+40, V_GREENMAP, "Saved!");
 }
 
-static void M_DrawSingleBookmark(INT16 x, INT16 y, INT16 index, bool highlighted)
+static void M_DrawSingleBookmark(int16_t x, int16_t y, int16_t index, bool highlighted)
 {
     characterbookmarkparent_t* bookmark_parent = FetchBookmarkParent(index);
     const bool bookmark_valid = (bookmark_parent != NULL && bookmark_parent->valid);
-    const INT32 flags = (highlighted) ? 0 : V_40TRANS;
+    const int32_t flags = (highlighted) ? 0 : V_40TRANS;
 
     // First, draw the little zit to show if the bookmark is valid or not
     patch_t* valid_bulb = static_cast<patch_t*>(W_CachePatchName("K_BLNA", PU_CACHE));
@@ -1164,7 +1164,7 @@ static void M_DrawSingleBookmark(INT16 x, INT16 y, INT16 index, bool highlighted
         return;
     }
 
-    UINT8* bulbcolormap = NULL;
+    uint8_t* bulbcolormap = NULL;
     const bool is_bookmark_unusable = IsBookmarkUnusable(bookmark_parent);
 
     if (is_bookmark_unusable) {
@@ -1185,7 +1185,7 @@ static void M_DrawSingleBookmark(INT16 x, INT16 y, INT16 index, bool highlighted
         defaultskinicon = static_cast<patch_t*>(W_CachePatchName("WHORUICO", PU_CACHE));
     }
     patch_t* skinicon = defaultskinicon;
-    UINT8* charcolormap = NULL;
+    uint8_t* charcolormap = NULL;
 
     if (bookmark_parent->skin_usable) {
         charcolormap = M_GetBookmarkSkinColormap(bookmark_parent);
@@ -1197,7 +1197,7 @@ static void M_DrawSingleBookmark(INT16 x, INT16 y, INT16 index, bool highlighted
     // Then, draw the follower icon (if present)
     x+= (16) + 1;
 
-    UINT8* followercolormap = NULL;
+    uint8_t* followercolormap = NULL;
     patch_t* followerskinicon = defaultskinicon;
 
     if (bookmark_parent->follower_present) {
@@ -1210,14 +1210,14 @@ static void M_DrawSingleBookmark(INT16 x, INT16 y, INT16 index, bool highlighted
     }
 }
 
-static void M_DrawPlaceholderBookmark(INT16 x, INT16 y)
+static void M_DrawPlaceholderBookmark(int16_t x, int16_t y)
 {
     // Draw a grey zit
     patch_t* valid_bulb = static_cast<patch_t*>(W_CachePatchName("K_BLNA", PU_CACHE));
 
     x += 2;
     
-    UINT8* colormap = R_GetTranslationColormap(
+    uint8_t* colormap = R_GetTranslationColormap(
         TC_DEFAULT, 
         SKINCOLOR_SILVER, 
         GTC_CACHE
@@ -1225,7 +1225,7 @@ static void M_DrawPlaceholderBookmark(INT16 x, INT16 y)
     V_DrawMappedPatch(x, y+1, 0, valid_bulb, colormap);
 }
 
-static void M_DrawBookmarkCursor(INT16 x, INT16 y)
+static void M_DrawBookmarkCursor(int16_t x, int16_t y)
 {
     // Urghhhh
     if (found_radioracers) {
@@ -1243,26 +1243,26 @@ static void M_DrawBookmarkCursor(INT16 x, INT16 y)
 
 void RRM_DrawCharacterBookmarks(void) {
     player_t* p = &players[g_localplayers[0]];
-    INT16 x = 1;
-    INT16 y = (BASEVIDHEIGHT/2) - 55;
+    int16_t x = 1;
+    int16_t y = (BASEVIDHEIGHT/2) - 55;
     
     // DRAWING THE CURRENT (selection)
     M_DrawCharacterCard(x, y, p);
     M_DrawCurrentCharAndFollower(x, y, p);
 
     // DRAWING THE PREVIEW (selection)
-    INT16 x2 = 236;
+    int16_t x2 = 236;
     characterbookmarkparent_t *current_bookmark_parent = FetchSelectedBookmarkParent();
 
     M_DrawPreviewCharacterCard(x2, y, current_bookmark_parent);
     M_DrawPreviewCharAndFollower(x2, y, current_bookmark_parent);
 
     // DRAWING THE MENU (to select)
-    const INT16 start_x = 87;
+    const int16_t start_x = 87;
 
-    INT16 row_y = 33;
-    INT16 row_x = start_x;
-    INT16 bookmark_menu_index = M_GetPageOffset();
+    int16_t row_y = 33;
+    int16_t row_x = start_x;
+    int16_t bookmark_menu_index = M_GetPageOffset();
 
     // No fancy borders for YOU
     if (found_radioracers) {
@@ -1281,8 +1281,8 @@ void RRM_DrawCharacterBookmarks(void) {
     }
     
     // Draw the page numbers
-    const INT16 page_button_x = start_x;
-    const INT16 page_button_y = row_y + 141;
+    const int16_t page_button_x = start_x;
+    const int16_t page_button_y = row_y + 141;
     const size_t max_pages = M_GetMaxPagesForBookmarkMenu();
     const std::string l_button = (max_pages > 1) ? "<l_animated>" : "<l>";
     K_DrawGameControl(
@@ -1309,15 +1309,15 @@ void RRM_DrawCharacterBookmarks(void) {
         );
     }
 
-    INT16 current_row = (bookmark_idx) / COLUMNS;
-    INT16 current_column = (bookmark_idx) % COLUMNS;
+    int16_t current_row = (bookmark_idx) / COLUMNS;
+    int16_t current_column = (bookmark_idx) % COLUMNS;
 
-    INT16 cursor_row_x = 0;
-    INT16 cursor_row_y = 0;
+    int16_t cursor_row_x = 0;
+    int16_t cursor_row_y = 0;
 
     bool highlighted = false;
-    for (INT16 i = 0; i < ROWS; i++) {
-        for (INT16 j = 0; j < COLUMNS; j++) {
+    for (int16_t i = 0; i < ROWS; i++) {
+        for (int16_t j = 0; j < COLUMNS; j++) {
             highlighted = (i == current_row && j == current_column);
             if (bookmark_menu_index >= char_bookmarks.size()) {
                 M_DrawPlaceholderBookmark(row_x, row_y);

@@ -40,7 +40,8 @@ extern consvar_t cv_toggle_sparkling_signposts;
 extern consvar_t cv_randomizeitemcapsules;
 extern consvar_t cv_toggle_minirankingshaking;
 extern consvar_t cv_toggle_coloredspbminimap;
-extern consvar_t cv_toggle_gardentoparrows;																						//SCS ADD END
+extern consvar_t cv_toggle_gardentoparrows;
+extern consvar_t cv_toggle_itemspytype;																						//SCS ADD END
 
 // Accessibility
 extern consvar_t cv_applyhaki;                      // Observation Haki mode
@@ -78,8 +79,8 @@ void RR_Hudfeed_OnChange(void);
  * Checks if either the encoremode flag or the clientside flag is on
  * \sa cv_applylocalencore encoremode
  */
-extern boolean shouldApplyEncore(void);
-extern boolean shouldUseHaki(void);
+extern dboolean shouldApplyEncore(void);
+extern dboolean shouldUseHaki(void);
 
 // Extra customization
 extern consvar_t cv_ringbox_roulette_player_scale;

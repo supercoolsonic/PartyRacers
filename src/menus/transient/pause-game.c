@@ -129,7 +129,7 @@ void Dummymenuplayer_OnChange(void)
 // Pause menu!
 void M_OpenPauseMenu(void)
 {
-	INT32 i = 0;
+	int32_t i = 0;
 	
 	// Radio Racers
 	if (radioracers_usemuteicons)															//SCS - RADIO START
@@ -211,8 +211,8 @@ void M_OpenPauseMenu(void)
 	}
 	else if (!netgame && !demo.playback)
 	{
-		boolean retryallowed = (modeattacking != ATTACKING_NONE);
-		boolean giveup = (
+		dboolean retryallowed = (modeattacking != ATTACKING_NONE);
+		dboolean giveup = (
 			grandprixinfo.gp == true
 			&& grandprixinfo.eventmode != GPEVENT_NONE
 			&& roundqueue.size != 0
@@ -285,7 +285,7 @@ void M_OpenPauseMenu(void)
 	G_ResetAllDeviceRumbles();
 }
 
-void M_QuitPauseMenu(INT32 choice)
+void M_QuitPauseMenu(int32_t choice)
 {
 	(void)choice;
 	// M_PauseTick actually handles the quitting when it's been long enough.
@@ -314,10 +314,10 @@ void M_PauseTick(void)
 #endif
 }
 
-boolean M_PauseInputs(INT32 ch)
+dboolean M_PauseInputs(int32_t ch)
 {
 
-	const UINT8 pid = 0;
+	const uint8_t pid = 0;
 	(void) ch;
 
 	if (pausemenu.closing)
@@ -352,8 +352,8 @@ boolean M_PauseInputs(INT32 ch)
 	return false;
 }
 
-UINT32 menuaddonoptions = 0;
-void M_HandlePauseMenuAddons(INT32 choice)
+uint32_t menuaddonoptions = 0;
+void M_HandlePauseMenuAddons(int32_t choice)
 {
 	if (choice == 2)
 	{
@@ -374,9 +374,9 @@ void M_HandlePauseMenuAddons(INT32 choice)
 }
 
 // Change gametype
-void M_HandlePauseMenuGametype(INT32 choice)
+void M_HandlePauseMenuGametype(int32_t choice)
 {
-	const UINT32 forbidden = GTR_FORBIDMP;
+	const uint32_t forbidden = GTR_FORBIDMP;
 
 	if (choice == 2)
 	{
@@ -417,9 +417,9 @@ void M_HandlePauseMenuGametype(INT32 choice)
 }
 
 // Call vote
-UINT32 menucallvote = MVT__MAX;
+uint32_t menucallvote = MVT__MAX;
 
-void M_HandlePauseMenuCallVote(INT32 choice)
+void M_HandlePauseMenuCallVote(int32_t choice)
 {
 	if (choice == 2)
 	{
@@ -449,7 +449,7 @@ void M_HandlePauseMenuCallVote(INT32 choice)
 }
 
 // Restart map
-void M_RestartMap(INT32 choice)
+void M_RestartMap(int32_t choice)
 {
 	(void)choice;
 	M_ClearMenus(false);
@@ -457,7 +457,7 @@ void M_RestartMap(INT32 choice)
 }
 
 // Try again
-void M_TryAgain(INT32 choice)
+void M_TryAgain(int32_t choice)
 {
 	(void)choice;
 	if (demo.playback)
@@ -476,7 +476,7 @@ void M_TryAgain(INT32 choice)
 	G_SetRetryFlag();
 }
 
-static void M_GiveUpResponse(INT32 ch)
+static void M_GiveUpResponse(int32_t ch)
 {
 	if (ch != MA_YES)
 		return;
@@ -493,7 +493,7 @@ static void M_GiveUpResponse(INT32 ch)
 	M_ClearMenus(false);
 }
 
-void M_GiveUp(INT32 choice)
+void M_GiveUp(int32_t choice)
 {
 	(void)choice;
 	if (demo.playback)
@@ -506,7 +506,7 @@ void M_GiveUp(INT32 choice)
 }
 
 // Pause spectate / join functions
-void M_HandleSpectateToggle(INT32 choice)
+void M_HandleSpectateToggle(int32_t choice)
 {
 	if (choice == 2)
 	{
@@ -519,10 +519,10 @@ void M_HandleSpectateToggle(INT32 choice)
 		// Identify relevant spectator state of pausemenu.splitscreenfocusid.
 		// See also M_DrawPause.
 
-		const UINT8 splitspecid =
+		const uint8_t splitspecid =
 			g_localplayers[pausemenu.splitscreenfocusid];
 
-		const UINT8 joingame = (
+		const uint8_t joingame = (
 			players[splitspecid].spectator == true
 			&& ((players[splitspecid].pflags & PF_WANTSTOJOIN) == 0)
 		) ? 1 : 0;
@@ -536,8 +536,8 @@ void M_HandleSpectateToggle(INT32 choice)
 		M_QuitPauseMenu(-1);
 
 		// Send spectate
-		UINT8 buf[2];
-		UINT8 *p = buf;
+		uint8_t buf[2];
+		uint8_t *p = buf;
 
 		WRITEUINT8(p, splitspecid);
 		WRITEUINT8(p, joingame);
@@ -571,9 +571,9 @@ void M_HandleSpectateToggle(INT32 choice)
 	S_StartSound(NULL, sfx_s3k5b);
 }
 
-static void M_ExitGameResponse(INT32 ch)
+static void M_ExitGameResponse(int32_t ch)
 {
-	const UINT8 pid = 0;
+	const uint8_t pid = 0;
 
 	if (ch != MA_YES)
 		return;
@@ -589,7 +589,7 @@ static void M_ExitGameResponse(INT32 ch)
 	}
 }
 
-void M_EndGame(INT32 choice)
+void M_EndGame(int32_t choice)
 {
 	(void)choice;
 	if (demo.playback)

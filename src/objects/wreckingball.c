@@ -82,7 +82,7 @@ void Obj_WreckingBallDeath(mobj_t *th)
 	
 	th->momz = 0;
 	
-	for (INT32 i = 0; i < 16; ++i)
+	for (int32_t i = 0; i < 16; ++i)
 	{
 		mobj_t* chunk = P_SpawnMobj(
 			P_RandomRange(PR_ITEM_DEBRIS, (th->x - th->radius), (th->x + th->radius)), 
@@ -110,7 +110,7 @@ void Obj_WreckingBallDeath(mobj_t *th)
 
 void Obj_WreckingBallThink(mobj_t *th)
 {
-	boolean grounded = P_IsObjectOnGround(th);
+	dboolean grounded = P_IsObjectOnGround(th);
 	
 	if (th->state == &states[S_GHZBALLDEATHANIM])	//death blink
 	{
@@ -186,7 +186,7 @@ void Obj_WreckingBallThink(mobj_t *th)
 
 		if (th->health <= 10)
 		{
-			INT32 i;
+			int32_t i;
 			for (i = 10; i >= th->health; i--)
 			{
 				finalspeed = FixedMul(finalspeed, FRACUNIT-FRACUNIT/4);
@@ -248,8 +248,8 @@ void Obj_WreckingBallChunkThink(mobj_t *th)
 		th->renderflags ^= RF_DONTDRAW;
 	}
 		
-	boolean onground = P_IsObjectOnGround(th);
-	UINT8 bounces = 0;
+	dboolean onground = P_IsObjectOnGround(th);
+	uint8_t bounces = 0;
 	
 	th->spritexscale = FRACUNIT;
 	th->spriteyscale = FRACUNIT;	//brute forcing
@@ -271,10 +271,10 @@ void Obj_WreckingBallChunkThink(mobj_t *th)
 void Obj_WreckingBallSpawnChain(mobj_t *th)
 {
 	/*BChain* link = nullptr;
-	INT32 numLinks = 7;
+	int32_t numLinks = 7;
 
 	
-	for (INT32 i = 0; i < numLinks; ++i)
+	for (int32_t i = 0; i < numLinks; ++i)
 	{
 		*BChain node = P_SpawnMobj(th.x, th.y, th.z+th.height/2, MT_GHZBALLLINK)
 		node->next(link);
@@ -341,7 +341,7 @@ void Obj_WreckingBallThrown_Pre(mobj_t *th, fixed_t finalSpeed, fixed_t dir)
 	}
 }
 
-boolean Obj_WreckingBallWasTossed(mobj_t *th)
+dboolean Obj_WreckingBallWasTossed(mobj_t *th)
 {
 	return (wreckingball_flags(th) & WBALL_TOSSED) == WBALL_TOSSED;
 }
@@ -351,7 +351,7 @@ void Obj_WreckingBallDrop(mobj_t *th)
 	wreckingball_flags(th) |= WBALL_DROPPED;
 }
 
-boolean Obj_WreckingBallCanRunOnWater(mobj_t *th)
+dboolean Obj_WreckingBallCanRunOnWater(mobj_t *th)
 {
 	return (wreckingball_flags(th) & WBALL_WATERSKI) == WBALL_WATERSKI;
 }

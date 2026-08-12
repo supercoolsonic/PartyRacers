@@ -51,8 +51,8 @@
 // RadioRacers
 #include "radioracers/rr_video.h"				//SCS - RADIO START
 
-boolean isPingDrawn = false;
-boolean isDrawingInput = false;					//SCS - RADIO END
+dboolean isPingDrawn = false;
+dboolean isDrawingInput = false;					//SCS - RADIO END
 
 extern "C" consvar_t cv_scr_scale, cv_scr_x, cv_scr_y;
 
@@ -162,7 +162,7 @@ static void temp_legacy_finishupdate_draws()
 			isPingDrawn = true;				//SCS - RADIO
 		}									//SCS - RADIO
 
-		// RADIO: Changed fps/ping layout, so need to define a custom boolean to check if ping is being drawn		//SCS - RADIO START
+		// RADIO: Changed fps/ping layout, so need to define a custom dboolean to check if ping is being drawn		//SCS - RADIO START
 		if (cv_ticrate.value)
 			SCR_DisplayTicRate();																					//SCS - RADIO END
 #ifdef SRB2_CONFIG_ENABLE_WEBM_MOVIES

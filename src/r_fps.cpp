@@ -26,7 +26,7 @@
 #include "z_zone.h"
 #include "i_time.h"
 
-UINT32 R_GetFramerateCap(void)
+uint32_t R_GetFramerateCap(void)
 {
 	if (rendermode == render_none)
 	{
@@ -50,7 +50,7 @@ UINT32 R_GetFramerateCap(void)
 	return cv_fpscap.value;
 }
 
-boolean R_UsingFrameInterpolation(void)
+dboolean R_UsingFrameInterpolation(void)
 {
 	return (R_GetFramerateCap() != TICRATE || I_GetTimeScale() < FRACUNIT);
 }
@@ -99,9 +99,9 @@ static vector3_t *R_LerpVector3(const vector3_t *from, const vector3_t *to, fixe
 // recalc necessary stuff for mouseaiming
 // slopes are already calculated for the full possible view (which is 4*viewheight).
 // 18/08/18: (No it's actually 16*viewheight, thanks Jimita for finding this out)
-static void R_SetupFreelook(player_t *player, boolean skybox)
+static void R_SetupFreelook(player_t *player, dboolean skybox)
 {
-	G_FinalClipAimingPitch((INT32 *)&aimingangle, player, skybox);
+	G_FinalClipAimingPitch((int32_t *)&aimingangle, player, skybox);
 
 	centeryfrac = (viewheight/2)<<FRACBITS;
 
@@ -124,7 +124,7 @@ void R_InterpolateViewRollAngle(fixed_t frac)
 void R_InterpolateView(fixed_t frac)
 {
 	viewvars_t* prevview = oldview;
-	UINT8 i;
+	uint8_t i;
 
 	if (FIXED_TO_FLOAT(frac) < 0)
 		frac = 0;
@@ -158,7 +158,7 @@ void R_InterpolateView(fixed_t frac)
 
 void R_UpdateViewInterpolation(void)
 {
-	UINT8 i;
+	uint8_t i;
 
 	for (i = 0; i < MAXSPLITSCREENPLAYERS; i++)
 	{
@@ -170,7 +170,7 @@ void R_UpdateViewInterpolation(void)
 	last_view_update = I_GetTime();
 }
 
-void R_ResetViewInterpolation(UINT8 p)
+void R_ResetViewInterpolation(uint8_t p)
 {
 	// Wait an extra tic if the interpolation state hasn't
 	// updated yet.
@@ -178,7 +178,7 @@ void R_ResetViewInterpolation(UINT8 p)
 
 	if (p == 0)
 	{
-		UINT8 i;
+		uint8_t i;
 		for (i = 0; i < MAXSPLITSCREENPLAYERS; i++)
 		{
 			oldview_invalid[i] = t;
@@ -190,7 +190,7 @@ void R_ResetViewInterpolation(UINT8 p)
 	}
 }
 
-void R_RelativeTeleportViewInterpolation(UINT8 p, fixed_t xdiff, fixed_t ydiff, fixed_t zdiff, angle_t angdiff)
+void R_RelativeTeleportViewInterpolation(uint8_t p, fixed_t xdiff, fixed_t ydiff, fixed_t zdiff, angle_t angdiff)
 {
 	pview_old[p].x += xdiff;
 	pview_old[p].y += ydiff;
@@ -200,7 +200,7 @@ void R_RelativeTeleportViewInterpolation(UINT8 p, fixed_t xdiff, fixed_t ydiff, 
 
 void R_SetViewContext(enum viewcontext_e _viewcontext)
 {
-	UINT8 i = 0;
+	uint8_t i = 0;
 
 	I_Assert(_viewcontext >= VIEWCONTEXT_PLAYER1
 			&& _viewcontext <= VIEWCONTEXT_SKY4);
@@ -328,7 +328,7 @@ static levelinterpolator_t *CreateInterpolator(levelinterpolator_type_e type, th
 	return ret;
 }
 
-void R_CreateInterpolator_SectorPlane(thinker_t *thinker, sector_t *sector, boolean ceiling)
+void R_CreateInterpolator_SectorPlane(thinker_t *thinker, sector_t *sector, dboolean ceiling)
 {
 	levelinterpolator_t *interp = CreateInterpolator(LVLINTERP_SectorPlane, thinker);
 	interp->sectorplane.sector = sector;
@@ -343,7 +343,7 @@ void R_CreateInterpolator_SectorPlane(thinker_t *thinker, sector_t *sector, bool
 	}
 }
 
-void R_CreateInterpolator_SectorScroll(thinker_t *thinker, sector_t *sector, boolean ceiling)
+void R_CreateInterpolator_SectorScroll(thinker_t *thinker, sector_t *sector, dboolean ceiling)
 {
 	levelinterpolator_t *interp = CreateInterpolator(LVLINTERP_SectorScroll, thinker);
 	interp->sectorscroll.sector = sector;

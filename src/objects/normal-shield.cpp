@@ -77,7 +77,7 @@ void Obj_SpawnNormalShieldVisuals(mobj_t *shield)
 	Visual::spawn(static_cast<Shield*>(shield));
 }
 
-boolean Obj_TickNormalShieldVisual(mobj_t *mobj)
+dboolean Obj_TickNormalShieldVisual(mobj_t *mobj)
 {
 	return static_cast<Visual*>(mobj)->tick();
 }

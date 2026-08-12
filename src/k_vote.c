@@ -134,14 +134,14 @@ typedef struct
 	fixed_t x, y;
 	fixed_t destX, destY;
 
-	UINT8 spr;
-	boolean small;
+	uint8_t spr;
+	dboolean small;
 
-	UINT8 action;
+	uint8_t action;
 	tic_t delay;
 
-	SINT8 level;
-	UINT8 player;
+	int8_t level;
+	uint8_t player;
 
 	fixed_t anim; // UI scope variable
 } y_vote_catcher;
@@ -150,9 +150,9 @@ typedef struct
 typedef struct
 {
 	y_vote_catcher catcher;
-	SINT8 selection;
-	UINT8 delay;
-	boolean sentTimeOutVote;
+	int8_t selection;
+	uint8_t delay;
+	dboolean sentTimeOutVote;
 	fixed_t x, destX;
 } y_vote_player;
 
@@ -168,22 +168,22 @@ typedef struct
 typedef struct
 {
 	y_vote_pile pile[VOTE_TOTAL];
-	UINT8 anim;
-	UINT8 tics;
-	UINT32 offset;
-	UINT32 endOffset;
-	UINT8 syncTime;
+	uint8_t anim;
+	uint8_t tics;
+	uint32_t offset;
+	uint32_t endOffset;
+	uint8_t syncTime;
 } y_vote_roulette;
 
 // General vote variables
 typedef struct
 {
-	INT32 timer;
-	INT32 tic, endtic;
-	INT32 selectFinalize, pickFinalize, strikeFinalize;
-	boolean notYetPicked;
-	boolean loaded;
-	SINT8 deferredLevel;
+	int32_t timer;
+	int32_t tic, endtic;
+	int32_t selectFinalize, pickFinalize, strikeFinalize;
+	dboolean notYetPicked;
+	dboolean loaded;
+	int8_t deferredLevel;
 	y_vote_player players[MAXSPLITSCREENPLAYERS];
 	y_vote_roulette roulette;
 
@@ -192,9 +192,9 @@ typedef struct
 	// then we want stage striking!
 	player_t *strike_loser;
 	player_t *strike_winner;
-	boolean strike_turn;
-	boolean strike_time_out;
-	boolean stage_striking;
+	dboolean strike_turn;
+	dboolean strike_time_out;
+	dboolean stage_striking;
 } y_vote_data;
 
 // Voting level drawing
@@ -202,7 +202,7 @@ typedef struct
 {
 	char str[128];
 	size_t str_len;
-	boolean encore;
+	dboolean encore;
 	fixed_t hop;
 } y_vote_draw_level;
 
@@ -252,11 +252,11 @@ static void Y_SetVoteTimer(void)
 	}
 }
 
-static UINT8 Y_CountStriked(void)
+static uint8_t Y_CountStriked(void)
 {
-	INT32 i;
+	int32_t i;
 
-	UINT8 num_striked = 0;
+	uint8_t num_striked = 0;
 	for (i = 0; i < VOTE_NUM_LEVELS; i++)
 	{
 		if (g_votes_striked[i] == true)
@@ -268,7 +268,7 @@ static UINT8 Y_CountStriked(void)
 	return num_striked;
 }
 
-static boolean Y_VoteIDIsSpecial(const UINT8 playerId)
+static dboolean Y_VoteIDIsSpecial(const uint8_t playerId)
 {
 	switch (playerId)
 	{
@@ -286,7 +286,7 @@ static boolean Y_VoteIDIsSpecial(const UINT8 playerId)
 	}
 }
 
-boolean Y_PlayerIDCanVote(const UINT8 playerId)
+dboolean Y_PlayerIDCanVote(const uint8_t playerId)
 {
 	if (Y_VoteIDIsSpecial(playerId) == true)
 	{
@@ -313,7 +313,7 @@ boolean Y_PlayerIDCanVote(const UINT8 playerId)
 	return true;
 }
 
-static boolean Y_IsPlayersTurn(const UINT8 playerId)
+static dboolean Y_IsPlayersTurn(const uint8_t playerId)
 {
 	if (Y_VoteIDIsSpecial(playerId) == true)
 	{
@@ -338,7 +338,7 @@ static boolean Y_IsPlayersTurn(const UINT8 playerId)
 	}
 }
 
-static boolean Y_PlayerIDCanVoteRightNow(const UINT8 playerId)
+static dboolean Y_PlayerIDCanVoteRightNow(const uint8_t playerId)
 {
 	if (Y_IsPlayersTurn(playerId) == false)
 	{
@@ -348,14 +348,14 @@ static boolean Y_PlayerIDCanVoteRightNow(const UINT8 playerId)
 	return Y_PlayerIDCanVote(playerId);
 }
 
-static boolean Y_PlayerCanSelect(const UINT8 localId)
+static dboolean Y_PlayerCanSelect(const uint8_t localId)
 {
 	if (localId > splitscreen)
 	{
 		return false;
 	}
 
-	const UINT8 p = g_localplayers[localId];
+	const uint8_t p = g_localplayers[localId];
 
 	if (g_pickedVote != VOTE_NOT_PICKED)
 	{
@@ -378,9 +378,9 @@ static boolean Y_PlayerCanSelect(const UINT8 localId)
 
 static void Y_SortPile(void)
 {
-	UINT8 numVotes = 0;
-	UINT8 votesLeft = 0;
-	INT32 i;
+	uint8_t numVotes = 0;
+	uint8_t votesLeft = 0;
+	int32_t i;
 
 	for (i = 0; i < VOTE_TOTAL; i++)
 	{
@@ -430,13 +430,13 @@ static void Y_SortPile(void)
 		}
 		else if (numVotes <= 12)
 		{
-			const boolean odd = ((numVotes % 2) != 0);
-			UINT8 rowSize = (numVotes + 1) / 2;
-			INT32 xOffset = 0;
+			const dboolean odd = ((numVotes % 2) != 0);
+			uint8_t rowSize = (numVotes + 1) / 2;
+			int32_t xOffset = 0;
 
 			if (votesLeft > rowSize)
 			{
-				SINT8 topRowIndex = (rowSize - ((votesLeft - 1) % rowSize)) - 1;
+				int8_t topRowIndex = (rowSize - ((votesLeft - 1) % rowSize)) - 1;
 
 				if (odd == true)
 				{
@@ -450,7 +450,7 @@ static void Y_SortPile(void)
 			}
 			else
 			{
-				const SINT8 botRowIndex = votesLeft - 1;
+				const int8_t botRowIndex = votesLeft - 1;
 				xOffset = -(rowSize - 1) + (botRowIndex << 1);
 
 				pile->destY += PILE_SPACING_H >> 1;
@@ -474,16 +474,16 @@ static void Y_SortPile(void)
 	}
 }
 
-void Y_SetPlayersVote(const UINT8 inputPlayerId, SINT8 newVote)
+void Y_SetPlayersVote(const uint8_t inputPlayerId, int8_t newVote)
 {
-	INT32 i;
+	int32_t i;
 
 	if (gamestate != GS_VOTING)
 	{
 		return;
 	}
 
-	UINT8 playerId = inputPlayerId;
+	uint8_t playerId = inputPlayerId;
 
 	// Manually overwrite these players for timed out votes.
 	// Loser/winner is encoded in the vote ID to prevent race
@@ -566,14 +566,14 @@ void Y_SetPlayersVote(const UINT8 inputPlayerId, SINT8 newVote)
 #endif
 }
 
-static void Y_DrawVoteThumbnail(fixed_t center_x, fixed_t center_y, fixed_t width, INT32 flags, SINT8 v, boolean dim, SINT8 playerID, boolean from_selection)
+static void Y_DrawVoteThumbnail(fixed_t center_x, fixed_t center_y, fixed_t width, int32_t flags, int8_t v, dboolean dim, int8_t playerID, dboolean from_selection)
 {
-	const boolean encore = vote_draw.levels[v].encore;
+	const dboolean encore = vote_draw.levels[v].encore;
 	const fixed_t height = (width * BASEVIDHEIGHT) / BASEVIDWIDTH;
 	const fixed_t x = center_x - (width >> 1);
 	const fixed_t y = center_y - (height >> 1);
-	INT32 fx, fy, fw, fh;
-	INT32 dupx, dupy;
+	int32_t fx, fy, fw, fh;
+	int32_t dupx, dupy;
 
 	if (v < 0 || v >= VOTE_NUM_LEVELS)
 	{
@@ -613,7 +613,7 @@ static void Y_DrawVoteThumbnail(fixed_t center_x, fixed_t center_y, fixed_t widt
 
 	V_AdjustXYWithSnap(&fx, &fy, flags, dupx, dupy);
 
-	boolean striked = false;
+	dboolean striked = false;
 	if (from_selection == true)
 	{
 		striked = g_votes_striked[v];
@@ -684,11 +684,11 @@ static void Y_DrawVoteThumbnail(fixed_t center_x, fixed_t center_y, fixed_t widt
 
 	if (playerID >= 0)
 	{
-		const INT32 whiteSq = 16 * dupx;
+		const int32_t whiteSq = 16 * dupx;
 
 		if (playerID < MAXPLAYERS) // Player vote
 		{
-			UINT8 *playerMap = R_GetTranslationColormap(players[playerID].skin, players[playerID].skincolor, GTC_CACHE);
+			uint8_t *playerMap = R_GetTranslationColormap(players[playerID].skin, players[playerID].skincolor, GTC_CACHE);
 			patch_t *playerPatch = faceprefix[players[playerID].skin][FACE_RANK];
 
 			V_DrawFixedPatch(
@@ -731,15 +731,15 @@ static void Y_DrawCatcher(y_vote_catcher *catcher)
 		SKINCOLOR_LILAC,
 	};
 
-	const UINT8 sizeOffset = (catcher->small == true) ? 1 : 0;
+	const uint8_t sizeOffset = (catcher->small == true) ? 1 : 0;
 	tic_t colorTic = 0;
 
 	fixed_t baseX = INT32_MAX;
 	fixed_t x = INT32_MAX;
 	fixed_t y = INT32_MAX;
 
-	UINT8 *craneColor = NULL;
-	UINT8 *bulbColor = NULL;
+	uint8_t *craneColor = NULL;
+	uint8_t *bulbColor = NULL;
 
 	if (catcher->action == CATCHER_NA)
 	{
@@ -818,7 +818,7 @@ static void Y_DrawCatcher(y_vote_catcher *catcher)
 //
 static void Y_DrawVoteBackground(void)
 {
-	static UINT32 bgTimer = 0;
+	static uint32_t bgTimer = 0;
 
 	static fixed_t derrPos = 0;
 	const fixed_t derrLoop = vote_draw.bg_derrText->width * FRACUNIT;
@@ -831,7 +831,7 @@ static void Y_DrawVoteBackground(void)
 		bgTimer = 0;
 	}
 
-	const UINT8 planetFrame = (bgTimer / FRACUNIT) % PLANET_FRAMES;
+	const uint8_t planetFrame = (bgTimer / FRACUNIT) % PLANET_FRAMES;
 
 	if (IS_WEIRD_RES()) {																				//SCS - RADIO START
 		V_DrawAdaptiveScaledFullScreenPatch(vote_draw.bg_planet[planetFrame], NULL, V_NOSCALEPATCH);
@@ -888,7 +888,7 @@ static void Y_DrawVoteBackground(void)
 		derrPos -= derrLoop;
 	}
 	
-	INT32 derrtextflags = 0;				//SCS - RADIO START
+	int32_t derrtextflags = 0;				//SCS - RADIO START
 	if (IS_WEIRD_RES())
 		derrtextflags = V_SNAPTOBOTTOM;		//SCS - RADIO END
 
@@ -913,7 +913,7 @@ static void Y_DrawVoteBackground(void)
 	}
 }
 
-static void Y_DrawVoteSelector(const fixed_t y, const fixed_t time, const UINT8 localPlayer)
+static void Y_DrawVoteSelector(const fixed_t y, const fixed_t time, const uint8_t localPlayer)
 {
 	const fixed_t destX = SELECTION_X + (vote.players[localPlayer].selection * SELECTION_SPACING_W);
 
@@ -927,12 +927,12 @@ static void Y_DrawVoteSelector(const fixed_t y, const fixed_t time, const UINT8 
 		return;
 	}
 
-	static const UINT8 freq = 7;
-	UINT8 *colormap = NULL;
+	static const uint8_t freq = 7;
+	uint8_t *colormap = NULL;
 
 	if (splitscreen > 0)
 	{
-		const UINT8 blink = ((time / freq / FRACUNIT) & 1);
+		const uint8_t blink = ((time / freq / FRACUNIT) & 1);
 
 		colormap = R_GetTranslationColormap(TC_RAINBOW, players[ g_localplayers[localPlayer] ].skincolor, GTC_CACHE);
 
@@ -971,20 +971,20 @@ static void Y_DrawVoteSelection(fixed_t offset)
 
 	fixed_t x = SELECTION_X;
 	fixed_t y = SELECTION_Y + FixedMul(offset, (SELECTION_HEIGHT + SELECTOR_HEIGHT) * 2);
-	INT32 i;
+	int32_t i;
 
 	//
 	// Draw map icons
 	//
 	for (i = 0; i < VOTE_NUM_LEVELS; i++)
 	{
-		boolean selected = false;
+		dboolean selected = false;
 		fixed_t destHop = 0;
-		INT32 j;
+		int32_t j;
 
 		for (j = 0; j <= splitscreen; j++) // another loop for drawing the selection backgrounds in the right order, grumble grumble..
 		{
-			const UINT8 p = g_localplayers[j];
+			const uint8_t p = g_localplayers[j];
 
 			if (vote.players[j].selection != i)
 			{
@@ -1016,8 +1016,8 @@ static void Y_DrawVoteSelection(fixed_t offset)
 			const fixed_t tx = x - (SELECTION_WIDTH >> 1);
 			const fixed_t ty = y + (height >> 1);
 
-			INT32 fx, fy, fw, fh;
-			INT32 dupx, dupy;
+			int32_t fx, fy, fw, fh;
+			int32_t dupx, dupy;
 
 			dupx = vid.dupx;
 			dupy = vid.dupy;
@@ -1067,7 +1067,7 @@ static void Y_DrawVoteSelection(fixed_t offset)
 
 	if (vote.stage_striking == true && Y_CountStriked() < VOTE_NUM_LEVELS-1)
 	{
-		UINT8 current_strike_player = (
+		uint8_t current_strike_player = (
 			(vote.strike_turn == true)
 				? (vote.strike_winner - players)
 				: (vote.strike_loser - players)
@@ -1110,7 +1110,7 @@ static void Y_DrawVoteSelection(fixed_t offset)
 
 		//if (splitscreen > 0)
 		{
-			const UINT8 priority = vote.tic % (splitscreen + 1);
+			const uint8_t priority = vote.tic % (splitscreen + 1);
 
 			for (i = 0; i <= splitscreen; i++)
 			{
@@ -1129,7 +1129,7 @@ static void Y_DrawVoteSelection(fixed_t offset)
 
 static void Y_DrawVotePile(void)
 {
-	INT32 i;
+	int32_t i;
 
 	for (i = 0; i < VOTE_TOTAL; i++)
 	{
@@ -1185,8 +1185,8 @@ void Y_VoteDrawer(void)
 
 	if (vote.loaded == true)
 	{
-		boolean slideOut = true;
-		INT32 i;
+		dboolean slideOut = true;
+		int32_t i;
 
 		for (i = 0; i <= splitscreen; i++)
 		{
@@ -1209,7 +1209,7 @@ void Y_VoteDrawer(void)
 
 	if (vote.timer > 0)
 	{
-		const INT32 tickDown = (vote.timer + 1) / TICRATE;
+		const int32_t tickDown = (vote.timer + 1) / TICRATE;
 
 		// See also y_inter.c
 		V__DrawOneScaleString(
@@ -1247,13 +1247,13 @@ void Y_VoteDrawer(void)
 //
 // Vote screen's selection stops moving
 //
-static void Y_FinalizeVote(const SINT8 level)
+static void Y_FinalizeVote(const int8_t level)
 {
 	nextmap = g_voteLevels[level][0];
 	deferencoremode = ((g_voteLevels[level][1] & VOTE_MOD_ENCORE) ==  VOTE_MOD_ENCORE);
 }
 
-static void Y_VoteStops(SINT8 pick, SINT8 level)
+static void Y_VoteStops(int8_t pick, int8_t level)
 {
 	Y_FinalizeVote(level);
 
@@ -1267,7 +1267,7 @@ static void Y_VoteStops(SINT8 pick, SINT8 level)
 	}
 }
 
-static void Y_PlayerSendStrike(const UINT8 localPlayer)
+static void Y_PlayerSendStrike(const uint8_t localPlayer)
 {
 	y_vote_player *const player = &vote.players[localPlayer];
 	y_vote_catcher *const catcher = &player->catcher;
@@ -1283,7 +1283,7 @@ static void Y_PlayerSendStrike(const UINT8 localPlayer)
 	catcher->delay = 5;
 }
 
-static void Y_PlayerSendVote(const UINT8 localPlayer)
+static void Y_PlayerSendVote(const uint8_t localPlayer)
 {
 	if (vote.stage_striking == true)
 	{
@@ -1305,7 +1305,7 @@ static void Y_PlayerSendVote(const UINT8 localPlayer)
 	S_StartSound(NULL, sfx_kc37);
 }
 
-static boolean Y_TickGenericCatcher(y_vote_catcher *const catcher)
+static dboolean Y_TickGenericCatcher(y_vote_catcher *const catcher)
 {
 	fixed_t spd = CATCHER_SPEED;
 	fixed_t xDelta = catcher->destX - catcher->x;
@@ -1360,7 +1360,7 @@ static boolean Y_TickGenericCatcher(y_vote_catcher *const catcher)
 	return true;
 }
 
-static void Y_TickPlayerCatcher(const UINT8 localPlayer)
+static void Y_TickPlayerCatcher(const uint8_t localPlayer)
 {
 	y_vote_player *const player = &vote.players[localPlayer];
 	y_vote_catcher *const catcher = &player->catcher;
@@ -1437,7 +1437,7 @@ static void Y_TickPlayerCatcher(const UINT8 localPlayer)
 	}
 }
 
-static void Y_TickPileCatcher(const UINT8 playerId)
+static void Y_TickPileCatcher(const uint8_t playerId)
 {
 	y_vote_pile *const pile = &vote.roulette.pile[playerId];
 	y_vote_catcher *const catcher = &pile->catcher;
@@ -1488,7 +1488,7 @@ static void Y_TickPileCatcher(const UINT8 playerId)
 	}
 }
 
-static void Y_TickPlayerPile(const UINT8 playerId)
+static void Y_TickPlayerPile(const uint8_t playerId)
 {
 	y_vote_pile *const pile = &vote.roulette.pile[playerId];
 	y_vote_catcher *const catcher = &pile->catcher;
@@ -1522,15 +1522,15 @@ static void Y_TickPlayerPile(const UINT8 playerId)
 
 static void Y_TickVoteRoulette(void)
 {
-	INT32 i;
+	int32_t i;
 
 	vote.timer = 0;
 	vote.roulette.syncTime++;
 
 	if (vote.endtic == -1)
 	{
-		UINT8 tempvotes[VOTE_TOTAL];
-		UINT8 numvotes = 0;
+		uint8_t tempvotes[VOTE_TOTAL];
+		uint8_t numvotes = 0;
 
 		for (i = 0; i < VOTE_TOTAL; i++)
 		{
@@ -1602,16 +1602,16 @@ static void Y_TickVoteRoulette(void)
 	}
 }
 
-static SINT8 Y_TryMapAngerVote(void)
+static int8_t Y_TryMapAngerVote(void)
 {
-	SINT8 angryMaps[VOTE_NUM_LEVELS] = { -1 };
+	int8_t angryMaps[VOTE_NUM_LEVELS] = { -1 };
 	size_t angryMapsCount = 0;
 
-	boolean mapVoted[VOTE_NUM_LEVELS] = { false };
-	INT32 pick = 0;
+	dboolean mapVoted[VOTE_NUM_LEVELS] = { false };
+	int32_t pick = 0;
 
-	INT32 numPlayers = 0;
-	INT32 i = 0;
+	int32_t numPlayers = 0;
+	int32_t i = 0;
 
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
@@ -1636,7 +1636,7 @@ static SINT8 Y_TryMapAngerVote(void)
 
 	for (i = 0; i < VOTE_NUM_LEVELS; i++)
 	{
-		const INT16 mapID = g_voteLevels[i][0];
+		const int16_t mapID = g_voteLevels[i][0];
 
 		if (mapVoted[i] == true)
 		{
@@ -1669,7 +1669,7 @@ static SINT8 Y_TryMapAngerVote(void)
 
 static void Y_ExitStageStrike(void)
 {
-	INT32 i;
+	int32_t i;
 
 	vote.stage_striking = false;
 
@@ -1686,10 +1686,10 @@ static void Y_ExitStageStrike(void)
 	Y_SetVoteTimer();
 }
 
-static boolean Y_CheckStageStrikeStatus(void)
+static dboolean Y_CheckStageStrikeStatus(void)
 {
-	INT32 i;
-	UINT8 num_voters = 0;
+	int32_t i;
+	uint8_t num_voters = 0;
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
 		if (Y_PlayerIDCanVote(i) == false)
@@ -1728,7 +1728,7 @@ static boolean Y_CheckStageStrikeStatus(void)
 
 static void Y_TickVoteStageStrike(void)
 {
-	INT32 i;
+	int32_t i;
 
 	if (Y_CheckStageStrikeStatus() == false)
 	{
@@ -1736,7 +1736,7 @@ static void Y_TickVoteStageStrike(void)
 		return;
 	}
 
-	SINT8 the_only_level = VOTE_NOT_PICKED;
+	int8_t the_only_level = VOTE_NOT_PICKED;
 	for (i = 0; i < VOTE_NUM_LEVELS; i++)
 	{
 		if (g_votes_striked[i] == true)
@@ -1766,7 +1766,7 @@ static void Y_TickVoteStageStrike(void)
 			{
 				for (i = 0; i <= splitscreen; i++)
 				{
-					UINT8 p = g_localplayers[i];
+					uint8_t p = g_localplayers[i];
 
 					if (p != (vote.strike_loser - players)
 						&& p != (vote.strike_winner - players))
@@ -1833,7 +1833,7 @@ static void Y_TickVoteStageStrike(void)
 			// Let's just strike a random stage for them.
 			if (server && vote.strike_time_out == false)
 			{
-				INT32 rng = M_RandomKey(VOTE_NUM_LEVELS);
+				int32_t rng = M_RandomKey(VOTE_NUM_LEVELS);
 				for (i = 0; i < VOTE_NUM_LEVELS; i++)
 				{
 					if (g_votes_striked[i] == false)
@@ -1864,8 +1864,8 @@ static void Y_TickVoteStageStrike(void)
 
 static void Y_TickVoteSelection(void)
 {
-	boolean everyone_voted = true;/* the default condition */
-	INT32 i, j;
+	dboolean everyone_voted = true;/* the default condition */
+	int32_t i, j;
 
 	if (vote.tic < 3*(NEWTICRATE/7)) // give it some time before letting you control it :V
 	{
@@ -1878,7 +1878,7 @@ static void Y_TickVoteSelection(void)
 	*/
 	for (i = 0; i <= splitscreen; i++)
 	{
-		boolean moved = false;
+		dboolean moved = false;
 
 		if (Y_PlayerCanSelect(i) == true)
 		{
@@ -1962,7 +1962,7 @@ static void Y_TickVoteSelection(void)
 			if (( M_RandomFixed() % 100 ) == 0)
 			{
 				// bots vote randomly
-				INT32 rng = M_RandomKey(VOTE_NUM_LEVELS);
+				int32_t rng = M_RandomKey(VOTE_NUM_LEVELS);
 				for (j = 0; j < VOTE_NUM_LEVELS; j++)
 				{
 					if (g_votes_striked[j] == false)
@@ -2042,7 +2042,7 @@ static void Y_TickVoteSelection(void)
 //
 void Y_VoteTicker(void)
 {
-	INT32 i;
+	int32_t i;
 
 	if (paused || P_AutoPause() || vote.loaded == false)
 	{
@@ -2111,7 +2111,7 @@ void Y_VoteTicker(void)
 //
 static void Y_InitVoteDrawing(void)
 {
-	INT32 i = 0, j = 0;
+	int32_t i = 0, j = 0;
 
 	vote_draw.ruby_icon = W_CachePatchName("RUBYICON", PU_STATIC);
 	vote_draw.strike_icon = W_CachePatchName("VT_LSTRK", PU_STATIC);
@@ -2202,14 +2202,14 @@ static void Y_InitVoteDrawing(void)
 	vote_draw.selectTransition = FRACUNIT;
 }
 
-static boolean Y_DetermineStageStrike(void)
+static dboolean Y_DetermineStageStrike(void)
 {
 	player_t *a = NULL;
 	player_t *b = NULL;
 
-	UINT8 num_voters = 0;
+	uint8_t num_voters = 0;
 
-	INT32 i;
+	int32_t i;
 
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
@@ -2242,8 +2242,8 @@ static boolean Y_DetermineStageStrike(void)
 		return false;
 	}
 
-	UINT32 score_a = 0;
-	UINT32 score_b = 0;
+	uint32_t score_a = 0;
+	uint32_t score_b = 0;
 
 	intertype_t scoring_type = Y_GetIntermissionType();
 	switch (scoring_type)
@@ -2301,7 +2301,7 @@ static boolean Y_DetermineStageStrike(void)
 
 void Y_StartVote(void)
 {
-	INT32 i = 0;
+	int32_t i = 0;
 
 	memset(&vote, 0, sizeof(vote));
 	memset(&vote_draw, 0, sizeof(vote_draw));
@@ -2363,7 +2363,7 @@ void Y_StartVote(void)
 //
 static void Y_UnloadVoteData(void)
 {
-	INT32 i, j;
+	int32_t i, j;
 
 	vote.loaded = false;
 
@@ -2436,7 +2436,7 @@ enum
 	VOTE_END_NORMAL,
 };
 
-void Y_SetupVoteFinish(SINT8 pick, SINT8 level, SINT8 anger)
+void Y_SetupVoteFinish(int8_t pick, int8_t level, int8_t anger)
 {
 	if (vote.loaded == false)
 	{
@@ -2457,9 +2457,9 @@ void Y_SetupVoteFinish(SINT8 pick, SINT8 level, SINT8 anger)
 
 	if (g_pickedVote == VOTE_NOT_PICKED)
 	{
-		INT32 i;
-		SINT8 votecompare = VOTE_NOT_PICKED;
-		INT32 endtype = VOTE_END_IMMEDIATE;
+		int32_t i;
+		int8_t votecompare = VOTE_NOT_PICKED;
+		int32_t endtype = VOTE_END_IMMEDIATE;
 
 		vote.roulette.syncTime = 0;
 
@@ -2525,7 +2525,7 @@ enum
 	VOTE_CTX_DUEL,
 };
 
-UINT8 Y_VoteContext(void)
+uint8_t Y_VoteContext(void)
 {
 	if (vote.stage_striking == true)
 	{

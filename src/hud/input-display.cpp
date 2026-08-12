@@ -62,7 +62,7 @@ const char* dpad_suffix(const Vec2<float>& v)
 
 }; // namespace
 
-void K_DrawInputDisplay(float x, float y, INT32 flags, char mode, UINT8 pid, boolean local, boolean transparent)
+void K_DrawInputDisplay(float x, float y, int32_t flags, char mode, uint8_t pid, dboolean local, dboolean transparent)
 {
 	auto fade_in = []
 	{
@@ -75,7 +75,7 @@ void K_DrawInputDisplay(float x, float y, INT32 flags, char mode, UINT8 pid, boo
 
 	// No assigned device? Well, you got to this screen somehow.
 	// Use menu behavior to guess from connected devices.
-	boolean guessinput = (G_GetDeviceForPlayer(pid) == -1);
+	dboolean guessinput = (G_GetDeviceForPlayer(pid) == -1);
 
 	// PLEASE DO NOT DANNY FUCKING PHANTOM ON THE PROFILE CONTROLS MENU
 	int alpha = (mode == '_') ? 9 : fade_in();
@@ -84,13 +84,13 @@ void K_DrawInputDisplay(float x, float y, INT32 flags, char mode, UINT8 pid, boo
 		return;
 
 	const ticcmd_t& cmd = players[displayplayers[pid]].cmd;
-	const boolean analog = (mode == '4' || mode == '5') ? players[displayplayers[pid]].analoginput : false;
+	const dboolean analog = (mode == '4' || mode == '5') ? players[displayplayers[pid]].analoginput : false;
 	srb2::String prefix = srb2::format("PR{}", mode);
 	auto gfx = [&]<typename... Args>(fmt::format_string<Args...> format, Args&&... args) -> srb2::String
 	{
 		return prefix + srb2::format(format, std::forward<Args>(args)...);
 	};
-	auto but = [&](char key, INT32 gc, UINT32 bt) -> srb2::String
+	auto but = [&](char key, int32_t gc, uint32_t bt) -> srb2::String
 	{
 		bool press = local ? G_PlayerInputAnalog(pid, gc, guessinput) : ((cmd.buttons & bt) == bt);
 		if (press)

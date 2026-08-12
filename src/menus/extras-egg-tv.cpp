@@ -33,7 +33,7 @@ void M_DrawEggTV()
 	g_egg_tv->draw();
 }
 
-boolean M_QuitEggTV()
+dboolean M_QuitEggTV()
 {
 	g_egg_tv = {};
 	
@@ -45,11 +45,11 @@ boolean M_QuitEggTV()
 	return true;
 }
 
-boolean M_HandleEggTV(INT32 choice)
+dboolean M_HandleEggTV(int32_t choice)
 {
 	(void)choice;
 
-	const UINT8 pid = 0;
+	const uint8_t pid = 0;
 	const EggTV::InputReaction reaction = g_egg_tv->input(pid);
 
 	if (reaction.bypass)
@@ -66,7 +66,7 @@ boolean M_HandleEggTV(INT32 choice)
 	return true;
 }
 
-void M_DeleteReplayChoice(INT32 choice)
+void M_DeleteReplayChoice(int32_t choice)
 {
 	if (choice == MA_YES)
 	{
@@ -77,7 +77,7 @@ void M_DeleteReplayChoice(INT32 choice)
 	}
 }
 
-void M_DeleteReplay(INT32 c)
+void M_DeleteReplay(int32_t c)
 {
 	(void)c;
 	M_StartMessage("Egg TV",
@@ -92,7 +92,7 @@ void M_DeleteReplay(INT32 c)
 	S_StartSound(nullptr, sfx_s3k36); // lel skid
 }
 
-void M_FavoriteReplay(INT32 c)
+void M_FavoriteReplay(int32_t c)
 {
 	(void)c;
 
@@ -139,7 +139,7 @@ menu_t EXTRAS_EggTVDef =
 };
 
 // Call this to construct Egg TV menu
-void M_EggTV(INT32 choice)
+void M_EggTV(int32_t choice)
 {
 	g_egg_tv = std::make_unique<EggTV>();
 

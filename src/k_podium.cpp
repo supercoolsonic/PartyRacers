@@ -70,21 +70,21 @@ typedef enum
 
 static struct podiumData_s
 {
-	boolean ranking;
+	dboolean ranking;
 	gpRank_t rank;
 	gp_rank_e grade;
 
 	podium_state_e state;
-	INT32 delay;
-	INT32 transition, transitionTime;
+	int32_t delay;
+	int32_t transition, transitionTime;
 
-	UINT8 displayLevels;
+	uint8_t displayLevels;
 	sfxenum_t gradeVoice;
 
 	cupheader_t *cup;
-	UINT8 emeraldnum;
+	uint8_t emeraldnum;
 
-	boolean fastForward;
+	dboolean fastForward;
 
 	char header[64];
 	char difficulty[64];
@@ -126,7 +126,7 @@ void podiumData_s::Init(void)
 		memset(&rank, 0, sizeof(gpRank_t));
 		rank.skin = players[consoleplayer].skin;
 
-		rank.numPlayers = std::clamp<UINT8>(M_RandomRange(0, MAXSPLITSCREENPLAYERS + 1), 1, MAXSPLITSCREENPLAYERS);
+		rank.numPlayers = std::clamp<uint8_t>(M_RandomRange(0, MAXSPLITSCREENPLAYERS + 1), 1, MAXSPLITSCREENPLAYERS);
 		rank.totalPlayers = K_GetGPPlayerCount(rank.numPlayers);
 
 		rank.position = M_RandomRange(1, 4);
@@ -136,28 +136,28 @@ void podiumData_s::Init(void)
 		// Fake totals
 		rank.numLevels = 8;
 
-		constexpr INT32 numRaces = 5;
-		for (INT32 i = 0; i < rank.numPlayers; i++)
+		constexpr int32_t numRaces = 5;
+		for (int32_t i = 0; i < rank.numPlayers; i++)
 		{
 			rank.totalPoints += numRaces * K_CalculateGPRankPoints(EXP_MAX, i+1, rank.totalPlayers);
 		}
 		rank.totalRings = numRaces * rank.numPlayers * 20;
 
 		// Randomized winnings
-		INT32 rgs = 0;
-		INT32 exp = 0;
-		INT32 texp = 0;
-		INT32 prs = 0;
-		INT32 tprs = 0;
+		int32_t rgs = 0;
+		int32_t exp = 0;
+		int32_t texp = 0;
+		int32_t prs = 0;
+		int32_t tprs = 0;
 
 		rank.winPoints = M_RandomRange(0, rank.totalPoints);
 
-		for (INT32 i = 0; i < rank.numLevels; i++)
+		for (int32_t i = 0; i < rank.numLevels; i++)
 		{
 			gpRank_level_t *const lvl = &rank.levels[i];
-			UINT8 specialWinner = 0;
-			UINT16 pprs = 0;
-			UINT16 pexp = 0;
+			uint8_t specialWinner = 0;
+			uint16_t pprs = 0;
+			uint16_t pexp = 0;
 
 			lvl->id = M_RandomRange(4, nummapheaders);
 
@@ -192,7 +192,7 @@ void podiumData_s::Init(void)
 			if (!M_RandomRange(0, 2))
 				lvl->continues = M_RandomRange(1, 3);
 
-			for (INT32 j = 0; j < rank.numPlayers; j++)
+			for (int32_t j = 0; j < rank.numPlayers; j++)
 			{
 				gpRank_level_perplayer_t *const dta = &lvl->perPlayer[j];
 
@@ -224,7 +224,7 @@ void podiumData_s::Init(void)
 				}
 				else
 				{
-					dta->grade = static_cast<gp_rank_e>(M_RandomRange(static_cast<INT32>(GRADE_E), static_cast<INT32>(GRADE_A)));
+					dta->grade = static_cast<gp_rank_e>(M_RandomRange(static_cast<int32_t>(GRADE_E), static_cast<int32_t>(GRADE_A)));
 				}
 			}
 
@@ -449,14 +449,14 @@ void podiumData_s::Tick(void)
 
 void podiumData_s::Draw(void)
 {
-	INT32 i;
+	int32_t i;
 
 	const float transition_f = FixedToFloat(transition);
 	const float transition_i = 1.0 - transition_f;
 
 	srb2::Draw drawer = srb2::Draw(0, 0);
 
-	INT32 fade = 5;
+	int32_t fade = 5;
 	if (state == PODIUM_ST_CONGRATS_SLIDEIN)
 	{
 		fade = (5 * transition_f);
@@ -469,9 +469,9 @@ void podiumData_s::Draw(void)
 		31, fade
 	);
 
-	constexpr INT32 header_height = 36;
-	constexpr INT32 header_offset = -16;
-	constexpr INT32 header_centered = (BASEVIDHEIGHT * 0.5) - header_height - header_offset;
+	constexpr int32_t header_height = 36;
+	constexpr int32_t header_offset = -16;
+	constexpr int32_t header_centered = (BASEVIDHEIGHT * 0.5) - header_height - header_offset;
 
 	switch (state)
 	{
@@ -500,12 +500,12 @@ void podiumData_s::Draw(void)
 			break;
 	}
 
-	const boolean singlePlayer = (rank.numPlayers == 1);
+	const dboolean singlePlayer = (rank.numPlayers == 1);
 	player_t *bestHuman = &players[consoleplayer];
 
 	if (singlePlayer == false)
 	{
-		UINT8 bestPos = UINT8_MAX;
+		uint8_t bestPos = UINT8_MAX;
 
 		for (i = 0; i < rank.numPlayers; i++)
 		{
@@ -610,7 +610,7 @@ void podiumData_s::Draw(void)
 				}
 			}
 
-			INT32 p;
+			int32_t p;
 			for (p = 0; p < rank.numPlayers; p++)
 			{
 				player_t *const player = &players[displayplayers[p]];
@@ -669,9 +669,9 @@ void podiumData_s::Draw(void)
 							case GPEVENT_SPECIAL:
 							{
 								srb2::Draw drawer_emerald = drawer_gametype;
-								UINT8 emeraldNum = g_podiumData.emeraldnum;
+								uint8_t emeraldNum = g_podiumData.emeraldnum;
 
-								boolean useWhiteFrame = ((leveltime & 1) || !dta->gotSpecialPrize);
+								dboolean useWhiteFrame = ((leveltime & 1) || !dta->gotSpecialPrize);
 								patch_t *emeraldPatch = nullptr;
 								skincolornum_t emeraldColor = SKINCOLOR_NONE;
 
@@ -727,8 +727,8 @@ void podiumData_s::Draw(void)
 								// Colorize the crystal, just like we do for hud
 								skincolornum_t overlaycolor = SKINCOLOR_MUSTARD;
 								fixed_t stablerateinverse = FRACUNIT - EXP_STABLERATE;
-								INT16 exp_range = EXP_MAX-EXP_MIN;
-								INT16 exp_offset = dta->exp-EXP_MIN;
+								int16_t exp_range = EXP_MAX-EXP_MIN;
+								int16_t exp_offset = dta->exp-EXP_MIN;
 								fixed_t factor = (exp_offset*FRACUNIT) / exp_range; // 0.0 to 1.0 in fixed
 								// amount of blue is how much factor is above EXP_STABLERATE, and amount of red is how much factor is below
 								// assume that EXP_STABLERATE is within 0.0 to 1.0 in fixed
@@ -893,12 +893,12 @@ void podiumData_s::Draw(void)
 
 		// Colorize the crystal for the totals, just like we do for in race hud
 		fixed_t extraexpfactor = (EXP_MAX*FRACUNIT) / EXP_TARGET;
-		INT16 totalExpMax = FixedMul(rank.totalExp*FRACUNIT, extraexpfactor) / FRACUNIT; // im just going to calculate it from target lol
-		INT16 totalExpMin = rank.numPlayers*EXP_MIN;
+		int16_t totalExpMax = FixedMul(rank.totalExp*FRACUNIT, extraexpfactor) / FRACUNIT; // im just going to calculate it from target lol
+		int16_t totalExpMin = rank.numPlayers*EXP_MIN;
 		skincolornum_t overlaycolor = SKINCOLOR_MUSTARD;
 		fixed_t stablerateinverse = FRACUNIT - EXP_STABLERATE;
-		INT16 exp_range = totalExpMax-totalExpMin;
-		INT16 exp_offset = rank.exp-totalExpMin;
+		int16_t exp_range = totalExpMax-totalExpMin;
+		int16_t exp_offset = rank.exp-totalExpMin;
 		fixed_t factor = (exp_offset*FRACUNIT) / exp_range; // 0.0 to 1.0 in fixed
 		// amount of blue is how much factor is above EXP_STABLERATE, and amount of red is how much factor is below
 		// assume that EXP_STABLERATE is within 0.0 to 1.0 in fixed
@@ -946,9 +946,9 @@ void podiumData_s::Draw(void)
 
 		if (rank.specialWon == true)
 		{
-			UINT8 emeraldNum = g_podiumData.emeraldnum;
+			uint8_t emeraldNum = g_podiumData.emeraldnum;
 
-			const boolean emeraldBlink = (leveltime & 1);
+			const dboolean emeraldBlink = (leveltime & 1);
 			patch_t *emeraldOverlay = nullptr;
 			patch_t *emeraldUnderlay = nullptr;
 			skincolornum_t emeraldColor = SKINCOLOR_NONE;
@@ -1049,27 +1049,27 @@ void podiumData_s::Draw(void)
 }
 
 /*--------------------------------------------------
-	boolean K_PodiumSequence(void)
+	dboolean K_PodiumSequence(void)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_PodiumSequence(void)
+dboolean K_PodiumSequence(void)
 {
 	return (gamestate == GS_CEREMONY);
 }
 
 /*--------------------------------------------------
-	boolean K_PodiumRanking(void)
+	dboolean K_PodiumRanking(void)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_PodiumRanking(void)
+dboolean K_PodiumRanking(void)
 {
 	return (gamestate == GS_CEREMONY && g_podiumData.ranking == true);
 }
 
 /*--------------------------------------------------
-	boolean K_PodiumGrade(void)
+	dboolean K_PodiumGrade(void)
 
 		See header file for description.
 --------------------------------------------------*/
@@ -1084,11 +1084,11 @@ gp_rank_e K_PodiumGrade(void)
 }
 
 /*--------------------------------------------------
-	boolean K_PodiumHasEmerald(void)
+	dboolean K_PodiumHasEmerald(void)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_PodiumHasEmerald(void)
+dboolean K_PodiumHasEmerald(void)
 {
 	if (K_PodiumSequence() == false)
 	{
@@ -1099,14 +1099,14 @@ boolean K_PodiumHasEmerald(void)
 }
 
 /*--------------------------------------------------
-	UINT8 K_GetPodiumPosition(player_t *player)
+	uint8_t K_GetPodiumPosition(player_t *player)
 
 		See header file for description.
 --------------------------------------------------*/
-UINT8 K_GetPodiumPosition(player_t *player)
+uint8_t K_GetPodiumPosition(player_t *player)
 {
-	UINT8 position = 1;
-	INT32 i;
+	uint8_t position = 1;
+	int32_t i;
 
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
@@ -1237,19 +1237,19 @@ void K_UpdatePodiumWaypoints(player_t *const player)
 }
 
 /*--------------------------------------------------
-	boolean K_StartCeremony(void)
+	dboolean K_StartCeremony(void)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_StartCeremony(void)
+dboolean K_StartCeremony(void)
 {
 	if (grandprixinfo.gp == false)
 	{
 		return false;
 	}
 
-	INT32 i;
-	INT32 podiumMapNum = NEXTMAP_INVALID;
+	int32_t i;
+	int32_t podiumMapNum = NEXTMAP_INVALID;
 
 	if (grandprixinfo.cup != NULL
 	&& grandprixinfo.cup->cachedlevels[CUPCACHE_PODIUM] != NEXTMAP_INVALID)
@@ -1325,7 +1325,7 @@ void K_FinishCeremony(void)
 --------------------------------------------------*/
 void K_ResetCeremony(void)
 {
-	SINT8 i;
+	int8_t i;
 
 	memset(&g_podiumData, 0, sizeof(struct podiumData_s));
 
@@ -1352,7 +1352,7 @@ void K_ResetCeremony(void)
 			mapmusrng = 0;
 		}
 
-		UINT8 limit = (encoremode && mapheaderinfo[gamemap-1]->encoremusname_size)
+		uint8_t limit = (encoremode && mapheaderinfo[gamemap-1]->encoremusname_size)
 			? mapheaderinfo[gamemap-1]->encoremusname_size
 			: mapheaderinfo[gamemap-1]->musname_size;
 
@@ -1431,7 +1431,7 @@ void K_ResetCeremony(void)
 	// who's just won on Normal from feeling obligated to complete Easy too.
 	for (; i >= 0; i--)
 	{
-		boolean anymerit = false;
+		dboolean anymerit = false;
 
 		if ((grandprixinfo.cup->windata[i].best_placement == 0) // First run
 			|| (g_podiumData.rank.position <= grandprixinfo.cup->windata[i].best_placement)) // Later, better run
@@ -1474,11 +1474,11 @@ void K_ResetCeremony(void)
 }
 
 /*--------------------------------------------------
-	void K_CeremonyTicker(boolean run)
+	void K_CeremonyTicker(dboolean run)
 
 		See header file for description.
 --------------------------------------------------*/
-void K_CeremonyTicker(boolean run)
+void K_CeremonyTicker(dboolean run)
 {
 	// don't trigger if doing anything besides idling
 	if (gameaction != ga_nothing || gamestate != GS_CEREMONY)

@@ -441,6 +441,9 @@ static menuitem_t OPTIONS_RadioRacersFun[] =
 	{IT_STRING | IT_CVAR, "CPU Randomization", "Make it so CPUs can randomize their color and follower each race. \x82(Disabled in netgames.)",		//SCS ADD START
 		NULL, {.cvar = &cv_toggle_cpu_colorfollowerrand}, 0, 0},
 		
+	{IT_STRING | IT_CVAR, "Item Spy", "Should item spy be beside portraits, or overhead? \x82(Portraits ignored in splitscreen)",	
+		NULL, {.cvar = &cv_toggle_itemspytype}, 0, 0},	
+		
 	{IT_SPACE | IT_NOTHING, NULL,  NULL,
 		NULL, {NULL}, 0, 0},
 		
@@ -460,7 +463,7 @@ static menuitem_t OPTIONS_RadioRacersFun[] =
 		NULL, {.cvar = &cv_toggle_ribbon_signposts}, 0, 0}, 
 		
 	{IT_STRING | IT_CVAR, "Sign Sparkles", "Should 1st place's signpost sparkle if the player achieved perfect EXP during the race?",
-		NULL, {.cvar = &cv_toggle_sparkling_signposts}, 0, 0},																								//SCS ADD END
+		NULL, {.cvar = &cv_toggle_sparkling_signposts}, 0, 0},																					//SCS ADD END
 		
 };
 
@@ -574,7 +577,7 @@ void RumbleEvents_OnChange(void)
 {
 	if (con_startup) return;
 
-	UINT16 newstatus = (cv_morerumbleevents.value) ? IT_STRING | IT_CVAR : IT_GRAYEDOUT;
+	uint16_t newstatus = (cv_morerumbleevents.value) ? IT_STRING | IT_CVAR : IT_GRAYEDOUT;
 
 	for (int i = 3; i < 11; i++) {
 		OPTIONS_RadioRacersGameplay[i].status = newstatus;
@@ -600,7 +603,7 @@ void Roulette_OnChange(void)
 {
 	if (con_startup) return;
 
-	UINT16 newstatus = (cv_rouletteonplayer.value) ? IT_STRING | IT_CVAR : IT_GRAYEDOUT;
+	uint16_t newstatus = (cv_rouletteonplayer.value) ? IT_STRING | IT_CVAR : IT_GRAYEDOUT;
 
 	for (int i = 17; i < 21; i++) {							//SCS EDIT - changing from 16 and 20 to 17 and 21. Not sure how this ever started happening, but whatever.
 		OPTIONS_RadioRacersHud[i].status = newstatus;

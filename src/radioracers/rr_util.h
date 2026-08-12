@@ -25,19 +25,19 @@ typedef enum {
 extern int scaleInt(int value, fixed_t scale);
 extern void RR_HandleBlueSphereRumble(player_t *player);
 extern void RR_AnnounceBattleWinner(player_t *player, battle_win_type_t type);
-extern void RR_PlayCountdownJingle(INT16 timer, player_t *player);
-extern boolean RR_IsBattle(void);
-extern boolean RR_ShouldShowEmeraldsInMinimap(void);
-extern boolean RR_ShouldGhostGardenArrowTop(mobj_t *mo);			//SCS ADD
-extern boolean RR_ShouldGhostGardenArrowFloor(mobj_t *mo);			//SCS ADD
-extern boolean RR_ShouldGhostRing(mobj_t *mo);
-extern boolean RR_ShouldGhostRingboxes(mobj_t *mo);
-extern boolean RR_ShouldGhostItemCapsuleParts(mobj_t* mo);
-extern boolean RR_ShouldGhostItemCapsuleNumbers(mobj_t *mo);
-extern boolean RR_ShouldRecolorVoltage(mobj_t *mo); // Voltage
-extern INT32 RR_FetchAlternateTripwire(INT32 original_textnum); // Tripwire
-extern void RR_GetTrackingCoordinatesForPlayer(trackingResult_t *result, boolean playerHasMobj);
-extern UINT16 get_skincolornum(const char *word);
+extern void RR_PlayCountdownJingle(int16_t timer, player_t *player);
+extern dboolean RR_IsBattle(void);
+extern dboolean RR_ShouldShowEmeraldsInMinimap(void);
+extern dboolean RR_ShouldGhostGardenArrowTop(mobj_t *mo);			//SCS ADD
+extern dboolean RR_ShouldGhostGardenArrowFloor(mobj_t *mo);			//SCS ADD
+extern dboolean RR_ShouldGhostRing(mobj_t *mo);
+extern dboolean RR_ShouldGhostRingboxes(mobj_t *mo);
+extern dboolean RR_ShouldGhostItemCapsuleParts(mobj_t* mo);
+extern dboolean RR_ShouldGhostItemCapsuleNumbers(mobj_t *mo);
+extern dboolean RR_ShouldRecolorVoltage(mobj_t *mo); // Voltage
+extern int32_t RR_FetchAlternateTripwire(int32_t original_textnum); // Tripwire
+extern void RR_GetTrackingCoordinatesForPlayer(trackingResult_t *result, dboolean playerHasMobj);
+extern uint16_t get_skincolornum(const char *word);
 
 #define IS_BEING_CHASED_BY_SPB(p) (p->pflags & PF_RINGLOCK)
 

@@ -268,7 +268,7 @@ static void RingShooterCountdown(mobj_t *mo)
 
 static void RingShooterFlicker(mobj_t *mo)
 {
-	UINT32 trans;
+	uint32_t trans;
 	mobj_t *part = mo->tracer;
 
 	while (!P_MobjWasRemoved(part->tracer))
@@ -302,7 +302,7 @@ static void ActivateRingShooter(mobj_t *mo)
 	RingShooterCountdown(mo);
 }
 
-static boolean RingShooterInit(mobj_t *mo)
+static dboolean RingShooterInit(mobj_t *mo)
 {
 	if (rs_base_initstate(mo) == -1)
 	{
@@ -374,7 +374,7 @@ static boolean RingShooterInit(mobj_t *mo)
 	return (rs_base_initstate(mo) != -1);
 }
 
-boolean Obj_RingShooterThinker(mobj_t *mo)
+dboolean Obj_RingShooterThinker(mobj_t *mo)
 {
 	if (RingShooterInit(mo) == true)
 	{
@@ -426,7 +426,7 @@ boolean Obj_RingShooterThinker(mobj_t *mo)
 
 void Obj_PlayerUsedRingShooter(mobj_t *base, player_t *player)
 {
-	const UINT8 playerID = player - players;
+	const uint8_t playerID = player - players;
 	if (playerID == rs_base_playerlast(base))
 	{
 		return;
@@ -508,10 +508,10 @@ static void SpawnRingShooter(player_t *player)
 	mobj_t *mo = player->mo;
 	mobj_t *base = P_SpawnMobj(mo->x, mo->y, mo->z, MT_RINGSHOOTER);
 	mobj_t *part, *refNipple;
-	UINT32 frameNum;
+	uint32_t frameNum;
 	angle_t angle;
 	vector2_t offset;
-	SINT8 i;
+	int8_t i;
 
 	rs_base_playerid(base) = rs_base_playerlast(base) = -1;
 	rs_base_karted(base) = -(RS_KARTED_INC * TICRATE); // wait for "3"
@@ -638,7 +638,7 @@ static void SpawnRingShooter(player_t *player)
 	rs_base_playerface(base) = (player - players);
 }
 
-static boolean AllowRingShooter(const player_t *player)
+static dboolean AllowRingShooter(const player_t *player)
 {
 	const fixed_t minSpeed = 6 * player->mo->scale;
 
@@ -668,7 +668,7 @@ static boolean AllowRingShooter(const player_t *player)
 	return false;
 }
 
-boolean Obj_PlayerRingShooterFreeze(const player_t *player)
+dboolean Obj_PlayerRingShooterFreeze(const player_t *player)
 {
 	const mobj_t *base = player->ringShooter;
 

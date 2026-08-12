@@ -25,16 +25,16 @@ extern "C" {
 typedef void**(*getconnectednodesfunc)(void*, size_t*);
 
 // function pointer for getting the list of connected node costs/distances
-typedef UINT32*(*getnodeconnectioncostsfunc)(void*);
+typedef uint32_t*(*getnodeconnectioncostsfunc)(void*);
 
 // function pointer for getting a heuristic between 2 nodes from their base data
-typedef UINT32(*getnodeheuristicfunc)(void*, void*);
+typedef uint32_t(*getnodeheuristicfunc)(void*, void*);
 
 // function pointer for getting if a node is traversable from its base data
-typedef boolean(*getnodetraversablefunc)(void*, void*);
+typedef dboolean(*getnodetraversablefunc)(void*, void*);
 
 // function pointer for getting if a node is our pathfinding end point
-typedef boolean(*getpathfindfinishedfunc)(void*, void*);
+typedef dboolean(*getpathfindfinishedfunc)(void*, void*);
 
 
 // A pathfindnode contains information about a node from the pathfinding
@@ -43,15 +43,15 @@ struct pathfindnode_t {
 	size_t heapindex;     // The index in the openset binary heap. Only valid while the node is in the openset.
 	void   *nodedata;
 	pathfindnode_t *camefrom; // should eventually be the most efficient predecessor node
-	UINT32     gscore;    // The accumulated distance from the start to this node
-	UINT32     hscore;    // The heuristic from this node to the goal
+	uint32_t     gscore;    // The accumulated distance from the start to this node
+	uint32_t     hscore;    // The heuristic from this node to the goal
 };
 
 // Contains the final created path after pathfinding is completed
 struct path_t {
 	size_t numnodes;
 	pathfindnode_t *array;
-	UINT32 totaldist;
+	uint32_t totaldist;
 };
 
 // Contains info about the pathfinding used to setup the algorithm
@@ -65,7 +65,7 @@ struct pathfindsetup_t {
 	size_t nodesarraycapacity;
 	void   *startnodedata;
 	void   *endnodedata;
-	UINT32 endgscore;
+	uint32_t endgscore;
 	getconnectednodesfunc getconnectednodes;
 	getnodeconnectioncostsfunc getconnectioncosts;
 	getnodeheuristicfunc getheuristic;
@@ -75,7 +75,7 @@ struct pathfindsetup_t {
 
 
 /*--------------------------------------------------
-	boolean K_PathfindAStar(path_t *const path, pathfindsetup_t *const pathfindsetup);
+	dboolean K_PathfindAStar(path_t *const path, pathfindsetup_t *const pathfindsetup);
 
 		From a source waypoint and destination waypoint, find the best path between them using the A* algorithm.
 
@@ -86,7 +86,7 @@ struct pathfindsetup_t {
 	Return:-
 		True if a path was found between source and destination, false otherwise.
 --------------------------------------------------*/
-boolean K_PathfindAStar(path_t *const path, pathfindsetup_t *const pathfindsetup);
+dboolean K_PathfindAStar(path_t *const path, pathfindsetup_t *const pathfindsetup);
 
 #ifdef __cplusplus
 } // extern "C"

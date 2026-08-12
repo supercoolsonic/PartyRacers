@@ -97,7 +97,7 @@ struct consvar_t::Builder
 		return *this;
 	}
 
-	Builder& step_amount(INT32 step_amount)
+	Builder& step_amount(int32_t step_amount)
 	{
 		var_.step_amount = step_amount;
 		return *this;
@@ -133,7 +133,7 @@ struct consvar_t::Builder
 		return *this;
 	}
 
-	Builder& flags(INT32 flags)
+	Builder& flags(int32_t flags)
 	{
 		var_.flags |= flags;
 		return *this;
@@ -142,7 +142,7 @@ struct consvar_t::Builder
 	Builder& on_off() { return values(CV_OnOff); }
 	Builder& yes_no() { return values(CV_YesNo); }
 
-	Builder& min_max(INT32 min, INT32 max, values_list_t values = {})
+	Builder& min_max(int32_t min, int32_t max, values_list_t values = {})
 	{
 		return combine_values({{min, "MIN"}, {max, "MAX"}}, values);
 	}
@@ -182,7 +182,7 @@ struct consvar_t::Builder
 		return *this;
 	}
 
-	Builder& enablefornetgames(boolean should_enable)
+	Builder& enablefornetgames(dboolean should_enable)
 	{
 		var_.enablefornetgames = should_enable;
 		return *this;
@@ -779,7 +779,13 @@ consvar_t cv_obvious_itemreel = Player("obviousitemreels", "No").yes_no().radio(
 //Shake the mini-ranking like in Mini Ranking Plus when a player takes damage?
 consvar_t cv_toggle_minirankingshaking = Player("shakeminiranking", "No").yes_no().radio();
 //Should the little SPB icon on the minimap be colorized the same color of the player that threw it?
-consvar_t cv_toggle_coloredspbminimap = Player("minimapcolorspb", "No").yes_no().radio();	
+consvar_t cv_toggle_coloredspbminimap = Player("minimapcolorspb", "No").yes_no().radio();
+
+consvar_t cv_toggle_itemspytype = Player("changeitemspytype", "overhead").values({
+	{1, "overhead"},
+	{2, "portrait"}, 
+	{3, "none"}
+}).radio();
 //You can change how many and which garden top guidance arrows appear!
 consvar_t cv_toggle_gardentoparrows = Player("changegardentoarrowvisibility", "overhead").values({						//SCS ADD END
 	{1, "overhead"},

@@ -24,7 +24,7 @@ extern "C" {
 
 struct fpoint_t
 {
-	INT32 x, y;
+	int32_t x, y;
 };
 
 struct fline_t
@@ -32,11 +32,11 @@ struct fline_t
 	fpoint_t a, b;
 };
 
-extern boolean am_recalc; // true if screen size changes
-extern boolean automapactive; // In AutoMap mode?
+extern dboolean am_recalc; // true if screen size changes
+extern dboolean automapactive; // In AutoMap mode?
 
 // Called by main loop.
-boolean AM_Responder(event_t *ev);
+dboolean AM_Responder(event_t *ev);
 
 // Called by main loop.
 void AM_Ticker(void);
@@ -52,12 +52,12 @@ void AM_Stop(void);
 
 struct minigen_t
 {
-	INT32 w, h;
-	UINT8 *buf;
+	int32_t w, h;
+	uint8_t *buf;
 };
 
 // Minimap generation
-minigen_t *AM_MinimapGenerate(INT32 mul);
+minigen_t *AM_MinimapGenerate(int32_t mul);
 
 #ifdef __cplusplus
 } // extern "C"

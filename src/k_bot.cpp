@@ -52,16 +52,16 @@
 extern "C" consvar_t cv_forcebots;
 
 /*--------------------------------------------------
-	void K_SetNameForBot(UINT8 playerNum, const char *realname)
+	void K_SetNameForBot(uint8_t playerNum, const char *realname)
 
 		See header file for description.
 --------------------------------------------------*/
-void K_SetNameForBot(UINT8 newplayernum, const char *realname)
+void K_SetNameForBot(uint8_t newplayernum, const char *realname)
 {
 	// These names are generally sourced from skins.
 	I_Assert(MAXPLAYERNAME >= SKINNAMESIZE+2);
 
-	boolean canApplyNameChange = true;
+	dboolean canApplyNameChange = true;
 	if (netgame == true)
 	{
 		canApplyNameChange = IsPlayerNameUnique(realname, newplayernum);
@@ -91,26 +91,26 @@ void K_SetNameForBot(UINT8 newplayernum, const char *realname)
 }
 
 /*--------------------------------------------------
-	void K_SetBot(UINT8 playerNum, UINT16 skinnum, UINT8 difficulty, botStyle_e style)
+	void K_SetBot(uint8_t playerNum, uint16_t skinnum, uint8_t difficulty, botStyle_e style)
 
 		See header file for description.
 --------------------------------------------------*/
-void K_SetBot(UINT8 newplayernum, UINT16 skinnum, UINT8 difficulty, botStyle_e style)
+void K_SetBot(uint8_t newplayernum, uint16_t skinnum, uint8_t difficulty, botStyle_e style)
 {
-	INT32 botfollower = -1;
-	UINT16 botfollowercolor = SKINCOLOR_NONE;
+	int32_t botfollower = -1;
+	uint16_t botfollowercolor = SKINCOLOR_NONE;
 	
 	CONS_Debug(DBG_NETPLAY, "addbot: %d\n", newplayernum);
 
 	G_AddPlayer(newplayernum, newplayernum);
 
 	if (newplayernum+1 > doomcom->numslots)
-		doomcom->numslots = (INT16)(newplayernum+1);
+		doomcom->numslots = (int16_t)(newplayernum+1);
 
 	playernode[newplayernum] = servernode;
 
 	// this will permit unlocks
-	memcpy(&players[newplayernum].availabilities, R_GetSkinAvailabilities(false, skinnum), MAXAVAILABILITY*sizeof(UINT8));
+	memcpy(&players[newplayernum].availabilities, R_GetSkinAvailabilities(false, skinnum), MAXAVAILABILITY*sizeof(uint8_t));
 
 	players[newplayernum].splitscreenindex = 0;
 	players[newplayernum].bot = true;
@@ -188,7 +188,7 @@ void K_SetBot(UINT8 newplayernum, UINT16 skinnum, UINT8 difficulty, botStyle_e s
 
 	LUA_HookPlayer(&players[newplayernum], HOOK(BotJoin));
 
-	for (UINT8 i = 0; i < PWRLV_NUMTYPES; i++)
+	for (uint8_t i = 0; i < PWRLV_NUMTYPES; i++)
 	{
 		clientpowerlevels[newplayernum][i] = 0;
 	}
@@ -208,13 +208,13 @@ void K_SetBot(UINT8 newplayernum, UINT16 skinnum, UINT8 difficulty, botStyle_e s
 }
 
 /*--------------------------------------------------
-	boolean K_AddBot(UINT16 skin, UINT8 difficulty, botStyle_e style, UINT8 *p)
+	dboolean K_AddBot(uint16_t skin, uint8_t difficulty, botStyle_e style, uint8_t *p)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_AddBot(UINT16 skin, UINT8 difficulty, botStyle_e style, UINT8 *p)
+dboolean K_AddBot(uint16_t skin, uint8_t difficulty, botStyle_e style, uint8_t *p)
 {
-	UINT8 newplayernum = *p;
+	uint8_t newplayernum = *p;
 
 	for (; newplayernum < MAXPLAYERS; newplayernum++)
 	{
@@ -248,16 +248,16 @@ boolean K_AddBot(UINT16 skin, UINT8 difficulty, botStyle_e style, UINT8 *p)
 --------------------------------------------------*/
 void K_UpdateMatchRaceBots(void)
 {
-	const UINT16 defaultbotskin = R_BotDefaultSkin();
-	UINT8 difficulty;
-	UINT8 pmax = (InADedicatedServer() ? MAXPLAYERS-1 : MAXPLAYERS);
-	UINT8 numplayers = 0;
-	UINT8 numbots = 0;
-	UINT8 numwaiting = 0;
-	SINT8 wantedbots = 0;
-	UINT16 usableskins = 0, skincount = (demo.playback ? demo.numskins : numskins);;
-	UINT16 grabskins[MAXSKINS+1];
-	UINT16 i;
+	const uint16_t defaultbotskin = R_BotDefaultSkin();
+	uint8_t difficulty;
+	uint8_t pmax = (InADedicatedServer() ? MAXPLAYERS-1 : MAXPLAYERS);
+	uint8_t numplayers = 0;
+	uint8_t numbots = 0;
+	uint8_t numwaiting = 0;
+	int8_t wantedbots = 0;
+	uint16_t usableskins = 0, skincount = (demo.playback ? demo.numskins : numskins);;
+	uint16_t grabskins[MAXSKINS+1];
+	uint16_t i;
 
 	// Init usable bot skins list
 	for (i = 0; i < skincount; i++)
@@ -288,11 +288,11 @@ void K_UpdateMatchRaceBots(void)
 		difficulty = cv_kartbot.value;
 		if (netgame)
 		{
-			pmax = std::min<UINT8>(pmax, static_cast<UINT8>(cv_maxconnections.value));
+			pmax = std::min<uint8_t>(pmax, static_cast<uint8_t>(cv_maxconnections.value));
 		}
 		if (cv_maxplayers.value > 0)
 		{
-			pmax = std::min<UINT8>(pmax, static_cast<UINT8>(cv_maxplayers.value));
+			pmax = std::min<uint8_t>(pmax, static_cast<uint8_t>(cv_maxplayers.value));
 		}
 	}
 
@@ -342,9 +342,9 @@ void K_UpdateMatchRaceBots(void)
 		}
 	}
 
-	auto clear_bots = [&numbots](UINT8 max)
+	auto clear_bots = [&numbots](uint8_t max)
 	{
-		UINT8 i = MAXPLAYERS;
+		uint8_t i = MAXPLAYERS;
 		while (numbots > max && i > 0)
 		{
 			i--;
@@ -366,7 +366,7 @@ void K_UpdateMatchRaceBots(void)
 	if (numbots < wantedbots)
 	{
 		// We require MORE bots!
-		UINT8 newplayernum = InADedicatedServer() ? 1 : 0;
+		uint8_t newplayernum = InADedicatedServer() ? 1 : 0;
 
 		// Rearrange usable bot skins list to prevent gaps for randomised selection
 		if (tutorialchallenge == TUTORIALSKIP_INPROGRESS)
@@ -391,11 +391,11 @@ void K_UpdateMatchRaceBots(void)
 
 		while (numbots < wantedbots)
 		{
-			UINT16 skinnum = defaultbotskin;
+			uint16_t skinnum = defaultbotskin;
 
 			if (usableskins > 0)
 			{
-				UINT16 index = P_RandomKey(PR_BOTS, usableskins);
+				uint16_t index = P_RandomKey(PR_BOTS, usableskins);
 				skinnum = grabskins[index];
 				grabskins[index] = grabskins[--usableskins];
 			}
@@ -425,11 +425,11 @@ void K_UpdateMatchRaceBots(void)
 }
 
 /*--------------------------------------------------
-	boolean K_PlayerUsesBotMovement(const player_t *player)
+	dboolean K_PlayerUsesBotMovement(const player_t *player)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_PlayerUsesBotMovement(const player_t *player)
+dboolean K_PlayerUsesBotMovement(const player_t *player)
 {
 	if (K_PodiumSequence() == true)
 		return true;
@@ -437,7 +437,7 @@ boolean K_PlayerUsesBotMovement(const player_t *player)
 	// Lua can't override the podium sequence result, but it can
 	// override the following results:
 	{
-		UINT8 shouldOverride = LUA_HookPlayerForceResults(const_cast<player_t*>(player),
+		uint8_t shouldOverride = LUA_HookPlayerForceResults(const_cast<player_t*>(player),
 			HOOK(PlayerUsesBotMovement));
 		if (shouldOverride == 1)
 			return true;
@@ -461,11 +461,11 @@ boolean K_PlayerUsesBotMovement(const player_t *player)
 }
 
 /*--------------------------------------------------
-	boolean K_BotCanTakeCut(player_t *player)
+	dboolean K_BotCanTakeCut(player_t *player)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_BotCanTakeCut(const player_t *player)
+dboolean K_BotCanTakeCut(const player_t *player)
 {
 	if (
 #if 1
@@ -554,7 +554,7 @@ static fixed_t K_BotSpeedScaled(const player_t *player, fixed_t speed)
 	}
 	
 	if (player->inkblotchtimer)		//SCS ADD - have to give them SOME kind of penalty for hitting an ink bubble
-		result = (UINT16)result / 2;
+		result = (uint16_t)result / 2;
 
 	return result;
 }
@@ -616,7 +616,7 @@ fixed_t K_BotMapModifier(void)
 	// fuck it we ball
 	return 5*FRACUNIT/10;
 
-	constexpr INT32 complexity_scale = 10000;
+	constexpr int32_t complexity_scale = 10000;
 	fixed_t modifier_max = (10 * FRACUNIT / 10) - FRACUNIT;
 	fixed_t modifier_min = (5 * FRACUNIT / 10) - FRACUNIT;
 
@@ -630,7 +630,7 @@ fixed_t K_BotMapModifier(void)
 }
 
 /*--------------------------------------------------
-	static UINT32 K_BotRubberbandDistance(const player_t *player)
+	static uint32_t K_BotRubberbandDistance(const player_t *player)
 
 		Calculates the distance away from 1st place that the
 		bot should rubberband to.
@@ -641,12 +641,12 @@ fixed_t K_BotMapModifier(void)
 	Return:-
 		Distance to add, as an integer.
 --------------------------------------------------*/
-static UINT32 K_BotRubberbandDistance(const player_t *player)
+static uint32_t K_BotRubberbandDistance(const player_t *player)
 {
-	UINT32 spacing = FixedDiv(640 * mapobjectscale, K_GetKartGameSpeedScalar(gamespeed)) / FRACUNIT;
-	const UINT8 portpriority = player - players;
-	UINT8 pos = 1;
-	UINT8 i;
+	uint32_t spacing = FixedDiv(640 * mapobjectscale, K_GetKartGameSpeedScalar(gamespeed)) / FRACUNIT;
+	const uint8_t portpriority = player - players;
+	uint8_t pos = 1;
+	uint8_t i;
 
 	if (player->botvars.rival || cv_levelskull.value)
 	{
@@ -730,7 +730,7 @@ fixed_t K_BotRubberband(const player_t *player)
 	// mechanics adjustments, not from items, so kill some bot speed if they've got bad EXP.
 	if (player->gradingfactor < FRACUNIT && !(player->botvars.rival) && player->botvars.difficulty > 1)
 	{
-		UINT8 levelreduce = std::min<UINT8>(3, player->botvars.difficulty/4); // How much to drop the "effective level" of bots that are consistently behind
+		uint8_t levelreduce = std::min<uint8_t>(3, player->botvars.difficulty/4); // How much to drop the "effective level" of bots that are consistently behind
 		expreduce = Easing_Linear((K_EffectiveGradingFactor(player) - MINGRADINGFACTOR) * 2, levelreduce*FRACUNIT, 0);
 		if (player->botvars.foe)
 			expreduce /= 2;
@@ -810,9 +810,9 @@ fixed_t K_BotRubberband(const player_t *player)
 
 	if (firstplace != nullptr)
 	{
-		const UINT32 spacing = FixedDiv(10240 * mapobjectscale, K_GetKartGameSpeedScalar(gamespeed)) / FRACUNIT;
-		const UINT32 wanteddist = firstplace->distancetofinish + K_BotRubberbandDistance(player);
-		const INT32 distdiff = player->distancetofinish - wanteddist;
+		const uint32_t spacing = FixedDiv(10240 * mapobjectscale, K_GetKartGameSpeedScalar(gamespeed)) / FRACUNIT;
+		const uint32_t wanteddist = firstplace->distancetofinish + K_BotRubberbandDistance(player);
+		const int32_t distdiff = player->distancetofinish - wanteddist;
 
 		rubberband = FixedDiv(distdiff + spacing, spacing * 2);
 
@@ -838,14 +838,14 @@ fixed_t K_BotRubberband(const player_t *player)
 		}
 	}
 
-	UINT32 scaled_dist = player->distancetofinish;
+	uint32_t scaled_dist = player->distancetofinish;
 	if (mapobjectscale != FRACUNIT)
 	{
 		// Bring back to normal scale.
 		scaled_dist = FixedDiv(scaled_dist, mapobjectscale);
 	}
 
-	UINT32 END_DIST = 2048 * 14;
+	uint32_t END_DIST = 2048 * 14;
 
 	if (K_EffectiveGradingFactor(player) <= FRACUNIT)
 	{
@@ -882,7 +882,7 @@ fixed_t K_UpdateRubberband(player_t *player)
 
 	fixed_t ret = player->botvars.rubberband;
 
-	UINT8 ease_soften = (ret > dest) ? 3 : 8;
+	uint8_t ease_soften = (ret > dest) ? 3 : 8;
 
 	if (player->botvars.bumpslow && dest > ret)
 		ease_soften = 80;
@@ -984,7 +984,7 @@ static void K_GetBotWaypointRadius(waypoint_t *const waypoint, fixed_t *smallest
 	*smallestScaled = std::min<fixed_t>(*smallestScaled, FixedMul(radius, reduce));
 }
 
-static fixed_t K_ScaleWPDistWithSlope(fixed_t disttonext, angle_t angletonext, const pslope_t *slope, SINT8 flip)
+static fixed_t K_ScaleWPDistWithSlope(fixed_t disttonext, angle_t angletonext, const pslope_t *slope, int8_t flip)
 {
 	if (slope == nullptr)
 	{
@@ -1031,16 +1031,16 @@ static botprediction_t *K_CreateBotPrediction(const player_t *player)
 	const precise_t time = I_GetPreciseTime();
 
 	// Stair janking makes it harder to steer, so attempt to steer harder.
-	const UINT8 jankDiv = (player->stairjank > 0) ? 4 : 1;
+	const uint8_t jankDiv = (player->stairjank > 0) ? 4 : 1;
 
-	const INT16 handling = K_GetKartTurnValue(player, KART_FULLTURN) / jankDiv; // Reduce prediction based on how fast you can turn
+	const int16_t handling = K_GetKartTurnValue(player, KART_FULLTURN) / jankDiv; // Reduce prediction based on how fast you can turn
 
-	const tic_t futuresight = (TICRATE * KART_FULLTURN) / std::max<INT16>(1, handling); // How far ahead into the future to try and predict
+	const tic_t futuresight = (TICRATE * KART_FULLTURN) / std::max<int16_t>(1, handling); // How far ahead into the future to try and predict
 	const fixed_t speed = K_BotSpeedScaled(player, P_AproxDistance(player->mo->momx, player->mo->momy));
 
-	const INT32 startDist = 0; //(DEFAULT_WAYPOINT_RADIUS * mapobjectscale) / FRACUNIT;
-	const INT32 maxDist = (DEFAULT_WAYPOINT_RADIUS * 3 * mapobjectscale) / FRACUNIT; // This function gets very laggy when it goes far distances, and going too far isn't very helpful anyway.
-	const INT32 distance = std::min<INT32>(((speed / FRACUNIT) * static_cast<INT32>(futuresight)) + startDist, maxDist);
+	const int32_t startDist = 0; //(DEFAULT_WAYPOINT_RADIUS * mapobjectscale) / FRACUNIT;
+	const int32_t maxDist = (DEFAULT_WAYPOINT_RADIUS * 3 * mapobjectscale) / FRACUNIT; // This function gets very laggy when it goes far distances, and going too far isn't very helpful anyway.
+	const int32_t distance = std::min<int32_t>(((speed / FRACUNIT) * static_cast<int32_t>(futuresight)) + startDist, maxDist);
 
 	// Halves radius when encountering a wall on your way to your destination.
 	fixed_t radReduce = FRACUNIT;
@@ -1048,18 +1048,18 @@ static botprediction_t *K_CreateBotPrediction(const player_t *player)
 	fixed_t radius = INT32_MAX;
 	fixed_t radiusScaled = INT32_MAX;
 
-	INT32 distanceleft = distance;
+	int32_t distanceleft = distance;
 	angle_t angletonext = ANGLE_MAX;
-	INT32 disttonext = INT32_MAX;
-	INT32 distscaled = INT32_MAX;
+	int32_t disttonext = INT32_MAX;
+	int32_t distscaled = INT32_MAX;
 	pslope_t *nextslope = player->mo->standingslope;
 
 	waypoint_t *wp = player->nextwaypoint;
 	mobj_t *prevwpmobj = player->mo;
 
-	const boolean useshortcuts = K_BotCanTakeCut(player);
-	const boolean huntbackwards = false;
-	boolean pathfindsuccess = false;
+	const dboolean useshortcuts = K_BotCanTakeCut(player);
+	const dboolean huntbackwards = false;
+	dboolean pathfindsuccess = false;
 	path_t pathtofinish = {0};
 
 	botprediction_t *predict = nullptr;
@@ -1147,7 +1147,7 @@ static botprediction_t *K_CreateBotPrediction(const player_t *player)
 }
 
 /*--------------------------------------------------
-	static UINT8 K_TrySpindash(const player_t *player, ticcmd_t *cmd)
+	static uint8_t K_TrySpindash(const player_t *player, ticcmd_t *cmd)
 
 		Determines conditions where the bot should attempt to spindash.
 
@@ -1158,7 +1158,7 @@ static botprediction_t *K_CreateBotPrediction(const player_t *player)
 		0 to make the bot drive normally, 1 to e-brake, 2 to e-brake & charge spindash.
 		(TODO: make this an enum)
 --------------------------------------------------*/
-static UINT8 K_TrySpindash(const player_t *player, ticcmd_t *cmd)
+static uint8_t K_TrySpindash(const player_t *player, ticcmd_t *cmd)
 {
 	ZoneScoped;
 
@@ -1168,7 +1168,7 @@ static UINT8 K_TrySpindash(const player_t *player, ticcmd_t *cmd)
 	const fixed_t baseAccel = K_GetNewSpeed(player) - oldSpeed;
 	const fixed_t speedDiff = player->speed - player->lastspeed;
 
-	const INT32 angleDiff = AngleDelta(player->mo->angle, K_MomentumAngleReal(player->mo));
+	const int32_t angleDiff = AngleDelta(player->mo->angle, K_MomentumAngleReal(player->mo));
 
 	if (player->spindashboost || player->tiregrease // You just released a spindash, you don't need to try again yet, jeez.
 		|| P_IsObjectOnGround(player->mo) == false) // Not in a state where we want 'em to spindash.
@@ -1186,9 +1186,9 @@ static UINT8 K_TrySpindash(const player_t *player, ticcmd_t *cmd)
 
 	if (leveltime < starttime)
 	{
-		INT32 boosthold = starttime - K_GetSpindashChargeTime(player);
+		int32_t boosthold = starttime - K_GetSpindashChargeTime(player);
 
-		boosthold -= (DIFFICULTBOT - std::min<UINT8>(DIFFICULTBOT, player->botvars.difficulty)) * difficultyModifier;
+		boosthold -= (DIFFICULTBOT - std::min<uint8_t>(DIFFICULTBOT, player->botvars.difficulty)) * difficultyModifier;
 
 		if (leveltime >= (unsigned)boosthold)
 		{
@@ -1204,11 +1204,11 @@ static UINT8 K_TrySpindash(const player_t *player, ticcmd_t *cmd)
 
 	if (player->botvars.spindashconfirm >= BOTSPINDASHCONFIRM)
 	{
-		INT32 chargingPoint = (K_GetSpindashChargeTime(player) + difficultyModifier);
+		int32_t chargingPoint = (K_GetSpindashChargeTime(player) + difficultyModifier);
 
 		// Release quicker the higher the difficulty is.
 		// Sounds counter-productive, but that's actually the best strategy after the race has started.
-		chargingPoint -= std::min<UINT8>(DIFFICULTBOT, player->botvars.difficulty) * difficultyModifier;
+		chargingPoint -= std::min<uint8_t>(DIFFICULTBOT, player->botvars.difficulty) * difficultyModifier;
 
 		if (player->spindash > chargingPoint)
 		{
@@ -1221,8 +1221,8 @@ static UINT8 K_TrySpindash(const player_t *player, ticcmd_t *cmd)
 	else
 	{
 		// Logic for normal racing.
-		boolean anyCondition = false;
-		boolean uphill = false;
+		dboolean anyCondition = false;
+		dboolean uphill = false;
 
 #define AddForCondition(x) \
 	if (x) \
@@ -1282,7 +1282,7 @@ static UINT8 K_TrySpindash(const player_t *player, ticcmd_t *cmd)
 }
 
 /*--------------------------------------------------
-	static boolean K_TryRingShooter(const player_t *player, const botcontroller_t *botController)
+	static dboolean K_TryRingShooter(const player_t *player, const botcontroller_t *botController)
 
 		Determines conditions where the bot should attempt to respawn.
 
@@ -1293,7 +1293,7 @@ static UINT8 K_TrySpindash(const player_t *player, ticcmd_t *cmd)
 	Return:-
 		true if we want to hold the respawn button, otherwise false.
 --------------------------------------------------*/
-static boolean K_TryRingShooter(const player_t *player, const botcontroller_t *botController)
+static dboolean K_TryRingShooter(const player_t *player, const botcontroller_t *botController)
 {
 	ZoneScoped;
 
@@ -1340,7 +1340,7 @@ static void K_DrawPredictionDebug(botprediction_t *predict, const player_t *play
 {
 	mobj_t *debugMobj = nullptr;
 	angle_t sideAngle = ANGLE_MAX;
-	UINT8 i = UINT8_MAX;
+	uint8_t i = UINT8_MAX;
 
 	I_Assert(predict != nullptr);
 	I_Assert(player != nullptr);
@@ -1447,7 +1447,7 @@ static angle_t K_BotSmoothLanding(const player_t *player, angle_t destangle)
 	ZoneScoped;
 
 	angle_t newAngle = destangle;
-	boolean air = !P_IsObjectOnGround(player->mo);
+	dboolean air = !P_IsObjectOnGround(player->mo);
 	angle_t steepVal = air ? STUMBLE_STEEP_VAL_AIR : STUMBLE_STEEP_VAL;
 	angle_t slopeSteep = std::max<angle_t>(AngleDelta(player->mo->pitch, 0), AngleDelta(player->mo->roll, 0));
 
@@ -1457,7 +1457,7 @@ static angle_t K_BotSmoothLanding(const player_t *player, angle_t destangle)
 		fixed_t rollMul = FINECOSINE(destangle >> ANGLETOFINESHIFT);
 		angle_t testAngles[2];
 		angle_t testDeltas[2];
-		UINT8 i;
+		uint8_t i;
 
 		testAngles[0] = R_PointToAngle2(0, 0, rollMul, pitchMul);
 		testAngles[1] = R_PointToAngle2(0, 0, -rollMul, -pitchMul);
@@ -1481,7 +1481,7 @@ static angle_t K_BotSmoothLanding(const player_t *player, angle_t destangle)
 }
 
 /*--------------------------------------------------
-	static INT32 K_HandleBotTrack(const player_t *player, ticcmd_t *cmd, botprediction_t *predict)
+	static int32_t K_HandleBotTrack(const player_t *player, ticcmd_t *cmd, botprediction_t *predict)
 
 		Determines inputs for standard track driving.
 
@@ -1493,15 +1493,15 @@ static angle_t K_BotSmoothLanding(const player_t *player, angle_t destangle)
 	Return:-
 		New value for turn amount.
 --------------------------------------------------*/
-static INT32 K_HandleBotTrack(const player_t *player, ticcmd_t *cmd, botprediction_t *predict, angle_t destangle)
+static int32_t K_HandleBotTrack(const player_t *player, ticcmd_t *cmd, botprediction_t *predict, angle_t destangle)
 {
 	ZoneScoped;
 
 	// Handle steering towards waypoints!
-	INT32 turnamt = 0;
-	SINT8 turnsign = 0;
+	int32_t turnamt = 0;
+	int8_t turnsign = 0;
 	angle_t moveangle;
-	INT32 anglediff;
+	int32_t anglediff;
 
 	I_Assert(predict != nullptr);
 
@@ -1585,7 +1585,7 @@ static INT32 K_HandleBotTrack(const player_t *player, ticcmd_t *cmd, botpredicti
 }
 
 /*--------------------------------------------------
-	static INT32 K_HandleBotReverse(const player_t *player, ticcmd_t *cmd, botprediction_t *predict)
+	static int32_t K_HandleBotReverse(const player_t *player, ticcmd_t *cmd, botprediction_t *predict)
 
 		Determines inputs for reversing.
 
@@ -1597,15 +1597,15 @@ static INT32 K_HandleBotTrack(const player_t *player, ticcmd_t *cmd, botpredicti
 	Return:-
 		New value for turn amount.
 --------------------------------------------------*/
-static INT32 K_HandleBotReverse(const player_t *player, ticcmd_t *cmd, botprediction_t *predict, angle_t destangle)
+static int32_t K_HandleBotReverse(const player_t *player, ticcmd_t *cmd, botprediction_t *predict, angle_t destangle)
 {
 	ZoneScoped;
 
 	// Handle steering towards waypoints!
-	INT32 turnamt = 0;
-	SINT8 turnsign = 0;
+	int32_t turnamt = 0;
+	int8_t turnsign = 0;
 	angle_t moveangle, angle;
-	INT16 anglediff, momdiff;
+	int16_t anglediff, momdiff;
 
 	if (predict != nullptr)
 	{
@@ -1742,8 +1742,8 @@ static void K_BotPodiumTurning(const player_t *player, ticcmd_t *cmd)
 		player->mo->x, player->mo->y,
 		player->currentwaypoint->mobj->x, player->currentwaypoint->mobj->y
 	);
-	const INT32 delta = AngleDeltaSigned(destAngle, player->mo->angle);
-	const INT16 handling = K_GetKartTurnValue(player, KART_FULLTURN);
+	const int32_t delta = AngleDeltaSigned(destAngle, player->mo->angle);
+	const int16_t handling = K_GetKartTurnValue(player, KART_FULLTURN);
 	fixed_t mul = FixedDiv(delta, (angle_t)(handling << TICCMD_REDUCE));
 
 	if (mul > FRACUNIT)
@@ -1800,10 +1800,10 @@ static void K_BuildBotTiccmdNormal(player_t *player, ticcmd_t *cmd)
 	botprediction_t *predict = nullptr;
 	auto predict_finally = srb2::finally([&predict]() { Z_Free(predict); });
 
-	boolean trySpindash = true;
+	dboolean trySpindash = true;
 	angle_t destangle = 0;
-	UINT8 spindash = 0;
-	INT32 turnamt = 0;
+	uint8_t spindash = 0;
+	int32_t turnamt = 0;
 
 	cmd->angle = 0; // For bots, this is used to transmit predictionerror to gamelogic.
 	// Will be overwritten by K_HandleBotTrack if we have a destination.
@@ -1855,7 +1855,7 @@ static void K_BuildBotTiccmdNormal(player_t *player, ticcmd_t *cmd)
 
 	destangle = player->mo->angle;
 
-	boolean forcedDir = false;
+	dboolean forcedDir = false;
 	if (botController != nullptr && (botController->flags & TMBOT_FORCEDIR) == TMBOT_FORCEDIR)
 	{
 		const fixed_t dist = DEFAULT_WAYPOINT_RADIUS * player->mo->scale;
@@ -1918,7 +1918,7 @@ static void K_BuildBotTiccmdNormal(player_t *player, ticcmd_t *cmd)
 		}
 		else if (distToFinish < farDist)
 		{
-			INT32 bullyTurn = INT32_MAX;
+			int32_t bullyTurn = INT32_MAX;
 
 			// We're in about the right place, let's do whatever we want to.
 
@@ -2024,7 +2024,7 @@ static void K_BuildBotTiccmdNormal(player_t *player, ticcmd_t *cmd)
 	}
 
 	// Update turning quicker if we're moving at high speeds.
-	UINT8 turndelta = (player->speed > (7 * K_GetKartSpeed(player, false, false) / 4)) ? 2 : 1;
+	uint8_t turndelta = (player->speed > (7 * K_GetKartSpeed(player, false, false) / 4)) ? 2 : 1;
 
 	if (turnamt != 0)
 	{
@@ -2189,7 +2189,7 @@ void K_UpdateBotGameplayVars(player_t *player)
 		dangle = langle - mangle;
 	// Writing this made me move my tongue around in my mouth
 
-	UINT32 smo = BOTANGLESAMPLES - 1;
+	uint32_t smo = BOTANGLESAMPLES - 1;
 
 	player->botvars.recentDeflection = (smo * player->botvars.recentDeflection / BOTANGLESAMPLES) + (dangle / BOTANGLESAMPLES);
 
@@ -2207,7 +2207,7 @@ void K_UpdateBotGameplayVars(player_t *player)
 	K_UpdateBotGameplayVarsItemUsage(player);
 }
 
-boolean K_BotUnderstandsItem(kartitems_t item)
+dboolean K_BotUnderstandsItem(kartitems_t item)
 {
 	//if (item == KITEM_BALLHOG)
 		//return false; // Sorry. MRs welcome!

@@ -39,7 +39,7 @@
 #define abjawz_owner(o) ((o)->target)
 #define abjawz_chase(o) ((o)->tracer)
 
-static void ABJawzChase(mobj_t *th, boolean grounded)
+static void ABJawzChase(mobj_t *th, dboolean grounded)
 {
 	fixed_t thrustamount = 0;
 	fixed_t frictionsafety = (th->friction == 0) ? 1 : th->friction;
@@ -87,7 +87,7 @@ static void ABJawzChase(mobj_t *th, boolean grounded)
 			if (angledelta != 0)
 			{
 				angle_t turnSpeed = MAX_ABJAWZ_TURN;
-				boolean turnclockwise = true;
+				dboolean turnclockwise = true;
 
 				// MAX_JAWZ_TURN gets stronger the slower the top speed of jawz
 				if (topspeed < abjawz_speed(th))
@@ -195,7 +195,7 @@ static void ABJawzChase(mobj_t *th, boolean grounded)
 	}
 }
 
-static boolean ABJawzSteersBetter(void)
+static dboolean ABJawzSteersBetter(void)
 {
 	return !!!(gametyperules & GTR_CIRCUIT);
 }
@@ -203,7 +203,7 @@ static boolean ABJawzSteersBetter(void)
 void Obj_ABJawzThink(mobj_t *th)
 {
 	
-	boolean grounded = P_IsObjectOnGround(th);
+	dboolean grounded = P_IsObjectOnGround(th);
 
 	if (th->fuse > 0 && th->fuse <= TICRATE)
 	{
@@ -309,9 +309,9 @@ void Obj_ABJawzBoosterThink(mobj_t *th)
 	{
 		angle_t newangle = th->target->angle + th->angle;
 		
-		UINT32 newx = th->target->x - th->target->momx - (FixedMul(th->target->scale, th->scale), FINECOSINE((newangle) >> ANGLETOFINESHIFT));
+		uint32_t newx = th->target->x - th->target->momx - (FixedMul(th->target->scale, th->scale), FINECOSINE((newangle) >> ANGLETOFINESHIFT));
 
-		UINT32 newy = th->target->y - th->target->momy - (FixedMul(th->target->scale, th->scale), FINESINE((newangle) >> ANGLETOFINESHIFT));
+		uint32_t newy = th->target->y - th->target->momy - (FixedMul(th->target->scale, th->scale), FINESINE((newangle) >> ANGLETOFINESHIFT));
 				
 		th->momx = 0;
 		th->momy = 0;
@@ -332,7 +332,7 @@ void Obj_ABJawzBoosterThink(mobj_t *th)
 
 void Obj_ABJawzThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir)
 {
-	INT32 lastTarg = -1;
+	int32_t lastTarg = -1;
 	player_t *owner = NULL;
 
 	if (abjawz_owner(th) != NULL && P_MobjWasRemoved(abjawz_owner(th)) == false

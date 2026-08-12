@@ -75,8 +75,8 @@ typedef enum
 } feedposition_t;
 
 struct ItemAnimatedConfig {
-    boolean animated = false; // Animated?
-    boolean should_flash = false; // Flashing patch?
+    dboolean animated = false; // Animated?
+    dboolean should_flash = false; // Flashing patch?
     int animated_frames = 0; // Number of frames to animate
     int tics_per_frame = 6; // Tics per frame (how long each frame should animate for)
     skincolornum_t flashing_colour = SKINCOLOR_RED; // The colour to flash
@@ -91,7 +91,7 @@ struct ItemConfigForFeedUpdate {
     std::optional<float> patch_scale; // Graphic scale
     std::optional<int> y_offset; // Shrink, Eggmark, etc
     skincolornum_t recolour = SKINCOLOR_NONE; // The colour to recolour the item too (usually droptarget)
-    boolean rainbow = false; // Rainbow colormap
+    dboolean rainbow = false; // Rainbow colormap
 };
 
 struct ProcessedItemConfig {
@@ -101,10 +101,10 @@ struct ProcessedItemConfig {
     int height_scaled;
     int x_offset;
     int y_offset;
-    boolean should_flash;
-    boolean rainbow;
-    UINT8 *colormap;
-    UINT8 *item_recolormap;
+    dboolean should_flash;
+    dboolean rainbow;
+    uint8_t *colormap;
+    uint8_t *item_recolormap;
 };
 
 // Drawing configurations
@@ -115,7 +115,7 @@ struct FeedConfig {
 
     feedposition_t position; // Determines alignment-style for text
     feeddirection_t direction; // Determines direction feed will update in
-    INT32 hudflags; // For centering correctly in the HUD
+    int32_t hudflags; // For centering correctly in the HUD
     int maxupdates = FEED_MAX_FEED_UPDATES; // Max updates to show in the feed at once
 };
 
@@ -180,8 +180,8 @@ namespace FeedUpdateUtils {
         std::string item_patch_name = config.patch;
 
         // For flashing items (Eggmark, SPB, mine)
-        UINT8 *colormap = (config.animation_config.should_flash && (current_time & 1) ? R_GetTranslationColormap(TC_BLINK, config.animation_config.flashing_colour, GTC_CACHE) : NULL);
-        UINT8 *item_recolormap = (config.recolour) ? R_GetTranslationColormap(TC_DEFAULT, config.recolour, GTC_CACHE) : NULL;
+        uint8_t *colormap = (config.animation_config.should_flash && (current_time & 1) ? R_GetTranslationColormap(TC_BLINK, config.animation_config.flashing_colour, GTC_CACHE) : NULL);
+        uint8_t *item_recolormap = (config.recolour) ? R_GetTranslationColormap(TC_DEFAULT, config.recolour, GTC_CACHE) : NULL;
 
         if (config.animation_config.animated) {
             int frames = config.animation_config.animated_frames;
@@ -210,8 +210,8 @@ namespace FeedUpdateUtils {
             item_y_offset, 
             config.animation_config.should_flash,
             config.rainbow,
-            static_cast<UINT8*>(colormap),
-            static_cast<UINT8*>(item_recolormap)
+            static_cast<uint8_t*>(colormap),
+            static_cast<uint8_t*>(item_recolormap)
         };
     }
 
@@ -237,7 +237,7 @@ class BaseFeedUpdate {
         fixed_t target_y; // When shifting, there should be a target coordinate
         fixed_t temp_y = 0;
 
-        boolean should_shift = false; // Shifting in the feed
+        dboolean should_shift = false; // Shifting in the feed
 
         // Internal timer for easing animations
         tic_t shifttimer = 0;
@@ -255,15 +255,15 @@ class BaseFeedUpdate {
         fixed_t temp_shift_y = 0; // Temporary variable to store the y-shift from the feed config
 
         // Is the update relating to the main player (stplyr)?
-        boolean is_about_self = false;
+        dboolean is_about_self = false;
     
         void reset_fade() {
             updatetrans = static_cast<transnum_t>(0);
         }
 
-        UINT8* get_rainbow_colormap() {
+        uint8_t* get_rainbow_colormap() {
             skincolornum_t rainbow = static_cast<skincolornum_t>(K_RainbowColor(I_GetTime()/2));
-            return static_cast<UINT8*>(
+            return static_cast<uint8_t*>(
                 R_GetTranslationColormap(TC_DEFAULT, rainbow, GTC_CACHE)
             );
         }
@@ -272,7 +272,7 @@ class BaseFeedUpdate {
             shifttimer = I_GetTime();
         }
 
-        INT32 clamp_translucency(INT32 trans = -1) {
+        int32_t clamp_translucency(int32_t trans = -1) {
             if (trans == -1)
                 return updatetrans;
             return (updatetrans < trans) ? trans : updatetrans;
@@ -300,12 +300,12 @@ class BaseFeedUpdate {
         // Draw background
         void draw_background(FeedConfig &c, float width) {
             constexpr int backgroundW = 4;
-            const boolean reverse = (c.position == FEED_POSITION_RIGHT);
+            const dboolean reverse = (c.position == FEED_POSITION_RIGHT);
             const float x_offset = reverse ? 4.f : -2.f;
 
-            INT32 translucency_level = (is_about_self) ? 6 : 8;
+            int32_t translucency_level = (is_about_self) ? 6 : 8;
 
-            INT32 feed_flags = c.hudflags;
+            int32_t feed_flags = c.hudflags;
 
             // Background is drawn at 60% translucency
             // Shouldn't be any higher than that
@@ -339,11 +339,11 @@ class BaseFeedUpdate {
         fixed_t get_temp_y() { return temp_y; }
         fixed_t get_target_y() { return target_y; }
         Hudfeed& get_feed () { return *feed; }
-        boolean has_x_been_overwritten() { return x_overwrite != -1; }
-        boolean is_done() {
+        dboolean has_x_been_overwritten() { return x_overwrite != -1; }
+        dboolean is_done() {
             return state == UPDATE_EXITED;
         }
-        boolean can_draw() {
+        dboolean can_draw() {
             // Can the update be drawn?
             if (is_entering()) {return (entering_trans <= FEED_UPDATE_FADE_IN_START-1);}
             if (is_exiting()) {return exiting_trans >= FEED_UPDATE_FADE_OUT_START; }
@@ -351,10 +351,10 @@ class BaseFeedUpdate {
             return state != UPDATE_NONE && !is_done();
         }        
         tic_t get_timer() { return shifttimer; }
-        boolean is_exiting() {return state == UPDATE_EXITING;}
-        boolean is_entering() {return state == UPDATE_ENTERING;}
-        boolean is_waiting_to_enter() {return state == UPDATE_WAITING_TO_ENTER;}
-        boolean is_shifting() { return should_shift; }
+        dboolean is_exiting() {return state == UPDATE_EXITING;}
+        dboolean is_entering() {return state == UPDATE_ENTERING;}
+        dboolean is_waiting_to_enter() {return state == UPDATE_WAITING_TO_ENTER;}
+        dboolean is_shifting() { return should_shift; }
         fixed_t get_temp_shift_y() {return temp_shift_y;}
 
         // == Write-methods
@@ -498,8 +498,8 @@ class Hudfeed {
         void update_config(FeedConfig new_config) { feed_config = new_config; } 
 
         std::deque<std::unique_ptr<BaseFeedUpdate>>& get_feed() { return log; }
-        boolean is_feed_full() { return log.size() == static_cast<size_t>(feed_config.maxupdates + 1); }
-        boolean is_feed_empty() { return log.empty(); }
+        dboolean is_feed_full() { return log.size() == static_cast<size_t>(feed_config.maxupdates + 1); }
+        dboolean is_feed_empty() { return log.empty(); }
 
         void push(std::unique_ptr<BaseFeedUpdate> update) {
             // Assign the feed to the update and push it to the log

@@ -99,7 +99,7 @@ void M_ResetOptions(void)
 	optionsmenu.resetprofilemenu = false;
 }
 
-void M_InitOptions(INT32 choice)
+void M_InitOptions(int32_t choice)
 {
 	(void)choice;
 
@@ -133,14 +133,14 @@ void M_InitOptions(INT32 choice)
 }
 
 // Prepares changing the colour of the background
-void M_OptionsChangeBGColour(INT16 newcolour)
+void M_OptionsChangeBGColour(int16_t newcolour)
 {
 	optionsmenu.fade = 10;
 	optionsmenu.lastcolour = optionsmenu.currcolour;
 	optionsmenu.currcolour = newcolour;
 }
 
-boolean M_OptionsQuit(void)
+dboolean M_OptionsQuit(void)
 {
 	optionsmenu.toptx = 140;
 	optionsmenu.topty = 70;
@@ -158,7 +158,7 @@ boolean M_OptionsQuit(void)
 
 void M_OptionsTick(void)
 {
-	boolean instanttransmission = optionsmenu.ticker == 0 && menuwipe;
+	dboolean instanttransmission = optionsmenu.ticker == 0 && menuwipe;
 
 	optionsmenu.ticker++;
 
@@ -241,21 +241,21 @@ static void M_OptionsMenuGoto(menu_t *assignment)
 	}
 }
 
-void M_VideoOptions(INT32 choice)
+void M_VideoOptions(int32_t choice)
 {
 	(void)choice;
 	M_OptionsMenuGoto(&OPTIONS_VideoDef);
 	M_GonerResetLooking(GDGONER_VIDEO);
 }
 
-void M_SoundOptions(INT32 choice)
+void M_SoundOptions(int32_t choice)
 {
 	(void)choice;
 	M_OptionsMenuGoto(&OPTIONS_SoundDef);
 	M_GonerResetLooking(GDGONER_SOUND);
 }
 
-void M_GameplayOptions(INT32 choice)
+void M_GameplayOptions(int32_t choice)
 {
 	(void)choice;
 	OPTIONS_GameplayItemsDef.music = currentMenu->music;
@@ -263,7 +263,7 @@ void M_GameplayOptions(INT32 choice)
 	OPTIONS_MainDef.lastOn = mopt_gameplay;
 }
 
-void M_ServerOptions(INT32 choice)
+void M_ServerOptions(int32_t choice)
 {
 	(void)choice;
 	OPTIONS_ServerAdvancedDef.music = currentMenu->music;
@@ -271,10 +271,10 @@ void M_ServerOptions(INT32 choice)
 	OPTIONS_MainDef.lastOn = mopt_server;
 }
 
-boolean M_OptionsInputs(INT32 ch)
+dboolean M_OptionsInputs(int32_t ch)
 {
 
-	const UINT8 pid = 0;
+	const uint8_t pid = 0;
 	(void)ch;
 
 	if (menucmd[pid].dpad_ud > 0)

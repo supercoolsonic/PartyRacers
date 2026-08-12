@@ -68,7 +68,7 @@ static trackingResult_t _getBaseRouletteCoordinatesForTrackingPlayer(void)
 	trackingResult_t result;
 
 	// No player object? Not bothering.
-	const boolean doesPlayerHaveMo = !((stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo)));
+	const dboolean doesPlayerHaveMo = !((stplyr->mo == NULL || P_MobjWasRemoved(stplyr->mo)));
 	if (!doesPlayerHaveMo)
 		return result;
 
@@ -244,7 +244,7 @@ static itembox_tracking_coordinates_t _getRouletteCoordinates(roulette_type_info
         y_offset = _clampRouletteCoordinates(MAX_SCALE_Y, BASE_HEIGHT_OFFSET);
     }
 
-    const boolean UPSIDE_DOWN = (stplyr->mo->eflags & MFE_VERTICALFLIP);
+    const dboolean UPSIDE_DOWN = (stplyr->mo->eflags & MFE_VERTICALFLIP);
 
     switch(_position)
     {
@@ -358,10 +358,10 @@ roulette_offset_spacing_t RR_getRouletteSpacingOffsetForRingBox(fixed_t offset)
  * ROULETTE TRACKING
  * =================
 */
-static boolean areWeInDanger(player_t* dangerousPlayer) {
-    boolean is_charging = dangerousPlayer->instaWhipCharge >= INSTAWHIP_CHARGETIME;
-    boolean is_invincible = dangerousPlayer->itemtype == KITEM_INVINCIBILITY || dangerousPlayer->invincibilitytimer;
-    boolean is_fat = dangerousPlayer->itemtype == KITEM_GROW || dangerousPlayer->growshrinktimer > 0;
+static dboolean areWeInDanger(player_t* dangerousPlayer) {
+    dboolean is_charging = dangerousPlayer->instaWhipCharge >= INSTAWHIP_CHARGETIME;
+    dboolean is_invincible = dangerousPlayer->itemtype == KITEM_INVINCIBILITY || dangerousPlayer->invincibilitytimer;
+    dboolean is_fat = dangerousPlayer->itemtype == KITEM_GROW || dangerousPlayer->growshrinktimer > 0;
 
     return (is_charging || is_invincible || is_fat);
 }
@@ -505,7 +505,7 @@ void RR_DrawDangerousPlayerCheck(player_t *dangerousPlayer, fixed_t distance, tr
      * Math could be better too.
      */
     // see K_GlanceAtPlayers
-    const boolean podiumspecial = (
+    const dboolean podiumspecial = (
         K_PodiumSequence() == true && 
         stplyr->nextwaypoint == NULL && 
         stplyr->speed == 0

@@ -31,7 +31,7 @@
 #include "core/vector.hpp"
 
 // The number of sparkles per waypoint connection in the waypoint visualisation
-static const UINT32 SPARKLES_PER_CONNECTION = 16U;
+static const uint32_t SPARKLES_PER_CONNECTION = 16U;
 
 // Some defaults for the size of the dynamically allocated sets for pathfinding. These are kept for the purpose of
 // allocating a size that is less likely to need reallocating again during the pathfinding.
@@ -44,10 +44,10 @@ static waypoint_t *firstwaypoint = NULL;
 static waypoint_t *finishline    = NULL;
 static waypoint_t *startingwaypoint = NULL;
 
-static UINT32 circuitlength = 0U;
+static uint32_t circuitlength = 0U;
 
 #define BASE_TRACK_COMPLEXITY (-5000) // Arbritrary, vibes-based value
-static INT32 trackcomplexity = 0;
+static int32_t trackcomplexity = 0;
 
 static size_t numwaypoints       = 0U;
 static size_t numwaypointmobjs   = 0U;
@@ -77,13 +77,13 @@ waypoint_t *K_GetStartingWaypoint(void)
 }
 
 /*--------------------------------------------------
-	boolean K_GetWaypointIsFinishline(waypoint_t *waypoint)
+	dboolean K_GetWaypointIsFinishline(waypoint_t *waypoint)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_GetWaypointIsFinishline(waypoint_t *waypoint)
+dboolean K_GetWaypointIsFinishline(waypoint_t *waypoint)
 {
-	boolean waypointisfinishline = false;
+	dboolean waypointisfinishline = false;
 
 	if (waypoint == NULL)
 	{
@@ -102,13 +102,13 @@ boolean K_GetWaypointIsFinishline(waypoint_t *waypoint)
 }
 
 /*--------------------------------------------------
-	boolean K_GetWaypointIsShortcut(waypoint_t *waypoint)
+	dboolean K_GetWaypointIsShortcut(waypoint_t *waypoint)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_GetWaypointIsShortcut(waypoint_t *waypoint)
+dboolean K_GetWaypointIsShortcut(waypoint_t *waypoint)
 {
-	boolean waypointisshortcut = false;
+	dboolean waypointisshortcut = false;
 
 	if (waypoint == NULL)
 	{
@@ -127,13 +127,13 @@ boolean K_GetWaypointIsShortcut(waypoint_t *waypoint)
 }
 
 /*--------------------------------------------------
-	boolean K_GetWaypointIsEnabled(waypoint_t *waypoint)
+	dboolean K_GetWaypointIsEnabled(waypoint_t *waypoint)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_GetWaypointIsEnabled(waypoint_t *waypoint)
+dboolean K_GetWaypointIsEnabled(waypoint_t *waypoint)
 {
-	boolean waypointisenabled = true;
+	dboolean waypointisenabled = true;
 
 	if (waypoint == NULL)
 	{
@@ -152,11 +152,11 @@ boolean K_GetWaypointIsEnabled(waypoint_t *waypoint)
 }
 
 /*--------------------------------------------------
-	boolean K_SetWaypointIsEnabled(waypoint_t *waypoint, boolean enabled)
+	dboolean K_SetWaypointIsEnabled(waypoint_t *waypoint, dboolean enabled)
 
 		See header file for description.
 --------------------------------------------------*/
-void K_SetWaypointIsEnabled(waypoint_t *waypoint, boolean enabled)
+void K_SetWaypointIsEnabled(waypoint_t *waypoint, dboolean enabled)
 {
 	if (waypoint == NULL)
 	{
@@ -173,13 +173,13 @@ void K_SetWaypointIsEnabled(waypoint_t *waypoint, boolean enabled)
 }
 
 /*--------------------------------------------------
-	boolean K_GetWaypointIsSpawnpoint(waypoint_t *waypoint)
+	dboolean K_GetWaypointIsSpawnpoint(waypoint_t *waypoint)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_GetWaypointIsSpawnpoint(waypoint_t *waypoint)
+dboolean K_GetWaypointIsSpawnpoint(waypoint_t *waypoint)
 {
-	boolean waypointisspawnpoint = true;
+	dboolean waypointisspawnpoint = true;
 
 	if (waypoint == NULL)
 	{
@@ -198,7 +198,7 @@ boolean K_GetWaypointIsSpawnpoint(waypoint_t *waypoint)
 }
 
 /*--------------------------------------------------
-	static boolean K_GetWaypointIsOnLine(waypoint_t *const waypoint)
+	static dboolean K_GetWaypointIsOnLine(waypoint_t *const waypoint)
 
 		Checks if a waypoint is exactly on a line. Moving to an exact point
 		on a line won't count as crossing it. Moving off of that point does.
@@ -208,7 +208,7 @@ boolean K_GetWaypointIsSpawnpoint(waypoint_t *waypoint)
 	Return:-
 		Whether the waypoint is exactly on a line.
 --------------------------------------------------*/
-static boolean K_GetWaypointIsOnLine(waypoint_t *const waypoint)
+static dboolean K_GetWaypointIsOnLine(waypoint_t *const waypoint)
 {
 	const fixed_t x = waypoint->mobj->x;
 	const fixed_t y = waypoint->mobj->y;
@@ -230,13 +230,13 @@ static boolean K_GetWaypointIsOnLine(waypoint_t *const waypoint)
 }
 
 /*--------------------------------------------------
-	INT32 K_GetWaypointNextID(waypoint_t *waypoint)
+	int32_t K_GetWaypointNextID(waypoint_t *waypoint)
 
 		See header file for description.
 --------------------------------------------------*/
-INT32 K_GetWaypointNextID(waypoint_t *waypoint)
+int32_t K_GetWaypointNextID(waypoint_t *waypoint)
 {
-	INT32 nextwaypointid = -1;
+	int32_t nextwaypointid = -1;
 
 	if (waypoint == NULL)
 	{
@@ -255,13 +255,13 @@ INT32 K_GetWaypointNextID(waypoint_t *waypoint)
 }
 
 /*--------------------------------------------------
-	INT32 K_GetWaypointID(waypoint_t *waypoint)
+	int32_t K_GetWaypointID(waypoint_t *waypoint)
 
 		See header file for description.
 --------------------------------------------------*/
-INT32 K_GetWaypointID(waypoint_t *waypoint)
+int32_t K_GetWaypointID(waypoint_t *waypoint)
 {
-	INT32 waypointid = -1;
+	int32_t waypointid = -1;
 
 	if (waypoint == NULL)
 	{
@@ -280,11 +280,11 @@ INT32 K_GetWaypointID(waypoint_t *waypoint)
 }
 
 /*--------------------------------------------------
-	waypoint_t *K_GetWaypointFromID(INT32 waypointID)
+	waypoint_t *K_GetWaypointFromID(int32_t waypointID)
 
 		See header file for description.
 --------------------------------------------------*/
-waypoint_t *K_GetWaypointFromID(INT32 waypointID)
+waypoint_t *K_GetWaypointFromID(int32_t waypointID)
 {
 	waypoint_t *waypoint = NULL;
 	size_t i = SIZE_MAX;
@@ -303,21 +303,21 @@ waypoint_t *K_GetWaypointFromID(INT32 waypointID)
 }
 
 /*--------------------------------------------------
-	UINT32 K_GetCircuitLength(void)
+	uint32_t K_GetCircuitLength(void)
 
 		See header file for description.
 --------------------------------------------------*/
-UINT32 K_GetCircuitLength(void)
+uint32_t K_GetCircuitLength(void)
 {
 	return circuitlength;
 }
 
 /*--------------------------------------------------
-	INT32 K_GetTrackComplexity(void)
+	int32_t K_GetTrackComplexity(void)
 
 		See header file for description.
 --------------------------------------------------*/
-INT32 K_GetTrackComplexity(void)
+int32_t K_GetTrackComplexity(void)
 {
 	return trackcomplexity;
 }
@@ -376,9 +376,9 @@ static void K_CompareOverlappingWaypoint
 		waypoint_t **const bestwaypoint,
 		fixed_t     *const bestfindist)
 {
-	const boolean useshortcuts = false;
-	const boolean huntbackwards = false;
-	boolean pathfindsuccess = false;
+	const dboolean useshortcuts = false;
+	const dboolean huntbackwards = false;
+	dboolean pathfindsuccess = false;
 	path_t pathtofinish = {0};
 
 	if (K_GetWaypointIsShortcut(*bestwaypoint) == false
@@ -393,7 +393,7 @@ static void K_CompareOverlappingWaypoint
 
 	if (pathfindsuccess == true)
 	{
-		if ((INT32)(pathtofinish.totaldist) < *bestfindist)
+		if ((int32_t)(pathtofinish.totaldist) < *bestfindist)
 		{
 			*bestwaypoint = checkwaypoint;
 			*bestfindist = pathtofinish.totaldist;
@@ -433,11 +433,11 @@ waypoint_t *K_GetBestWaypointForMobj(mobj_t *const mobj, waypoint_t *const hint)
 				(mobj->x / FRACUNIT) - (checkwaypoint->mobj->x / FRACUNIT),
 				(mobj->y / FRACUNIT) - (checkwaypoint->mobj->y / FRACUNIT));
 
-			UINT8 zMultiplier = 4; // Heavily weight z distance, for the sake of overlapping paths
+			uint8_t zMultiplier = 4; // Heavily weight z distance, for the sake of overlapping paths
 
 			if (hint != NULL)
 			{
-				boolean connectedToHint = (checkwaypoint == hint);
+				dboolean connectedToHint = (checkwaypoint == hint);
 
 				if (connectedToHint == false && hint->numnextwaypoints > 0)
 				{
@@ -579,7 +579,7 @@ waypoint_t *K_GetWaypointFromIndex(size_t waypointindex)
 }
 
 /*--------------------------------------------------
-	static UINT32 K_DistanceBetweenWaypoints(waypoint_t *const waypoint1, waypoint_t *const waypoint2)
+	static uint32_t K_DistanceBetweenWaypoints(waypoint_t *const waypoint1, waypoint_t *const waypoint2)
 
 		Gets the Euclidean distance between 2 waypoints by using their mobjs. Used for the heuristic.
 
@@ -590,9 +590,9 @@ waypoint_t *K_GetWaypointFromIndex(size_t waypointindex)
 	Return:-
 		Euclidean distance between the 2 waypoints
 --------------------------------------------------*/
-static UINT32 K_DistanceBetweenWaypoints(waypoint_t *const waypoint1, waypoint_t *const waypoint2)
+static uint32_t K_DistanceBetweenWaypoints(waypoint_t *const waypoint1, waypoint_t *const waypoint2)
 {
-	UINT32 finaldist = UINT32_MAX;
+	uint32_t finaldist = UINT32_MAX;
 	I_Assert(waypoint1 != NULL);
 	I_Assert(waypoint2 != NULL);
 
@@ -600,7 +600,7 @@ static UINT32 K_DistanceBetweenWaypoints(waypoint_t *const waypoint1, waypoint_t
 		const fixed_t xydist =
 			P_AproxDistance(waypoint1->mobj->x - waypoint2->mobj->x, waypoint1->mobj->y - waypoint2->mobj->y);
 		const fixed_t xyzdist = P_AproxDistance(xydist, waypoint1->mobj->z - waypoint2->mobj->z);
-		finaldist = ((UINT32)xyzdist >> FRACBITS);
+		finaldist = ((uint32_t)xyzdist >> FRACBITS);
 	}
 
 	return finaldist;
@@ -621,12 +621,12 @@ static void K_DebugWaypointsSpawnLine(waypoint_t *const waypoint1, waypoint_t *c
 	mobj_t *spawnedmobj;
 	fixed_t stepx, stepy, stepz;
 	fixed_t x, y, z;
-	UINT32 waypointdist;
-	INT32 n;
-	UINT16 linkcolour = SKINCOLOR_GREEN;
+	uint32_t waypointdist;
+	int32_t n;
+	uint16_t linkcolour = SKINCOLOR_GREEN;
 
 	// This array is used to choose which colour should be on this connection
-	const UINT16 linkcolours[] = {
+	const uint16_t linkcolours[] = {
 		SKINCOLOR_RED,
 		SKINCOLOR_BLUE,
 		SKINCOLOR_ORANGE,
@@ -635,7 +635,7 @@ static void K_DebugWaypointsSpawnLine(waypoint_t *const waypoint1, waypoint_t *c
 		SKINCOLOR_CYAN,
 		SKINCOLOR_WHITE,
 	};
-	const size_t linkcolourssize = sizeof(linkcolours) / sizeof(UINT16);
+	const size_t linkcolourssize = sizeof(linkcolours) / sizeof(uint16_t);
 
 	// Error conditions
 	I_Assert(waypoint1 != NULL);
@@ -737,7 +737,7 @@ void K_DebugWaypointsVisualise(void)
 	mobj_t *debugmobj;
 	waypoint_t *waypoint;
 	waypoint_t *otherwaypoint;
-	UINT32 i;
+	uint32_t i;
 
 	if (waypointcap == NULL)
 	{
@@ -1027,7 +1027,7 @@ static void **K_WaypointPathfindGetPrev(void *data, size_t *numconnections)
 }
 
 /*--------------------------------------------------
-	static UINT32 *K_WaypointPathfindGetNextCosts(void* data)
+	static uint32_t *K_WaypointPathfindGetNextCosts(void* data)
 
 		Gets the list of costs the next waypoints have. For pathfinding only.
 
@@ -1035,11 +1035,11 @@ static void **K_WaypointPathfindGetPrev(void *data, size_t *numconnections)
 		data - Should point to a waypoint_t to get nextwaypointdistances from
 
 	Return:-
-		A pointer to an array of UINT32's describing the cost of going from a waypoint to a next waypoint
+		A pointer to an array of uint32_t's describing the cost of going from a waypoint to a next waypoint
 --------------------------------------------------*/
-static UINT32 *K_WaypointPathfindGetNextCosts(void* data)
+static uint32_t *K_WaypointPathfindGetNextCosts(void* data)
 {
-	UINT32 *connectingnodecosts = NULL;
+	uint32_t *connectingnodecosts = NULL;
 
 	if (data == NULL)
 	{
@@ -1055,7 +1055,7 @@ static UINT32 *K_WaypointPathfindGetNextCosts(void* data)
 }
 
 /*--------------------------------------------------
-	static UINT32 *K_WaypointPathfindGetPrevCosts(void* data)
+	static uint32_t *K_WaypointPathfindGetPrevCosts(void* data)
 
 		Gets the list of costs the previous waypoints have. For pathfinding only.
 
@@ -1063,11 +1063,11 @@ static UINT32 *K_WaypointPathfindGetNextCosts(void* data)
 		data - Should point to a waypoint_t to get prevwaypointdistances from
 
 	Return:-
-		A pointer to an array of UINT32's describing the cost of going from a waypoint to a previous waypoint
+		A pointer to an array of uint32_t's describing the cost of going from a waypoint to a previous waypoint
 --------------------------------------------------*/
-static UINT32 *K_WaypointPathfindGetPrevCosts(void* data)
+static uint32_t *K_WaypointPathfindGetPrevCosts(void* data)
 {
-	UINT32 *connectingnodecosts = NULL;
+	uint32_t *connectingnodecosts = NULL;
 
 	if (data == NULL)
 	{
@@ -1083,7 +1083,7 @@ static UINT32 *K_WaypointPathfindGetPrevCosts(void* data)
 }
 
 /*--------------------------------------------------
-	static UINT32 K_WaypointPathfindGetHeuristic(void *data1, void *data2)
+	static uint32_t K_WaypointPathfindGetHeuristic(void *data1, void *data2)
 
 		Gets the heuristic (euclidean distance) between 2 waypoints. For pathfinding only.
 
@@ -1092,11 +1092,11 @@ static UINT32 *K_WaypointPathfindGetPrevCosts(void* data)
 		data2 - Should point to a waypoint_t for the second waypoint
 
 	Return:-
-		A UINT32 for the heuristic of the 2 waypoints.
+		A uint32_t for the heuristic of the 2 waypoints.
 --------------------------------------------------*/
-static UINT32 K_WaypointPathfindGetHeuristic(void *data1, void *data2)
+static uint32_t K_WaypointPathfindGetHeuristic(void *data1, void *data2)
 {
-	UINT32 nodeheuristic = UINT32_MAX;
+	uint32_t nodeheuristic = UINT32_MAX;
 
 	if (data1 == NULL)
 	{
@@ -1118,7 +1118,7 @@ static UINT32 K_WaypointPathfindGetHeuristic(void *data1, void *data2)
 }
 
 /*--------------------------------------------------
-	static boolean K_WaypointPathfindTraversableAllEnabled(void *data)
+	static dboolean K_WaypointPathfindTraversableAllEnabled(void *data)
 
 		Checks if a waypoint used as a pathfindnode is traversable. For pathfinding only.
 		Variant that accepts shortcut waypoints as traversable.
@@ -1129,9 +1129,9 @@ static UINT32 K_WaypointPathfindGetHeuristic(void *data1, void *data2)
 	Return:-
 		True if the waypoint is traversable, false otherwise.
 --------------------------------------------------*/
-static boolean K_WaypointPathfindTraversableAllEnabled(void *data, void *prevdata)
+static dboolean K_WaypointPathfindTraversableAllEnabled(void *data, void *prevdata)
 {
-	boolean traversable = false;
+	dboolean traversable = false;
 
 	(void)prevdata;
 
@@ -1149,7 +1149,7 @@ static boolean K_WaypointPathfindTraversableAllEnabled(void *data, void *prevdat
 }
 
 /*--------------------------------------------------
-	static boolean K_WaypointPathfindTraversableNoShortcuts(void *data)
+	static dboolean K_WaypointPathfindTraversableNoShortcuts(void *data)
 
 		Checks if a waypoint used as a pathfindnode is traversable. For pathfinding only.
 		Variant that does not accept shortcut waypoints as traversable.
@@ -1160,9 +1160,9 @@ static boolean K_WaypointPathfindTraversableAllEnabled(void *data, void *prevdat
 	Return:-
 		True if the waypoint is traversable, false otherwise.
 --------------------------------------------------*/
-static boolean K_WaypointPathfindTraversableNoShortcuts(void *data, void *prevdata)
+static dboolean K_WaypointPathfindTraversableNoShortcuts(void *data, void *prevdata)
 {
-	boolean traversable = false;
+	dboolean traversable = false;
 
 	if (data == NULL || prevdata == NULL)
 	{
@@ -1181,7 +1181,7 @@ static boolean K_WaypointPathfindTraversableNoShortcuts(void *data, void *prevda
 }
 
 /*--------------------------------------------------
-	static boolean K_WaypointPathfindReachedEnd(void *data, void *setupData)
+	static dboolean K_WaypointPathfindReachedEnd(void *data, void *setupData)
 
 		Returns if the current waypoint data is our end point of our pathfinding.
 
@@ -1192,9 +1192,9 @@ static boolean K_WaypointPathfindTraversableNoShortcuts(void *data, void *prevda
 	Return:-
 		True if the waypoint is the pathfind end point, false otherwise.
 --------------------------------------------------*/
-static boolean K_WaypointPathfindReachedEnd(void *data, void *setupData)
+static dboolean K_WaypointPathfindReachedEnd(void *data, void *setupData)
 {
-	boolean isEnd = false;
+	dboolean isEnd = false;
 
 	if (data == NULL || setupData == NULL)
 	{
@@ -1212,7 +1212,7 @@ static boolean K_WaypointPathfindReachedEnd(void *data, void *setupData)
 }
 
 /*--------------------------------------------------
-	static boolean K_WaypointPathfindNextValid(void *data, void *setupData)
+	static dboolean K_WaypointPathfindNextValid(void *data, void *setupData)
 
 		Returns if the current waypoint data has a next waypoint.
 
@@ -1223,9 +1223,9 @@ static boolean K_WaypointPathfindReachedEnd(void *data, void *setupData)
 	Return:-
 		True if the waypoint has a next waypoint, false otherwise.
 --------------------------------------------------*/
-static boolean K_WaypointPathfindNextValid(void *data, void *setupData)
+static dboolean K_WaypointPathfindNextValid(void *data, void *setupData)
 {
-	boolean nextValid = false;
+	dboolean nextValid = false;
 
 	if (data == NULL || setupData == NULL)
 	{
@@ -1251,7 +1251,7 @@ static boolean K_WaypointPathfindNextValid(void *data, void *setupData)
 }
 
 /*--------------------------------------------------
-	static boolean K_WaypointPathfindReachedGScore(void *data, void *setupData)
+	static dboolean K_WaypointPathfindReachedGScore(void *data, void *setupData)
 
 		Returns if the current waypoint data reaches our end G score.
 
@@ -1262,9 +1262,9 @@ static boolean K_WaypointPathfindNextValid(void *data, void *setupData)
 	Return:-
 		True if the waypoint reached the G score, false otherwise.
 --------------------------------------------------*/
-static boolean K_WaypointPathfindReachedGScore(void *data, void *setupData)
+static dboolean K_WaypointPathfindReachedGScore(void *data, void *setupData)
 {
-	boolean scoreReached = false;
+	dboolean scoreReached = false;
 
 	if (data == NULL || setupData == NULL)
 	{
@@ -1274,7 +1274,7 @@ static boolean K_WaypointPathfindReachedGScore(void *data, void *setupData)
 	{
 		pathfindnode_t *node = (pathfindnode_t *)data;
 		pathfindsetup_t *setup = (pathfindsetup_t *)setupData;
-		boolean nextValid = K_WaypointPathfindNextValid(data, setupData);
+		dboolean nextValid = K_WaypointPathfindNextValid(data, setupData);
 
 		scoreReached = (node->gscore >= setup->endgscore) || (nextValid == false);
 	}
@@ -1283,7 +1283,7 @@ static boolean K_WaypointPathfindReachedGScore(void *data, void *setupData)
 }
 
 /*--------------------------------------------------
-	static boolean K_WaypointPathfindReachedGScoreSpawnable(void *data, void *setupData)
+	static dboolean K_WaypointPathfindReachedGScoreSpawnable(void *data, void *setupData)
 
 		Returns if the current waypoint data reaches our end G score.
 
@@ -1294,10 +1294,10 @@ static boolean K_WaypointPathfindReachedGScore(void *data, void *setupData)
 	Return:-
 		True if the waypoint reached the G score, false otherwise.
 --------------------------------------------------*/
-static boolean K_WaypointPathfindReachedGScoreSpawnable(void *data, void *setupData)
+static dboolean K_WaypointPathfindReachedGScoreSpawnable(void *data, void *setupData)
 {
-	boolean scoreReached = false;
-	boolean spawnable = false;
+	dboolean scoreReached = false;
+	dboolean spawnable = false;
 
 	if (data == NULL || setupData == NULL)
 	{
@@ -1308,7 +1308,7 @@ static boolean K_WaypointPathfindReachedGScoreSpawnable(void *data, void *setupD
 		pathfindnode_t *node = (pathfindnode_t *)data;
 		pathfindsetup_t *setup = (pathfindsetup_t *)setupData;
 		waypoint_t *wp = (waypoint_t *)node->nodedata;
-		boolean nextValid = K_WaypointPathfindNextValid(data, setupData);
+		dboolean nextValid = K_WaypointPathfindNextValid(data, setupData);
 
 		scoreReached = (node->gscore >= setup->endgscore) || (nextValid == false);
 		spawnable = K_GetWaypointIsSpawnpoint(wp);
@@ -1318,23 +1318,23 @@ static boolean K_WaypointPathfindReachedGScoreSpawnable(void *data, void *setupD
 }
 
 /*--------------------------------------------------
-	boolean K_PathfindToWaypoint(
+	dboolean K_PathfindToWaypoint(
 		waypoint_t *const sourcewaypoint,
 		waypoint_t *const destinationwaypoint,
 		path_t *const     returnpath,
-		const boolean     useshortcuts,
-		const boolean     huntbackwards)
+		const dboolean     useshortcuts,
+		const dboolean     huntbackwards)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_PathfindToWaypoint(
+dboolean K_PathfindToWaypoint(
 	waypoint_t *const sourcewaypoint,
 	waypoint_t *const destinationwaypoint,
 	path_t *const     returnpath,
-	const boolean     useshortcuts,
-	const boolean     huntbackwards)
+	const dboolean     useshortcuts,
+	const dboolean     huntbackwards)
 {
-	boolean pathfound    = false;
+	dboolean pathfound    = false;
 
 	if (sourcewaypoint == NULL)
 	{
@@ -1400,23 +1400,23 @@ boolean K_PathfindToWaypoint(
 }
 
 /*--------------------------------------------------
-	boolean K_PathfindThruCircuit(
+	dboolean K_PathfindThruCircuit(
 		waypoint_t *const sourcewaypoint,
-		const UINT32      traveldistance,
+		const uint32_t      traveldistance,
 		path_t *const     returnpath,
-		const boolean     useshortcuts,
-		const boolean     huntbackwards)
+		const dboolean     useshortcuts,
+		const dboolean     huntbackwards)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_PathfindThruCircuit(
+dboolean K_PathfindThruCircuit(
 	waypoint_t *const sourcewaypoint,
-	const UINT32      traveldistance,
+	const uint32_t      traveldistance,
 	path_t *const     returnpath,
-	const boolean     useshortcuts,
-	const boolean     huntbackwards)
+	const dboolean     useshortcuts,
+	const dboolean     huntbackwards)
 {
-	boolean pathfound = false;
+	dboolean pathfound = false;
 
 	if (sourcewaypoint == NULL)
 	{
@@ -1476,23 +1476,23 @@ boolean K_PathfindThruCircuit(
 }
 
 /*--------------------------------------------------
-	boolean K_PathfindThruCircuitSpawnable(
+	dboolean K_PathfindThruCircuitSpawnable(
 		waypoint_t *const sourcewaypoint,
-		const UINT32      traveldistance,
+		const uint32_t      traveldistance,
 		path_t *const     returnpath,
-		const boolean     useshortcuts,
-		const boolean     huntbackwards)
+		const dboolean     useshortcuts,
+		const dboolean     huntbackwards)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_PathfindThruCircuitSpawnable(
+dboolean K_PathfindThruCircuitSpawnable(
 	waypoint_t *const sourcewaypoint,
-	const UINT32      traveldistance,
+	const uint32_t      traveldistance,
 	path_t *const     returnpath,
-	const boolean     useshortcuts,
-	const boolean     huntbackwards)
+	const dboolean     useshortcuts,
+	const dboolean     huntbackwards)
 {
-	boolean pathfound = false;
+	dboolean pathfound = false;
 
 	if (sourcewaypoint == NULL)
 	{
@@ -1555,16 +1555,16 @@ boolean K_PathfindThruCircuitSpawnable(
 	waypoint_t *K_GetNextWaypointToDestination(
 		waypoint_t *const sourcewaypoint,
 		waypoint_t *const destinationwaypoint,
-		const boolean     useshortcuts,
-		const boolean     huntbackwards)
+		const dboolean     useshortcuts,
+		const dboolean     huntbackwards)
 
 		See header file for description.
 --------------------------------------------------*/
 waypoint_t *K_GetNextWaypointToDestination(
 	waypoint_t *const sourcewaypoint,
 	waypoint_t *const destinationwaypoint,
-	const boolean     useshortcuts,
-	const boolean     huntbackwards)
+	const dboolean     useshortcuts,
+	const dboolean     huntbackwards)
 {
 	waypoint_t *nextwaypoint = NULL;
 
@@ -1610,7 +1610,7 @@ waypoint_t *K_GetNextWaypointToDestination(
 		{
 			path_t                     pathtowaypoint  = {0};
 			pathfindsetup_t            pathfindsetup   = {0};
-			boolean                    pathfindsuccess = false;
+			dboolean                    pathfindsuccess = false;
 			getconnectednodesfunc      nextnodesfunc   = K_WaypointPathfindGetNext;
 			getnodeconnectioncostsfunc nodecostsfunc   = K_WaypointPathfindGetNextCosts;
 			getnodeheuristicfunc       heuristicfunc   = K_WaypointPathfindGetHeuristic;
@@ -1666,8 +1666,8 @@ waypoint_t *K_GetNextWaypointToDestination(
 				size_t     i                   = 0U;
 				waypoint_t **nextwaypointlist  = NULL;
 				size_t     numnextwaypoints    = 0U;
-				boolean waypointisenabled      = true;
-				boolean waypointisshortcut     = false;
+				dboolean waypointisenabled      = true;
+				dboolean waypointisshortcut     = false;
 
 				if (huntbackwards)
 				{
@@ -1720,7 +1720,7 @@ waypoint_t *K_GetNextWaypointToDestination(
 }
 
 /*--------------------------------------------------
-	boolean K_CheckWaypointForMobj(waypoint_t *const waypoint, void *const mobjpointer)
+	dboolean K_CheckWaypointForMobj(waypoint_t *const waypoint, void *const mobjpointer)
 
 		Compares a waypoint's mobj and a void pointer that *should* point to an mobj. Intended for use with the
 		K_SearchWaypoint functions ONLY. No, it is not my responsibility to make sure the pointer you sent in is
@@ -1733,9 +1733,9 @@ waypoint_t *K_GetNextWaypointToDestination(
   Return:-
 		The waypoint that uses that mobj, NULL if it wasn't found, NULL if it isn't an MT_WAYPOINT
 --------------------------------------------------*/
-static boolean K_CheckWaypointForMobj(waypoint_t *const waypoint, void *const mobjpointer)
+static dboolean K_CheckWaypointForMobj(waypoint_t *const waypoint, void *const mobjpointer)
 {
-	boolean mobjsmatch = false;
+	dboolean mobjsmatch = false;
 
 	// Error Conditions
 	I_Assert(waypoint != NULL);
@@ -1769,9 +1769,9 @@ static boolean K_CheckWaypointForMobj(waypoint_t *const waypoint, void *const mo
 /*--------------------------------------------------
 	waypoint_t *K_TraverseWaypoints(
 		waypoint_t *waypoint,
-		boolean    (*conditionalfunc)(waypoint_t *const, void *const),
+		dboolean    (*conditionalfunc)(waypoint_t *const, void *const),
 		void       *const condition,
-		boolean    *const visitedarray)
+		dboolean    *const visitedarray)
 
 		Searches through the waypoint list for a waypoint that matches a condition, just does a simple flood search
 		of the graph with no pathfinding
@@ -1788,9 +1788,9 @@ static boolean K_CheckWaypointForMobj(waypoint_t *const waypoint, void *const mo
 --------------------------------------------------*/
 static waypoint_t *K_TraverseWaypoints(
 	waypoint_t *waypoint,
-	boolean    (*conditionalfunc)(waypoint_t *const, void *const),
+	dboolean    (*conditionalfunc)(waypoint_t *const, void *const),
 	void       *const condition,
-	boolean    *const visitedarray)
+	dboolean    *const visitedarray)
 {
 	waypoint_t *foundwaypoint = NULL;
 
@@ -1830,7 +1830,7 @@ searchwaypointstart:
 				{
 					// The nesting here is a bit nasty, but it's better than potentially a lot of function calls on
 					// the stack, and another function would be very small in this case
-					UINT32 i;
+					uint32_t i;
 					// For each next waypoint, Search through it's path continuation until we hopefully find the one
 					// we're looking for
 					for (i = 0; i < waypoint->numnextwaypoints; i++)
@@ -1860,7 +1860,7 @@ searchwaypointstart:
 
 /*--------------------------------------------------
 	waypoint_t *K_SearchWaypointGraph(
-		boolean (*conditionalfunc)(waypoint_t *const, void *const),
+		dboolean (*conditionalfunc)(waypoint_t *const, void *const),
 		void    *const condition)
 
 		Searches through the waypoint graph for a waypoint that matches the conditional
@@ -1873,10 +1873,10 @@ searchwaypointstart:
 		The waypoint that uses that mobj, NULL if it wasn't found, NULL if it isn't an MT_WAYPOINT
 --------------------------------------------------*/
 static waypoint_t *K_SearchWaypointGraph(
-	boolean (*conditionalfunc)(waypoint_t *const, void *const),
+	dboolean (*conditionalfunc)(waypoint_t *const, void *const),
 	void    *const condition)
 {
-	boolean *visitedarray = NULL;
+	dboolean *visitedarray = NULL;
 	waypoint_t *foundwaypoint = NULL;
 
 	// Error conditions
@@ -1884,7 +1884,7 @@ static waypoint_t *K_SearchWaypointGraph(
 	I_Assert(conditionalfunc != NULL);
 	I_Assert(firstwaypoint != NULL);
 
-	visitedarray = static_cast<boolean*>(Z_Calloc(numwaypoints * sizeof(boolean), PU_STATIC, NULL));
+	visitedarray = static_cast<dboolean*>(Z_Calloc(numwaypoints * sizeof(dboolean), PU_STATIC, NULL));
 	foundwaypoint = K_TraverseWaypoints(firstwaypoint, conditionalfunc, condition, visitedarray);
 	Z_Free(visitedarray);
 
@@ -1918,7 +1918,7 @@ waypoint_t *K_SearchWaypointGraphForMobj(mobj_t *const mobj)
 
 /*--------------------------------------------------
 	waypoint_t *K_SearchWaypointHeap(
-		boolean (*conditionalfunc)(waypoint_t *const, void *const),
+		dboolean (*conditionalfunc)(waypoint_t *const, void *const),
 		void    *const condition)
 
 		Searches through the waypoint heap for a waypoint that matches the conditional
@@ -1931,10 +1931,10 @@ waypoint_t *K_SearchWaypointGraphForMobj(mobj_t *const mobj)
 		The waypoint that uses that mobj, NULL if it wasn't found, NULL if it isn't an MT_WAYPOINT
 --------------------------------------------------*/
 static waypoint_t *K_SearchWaypointHeap(
-	boolean (*conditionalfunc)(waypoint_t *const, void *const),
+	dboolean (*conditionalfunc)(waypoint_t *const, void *const),
 	void    *const condition)
 {
-	UINT32 i = 0;
+	uint32_t i = 0;
 	waypoint_t *foundwaypoint = NULL;
 
 	// Error conditions
@@ -1983,7 +1983,7 @@ waypoint_t *K_SearchWaypointHeapForMobj(mobj_t *const mobj)
 }
 
 /*--------------------------------------------------
-	static UINT32 K_SetupCircuitLength(void)
+	static uint32_t K_SetupCircuitLength(void)
 
 		Sets up the Circuit Length by getting the best path from the finishwaypoint back to itself.
 		On sprint maps, circuitlength is 0.
@@ -1994,7 +1994,7 @@ waypoint_t *K_SearchWaypointHeapForMobj(mobj_t *const mobj)
 	Return:-
 		Length of the circuit
 --------------------------------------------------*/
-static UINT32 K_SetupCircuitLength(void)
+static uint32_t K_SetupCircuitLength(void)
 {
 	I_Assert(firstwaypoint != NULL);
 	I_Assert(numwaypoints > 0U);
@@ -2008,11 +2008,11 @@ static UINT32 K_SetupCircuitLength(void)
 		path_t bestsprintpath = {0};
 		auto sprint_finally = srb2::finally([&bestsprintpath]() { Z_Free(bestsprintpath.array); });
 
-		const boolean useshortcuts = false;
-		const boolean huntbackwards = true;
-		const UINT32 traveldist = UINT32_MAX - UINT16_MAX; // Go as far back as possible. Not exactly UINT32_MAX to avoid possible overflow.
+		const dboolean useshortcuts = false;
+		const dboolean huntbackwards = true;
+		const uint32_t traveldist = UINT32_MAX - UINT16_MAX; // Go as far back as possible. Not exactly UINT32_MAX to avoid possible overflow.
 
-		boolean pathfindsuccess = K_PathfindThruCircuit(
+		dboolean pathfindsuccess = K_PathfindThruCircuit(
 			finishline, traveldist,
 			&bestsprintpath,
 			useshortcuts, huntbackwards
@@ -2033,8 +2033,8 @@ static UINT32 K_SetupCircuitLength(void)
 		path_t        bestcircuitpath = {0};
 		auto circuit_finally = srb2::finally([&bestcircuitpath]() { Z_Free(bestcircuitpath.array); });
 
-		const boolean useshortcuts    = false;
-		const boolean huntbackwards   = false;
+		const dboolean useshortcuts    = false;
+		const dboolean huntbackwards   = false;
 
 		K_PathfindToWaypoint(&fakefinishline, finishline, &bestcircuitpath, useshortcuts, huntbackwards);
 
@@ -2080,7 +2080,7 @@ static void K_AddPrevToWaypoint(waypoint_t *const waypoint, waypoint_t *const pr
 		I_Error("K_AddPrevToWaypoint: Failed to reallocate memory for previous waypoints.");
 	}
 
-	waypoint->prevwaypointdistances = static_cast<UINT32*>(
+	waypoint->prevwaypointdistances = static_cast<uint32_t*>(
 		Z_Realloc(waypoint->prevwaypointdistances, waypoint->numprevwaypoints * sizeof(fixed_t), PU_LEVEL, NULL)
 	);
 
@@ -2145,7 +2145,7 @@ static waypoint_t *K_MakeWaypoint(mobj_t *const mobj)
 		{
 			I_Error("K_MakeWaypoint: Out of Memory allocating next waypoints.");
 		}
-		madewaypoint->nextwaypointdistances = static_cast<UINT32*>(
+		madewaypoint->nextwaypointdistances = static_cast<uint32_t*>(
 			Z_Calloc(madewaypoint->numnextwaypoints * sizeof(fixed_t), PU_LEVEL, NULL)
 		);
 		if (madewaypoint->nextwaypointdistances == NULL)
@@ -2189,7 +2189,7 @@ static waypoint_t *K_SetupWaypoint(mobj_t *const mobj)
 	if (thiswaypoint == NULL)
 	{
 		mobj_t *otherwaypointmobj = NULL;
-		UINT32 nextwaypointindex = 0;
+		uint32_t nextwaypointindex = 0;
 
 		thiswaypoint = K_MakeWaypoint(mobj);
 
@@ -2205,8 +2205,8 @@ static waypoint_t *K_SetupWaypoint(mobj_t *const mobj)
 			{
 				if (finishline != NULL)
 				{
-					const INT32 oldfinishlineid = K_GetWaypointID(finishline);
-					const INT32 thiswaypointid  = K_GetWaypointID(thiswaypoint);
+					const int32_t oldfinishlineid = K_GetWaypointID(finishline);
+					const int32_t thiswaypointid  = K_GetWaypointID(thiswaypoint);
 					CONS_Alert(
 						CONS_WARNING, "Multiple finish line waypoints with IDs %d and %d! Using %d.",
 						oldfinishlineid, thiswaypointid, thiswaypointid);
@@ -2262,17 +2262,17 @@ static waypoint_t *K_SetupWaypoint(mobj_t *const mobj)
 }
 
 /*--------------------------------------------------
-	static boolean K_AllocateWaypointHeap(void)
+	static dboolean K_AllocateWaypointHeap(void)
 
 		Allocates the waypoint heap enough space for the number of waypoint mobjs on the map
 
 	Return:-
 		True if the allocation was successful, false if it wasn't. Will I_Error if out of memory still.
 --------------------------------------------------*/
-static boolean K_AllocateWaypointHeap(void)
+static dboolean K_AllocateWaypointHeap(void)
 {
 	mobj_t *waypointmobj = NULL;
-	boolean allocationsuccessful = false;
+	dboolean allocationsuccessful = false;
 
 	// Error conditions
 	I_Assert(waypointheap == NULL); // waypointheap is already allocated
@@ -2372,7 +2372,7 @@ static BlockItReturn_t K_TrackWaypointNearOffroad(line_t *line)
 		if ((line->flags & (ML_TWOSIDED|ML_IMPASSABLE|ML_BLOCKPLAYERS|ML_MIDSOLID)) == ML_TWOSIDED)
 		{
 			// double-sided, and no blocking flags -- it's not a wall
-			const INT32 side = P_PointOnLineSide(g_track_wp_x, g_track_wp_y, line);
+			const int32_t side = P_PointOnLineSide(g_track_wp_x, g_track_wp_y, line);
 			const sector_t *sec = side ? line->frontsector : line->backsector;
 
 			if (sec != nullptr && (sec->damagetype == SD_DEATHPIT || sec->damagetype == SD_INSTAKILL))
@@ -2393,7 +2393,7 @@ static BlockItReturn_t K_TrackWaypointNearOffroad(line_t *line)
 }
 
 /*--------------------------------------------------
-	boolean K_SneakerPanelOverlap(struct sneakerpanel &panelA, struct sneakerpanel &panelB)
+	dboolean K_SneakerPanelOverlap(struct sneakerpanel &panelA, struct sneakerpanel &panelB)
 
 		Returns whenever or not a sneaker panel sector / thing overlap
 --------------------------------------------------*/
@@ -2429,7 +2429,7 @@ struct complexity_sneaker_s
 	}
 };
 
-static boolean K_SneakerPanelOverlap(complexity_sneaker_s &panelA, complexity_sneaker_s &panelB)
+static dboolean K_SneakerPanelOverlap(complexity_sneaker_s &panelA, complexity_sneaker_s &panelB)
 {
 	const fixed_t overlap_extra = 528 * mapobjectscale; // merge ones this close together
 
@@ -2461,17 +2461,17 @@ static boolean K_SneakerPanelOverlap(complexity_sneaker_s &panelA, complexity_sn
 }
 
 /*--------------------------------------------------
-	INT32 K_CalculateTrackComplexity(void)
+	int32_t K_CalculateTrackComplexity(void)
 
 		Sets the value of trackcomplexity. This value accumulates all of the
 		turn angle deltas to get an idea of how complicated the map is.
 --------------------------------------------------*/
-static INT32 K_CalculateTrackComplexity(void)
+static int32_t K_CalculateTrackComplexity(void)
 {
-	const boolean huntbackwards = false;
-	const boolean useshortcuts = false;
+	const dboolean huntbackwards = false;
+	const dboolean useshortcuts = false;
 
-	boolean pathfindsuccess = false;
+	dboolean pathfindsuccess = false;
 	path_t path = {0};
 
 	trackcomplexity = BASE_TRACK_COMPLEXITY;
@@ -2497,7 +2497,7 @@ static INT32 K_CalculateTrackComplexity(void)
 			waypoint_t *const mid = (waypoint_t *)path.array[ i ].nodedata;
 			waypoint_t *const end = (waypoint_t *)path.array[ i + 1 ].nodedata;
 
-			const INT32 turn_id = K_GetWaypointID(mid);
+			const int32_t turn_id = K_GetWaypointID(mid);
 
 			// would it be better to just check mid?
 			if (K_GetWaypointIsSpawnpoint(start) == false
@@ -2585,8 +2585,8 @@ static INT32 K_CalculateTrackComplexity(void)
 				g_track_wp_radius = mid->mobj->radius;
 
 				const fixed_t searchRadius = /*g_track_wp_radius +*/ MAXRADIUS;
-				INT32 xl, xh, yl, yh;
-				INT32 bx, by;
+				int32_t xl, xh, yl, yh;
+				int32_t bx, by;
 
 				const fixed_t c = FixedMul(g_track_wp_radius, FINECOSINE((start_mid_angle + ANGLE_90) >> ANGLETOFINESHIFT));
 				const fixed_t s = FixedMul(g_track_wp_radius,   FINESINE((start_mid_angle + ANGLE_90) >> ANGLETOFINESHIFT));
@@ -2684,7 +2684,7 @@ static INT32 K_CalculateTrackComplexity(void)
 				|| (terrain_c != nullptr && (terrain_c->flags & TRF_SNEAKERPANEL)))
 			{
 				complexity_sneaker_s new_panel(sec);
-				boolean create_new = true;
+				dboolean create_new = true;
 
 				for (size_t j = 0; j < sec->linecount; j++)
 				{
@@ -2724,7 +2724,7 @@ static INT32 K_CalculateTrackComplexity(void)
 			}
 
 			complexity_sneaker_s new_panel(mt);
-			boolean create_new = true;
+			dboolean create_new = true;
 
 			for (auto &panel : sneaker_panels)
 			{
@@ -2756,13 +2756,13 @@ static INT32 K_CalculateTrackComplexity(void)
 }; // namespace
 
 /*--------------------------------------------------
-	boolean K_SetupWaypointList(void)
+	dboolean K_SetupWaypointList(void)
 
 		See header file for description.
 --------------------------------------------------*/
-boolean K_SetupWaypointList(void)
+dboolean K_SetupWaypointList(void)
 {
-	boolean setupsuccessful = false;
+	dboolean setupsuccessful = false;
 
 	K_FreeWaypoints();
 
@@ -2779,7 +2779,7 @@ boolean K_SetupWaypointList(void)
 			// Loop through the waypointcap here so that all waypoints are added to the heap, and allow easier debugging
 			for (waypointmobj = waypointcap; waypointmobj; waypointmobj = waypointmobj->tracer)
 			{
-				waypointmobj->cusval = (INT32)numwaypoints;
+				waypointmobj->cusval = (int32_t)numwaypoints;
 				K_SetupWaypoint(waypointmobj);
 			}
 
@@ -2834,7 +2834,7 @@ void K_ClearWaypoints(void)
 }
 
 /*--------------------------------------------------
-	static boolean K_RaiseWaypoint(
+	static dboolean K_RaiseWaypoint(
 		mobj_t *const       waypointmobj,
 		const mobj_t *const riser)
 
@@ -2848,7 +2848,7 @@ void K_ClearWaypoints(void)
 		True if the waypoint was risen, false if not.
 --------------------------------------------------*/
 
-static boolean K_RaiseWaypoint(
+static dboolean K_RaiseWaypoint(
 		mobj_t *const       waypointmobj,
 		const mobj_t *const riser)
 {
@@ -2858,7 +2858,7 @@ static boolean K_RaiseWaypoint(
 	const sector_t *sector;
 	ffloor_t *rover;
 
-	boolean descending;
+	dboolean descending;
 
 	fixed_t sort;
 	fixed_t z;
@@ -2921,7 +2921,7 @@ static boolean K_RaiseWaypoint(
 }
 
 /*--------------------------------------------------
-	static boolean K_AnchorWaypointRadius(
+	static dboolean K_AnchorWaypointRadius(
 		mobj_t *const       waypointmobj,
 		const mobj_t *const anchor)
 
@@ -2935,7 +2935,7 @@ static boolean K_RaiseWaypoint(
 		True if the waypoint's radius was adjusted, false if not.
 --------------------------------------------------*/
 
-static boolean K_AnchorWaypointRadius(
+static dboolean K_AnchorWaypointRadius(
 		mobj_t *const       waypointmobj,
 		const mobj_t *const anchor)
 {

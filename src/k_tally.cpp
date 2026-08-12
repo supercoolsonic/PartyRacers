@@ -45,7 +45,7 @@
 #include "k_objects.h"
 #include "k_director.h"
 
-boolean level_tally_t::UseBonuses(void)
+dboolean level_tally_t::UseBonuses(void)
 {
 	if ((gametyperules & GTR_SPECIALSTART) || (grandprixinfo.gp == true && grandprixinfo.eventmode == GPEVENT_SPECIAL))
 	{
@@ -189,23 +189,23 @@ void level_tally_t::DetermineStatistics(void)
 }
 
 // RADIO
-static inline fixed_t CalculateExpBonus(UINT16 exp, UINT16 totalExp) {			//SCS - RADIO START
+static inline fixed_t CalculateExpBonus(uint16_t exp, uint16_t totalExp) {			//SCS - RADIO START
 	return (exp * FRACUNIT) / std::max(1, static_cast<int>(totalExp));
 }
 
-static inline boolean IsPerfectRace(fixed_t percent) {
+static inline dboolean IsPerfectRace(fixed_t percent) {
 	return percent == FRACUNIT;
 }
 
-static inline boolean IsPerfectExpBonus(UINT16 exp, UINT16 totalExp) {
+static inline dboolean IsPerfectExpBonus(uint16_t exp, uint16_t totalExp) {
 	return CalculateExpBonus(exp, totalExp) == FRACUNIT;
 }
 
-static inline boolean IsNearlyPerfectExpBonus(UINT16 exp, UINT16 totalExp) {
+static inline dboolean IsNearlyPerfectExpBonus(uint16_t exp, uint16_t totalExp) {
 	return CalculateExpBonus(exp, totalExp) >= FloatToFixed(0.98f); //118
 }																				//SCS - RADIO END
 
-INT32 level_tally_t::CalculateGrade(void)
+int32_t level_tally_t::CalculateGrade(void)
 {
 	static const fixed_t gradePercents[GRADE_A] = {
 		 7*FRACUNIT/20,		// D: 35% or higher
@@ -213,12 +213,12 @@ INT32 level_tally_t::CalculateGrade(void)
 		14*FRACUNIT/20,		// B: 70% or higher
 		18*FRACUNIT/20		// A: 90% or higher
 	};
-	INT32 retGrade = GRADE_E; // gp_rank_e
+	int32_t retGrade = GRADE_E; // gp_rank_e
 
 	if (K_InRaceDuel())
 		return GRADE_INVALID;
 
-	INT32 bonusWeights[TALLY_WINDOW_SIZE];
+	int32_t bonusWeights[TALLY_WINDOW_SIZE];
 	for (int i = 0; i < TALLY_WINDOW_SIZE; i++)
 	{
 		switch (bonuses[i])
@@ -248,16 +248,16 @@ INT32 level_tally_t::CalculateGrade(void)
 		}
 	}
 
-	const INT32 positionWeight =  0; // (position > 0 && numPlayers > 2) ? 50 : 0;
-	const INT32 total = positionWeight + bonusWeights[0] + bonusWeights[1];
+	const int32_t positionWeight =  0; // (position > 0 && numPlayers > 2) ? 50 : 0;
+	const int32_t total = positionWeight + bonusWeights[0] + bonusWeights[1];
 
-	INT32 ours = 0;
+	int32_t ours = 0;
 	fixed_t percent = 0;
 
 	if (position > 0 && numPlayers > 2)
 	{
-		const INT32 sc = (position - 1);
-		const INT32 loser = ((numPlayers + 1) / 2); // number of winner positions
+		const int32_t sc = (position - 1);
+		const int32_t loser = ((numPlayers + 1) / 2); // number of winner positions
 		ours += ((loser - sc) * positionWeight) / loser;
 	}
 
@@ -335,7 +335,7 @@ INT32 level_tally_t::CalculateGrade(void)
 			 */
 			nearlyPerfectExpBonus = IsNearlyPerfectExpBonus(exp, totalExp);
 			perfectExpBonus = IsPerfectExpBonus(exp, totalExp);
-			boolean perfectRaceBonuses = nearlyPerfectExpBonus;
+			dboolean perfectRaceBonuses = nearlyPerfectExpBonus;
 	
 			// If it's a grand prix, check if the ring bonus is perfect too. 
 			// That's more of an incentive in single-player (e.g. lives)
@@ -368,13 +368,13 @@ void level_tally_t::Init(player_t *player)
 	owner = player;
 	gt = gametype;
 
-	const boolean game_over = (
+	const dboolean game_over = (
 		G_GametypeUsesLives()
 		? ((player->pflags & PF_LOSTLIFE) == PF_LOSTLIFE)
 		: (tutorialchallenge == TUTORIALSKIP_INPROGRESS && K_IsPlayerLosing(player))
 	);
 
-	time = std::min<INT32>(static_cast<INT32>(player->realtime), (100 * 60 * TICRATE) - 1);
+	time = std::min<int32_t>(static_cast<int32_t>(player->realtime), (100 * 60 * TICRATE) - 1);
 	ringPool = player->totalring;
 	livesAdded = 0;
 
@@ -427,7 +427,7 @@ void level_tally_t::Init(player_t *player)
 
 		if ((gametypes[gt]->rules & GTR_CIRCUIT) == GTR_CIRCUIT && K_GetNumGradingPoints() > 0) // EXP should be a rule type, but here we are
 		{
-			exp = static_cast<UINT16>(std::max<fixed_t>(player->exp, 0)); // The scoring calc doesn't subtract anymore, so using 0 is okay and will not wrap
+			exp = static_cast<uint16_t>(std::max<fixed_t>(player->exp, 0)); // The scoring calc doesn't subtract anymore, so using 0 is okay and will not wrap
 			totalExp = EXP_TARGET;
 		}
 
@@ -452,7 +452,7 @@ void level_tally_t::Init(player_t *player)
 				{
 					if (playeringame[i] == true && players[i].spectator == false)
 					{
-						pointLimit = std::min<INT32>(pointLimit, static_cast<int>(-players[i].roundscore));
+						pointLimit = std::min<int32_t>(pointLimit, static_cast<int>(-players[i].roundscore));
 					}
 				}
 			}
@@ -599,7 +599,7 @@ void level_tally_t::Init(player_t *player)
 		// It'd be neat to add all of the grade sounds,
 		// but not this close to release
 
-		UINT16 skinid = player->skin;
+		uint16_t skinid = player->skin;
 		if (skinid >= numskins || R_CanShowSkinInDemo(skinid) == false)
 			;
 		else if (rank < GRADE_C)
@@ -650,9 +650,9 @@ void level_tally_t::Init(player_t *player)
 		delay = 0;
 	}
 
-	if (UINT8 pnum = player - players; G_IsPartyLocal(pnum))
+	if (uint8_t pnum = player - players; G_IsPartyLocal(pnum))
 	{
-		UINT8 view = G_PartyPosition(pnum);
+		uint8_t view = G_PartyPosition(pnum);
 		// Battle: if this player's viewpoint has changed
 		// since being eliminated, set it back so they see
 		// their own Tally and not someone else's.
@@ -674,17 +674,17 @@ void level_tally_t::NewLine(void)
 	delay = TICRATE/5;
 }
 
-boolean level_tally_t::IncrementLine(void)
+dboolean level_tally_t::IncrementLine(void)
 {
-	UINT8 count = lines;
+	uint8_t count = lines;
 
-	INT32 *value = nullptr;
-	INT32 dest = 0;
+	int32_t *value = nullptr;
+	int32_t dest = 0;
 
-	INT32 amount = 1;
-	INT32 freq = 2;
+	int32_t amount = 1;
+	int32_t freq = 2;
 
-	boolean lives_check = false;
+	dboolean lives_check = false;
 
 	for (int i = 0; i < TALLY_WINDOW_SIZE; i++)
 	{
@@ -729,9 +729,9 @@ boolean level_tally_t::IncrementLine(void)
 	
 	// Radio hook
 	// Prevent confusion with the total ring bonus from the stats
-	boolean isRingTallyBonus = false;										//SCS - RADIO START
-	boolean isExpTallyBonus = false;
-	boolean isPrisonBonus = false;											//SCS - RADIO END
+	dboolean isRingTallyBonus = false;										//SCS - RADIO START
+	dboolean isExpTallyBonus = false;
+	dboolean isPrisonBonus = false;											//SCS - RADIO END
 
 	for (int i = 0; i < TALLY_WINDOW_SIZE; i++)
 	{
@@ -794,7 +794,7 @@ boolean level_tally_t::IncrementLine(void)
 		return true;
 	}
 
-	const boolean playSounds = P_IsDisplayPlayer(owner);
+	const dboolean playSounds = P_IsDisplayPlayer(owner);
 
 	if (*value == dest)
 	{
@@ -815,7 +815,7 @@ boolean level_tally_t::IncrementLine(void)
 		return true;
 	}
 
-	const INT32 prevVal = *value;
+	const int32_t prevVal = *value;
 
 	if (playSounds == true && tickSound == 0)
 	{
@@ -845,9 +845,9 @@ boolean level_tally_t::IncrementLine(void)
 
 	if (lives_check == true)
 	{
-		const UINT8 lifethreshold = 20;
-		const UINT8 oldExtra = prevVal / lifethreshold;
-		const UINT8 extra = *value / lifethreshold;
+		const uint8_t lifethreshold = 20;
+		const uint8_t oldExtra = prevVal / lifethreshold;
+		const uint8_t extra = *value / lifethreshold;
 
 		// Handle extra life sound & blinking
 		if (extra > oldExtra)
@@ -924,7 +924,7 @@ void level_tally_t::Tick(void)
 		return;
 	}
 
-	const boolean playSounds = P_IsDisplayPlayer(owner);
+	const dboolean playSounds = P_IsDisplayPlayer(owner);
 
 	switch (state)
 	{
@@ -1071,8 +1071,8 @@ void level_tally_t::Draw(void)
 
 	const float frac = (r_splitscreen ? 0.5 : 1.0);
 
-	INT32 v_width = BASEVIDWIDTH;
-	INT32 v_height = BASEVIDHEIGHT;
+	int32_t v_width = BASEVIDWIDTH;
+	int32_t v_height = BASEVIDHEIGHT;
 	if (r_splitscreen > 0)
 	{
 		v_height /= 2;
@@ -1082,7 +1082,7 @@ void level_tally_t::Draw(void)
 		v_width /= 2;
 	}
 
-	SINT8 h_transition_sign = 1;
+	int8_t h_transition_sign = 1;
 	if (r_splitscreen > 1)
 	{
 		if (!(R_GetViewNumber() & 1))
@@ -1104,7 +1104,7 @@ void level_tally_t::Draw(void)
 		.clipy(0, v_height);
 
 
-	INT32 fade = 5;
+	int32_t fade = 5;
 	if (state == TALLY_ST_GOTTHRU_SLIDEIN
 		|| state == TALLY_ST_GAMEOVER_SLIDEIN)
 	{
@@ -1120,11 +1120,11 @@ void level_tally_t::Draw(void)
 		31, fade
 	);
 
-	const INT32 header_width = (r_splitscreen ? (BASEVIDWIDTH * 0.5) : BASEVIDWIDTH);
-	const INT32 header_x = (v_width - header_width) * 0.5;
+	const int32_t header_width = (r_splitscreen ? (BASEVIDWIDTH * 0.5) : BASEVIDWIDTH);
+	const int32_t header_x = (v_width - header_width) * 0.5;
 
-	const INT32 header_height = 36 * frac;
-	const INT32 header_centered = (v_height * 0.5) - header_height;
+	const int32_t header_height = 36 * frac;
+	const int32_t header_centered = (v_height * 0.5) - header_height;
 
 	switch (state)
 	{
@@ -1173,7 +1173,7 @@ void level_tally_t::Draw(void)
 				.colormap(owner->skin, color)
 				.patch(faceprefix[owner->skin][FACE_RANK]);
 
-			UINT8 lives_num = owner->lives;
+			uint8_t lives_num = owner->lives;
 			if (state == TALLY_ST_GAMEOVER_SLIDEIN)
 			{
 				lives_num++;
@@ -1203,8 +1203,8 @@ void level_tally_t::Draw(void)
 	if (state != TALLY_ST_GOTTHRU_SLIDEIN
 		&& state != TALLY_ST_GOTTHRU_SLIDEUP)
 	{
-		UINT8 numBoxes = 0;
-		boolean drawStats = false;
+		uint8_t numBoxes = 0;
+		dboolean drawStats = false;
 		if (stats[0] != TALLY_STAT_NA)
 		{
 			numBoxes++;
@@ -1228,10 +1228,10 @@ void level_tally_t::Draw(void)
 			((v_height * 0.5) + (8.0 * frac)) - ((box_bg->height * 0.5) * numBoxes)
 		);
 
-		UINT8 displayLines = lines;
+		uint8_t displayLines = lines;
 		
 		// Radio hook
-		const boolean showPerfectBonuses = cv_show_s_ranks.value && !r_splitscreen && !demo.playback;		//SCS - RADIO
+		const dboolean showPerfectBonuses = cv_show_s_ranks.value && !r_splitscreen && !demo.playback;		//SCS - RADIO
 
 		for (int b = 0;	b < numBoxes; b++)
 		{
@@ -1258,7 +1258,7 @@ void level_tally_t::Draw(void)
 				.xy(11.0 * frac, 6.0 * frac)
 				.font(r_splitscreen ? srb2::Draw::Font::kPing : srb2::Draw::Font::kTimer);
 
-			UINT8 boxLines = 0;
+			uint8_t boxLines = 0;
 			if (drawStats == true)
 			{
 				for (int i = 0; i < TALLY_WINDOW_SIZE; i++)
@@ -1359,9 +1359,9 @@ void level_tally_t::Draw(void)
 					{
 						case TALLY_STAT_TIME:
 						{
-							INT32 work_minutes = displayStat[i] / (60 * TICRATE);
-							INT32 work_seconds = displayStat[i] / TICRATE % 60;
-							INT32 work_tics = G_TicsToCentiseconds(displayStat[i]);
+							int32_t work_minutes = displayStat[i] / (60 * TICRATE);
+							int32_t work_seconds = displayStat[i] / TICRATE % 60;
+							int32_t work_tics = G_TicsToCentiseconds(displayStat[i]);
 
 							drawer_text
 								.x(197.0 * frac)
@@ -1420,7 +1420,7 @@ void level_tally_t::Draw(void)
 									.colormap(owner->skin, color)
 									.patch(faceprefix[owner->skin][r_splitscreen ? FACE_MINIMAP : FACE_RANK]);
 
-								UINT8 lives_num = std::min(owner->lives + livesAdded, 10);
+								uint8_t lives_num = std::min(owner->lives + livesAdded, 10);
 								if (xtraBlink > 0 && (xtraBlink & 1) == 0 && livesAdded > 0)
 								{
 									lives_num = 0;
@@ -1605,9 +1605,9 @@ void K_InitPlayerTally(player_t *player)
 
 void K_TickPlayerTally(player_t *player)
 {
-	boolean fastForwardInput = !demo.playback && P_IsMachineLocalPlayer(player) &&
+	dboolean fastForwardInput = !demo.playback && P_IsMachineLocalPlayer(player) &&
 		G_PlayerInputDown(G_LocalSplitscreenPartyPosition(player - players), gc_a, 0);
-	boolean allowFastForward = player->tally.state > TALLY_ST_GOTTHRU_SLIDEIN
+	dboolean allowFastForward = player->tally.state > TALLY_ST_GOTTHRU_SLIDEIN
 		&& player->tally.state <= TALLY_ST_DONE
 		&& player->tally.releasedFastForward
 		// - Not allowed online so we don't have to do any
@@ -1626,7 +1626,7 @@ void K_TickPlayerTally(player_t *player)
 			player->tally.Tick();
 		while (player->tally.state != TALLY_ST_DONE && player->tally.state != TALLY_ST_GAMEOVER_DONE);
 
-		player->tally.delay = std::min<INT32>(player->tally.delay, TICRATE);
+		player->tally.delay = std::min<int32_t>(player->tally.delay, TICRATE);
 
 		if (Y_ShouldDoIntermission())
 			musiccountdown = 2; // gets decremented to 1 in G_Ticker to immediately trigger intermission music [blows raspberry]
@@ -1652,7 +1652,7 @@ void K_DrawPlayerTally(void)
 	stplyr->tally.Draw();
 }
 
-boolean K_PlayerTallyActive(player_t *player)
+dboolean K_PlayerTallyActive(player_t *player)
 {
 	return player->tally.active; //(player->exiting || (player->pflags & PF_NOCONTEST));
 }

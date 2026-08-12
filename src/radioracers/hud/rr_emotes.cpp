@@ -31,7 +31,7 @@
 
 // For the chat window
 int hu_radio_tick = 0;
-boolean is_emote_menu_on = false;
+dboolean is_emote_menu_on = false;
 /*
 
 // Emote menu
@@ -41,11 +41,11 @@ std::vector<emote_t*> menu_emotes;
 std::vector<emote_t*> menu_search_emotes;
 
 size_t emote_menu_selection = 0;
-boolean is_emote_menu_on = false;
+dboolean is_emote_menu_on = false;
 std::vector<emote_t*> all_the_emotes;
 
 // Emote preview
-boolean is_emote_preview_on = false;
+dboolean is_emote_preview_on = false;
 std::string emote_search_query;
 size_t emote_search_query_select = 0; 
 std::vector<emote_t*> emote_search_results;
@@ -61,13 +61,13 @@ std::vector<std::vector<emote_t*>> chat_input_emotes;
 typedef struct
 {
     std::string message;
-    boolean contains_text;
+    dboolean contains_text;
     std::vector<patch_t*> found_emote_patches;
     std::vector<emote_t*> found_emotes;
     std::vector<int> found_emote_atlases;
 } parse_message_results_t;
 
-static INT32 getEmotePatchWidth(patch_t* emote_patch, boolean contains_text = true)
+static int32_t getEmotePatchWidth(patch_t* emote_patch, dboolean contains_text = true)
 {
     float_t scale = GET_CHAT_EMOTE_SCALE(emote_patch->height, contains_text);
     float_t scaled_width = emote_patch->width * scale;
@@ -75,10 +75,10 @@ static INT32 getEmotePatchWidth(patch_t* emote_patch, boolean contains_text = tr
     return static_cast<int>(scaled_width + EMOTE_PADDING);
 }
 
-static INT32 getAtlasEmotePatchWidth(int atlas_id, boolean contains_text = true)
+static int32_t getAtlasEmotePatchWidth(int atlas_id, dboolean contains_text = true)
 {
-    INT32 height = EMOTE_ATLASES[atlas_id]->height;
-    INT32 width = EMOTE_ATLASES[atlas_id]->width;
+    int32_t height = EMOTE_ATLASES[atlas_id]->height;
+    int32_t width = EMOTE_ATLASES[atlas_id]->width;
 
     float_t scale = GET_CHAT_EMOTE_SCALE(height, contains_text);
     float_t scaled_width = width * scale;
@@ -86,7 +86,7 @@ static INT32 getAtlasEmotePatchWidth(int atlas_id, boolean contains_text = true)
     return static_cast<int>(scaled_width + EMOTE_PADDING);
 }
 
-static boolean isValid(const char* msg)
+static dboolean isValid(const char* msg)
 {
     for (int i = 0; msg[i] != '\0'; i++) {
         if (V_CharacterValidEx(&fontv[HU_FONT], msg[i] - fontv[HU_FONT].start))
@@ -172,7 +172,7 @@ static parse_message_results_t ParseMessageForEmotes(const char* message, int of
     ) {
         emote_t* temp_emote = result.found_emotes[idx];
         
-        INT32 width = -1;
+        int32_t width = -1;
         if (temp_emote->atlas_id != -1) {
             width = getAtlasEmotePatchWidth(temp_emote->atlas_id, result.contains_text);
         } else {
@@ -204,15 +204,15 @@ static parse_message_results_t ParseMessageForEmotes(const char* message, int of
 }
 
 static word_wrap_results_t word_wrap(
-    INT32 w, 
+    int32_t w, 
     fixed_t scale, 
-    INT32 option, 
+    int32_t option, 
     const char* string,
     size_t log_index,
     int offset,
     std::vector<std::vector<patch_t*>> *patch_table,
     std::vector<std::vector<emote_t*>> *emote_table,
-    boolean override = false
+    dboolean override = false
 )
 {
     // Replace any emote identifiers (if there are any) with '\x01'. It'll act as a placeholder.
@@ -249,9 +249,9 @@ static word_wrap_results_t word_wrap(
  * Need to perform the same functionality as word_wrap, but this is just being used for reference.
  *//*
 static word_wrap_results_t just_word_wrap(
-    INT32 w, 
+    int32_t w, 
     fixed_t scale, 
-    INT32 option, 
+    int32_t option, 
     int offset,
     const char* string
 )
@@ -274,27 +274,27 @@ static word_wrap_results_t just_word_wrap(
     return results;
 }
 
-static word_wrap_results_t RR_CHAT_Just_Word_Wrap(INT32 w, fixed_t scale, INT32 option, const char *string, size_t chat_mini_log_index)
+static word_wrap_results_t RR_CHAT_Just_Word_Wrap(int32_t w, fixed_t scale, int32_t option, const char *string, size_t chat_mini_log_index)
 {
     return just_word_wrap(w, scale, option, chat_mini_log_offset[chat_mini_log_index], string);
 }
 
-static word_wrap_results_t RR_CHAT_Mini_WordWrap(INT32 w, fixed_t scale, INT32 option, const char *string, size_t chat_mini_log_index)
+static word_wrap_results_t RR_CHAT_Mini_WordWrap(int32_t w, fixed_t scale, int32_t option, const char *string, size_t chat_mini_log_index)
 {
     return word_wrap(w, scale, option, string, chat_mini_log_index, chat_mini_log_offset[chat_mini_log_index], &chat_mini_log_emote_patches, &chat_mini_log_emotes);
 }
 
-static word_wrap_results_t RR_CHAT_WordWrap(INT32 w, fixed_t scale, INT32 option, const char *string, size_t chat_log_index)
+static word_wrap_results_t RR_CHAT_WordWrap(int32_t w, fixed_t scale, int32_t option, const char *string, size_t chat_log_index)
 {
     return word_wrap(w, scale, option, string, chat_log_index, chat_log_offset[chat_log_index], &chat_log_emote_patches, &chat_log_emotes);
 }
 
-static word_wrap_results_t RR_Chat_Input_WordWrap(INT32 w, fixed_t scale, INT32 option, const char* string) 
+static word_wrap_results_t RR_Chat_Input_WordWrap(int32_t w, fixed_t scale, int32_t option, const char* string) 
 {
     return word_wrap(w, scale, option, string, 0, 0, &chat_input_emote_patches, &chat_input_emotes, true);
 }
 
-void RR_UpdateEmoteChatLogs(UINT32 chat_mini_log, UINT32 chat_log)
+void RR_UpdateEmoteChatLogs(uint32_t chat_mini_log, uint32_t chat_log)
 {
     // CONS_Printf("[%d]: Initialize emote chat log\n", chat_log);
 
@@ -319,7 +319,7 @@ void RR_UpdateEmoteChatLogs(UINT32 chat_mini_log, UINT32 chat_log)
     chat_mini_log_emote_patches[chat_mini_log].clear();
 }
 
-void RR_RemoveEmoteChatLog(UINT32 chat_log)
+void RR_RemoveEmoteChatLog(uint32_t chat_log)
 {
     if (chat_log == 0)
         return;
@@ -333,7 +333,7 @@ void RR_RemoveEmoteChatLog(UINT32 chat_log)
     chat_log_emote_patches[chat_log-1].clear();
 }
 
-void RR_RemoveEmoteChatMiniLog(UINT32 chat_mini_log)
+void RR_RemoveEmoteChatMiniLog(uint32_t chat_mini_log)
 {
     if (chat_mini_log == 0)
         return;
@@ -411,35 +411,35 @@ std::unordered_map<chat_log_type_t, std::function<emote_t*(size_t, int)>> emote_
 // Lots of edge-cases to check for
 typedef struct 
 {
-    boolean line_has_emote = false;
-    boolean line_checked_for_emote = false;
-    boolean previous_line_had_emote = false;
-    boolean previous_line_checked = false;
-    boolean had_at_least_one_emote = false;
+    dboolean line_has_emote = false;
+    dboolean line_checked_for_emote = false;
+    dboolean previous_line_had_emote = false;
+    dboolean previous_line_checked = false;
+    dboolean had_at_least_one_emote = false;
 } emote_flags_t;
 
-static INT32 Parse_ChatLog_Message(
+static int32_t Parse_ChatLog_Message(
     emote_flags_t &flags,
-    INT32& linescount,
-    INT32& dy,
-    INT32& startj,
-    INT32 charheight,
-    INT32 y,
-    INT32 chat_topy,
-    INT32 chat_bottomy,
+    int32_t& linescount,
+    int32_t& dy,
+    int32_t& startj,
+    int32_t charheight,
+    int32_t y,
+    int32_t chat_topy,
+    int32_t chat_bottomy,
     char* msg,
-    INT32 emote_padding
+    int32_t emote_padding
 )
 {
-    INT32 j = 0;
+    int32_t j = 0;
 
-    boolean& line_has_emote = flags.line_has_emote;
-    boolean& line_checked_for_emote = flags.line_checked_for_emote;
-    boolean& previous_line_had_emote = flags.previous_line_had_emote;
-    boolean& previous_line_checked = flags.previous_line_checked;
-    boolean& had_at_least_one_emote = flags.had_at_least_one_emote;
+    dboolean& line_has_emote = flags.line_has_emote;
+    dboolean& line_checked_for_emote = flags.line_checked_for_emote;
+    dboolean& previous_line_had_emote = flags.previous_line_had_emote;
+    dboolean& previous_line_checked = flags.previous_line_checked;
+    dboolean& had_at_least_one_emote = flags.had_at_least_one_emote;
 
-    INT32 emotelinescount = 0;
+    int32_t emotelinescount = 0;
     for (; msg[j]; j++) // iterate through msg
     {
         if (msg[j] == '\x01')
@@ -508,19 +508,19 @@ static INT32 Parse_ChatLog_Message(
     return emotelinescount;
 }
 
-INT32 RR_Parse_ChatLog(chat_log_parameters_t parameters)
+int32_t RR_Parse_ChatLog(chat_log_parameters_t parameters)
 {
-    INT32 boxw = parameters.boxw;
-    INT32 charheight = parameters.charheight;
-	INT32 x = parameters.x, y = parameters.y;
-	INT32 chat_topy = parameters.chat_topy, chat_bottomy = parameters.chat_bottomy;
-    UINT32 chat_nummsg_log = parameters.chat_nummsg_log;
-    INT32 flags = parameters.flags;
+    int32_t boxw = parameters.boxw;
+    int32_t charheight = parameters.charheight;
+	int32_t x = parameters.x, y = parameters.y;
+	int32_t chat_topy = parameters.chat_topy, chat_bottomy = parameters.chat_bottomy;
+    uint32_t chat_nummsg_log = parameters.chat_nummsg_log;
+    int32_t flags = parameters.flags;
 
     fixed_t scale = parameters.scale;    
-    INT32 dy = 0;
+    int32_t dy = 0;
 
-    for (UINT32 i = 0; i < chat_nummsg_log; i++)
+    for (uint32_t i = 0; i < chat_nummsg_log; i++)
     {
         word_wrap_results_t results = RR_CHAT_WordWrap(
             boxw-4,
@@ -531,12 +531,12 @@ INT32 RR_Parse_ChatLog(chat_log_parameters_t parameters)
         );
         char *msg = results.msg;
         
-        INT32 startj = 0;
-        INT32 linescount = 1;
+        int32_t startj = 0;
+        int32_t linescount = 1;
         emote_flags_t emote_flags; // Flags to check for when parsing the message
 
-        INT32 emote_padding = results.contains_text ? EMOTE_PADDING_CONST_TEXT : EMOTE_PADDING_CONST;
-        INT32 emotelines = Parse_ChatLog_Message(emote_flags, 
+        int32_t emote_padding = results.contains_text ? EMOTE_PADDING_CONST_TEXT : EMOTE_PADDING_CONST;
+        int32_t emotelines = Parse_ChatLog_Message(emote_flags, 
             linescount, dy,
             startj, charheight,
             y, chat_topy, chat_bottomy,
@@ -575,13 +575,13 @@ INT32 RR_Parse_ChatLog(chat_log_parameters_t parameters)
     return dy;
 }
 
-INT32 RR_Parse_ChatMiniLog_For_Lines(
+int32_t RR_Parse_ChatMiniLog_For_Lines(
     size_t i, 
     fixed_t scale,
-    INT32 boxw
+    int32_t boxw
 )
 {
-    INT32 msglines = 0;
+    int32_t msglines = 0;
     size_t reverse_i = 0;
 	for (; i > 0; i--)
 	{
@@ -589,10 +589,10 @@ INT32 RR_Parse_ChatMiniLog_For_Lines(
         word_wrap_results_t results = RR_CHAT_Just_Word_Wrap(boxw-4, scale, V_SNAPTOBOTTOM|V_SNAPTOLEFT, chat_mini[i-1], i-1);
 		char *msg = results.msg;
 		size_t j = 0;
-		INT32 linescount = 1;
+		int32_t linescount = 1;
 
-		boolean line_has_emote = false;
-		boolean line_checked_for_emote = false;
+		dboolean line_has_emote = false;
+		dboolean line_checked_for_emote = false;
 
 		for (; msg[j]; j++) // iterate through msg
 		{
@@ -638,18 +638,18 @@ INT32 RR_Parse_ChatMiniLog_For_Lines(
  * a bit differently.
  *//*
 static void ParseMessageForChatWindow(
-    UINT32 *j,
+    uint32_t *j,
     char* msg,
-    INT32 *linescount,
+    int32_t *linescount,
     int *emote_lines,
-    boolean *line_has_emote_ref,
-    boolean *had_at_least_one_emote_ref
+    dboolean *line_has_emote_ref,
+    dboolean *had_at_least_one_emote_ref
 ) {
-    boolean line_has_emote = false;
-    boolean line_checked_for_emote = false;
-    boolean previous_line_had_emote = false;
-    boolean previous_line_checked = false;
-    boolean had_at_least_one_emote = false;
+    dboolean line_has_emote = false;
+    dboolean line_checked_for_emote = false;
+    dboolean previous_line_had_emote = false;
+    dboolean previous_line_checked = false;
+    dboolean had_at_least_one_emote = false;
     
     for (; msg[*j]; (*j)++) // iterate through msg
     {
@@ -698,21 +698,21 @@ bool contains(const std::vector<int>& vec, int value) {
     return std::find(vec.begin(), vec.end(), value) != vec.end();
 }
 
-static INT16 GetChatHeightPaddingForWindow(
-    INT32 charheight,
-    INT32 emote_lines,
-    INT32 typelines,
+static int16_t GetChatHeightPaddingForWindow(
+    int32_t charheight,
+    int32_t emote_lines,
+    int32_t typelines,
     word_wrap_results_t r
 ) {
-    INT16 chatinput_h = typelines * charheight;
+    int16_t chatinput_h = typelines * charheight;
 
     /**
      * Padding
      *//*
     if (typelines > 1) {
-        INT16 firstlineheight = 1 * charheight;
-        INT32 adjusted_emotelines = emote_lines;
-        INT32 adjusted_typelines = typelines;
+        int16_t firstlineheight = 1 * charheight;
+        int32_t adjusted_emotelines = emote_lines;
+        int32_t adjusted_typelines = typelines;
         if(!r.lines_with_emotes.empty() && r.contains_text && contains(r.lines_with_emotes, 1)) {
             firstlineheight = (charheight) + (EMOTE_PADDING_CONST_TEXT);
 
@@ -734,28 +734,28 @@ static INT16 GetChatHeightPaddingForWindow(
 }
 
 void RR_Draw_ChatMiniLog(chat_mini_log_parameters_t parameters) {
-    INT32 boxw = parameters.boxw;
-    INT32 charheight = parameters.charheight;
-	INT32 *x = parameters.x, *y = parameters.y;
-    UINT32 chat_nummsg_min = parameters.chat_nummsg_min;
+    int32_t boxw = parameters.boxw;
+    int32_t charheight = parameters.charheight;
+	int32_t *x = parameters.x, *y = parameters.y;
+    uint32_t chat_nummsg_min = parameters.chat_nummsg_min;
 
     fixed_t scale = parameters.scale;
     size_t i = 0;
 
     for (; i<=(chat_nummsg_min-1); i++) // iterate through our hot messages
 	{
-        INT32 timer = ((cv_chattime.value*TICRATE)-chat_timers[i]) - cv_chattime.value*TICRATE+9; // see below...
-        INT32 transflag = (timer >= 0 && timer <= 9) ? (timer*V_10TRANS) : 0; // you can make bad jokes out of this one.
-		UINT32 j = 0;
+        int32_t timer = ((cv_chattime.value*TICRATE)-chat_timers[i]) - cv_chattime.value*TICRATE+9; // see below...
+        int32_t transflag = (timer >= 0 && timer <= 9) ? (timer*V_10TRANS) : 0; // you can make bad jokes out of this one.
+		uint32_t j = 0;
         
         word_wrap_results_t results = RR_CHAT_Mini_WordWrap(boxw-4, scale, V_SNAPTOBOTTOM|V_SNAPTOLEFT, chat_mini[i], i); // get the current message, and word wrap it.
 		char *msg = results.msg;
 
-		INT32 linescount = 1;
+		int32_t linescount = 1;
 
         // Yeah
-		boolean line_has_emote = false;
-		boolean had_at_least_one_emote = false;
+		dboolean line_has_emote = false;
+		dboolean had_at_least_one_emote = false;
 
 		int emote_lines = 0;
 
@@ -768,10 +768,10 @@ void RR_Draw_ChatMiniLog(chat_mini_log_parameters_t parameters) {
             &had_at_least_one_emote
         );
 
-        INT32 final_height = 0;
+        int32_t final_height = 0;
 		if (cv_chatbacktint.value) // on request of wolfy
 		{
-			INT32 width = V_RR_StringWidth(msg, 0, i, results.contains_text);
+			int32_t width = V_RR_StringWidth(msg, 0, i, results.contains_text);
 			if (vid.width >= 640)
 				width /= 2;		
 
@@ -815,7 +815,7 @@ void RR_Draw_ChatMiniLog(chat_mini_log_parameters_t parameters) {
 }
 
 
-INT16 RR_DrawChatInput(chat_input_parameters_t p, INT32 *chaty) {
+int16_t RR_DrawChatInput(chat_input_parameters_t p, int32_t *chaty) {
     const fixed_t scale = (vid.width < 640) ? FRACUNIT : FRACUNIT/2;
 
     const char* fmt_msg = va("%c%s %c%s%c%c", '\x80', p.talk, '\x80', w_chat, '\x80', '_');
@@ -826,16 +826,16 @@ INT16 RR_DrawChatInput(chat_input_parameters_t p, INT32 *chaty) {
         fmt_msg
     );
 
-    INT32 y = p.y;
+    int32_t y = p.y;
 
     char* msg = r.msg;
 
-    boolean line_has_emote = false;
-    boolean had_at_least_one_emote = false;
+    dboolean line_has_emote = false;
+    dboolean had_at_least_one_emote = false;
 
-    UINT32 i = 0;
-    INT32 typelines = 1;
-    INT32 emote_lines = 0;
+    uint32_t i = 0;
+    int32_t typelines = 1;
+    int32_t emote_lines = 0;
     
     ParseMessageForChatWindow(
         &i,
@@ -855,7 +855,7 @@ INT16 RR_DrawChatInput(chat_input_parameters_t p, INT32 *chaty) {
     y -= typelines * p.charheight;
     *chaty = (y + (emote_lines*p.charheight));
 
-    INT16 chatinput_h = GetChatHeightPaddingForWindow(
+    int16_t chatinput_h = GetChatHeightPaddingForWindow(
         p.charheight,
         emote_lines,
         typelines,
@@ -890,7 +890,7 @@ INT16 RR_DrawChatInput(chat_input_parameters_t p, INT32 *chaty) {
     return typelines;
 }
 
-boolean RR_CheckChatDeleteEmoteForInput(void) {
+dboolean RR_CheckChatDeleteEmoteForInput(void) {
     if (c_input <= 0)
         return false;
     
@@ -904,8 +904,8 @@ boolean RR_CheckChatDeleteEmoteForInput(void) {
             int start = i;
             start--;
 
-            boolean entered = false;
-            boolean valid = true;
+            dboolean entered = false;
+            dboolean valid = true;
 
             // Nested loops, sorry
             while (start >= 0 && w_chat[start] != ':') {
@@ -969,7 +969,7 @@ static void search_for_emotes(void)
     emote_search_query_select = 0;
 }
 
-static void update_query_add(INT32 c, std::string *query)
+static void update_query_add(int32_t c, std::string *query)
 {
     if (query->size() >= EMOTE_MENU_QUERY_SIZE)
         return;
@@ -985,7 +985,7 @@ static void update_query_delete(std::string *query)
     query->pop_back();
 }
 
-static void update_emote_query_add(INT32 c)
+static void update_emote_query_add(int32_t c)
 {
     if (emote_search_query.size() >= EMOTE_MENU_QUERY_SIZE)
         return;
@@ -1052,7 +1052,7 @@ void RR_CheckChatDeleteForEmotePreview(void)
     } 
 }
 
-void RR_CheckChatInputForEmotePreview(INT32 c) {
+void RR_CheckChatInputForEmotePreview(int32_t c) {
     if(is_emote_menu_on) {
         return;
     }
@@ -1062,7 +1062,7 @@ void RR_CheckChatInputForEmotePreview(INT32 c) {
         }
         if (w_chat[c_input-1] == ':' && c != ':' && c != ' ' ) {
 
-            boolean show_ = true;
+            dboolean show_ = true;
 
             // Check if there's a space before the colon or at the start of the line
             if (c_input - 2 >= 0 && w_chat[c_input - 2] != '\0') {
@@ -1088,7 +1088,7 @@ void RR_CheckChatInputForEmotePreview(INT32 c) {
     }
 }
 
-static void draw_favourite(INT16 x, INT16 y) {
+static void draw_favourite(int16_t x, int16_t y) {
     if (!is_emote_menu_on)
         return;
         
@@ -1108,7 +1108,7 @@ static void draw_favourite(INT16 x, INT16 y) {
     );
 }
 
-static void draw_atlas_emote(emote_t* emote, INT16 x, INT16 y, INT32 scale)
+static void draw_atlas_emote(emote_t* emote, int16_t x, int16_t y, int32_t scale)
 {
     float scale_f = static_cast<float>(scale);
 
@@ -1120,10 +1120,10 @@ static void draw_atlas_emote(emote_t* emote, INT16 x, INT16 y, INT32 scale)
         scale_f/EMOTE_ATLASES[emote->atlas_id]->width, scale_f/EMOTE_ATLASES[emote->atlas_id]->height
     ));
     
-    INT16 scaled_width = std::ceil(FixedToFloat(final_scale) * EMOTE_ATLASES[emote->atlas_id]->width);
-    INT16 scaled_height = std::ceil(FixedToFloat(final_scale) * EMOTE_ATLASES[emote->atlas_id]->height);
+    int16_t scaled_width = std::ceil(FixedToFloat(final_scale) * EMOTE_ATLASES[emote->atlas_id]->width);
+    int16_t scaled_height = std::ceil(FixedToFloat(final_scale) * EMOTE_ATLASES[emote->atlas_id]->height);
 
-    INT32 offset = (scaled_height < scale) ? (scale - scaled_height)/2 : 0;
+    int32_t offset = (scaled_height < scale) ? (scale - scaled_height)/2 : 0;
 
     emote_atlas_coordinates_t coords = getEmoteAtlasCoordinates(emote, FixedToFloat(final_scale)); 
 
@@ -1144,7 +1144,7 @@ static void draw_atlas_emote(emote_t* emote, INT16 x, INT16 y, INT32 scale)
     }
 }
 
-static void draw_normal_emote(emote_t* emote, INT16 x, INT16 y, INT32 scale)
+static void draw_normal_emote(emote_t* emote, int16_t x, int16_t y, int32_t scale)
 {
     float scale_f = static_cast<float>(scale);
 
@@ -1158,8 +1158,8 @@ static void draw_normal_emote(emote_t* emote, INT16 x, INT16 y, INT32 scale)
 
     int final_patch_height = FixedToFloat(final_scale) * emote_patch->height;
     int final_patch_width = FixedToFloat(final_scale) * emote_patch->width;
-    INT32 offset_h = (final_patch_height < scale) ? (scale - final_patch_height)/2 : 0;
-    INT32 offset_w = (final_patch_width < scale) ? (scale - final_patch_width)/2 : 0;
+    int32_t offset_h = (final_patch_height < scale) ? (scale - final_patch_height)/2 : 0;
+    int32_t offset_w = (final_patch_width < scale) ? (scale - final_patch_width)/2 : 0;
 
     V_DrawStretchyFixedPatch(
         (x + offset_w) << FRACBITS,
@@ -1176,7 +1176,7 @@ static void draw_normal_emote(emote_t* emote, INT16 x, INT16 y, INT32 scale)
     }
 }
 
-static void draw_select_cursor(INT16 x, INT16 y, INT32 scale)
+static void draw_select_cursor(int16_t x, int16_t y, int32_t scale)
 {
     float scale_f = static_cast<float>(scale);
 
@@ -1184,7 +1184,7 @@ static void draw_select_cursor(INT16 x, INT16 y, INT32 scale)
     // So to be safe, just gonna use leveltime. Won't work during vote screens/intermissions, but still.
     // TODO: Define own tick when confident that the random crash issue is squashed
 
-    UINT8 cursorframe = (leveltime/4) % 8;
+    uint8_t cursorframe = (leveltime/4) % 8;
     patch_t* cursor_patch = static_cast<patch_t*>(W_CachePatchName(
         va("K_CHILI%d", cursorframe+1), PU_HUDGFX
     ));
@@ -1269,15 +1269,15 @@ void RR_SelectEmoteFromPreview(void)
 }
 
 void RR_DrawChatEmotePreview(
-    INT16 x,
-    INT16 y,
-    INT32 w
+    int16_t x,
+    int16_t y,
+    int32_t w
 )
 {
     if (!is_emote_preview_on)
         return;
     
-    const INT32 PREVIEW_HEIGHT = 10;
+    const int32_t PREVIEW_HEIGHT = 10;
 
     if (EMOTES.empty() || emote_search_results.empty()) {
         V_DrawFillConsoleMap(
@@ -1316,7 +1316,7 @@ void RR_DrawChatEmotePreview(
             V_SNAPTOBOTTOM | V_SNAPTOLEFT
         );
         
-        INT16 temp_x = x;
+        int16_t temp_x = x;
         for (size_t i = 0; i < emote_search_results.size(); i++) {
             emote_t* preview_emote = emote_search_results[i];
 
@@ -1473,7 +1473,7 @@ static void update_emote_menu_results()
 }
 
 
-void RR_CheckChatInputForEmoteMenu(INT32 c)
+void RR_CheckChatInputForEmoteMenu(int32_t c)
 {
     if(is_emote_preview_on) {
         return;
@@ -1534,7 +1534,7 @@ void RR_CheckChatEnterforEmoteMenu(void)
     hu_radio_tick = 3;
 }
 
-static void wrap_emote_menu(INT32 direction) {
+static void wrap_emote_menu(int32_t direction) {
 
     size_t total_emotes_on_page = get_max_emotes_on_menu_page();
     size_t max_rows = (total_emotes_on_page + ROWS - 1)/ROWS;
@@ -1580,7 +1580,7 @@ static void wrap_emote_menu(INT32 direction) {
     }    
 
     std::vector<emote_t*> *current_emotes = get_current_emote_list();
-    boolean selection_too_large = current_emotes != nullptr && emote_menu_selection >= current_emotes->size();
+    dboolean selection_too_large = current_emotes != nullptr && emote_menu_selection >= current_emotes->size();
 
     // Another obligatory check
     if (selection_too_large) {
@@ -1589,7 +1589,7 @@ static void wrap_emote_menu(INT32 direction) {
     }
 }
 
-void RR_CheckEmoteMenuMovement(INT32 direction)
+void RR_CheckEmoteMenuMovement(int32_t direction)
 {
     // there can only be (ROWS * COLUMNS) per page
     size_t total_emotes_on_page = get_max_emotes_on_menu_page();
@@ -1667,24 +1667,24 @@ void RR_ToggleEmoteMenu(void)
  * Discord/Skype-esque menu
  *//*
 void RR_DrawChatEmoteMenu(
-    INT16 x, 
-    INT16 y
+    int16_t x, 
+    int16_t y
 ) {
     if (!is_emote_menu_on)
         return;
 
-    const INT32 MENU_WIDTH = 56;
-    const INT32 MENU_HEIGHT = 72;
-    const INT32 background_y = y - (MENU_HEIGHT);
+    const int32_t MENU_WIDTH = 56;
+    const int32_t MENU_HEIGHT = 72;
+    const int32_t background_y = y - (MENU_HEIGHT);
 
     // Just scale the whole emote. It'll look squashed if it's wide, but, who cares? Wide emotes are NON-standard.
-    const INT32 _WIDTH = 10;
+    const int32_t _WIDTH = 10;
 
     // background
     V_DrawFill(x, background_y, MENU_WIDTH, MENU_HEIGHT, 31 | V_60TRANS | V_SNAPTOBOTTOM | V_SNAPTOLEFT);
 
     // sort
-    const UINT8 menuSortLine_y = background_y - 10;
+    const uint8_t menuSortLine_y = background_y - 10;
     V_DrawFill(x, menuSortLine_y, MENU_WIDTH, 5, 22 | V_SNAPTOBOTTOM | V_SNAPTOLEFT);
     const char* sortString = va("\x83\Ctrl+=: \x81%s", cv_chat_emotes_sort.string);
 
@@ -1705,9 +1705,9 @@ void RR_DrawChatEmoteMenu(
 
 
     // text input
-    const INT32 text_x = x + 1;
-    const INT32 text_y = background_y - 5;
-    const INT32 text_bg_y = background_y - 5;
+    const int32_t text_x = x + 1;
+    const int32_t text_y = background_y - 5;
+    const int32_t text_bg_y = background_y - 5;
     
     V_DrawFill(x, text_bg_y, MENU_WIDTH, 5, 19 | V_SNAPTOBOTTOM | V_SNAPTOLEFT);
     V_DrawStringScaled(
@@ -1746,7 +1746,7 @@ void RR_DrawChatEmoteMenu(
     }
 
      if (EMOTES.empty() || menu_emotes.empty()) {
-        const INT32 middle_x = x + (MENU_WIDTH/2);
+        const int32_t middle_x = x + (MENU_WIDTH/2);
         const char* nothing = (EMOTES.empty()) ? "NO EMOTES LOADED" : "NOTHING";
         const fixed_t string_w = V_StringScaledWidth( FRACUNIT/2, FRACUNIT, FRACUNIT, V_SNAPTOBOTTOM | V_SNAPTOLEFT, TINY_FONT, nothing);
         const int string_w_int = string_w/FRACUNIT;
@@ -1782,7 +1782,7 @@ void RR_DrawChatEmoteMenu(
 
     size_t max_page = get_max_pages_for_emote_menu();
 
-    const INT32 page_y = y - 5;
+    const int32_t page_y = y - 5;
 
     fixed_t page_width = V_StringScaledWidth( FRACUNIT/2, FRACUNIT, FRACUNIT, V_SNAPTOBOTTOM | V_SNAPTOLEFT, TINY_FONT, va("Page %d of %d", emote_menu_page, max_page));
     fixed_t page_x = ((x + MENU_WIDTH) << FRACBITS) - page_width;
@@ -1820,7 +1820,7 @@ void RR_DrawChatEmoteMenu(
             if (i == current_row && j == current_column) {
                 V_DrawFill(x, page_y - 6, MENU_WIDTH, 5, 21 | V_SNAPTOBOTTOM | V_SNAPTOLEFT);
 
-                const INT32 middle_x = x + (MENU_WIDTH/2);
+                const int32_t middle_x = x + (MENU_WIDTH/2);
                 const fixed_t emote_width = V_StringScaledWidth( FRACUNIT/2, FRACUNIT, FRACUNIT, V_SNAPTOBOTTOM | V_SNAPTOLEFT, TINY_FONT, m_emote->name);
                 const int emote_width_int = emote_width/FRACUNIT;
 

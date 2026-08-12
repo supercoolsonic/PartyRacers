@@ -27,13 +27,13 @@
  * RADIO: Copied straight from v_video.cpp
  * Instead of manipulating the original function, just copy it here.
  */
-extern boolean V_CharacterValidEx(font_t* font, int c);
+extern dboolean V_CharacterValidEx(font_t* font, int c);
 
 typedef struct
 {
     char* msg;
     std::vector<int> lines_with_emotes;
-    boolean contains_text;
+    dboolean contains_text;
 } word_wrap_results_t;
 
 typedef enum  {
@@ -47,12 +47,12 @@ word_wrap_results_t V_RR_ScaledWordWrap(
 	fixed_t scale,
 	fixed_t spacescale,
 	fixed_t lfscale,
-	INT32 flags,
+	int32_t flags,
 	int fontno,
 	const char* s,
     patch_t** found_emote_patches,
     int* found_emote_atlases,
-    boolean contains_text
+    dboolean contains_text
 );
 
 void V_RR_DrawStringScaled(
@@ -61,14 +61,14 @@ void V_RR_DrawStringScaled(
     fixed_t           scale,
     fixed_t     space_scale,
     fixed_t  linefeed_scale,
-    INT32       flags,
-    const UINT8 *colormap,
+    int32_t       flags,
+    const uint8_t *colormap,
     int         font,
     const char *text,
     int chat_log_index,
     std::vector<int> lines_with_emotes,
     chat_log_type_t log_type,
-    boolean contains_text,
+    dboolean contains_text,
     int top_offset,
     int bottom_offset
 );
@@ -80,11 +80,11 @@ fixed_t V_RR_StringScaledWidth(
     fixed_t      scale,
     fixed_t spacescale,
     fixed_t    lfscale,
-    INT32      flags,
+    int32_t      flags,
     int        fontno,
     const char *s,
     int chat_log_index,
-    boolean contains_text
+    dboolean contains_text
 );
 
 extern "C" {
@@ -109,8 +109,8 @@ extern "C" {
 	V__DrawDupxString (x,y,scale,option,NULL,TINYTIMER_FONT,string)
 
     // Input display
-extern boolean isPingDrawn;
-extern boolean isDrawingInput;
+extern dboolean isPingDrawn;
+extern dboolean isDrawingInput;
 
 #ifdef __cplusplus
 } // extern "C"

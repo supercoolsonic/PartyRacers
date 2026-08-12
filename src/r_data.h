@@ -26,19 +26,19 @@ extern "C" {
 // Store lists of lumps for F_START/F_END etc.
 struct lumplist_t
 {
-	UINT16 wadfile;
-	UINT16 firstlump;
+	uint16_t wadfile;
+	uint16_t firstlump;
 	size_t numlumps;
 };
 
-UINT32 ASTBlendPixel(RGBA_t background, RGBA_t foreground, int style, UINT8 alpha);
-UINT32 ASTBlendTexturePixel(RGBA_t background, RGBA_t foreground, int style, UINT8 alpha);
-UINT8 ASTBlendPaletteIndexes(UINT8 background, UINT8 foreground, int style, UINT8 alpha);
+uint32_t ASTBlendPixel(RGBA_t background, RGBA_t foreground, int style, uint8_t alpha);
+uint32_t ASTBlendTexturePixel(RGBA_t background, RGBA_t foreground, int style, uint8_t alpha);
+uint8_t ASTBlendPaletteIndexes(uint8_t background, uint8_t foreground, int style, uint8_t alpha);
 
-extern INT32 ASTTextureBlendingThreshold[2];
+extern int32_t ASTTextureBlendingThreshold[2];
 
-extern INT16 color8to16[256]; // remap color index to highcolor
-extern INT16 *hicolormaps; // remap high colors to high colors..
+extern int16_t color8to16[256]; // remap color index to highcolor
+extern int16_t *hicolormaps; // remap high colors to high colors..
 
 extern CV_PossibleValue_t Color_cons_t[];
 
@@ -56,24 +56,24 @@ extern size_t flatmemory, spritememory, texturememory;
 //#define COLORMAPREVERSELIST
 
 void R_InitColormaps(void);
-void R_ReInitColormaps(UINT16 num, void *newencoremap, size_t encoremapsize);
+void R_ReInitColormaps(uint16_t num, void *newencoremap, size_t encoremapsize);
 void R_ClearColormaps(void);
-extracolormap_t *R_CreateDefaultColormap(boolean lighttable);
+extracolormap_t *R_CreateDefaultColormap(dboolean lighttable);
 extracolormap_t *R_GetDefaultColormap(void);
-extracolormap_t *R_CopyColormap(extracolormap_t *extra_colormap, boolean lighttable);
+extracolormap_t *R_CopyColormap(extracolormap_t *extra_colormap, dboolean lighttable);
 void R_AddColormapToList(extracolormap_t *extra_colormap);
 
 #ifdef EXTRACOLORMAPLUMPS
-boolean R_CheckDefaultColormapByValues(boolean checkrgba, boolean checkfadergba, boolean checkparams,
-	INT32 rgba, INT32 fadergba, UINT8 fadestart, UINT8 fadeend, UINT8 flags, lumpnum_t lump);
-extracolormap_t *R_GetColormapFromListByValues(INT32 rgba, INT32 fadergba, UINT8 fadestart, UINT8 fadeend, UINT8 flags, lumpnum_t lump);
+dboolean R_CheckDefaultColormapByValues(dboolean checkrgba, dboolean checkfadergba, dboolean checkparams,
+	int32_t rgba, int32_t fadergba, uint8_t fadestart, uint8_t fadeend, uint8_t flags, lumpnum_t lump);
+extracolormap_t *R_GetColormapFromListByValues(int32_t rgba, int32_t fadergba, uint8_t fadestart, uint8_t fadeend, uint8_t flags, lumpnum_t lump);
 #else
-boolean R_CheckDefaultColormapByValues(boolean checkrgba, boolean checkfadergba, boolean checkparams,
-	INT32 rgba, INT32 fadergba, UINT8 fadestart, UINT8 fadeend, UINT8 flags);
-extracolormap_t *R_GetColormapFromListByValues(INT32 rgba, INT32 fadergba, UINT8 fadestart, UINT8 fadeend, UINT8 flags);
+dboolean R_CheckDefaultColormapByValues(dboolean checkrgba, dboolean checkfadergba, dboolean checkparams,
+	int32_t rgba, int32_t fadergba, uint8_t fadestart, uint8_t fadeend, uint8_t flags);
+extracolormap_t *R_GetColormapFromListByValues(int32_t rgba, int32_t fadergba, uint8_t fadestart, uint8_t fadeend, uint8_t flags);
 #endif
-boolean R_CheckDefaultColormap(extracolormap_t *extra_colormap, boolean checkrgba, boolean checkfadergba, boolean checkparams);
-boolean R_CheckEqualColormaps(extracolormap_t *exc_a, extracolormap_t *exc_b, boolean checkrgba, boolean checkfadergba, boolean checkparams);
+dboolean R_CheckDefaultColormap(extracolormap_t *extra_colormap, dboolean checkrgba, dboolean checkfadergba, dboolean checkparams);
+dboolean R_CheckEqualColormaps(extracolormap_t *exc_a, extracolormap_t *exc_b, dboolean checkrgba, dboolean checkfadergba, dboolean checkparams);
 extracolormap_t *R_GetColormapFromList(extracolormap_t *extra_colormap);
 
 typedef int textmapcolormapflags_t;
@@ -94,12 +94,12 @@ typedef int textmapcolormapflags_t;
 
 lighttable_t *R_CreateLightTable(extracolormap_t *extra_colormap);
 extracolormap_t * R_CreateColormapFromLinedef(char *p1, char *p2, char *p3);
-extracolormap_t* R_CreateColormap(INT32 rgba, INT32 fadergba, UINT8 fadestart, UINT8 fadeend, UINT8 flags);
+extracolormap_t* R_CreateColormap(int32_t rgba, int32_t fadergba, uint8_t fadestart, uint8_t fadeend, uint8_t flags);
 extracolormap_t *R_AddColormaps(extracolormap_t *exc_augend, extracolormap_t *exc_addend,
-	boolean subR, boolean subG, boolean subB, boolean subA,
-	boolean subFadeR, boolean subFadeG, boolean subFadeB, boolean subFadeA,
-	boolean subFadeStart, boolean subFadeEnd, boolean ignoreFlags,
-	boolean lighttable);
+	dboolean subR, dboolean subG, dboolean subB, dboolean subA,
+	dboolean subFadeR, dboolean subFadeG, dboolean subFadeB, dboolean subFadeA,
+	dboolean subFadeStart, dboolean subFadeEnd, dboolean ignoreFlags,
+	dboolean lighttable);
 #ifdef EXTRACOLORMAPLUMPS
 extracolormap_t *R_ColormapForName(char *name);
 const char *R_NameForColormap(extracolormap_t *extra_colormap);
@@ -117,7 +117,7 @@ const char *R_NameForColormap(extracolormap_t *extra_colormap);
 #define R_PutRgbaRGB(r, g, b) (R_PutRgbaR(r) + R_PutRgbaG(g) + R_PutRgbaB(b))
 #define R_PutRgbaRGBA(r, g, b, a) (R_PutRgbaRGB(r, g, b) + R_PutRgbaA(a))
 
-UINT8 NearestPaletteColor(UINT8 r, UINT8 g, UINT8 b, RGBA_t *palette);
+uint8_t NearestPaletteColor(uint8_t r, uint8_t g, uint8_t b, RGBA_t *palette);
 #define NearestColor(r, g, b) NearestPaletteColor(r, g, b, NULL)
 
 #ifdef __cplusplus

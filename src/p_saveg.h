@@ -31,35 +31,35 @@ extern "C" {
 
 // Local Play
 void P_SaveGame(savebuffer_t *save);
-boolean P_LoadGame(savebuffer_t *save);
+dboolean P_LoadGame(savebuffer_t *save);
 void P_GetBackupCupData(savebuffer_t *save);
 
 // Online
-void P_SaveNetGame(savebuffer_t *save, boolean resending);
-boolean P_LoadNetGame(savebuffer_t *save, boolean reloading);
+void P_SaveNetGame(savebuffer_t *save, dboolean resending);
+dboolean P_LoadNetGame(savebuffer_t *save, dboolean reloading);
 
-mobj_t *P_FindNewPosition(UINT32 oldposition);
+mobj_t *P_FindNewPosition(uint32_t oldposition);
 
 struct savedata_bot_s
 {
-	boolean valid;
-	UINT16 skin;
-	UINT8 difficulty;
-	boolean rival;
-	boolean foe;
-	UINT32 score;
+	dboolean valid;
+	uint16_t skin;
+	uint8_t difficulty;
+	dboolean rival;
+	dboolean foe;
+	uint32_t score;
 };
 
 struct savedata_t
 {
-	UINT32 score;
-	SINT8 lives;
-	UINT16 totalring;
+	uint32_t score;
+	int8_t lives;
+	uint16_t totalring;
 
-	UINT16 skin;
-	UINT16 skincolor;
-	INT32 followerskin;
-	UINT16 followercolor;
+	uint16_t skin;
+	uint16_t skincolor;
+	int32_t followerskin;
+	uint16_t followercolor;
 
 	struct savedata_bot_s bots[MAXPLAYERS];
 };
@@ -69,29 +69,29 @@ extern savedata_t savedata;
 struct savedata_cup_t
 {
 	cupheader_t *cup;
-	UINT8 difficulty;
-	boolean encore;
+	uint8_t difficulty;
+	dboolean encore;
 };
 
 extern savedata_cup_t cupsavedata;
 
 struct savebuffer_t
 {
-	UINT8 *buffer;
-	UINT8 *p;
-	UINT8 *end;
+	uint8_t *buffer;
+	uint8_t *p;
+	uint8_t *end;
 	size_t size;
 };
 
-boolean P_SaveBufferZAlloc(savebuffer_t *save, size_t alloc_size, INT32 tag, void *user);
+dboolean P_SaveBufferZAlloc(savebuffer_t *save, size_t alloc_size, int32_t tag, void *user);
 #define P_SaveBufferAlloc(a,b) P_SaveBufferZAlloc(a, b, PU_STATIC, NULL)
-boolean P_SaveBufferFromExisting(savebuffer_t *save, UINT8 *existing_buffer, size_t existing_size);
-boolean P_SaveBufferFromLump(savebuffer_t *save, lumpnum_t lump);
-boolean P_SaveBufferFromFile(savebuffer_t *save, char const *name);
+dboolean P_SaveBufferFromExisting(savebuffer_t *save, uint8_t *existing_buffer, size_t existing_size);
+dboolean P_SaveBufferFromLump(savebuffer_t *save, lumpnum_t lump);
+dboolean P_SaveBufferFromFile(savebuffer_t *save, char const *name);
 void P_SaveBufferFree(savebuffer_t *save);
 size_t P_SaveBufferRemaining(const savebuffer_t *save);
 
-boolean TypeIsNetSynced(mobjtype_t type);
+dboolean TypeIsNetSynced(mobjtype_t type);
 
 #ifdef __cplusplus
 } // extern "C"
