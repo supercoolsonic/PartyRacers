@@ -208,6 +208,9 @@ int32_t RR_FetchAlternateTripwire(int32_t original_textnum)
 {
     if (!found_radioracers || !radioracers_usealternatetripwire || !cv_obvious_tripwire.value || r_splitscreen > 0) 
         return original_textnum;
+	
+	//if (!(leveltime % 3 == 0))			//SCS - Wanted to try to make a 'flicker' option for the obvious tripwires, so they could show the X and Check, but still largely retain the original vanilla colors. But it just hurts my eyes lol
+		//return original_textnum;
 
     char texname[9];
     strncpy(texname, textures[original_textnum]->name, 8);

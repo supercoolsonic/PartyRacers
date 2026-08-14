@@ -4157,7 +4157,7 @@ void PositionFacesInfo::draw_1p()
 			xoff = yoff = 0;
 		}
 		
-		if (cv_toggle_minirankingshaking.value == 1 && players[rankplayer[i]].mo->health > 0)		//SCS ADD
+		if (cv_toggle_minirankingshaking.value == 1 && players[rankplayer[i]].mo->health > 0)		//SCS ADD START
 		{
 			tumbleoffset = 0;
 			
@@ -4166,7 +4166,7 @@ void PositionFacesInfo::draw_1p()
 			
 			shakeangle = FixedAngle(FixedDiv((leveltime%(TICRATE/2)), TICRATE)*720);							//This math is based on the math used in Mini Ranking Plus! So, credit to its original writer, you are good at math lol
 			shakeoffset = (FSIN(shakeangle)*(players[rankplayer[i]].spinouttimer + tumbleoffset))/15000;
-		}
+		}																							//SCS ADD END
 		
 		if (players[rankplayer[i]].mo->color)
 		{
@@ -4221,6 +4221,7 @@ void PositionFacesInfo::draw_1p()
 		
 		if (cv_toggle_itemspytype.value == 2 && r_splitscreen < 1)	//SCS ADD START
 		{
+			xoff = yoff = 0;
 			if (!(gametyperules & GTR_POINTLIMIT) && (players[rankplayer[i]].itemtype != KITEM_NONE || (players[rankplayer[i]].itemRoulette.active && !players[rankplayer[i]].itemRoulette.ringbox)))	//Not playing Battle 
 			{	
 				if (players[rankplayer[i]].itemtype == KITEM_NONE)	//item roulette is spinning...
