@@ -4227,7 +4227,10 @@ void PositionFacesInfo::draw_1p()
 				if (players[rankplayer[i]].itemtype == KITEM_NONE)	//item roulette is spinning...
 					V_DrawMappedPatch(FACE_X + xoff + 9, Y + yoff - 1, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, kp_itemspyportraitrand[(leveltime % (48 - 1))], NULL);
 				else												//item roulette has a result
-					V_DrawMappedPatch(FACE_X + xoff + 9, Y + yoff - 1, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, K_GetItemPatch_RaceFaces(players[rankplayer[i]].itemtype), NULL);
+				{
+					if ((&players[rankplayer[i]] == stplyr && stplyr->inkblotchtimer <= 0) || (&players[rankplayer[i]] != stplyr))	//...but don't draw anything if we're currently inked
+						V_DrawMappedPatch(FACE_X + xoff + 9, Y + yoff - 1, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, K_GetItemPatch_RaceFaces(players[rankplayer[i]].itemtype), NULL);
+				}
 				
 				if (players[rankplayer[i]].itemamount > 1)
 					V_DrawStringScaled((FACE_X + xoff + 24)<<FRACBITS, (Y + yoff + 9)<<FRACBITS, FRACUNIT, FRACUNIT, FRACUNIT, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, NULL, TINY_FONT, va("x%d", players[rankplayer[i]].itemamount));
