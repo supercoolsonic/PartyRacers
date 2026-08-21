@@ -1649,7 +1649,7 @@ sfxenum_t S_AddSoundFx(const char *name, dboolean singular, int32_t flags, dbool
 	if (i < NUMSFX)
 	{
 		strncpy(freeslotnames[i-sfx_freeslot0], name, 6);
-		freeslotnames[i - sfx_freeslot0][6] = '\0'; // to avoid a crash with a lot of loaded characters			//SCS ADD - Implementation for merge request "Implement fix for crash when roughly 750+ skins are loaded at once"
+		freeslotnames[i - sfx_freeslot0][6] = '\0'; // to avoid a crash with a lot of loaded characters
 		S_sfx[i].singularity = singular;
 		S_sfx[i].priority = 60;
 		S_sfx[i].pitch = flags;
