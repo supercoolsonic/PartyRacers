@@ -563,7 +563,8 @@ void A_GenericBumper();
 extern dboolean actionsoverridden[NUMACTIONS];
 
 // ratio of states to sprites to mobj types is roughly 6 : 1 : 1
-#define NUMMOBJFREESLOTS 1024
+//#define NUMMOBJFREESLOTS 1024
+#define NUMMOBJFREESLOTS 2048						//SCS EDIT - Apparently this is okay? From TMM Radio
 #define NUMSPRITEFREESLOTS (NUMMOBJFREESLOTS*2)
 #define NUMSTATEFREESLOTS (NUMMOBJFREESLOTS*8)
 
