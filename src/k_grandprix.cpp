@@ -762,16 +762,21 @@ static dboolean CompareJoiners(player_t *a, player_t *b)
 
 static dboolean CompareReplacements(player_t *a, player_t *b)
 {
-	if ((a->pflags & PF_NOCONTEST) != (b->pflags & PF_NOCONTEST))
+	// if both players participated in the race
+	// otherwise, don't try to push non-participant to the back
+	if (a->position != 0 && b->position != 0)
 	{
-		// Push NO CONTEST to the back.
-		return ((a->pflags & PF_NOCONTEST) == 0);
-	}
+		if ((a->pflags & PF_NOCONTEST) != (b->pflags & PF_NOCONTEST))
+		{
+			// Push NO CONTEST to the back.
+			return ((a->pflags & PF_NOCONTEST) == 0);
+		}
 
-	if (a->position != b->position)
-	{
-		// Push bad position to the back.
-		return (a->position < b->position);
+		if (a->position != b->position)
+		{
+			// Push bad position to the back.
+			return (a->position < b->position);
+		}
 	}
 
 	// Fuck it
@@ -903,7 +908,7 @@ void K_RetireBots(void)
 
 				// A human is taking up this slot? Spectate them.
 				replace->spectator = true;
-				replace->pflags |= PF_WANTSTOJOIN; // We were are spectator against our will, we want to play ASAP.
+				replace->pflags |= PF_WANTSTOJOIN; // We were made a spectator against our will, we want to play ASAP.
 
 				humans.pop_back();
 			}
@@ -1093,7 +1098,7 @@ void K_FakeBotResults(player_t *bot)
 	// hey, you "won"
 	bot->exiting = 1;
 	bot->realtime += (bot->distancetofinish / distfactor);
-	bot->gradingpointnum = K_GetNumGradingPoints();					//SCS ADD - Merge request
+	bot->gradingpointnum = K_GetNumGradingPoints();
 	bot->exp = K_GetEXP(bot);
 	bot->distancetofinish = 0;
 	K_IncreaseBotDifficulty(bot);

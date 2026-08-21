@@ -478,7 +478,7 @@ static lumpinfo_t* ResGetLumpsWad (FILE* handle, uint16_t* nlmp, const char* fil
 			const char *trimname, *dotpos;
 
 			trimname = strrchr(filename, PATHSEP[0]);
-#if defined (_WIN32)
+#if (defined (_WIN32)) || (defined(__linux__))
 			// For Zone Builder support, work around temporary filenames.
 			// They're annoyingly randomised, BUT they follow \Temp\8\8.3...
 			// AND they're always guaranteed to follow the map file, which
@@ -495,7 +495,8 @@ static lumpinfo_t* ResGetLumpsWad (FILE* handle, uint16_t* nlmp, const char* fil
 
 				if (((trimname-1) - temp) == 8
 					&& temp >= filename+5
-					&& !strncmp(temp-5, PATHSEP"Temp", 5))
+					&& (!strncmp(temp-5, PATHSEP"Temp", 5)
+					|| !strncmp(temp-4, PATHSEP"tmp", 4)))
 				{
 					filename = wadfiles[
 						((wadnamelump & ~UINT16_MAX) >> 16)

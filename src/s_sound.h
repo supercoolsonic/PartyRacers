@@ -298,7 +298,10 @@ uint32_t S_SoundInputRemainingSamples(void);
 void S_QueueVoiceFrameFromPlayer(int32_t playernum, void *data, uint32_t len, dboolean terminal);
 void S_SetPlayerVoiceActive(int32_t playernum);
 dboolean S_IsPlayerVoiceActive(int32_t playernum);
-void S_ResetVoiceQueue(int32_t playernum);
+void S_ResetVoiceQueue(int32_t playernum);	
+
+void Command_PlaySound(void);
+void Got_PlaySound(const uint8_t **cp, int32_t playernum);
 
 #ifdef __cplusplus
 } // extern "C"
