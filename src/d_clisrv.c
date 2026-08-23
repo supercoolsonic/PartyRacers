@@ -4451,26 +4451,6 @@ static size_t TotalTextCmdPerTic(tic_t tic)
 	return total;
 }
 
-#ifdef SIGNGAMETRAFFIC
-	static dboolean IsSplitPlayerOnNodeGuest(int node, int split)
-	{
-		char allZero[PUBKEYLENGTH];
-		memset(allZero, 0, PUBKEYLENGTH);
-
-		if (split == 0)
-			return PR_IsKeyGuest(players[nodetoplayer[node]].public_key);
-		else if (split == 1)
-			return PR_IsKeyGuest(players[nodetoplayer2[node]].public_key);
-		else if (split == 2)
-			return PR_IsKeyGuest(players[nodetoplayer3[node]].public_key);
-		else if (split == 3)
-			return PR_IsKeyGuest(players[nodetoplayer4[node]].public_key);
-		else
-			I_Error("IsSplitPlayerOnNodeGuest: Out of bounds");
-		return false; // unreachable
-	}
-#endif
-
 static dboolean IsPlayerGuest(uint8_t player)
 {
  	return PR_IsKeyGuest(players[player].public_key);
@@ -5641,49 +5621,6 @@ static void HandlePacketFromPlayer(int8_t node)
 #ifdef PARANOIA
 	if (netconsole >= MAXPLAYERS)
 		I_Error("bad table nodetoplayer: node %d player %d", doomcom->remotenode, netconsole);
-#endif
-
-
-#ifdef SIGNGAMETRAFFIC
-	if (server)
-	{
-
-		int splitnodes;
-		if (IsPacketSigned(netbuffer->packettype))
-		{
-			for (splitnodes = 0; splitnodes < MAXSPLITSCREENPLAYERS; splitnodes++)
-			{
-				int targetplayer = NodeToSplitPlayer(node, splitnodes);
-				if (targetplayer == -1)
-					continue;
-
-				const void* message = &netbuffer->u;
-				if (IsSplitPlayerOnNodeGuest(node, splitnodes) || demo.playback)
-				{
-					//CONS_Printf("Throwing out a guest signature from node %d player %d\n", node, splitnodes);
-				}
-				else
-				{
-					if (crypto_eddsa_check(netbuffer->signature[splitnodes], players[targetplayer].public_key, message, doomcom->datalength - BASEPACKETSIZE))
-					{
-						CONS_Alert(CONS_ERROR, "SIGFAIL! Packet type %d from node %d player %d\nkey %s size %d netconsole %d\n",
-							netbuffer->packettype, node, splitnodes,
-							GetPrettyRRID(players[targetplayer].public_key, true), doomcom->datalength - BASEPACKETSIZE, netconsole);
-
-						// Something scary can happen when multiple kicks that resolve to the same node are processed in quick succession.
-						// Sometimes, a kick will still be left to process after the player's been disposed, and that causes the kick to resolve on the server instead!
-						// This sucks, so we check for a stale/misfiring kick beforehand.
-						if (netconsole != -1)
-							SendKick(netconsole, KICK_MSG_SIGFAIL);
-						// Net_CloseConnection(node);
-						// nodeingame[node] = false;
-						return;
-					}
-				}
-
-			}
-		}
-	}
 #endif
 
 	switch (netbuffer->packettype)
