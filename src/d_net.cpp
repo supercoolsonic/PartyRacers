@@ -1016,72 +1016,12 @@ static dboolean ShouldDropPacket(void)
 }
 #endif
 
-// Unused because Eidolon correctly pointed out that +512b on every packet was scary.
-#ifdef SIGNGAMETRAFFIC
-	dboolean IsPacketSigned(int packettype)
-	{
-		switch (packettype)
-		{
-			case PT_CLIENTCMD:
-			case PT_CLIENT2CMD:
-			case PT_CLIENT3CMD:
-			case PT_CLIENT4CMD:
-			case PT_CLIENTMIS:
-			case PT_CLIENT2MIS:
-			case PT_CLIENT3MIS:
-			case PT_CLIENT4MIS:
-			case PT_TEXTCMD:
-			case PT_TEXTCMD2:
-			case PT_TEXTCMD3:
-			case PT_TEXTCMD4:
-			case PT_LOGIN:
-			case PT_ASKLUAFILE:
-			case PT_SENDINGLUAFILE:
-			case PT_SAY:
-				return true;
-			default:
-				return false;
-		}
-	}
-#endif
-
 //
 // HSendPacket
 //
 dboolean HSendPacket(int32_t node, dboolean reliable, uint8_t acknum, size_t packetlength)
 {
 	doomcom->datalength = (int16_t)(packetlength + BASEPACKETSIZE);
-
-#ifdef SIGNGAMETRAFFIC
-	if (IsPacketSigned(netbuffer->packettype))
-	{
-		int i;
-
-		for (i = 0; i < MAXSPLITSCREENPLAYERS; i++)
-		{
-			const void* message = &netbuffer->u;
-			//CONS_Printf("Signing packet type %d of length %d\n", netbuffer->packettype, packetlength);
-			if (PR_IsLocalPlayerGuest(i))
-				memset(netbuffer->signature[i], 0, sizeof(netbuffer->signature[i]));
-			else
-				crypto_eddsa_sign(netbuffer->signature[i], PR_GetLocalPlayerProfile(i)->secret_key, message, packetlength);
-		}
-
-		#ifdef DEVELOP
-			if (cv_badtraffic.value)
-			{
-				CV_AddValue(&cv_badtraffic, -1);
-				CONS_Alert(CONS_WARNING, "cv_badtraffic enabled, scrubbing signature from HSendPacket\n");
-				memset(netbuffer->signature, 0, sizeof(netbuffer->signature));
-			}
-		#endif
-	}
-	else
-	{
-		//CONS_Printf("NOT signing PT_%d of length %d, it doesn't need to be\n", netbuffer->packettype, packetlength);
-		memset(netbuffer->signature, 0, sizeof(netbuffer->signature));
-	}
-#endif
 
 	if (node == 0) // Packet is to go back to us
 	{

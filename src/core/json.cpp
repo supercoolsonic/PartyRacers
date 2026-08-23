@@ -17,6 +17,8 @@
 
 #include <fmt/format.h>
 
+using namespace std::string_view_literals;
+
 using namespace srb2;
 
 JsonError::JsonError(const std::string& what) : std::runtime_error(what) {}
@@ -1058,17 +1060,17 @@ Token Tokenizer::peek()
 		case 'n':
 			if (in_.size() < 4) throw JsonParseError("reached end of buffer parsing null");
 			ret = Token { Token::Type::kNull, in_.substr(0, 4) };
-			if (ret.slice != "null") throw JsonParseError("invalid null token");
+			if (ret.slice != "null"sv) throw JsonParseError("invalid null token");
 			break;
 		case 'f':
 			if (in_.size() < 5) throw JsonParseError("reached end of buffer parsing false");
 			ret = Token { Token::Type::kBoolean, in_.substr(0, 5) };
-			if (ret.slice != "false") throw JsonParseError("invalid boolean token");
+			if (ret.slice != "false"sv) throw JsonParseError("invalid boolean token");
 			break;
 		case 't':
 			if (in_.size() < 4) throw JsonParseError("reached end of buffer parsing true");
 			ret = Token { Token::Type::kBoolean, in_.substr(0, 4) };
-			if (ret.slice != "true") throw JsonParseError("invalid boolean token");
+			if (ret.slice != "true"sv) throw JsonParseError("invalid boolean token");
 			break;
 		case '{':
 			ret = Token { Token::Type::kOpenCurly, in_.substr(0, 1) };
@@ -1699,8 +1701,8 @@ static JsonValue parse_value(Tokenizer& tokenizer, int depth)
 		ret = JsonValue();
 		break;
 	case Type::kBoolean:
-		if (token.slice == "true") ret = JsonValue(true);
-		else if (token.slice == "false") ret = JsonValue(false);
+		if (token.slice == "true"sv) ret = JsonValue(true);
+		else if (token.slice == "false"sv) ret = JsonValue(false);
 		else throw JsonParseError("illegal boolean token");
 		break;
 	case Type::kNumber:
