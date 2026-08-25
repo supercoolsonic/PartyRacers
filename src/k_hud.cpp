@@ -707,7 +707,7 @@ void K_LoadKartHUDGraphics(void)
 		HU_UpdatePatch(&kp_itemspyportraitrand[i], "%s", buffer);
 		
 	}*/
-	HU_UpdatePatch(&kp_itemspyportraitrand[0], "ISPYRN1");
+	HU_UpdatePatch(&kp_itemspyportraitrand[0], "ISPYRN1");			//SCS ADD START
 	HU_UpdatePatch(&kp_itemspyportraitrand[1], "ISPYRN2");
 	HU_UpdatePatch(&kp_itemspyportraitrand[2], "ISPYRN3");
 	HU_UpdatePatch(&kp_itemspyportraitrand[3], "ISPYRN4");
@@ -4222,6 +4222,34 @@ void PositionFacesInfo::draw_1p()
 		if (cv_toggle_itemspytype.value == 2 && r_splitscreen < 1)	//SCS ADD START
 		{
 			xoff = yoff = 0;
+			fixed_t distance = (FRACUNIT/13)+1;
+			vector3_t vdist;
+			vector3_t pPos;
+			player_t *mockplayer = &players[rankplayer[i]];
+			
+			if (mockplayer != NULL && stplyr != NULL)
+			{
+				vdist.x = R_InterpolateFixed(mockplayer->mo->old_x, mockplayer->mo->x);
+				vdist.y = R_InterpolateFixed(mockplayer->mo->old_y, mockplayer->mo->y);
+				vdist.z = R_InterpolateFixed(mockplayer->mo->old_z, mockplayer->mo->z);
+
+				pPos.x = R_InterpolateFixed(stplyr->mo->old_x, stplyr->mo->x);
+				pPos.y = R_InterpolateFixed(stplyr->mo->old_y, stplyr->mo->y);
+				pPos.z = R_InterpolateFixed(stplyr->mo->old_z, stplyr->mo->z);
+				
+				distance = R_PointToDist2(pPos.x, pPos.y, vdist.x, vdist.y)/(FRACUNIT/4);
+				
+				//if (&players[rankplayer[i]] != stplyr && distance > (FRACUNIT/10))
+				if (distance > (FRACUNIT/13))
+				{
+					//CONS_Printf("TOO FAR TOO DRAW %d\n", distance);
+					goto TooFarToDraw;
+				}
+				//else
+					//CONS_Printf("We're drawing: %d\n", distance);
+			}
+			//CONS_Printf("Our draw limit is %d\n", (FRACUNIT/15));
+			
 			if (!(gametyperules & GTR_POINTLIMIT) && (players[rankplayer[i]].itemtype != KITEM_NONE || (players[rankplayer[i]].itemRoulette.active && !players[rankplayer[i]].itemRoulette.ringbox)))	//Not playing Battle 
 			{	
 				if (players[rankplayer[i]].itemtype == KITEM_NONE)	//item roulette is spinning...
@@ -4245,6 +4273,7 @@ void PositionFacesInfo::draw_1p()
 				V_DrawMappedPatch(FACE_X + xoff + 9, Y + yoff - 7, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, K_GetSlotPatch_RaceFaces(players[rankplayer[i]].ringboxaward), NULL);
 			}				
 		}										//SCS ADD END
+		TooFarToDraw:
 
 		if ((gametyperules & GTR_BUMPERS) && (players[rankplayer[i]].pflags & PF_ELIMINATED))
 			V_DrawScaledPatch(FACE_X-4, Y-3, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, kp_ranknobumpers);

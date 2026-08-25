@@ -3041,7 +3041,10 @@ mapthing_t *G_FindRaceStart(int32_t playernum)
 
 		if (G_CheckSpot(playernum, playerstarts[pos % numcoopstarts]))
 			return playerstarts[pos % numcoopstarts];
-
+		
+		if (playernum > 16 && G_CheckSpot((playernum%16), playerstarts[(pos%16) % numcoopstarts]))	//SCS ADD START	- In maps that don't have spots 17-32 placed, instead of everyone dropping on 1st, how about a player per spot in 1-16?
+			return playerstarts[(pos%16) % numcoopstarts];											//SCS ADD END
+			
 		// Your spot isn't available? Find whatever you can get first.
 		for (i = 0; i < numcoopstarts; i++)
 		{
