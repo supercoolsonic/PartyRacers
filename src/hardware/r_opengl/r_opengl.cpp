@@ -1413,6 +1413,7 @@ void SetStates(void)
 	pglEnable(GL_BLEND);           // enable color blending
 
 	pglColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	pglScissor(0, 0, screen_width, screen_height);
 
 	//pglDisable(GL_DITHER);         // faB: ??? (undocumented in OpenGL 1.1)
 	                              // Hurdler: yes, it is!
