@@ -18465,6 +18465,9 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 			player->armageddonshieldboosttimer = 0;	//SCS ADD
 			player->armashielddeployed = false;		//SCS ADD
 		}
+		
+		if (player->orbinautchargetime && player->itemtype != KITEM_SOL && player->itemtype != KITEM_ICEDUS)	//SCS ADD
+			player->orbinautchargetime = 0;
 
 		if (spbplace == -1 || player->position != spbplace)
 		{
