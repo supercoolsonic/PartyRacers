@@ -4109,11 +4109,11 @@ static void K_GetKartBoostPower(player_t *player)
 	{
 		if (player->leaderpenalty < POS_DELAY_TIME + 4)
 		{
-			ADDBOOST(((player->playerringgunpower/55)*FRACUNIT/(86/GetTotalInGameRacers())),//*(player->position/GetTotalInGameRacers()*GetTotalInGameRacers()), 
-			(FRACUNIT/4 + (player->playerringgunpower/55)*FRACUNIT/(86/GetTotalInGameRacers())),//*(player->position/GetTotalInGameRacers()*GetTotalInGameRacers()), 
-			((player->playerringgunpower/55)*FRACUNIT/(86/GetTotalInGameRacers())));//*(player->position/GetTotalInGameRacers())*GetTotalInGameRacers()); // + ???% top speed, + 25 + ???% acceleration, +???% handling
+			ADDBOOST(((player->playerringgunpower/55)*FRACUNIT/(86/(GetTotalInGameRacers()+1))),//*(player->position/GetTotalInGameRacers()*GetTotalInGameRacers()), 
+			(FRACUNIT/4 + (player->playerringgunpower/55)*FRACUNIT/(86/(GetTotalInGameRacers()+1))),//*(player->position/GetTotalInGameRacers()*GetTotalInGameRacers()), 
+			((player->playerringgunpower/55)*FRACUNIT/(86/(GetTotalInGameRacers()+1))));//*(player->position/GetTotalInGameRacers())*GetTotalInGameRacers()); // + ???% top speed, + 25 + ???% acceleration, +???% handling
 		}
-		else
+		else if (player->distancetofinish != 0)
 		{
 			P_KillMobj(player->mo, NULL, NULL, DMG_NORMAL);	//Don't drag it into 1st for too long
 		}
@@ -11539,13 +11539,17 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 		}
 		else
 		{
-			if (player->baildrop) //Kiiiiiillll yoooouuuuuu
+			if (player->baildrop) //Kiiiiiillll yoooouuuuuu						Well, maybe that's a bit too harsh
 			{
-				player->invincibilitytimer = 0;
+				/*player->invincibilitytimer = 0;
 				player->rings = -1*player->ringlimit;
 				player->masteremeraldinvincibility = false;
 				player->usedmasteremeraldduringringboxaward = false;
-				P_KillMobj(player->mo, NULL, NULL, DMG_NORMAL);			
+				P_KillMobj(player->mo, NULL, NULL, DMG_NORMAL);*/
+
+				player->masteremeraldinvincibility = false;
+				player->usedmasteremeraldduringringboxaward = false;
+				player->invincibilitytimer = 0;
 			}
 			
 			if (player->usedmasteremeraldduringringboxaward)
@@ -11657,7 +11661,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 
 		if ((player->baildrop % BAIL_DROPFREQUENCY) == 0)
 		{
-			P_FlingBurst(player, K_MomentumAngle(pmo), MT_FLINGRING, 10*TICRATE, FRACUNIT, player->baildrop/BAIL_DROPFREQUENCY, FRACUNIT);
+			P_FlingBurst(player->mo, K_MomentumAngle(pmo), MT_FLINGRING, 10*TICRATE, FRACUNIT, player->baildrop/BAIL_DROPFREQUENCY, FRACUNIT);		//SCS EDIT
 			S_StartSound(pmo, sfx_gshad);
 		}
 
@@ -12129,7 +12133,8 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 				wheelfire->momy = 0;
 				wheelfire->momz = 0;
 				S_StartSound(player->mo, sfx_s3k4f);
-				S_StartSound(player->mo, sfx_s3k4f);
+				S_StartSound(player->mo, sfx_s248);
+				wheelfire->color = player->skincolor;
 				//wheelfire->fuse = 30;
 			}
 
@@ -16486,7 +16491,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 						{
 							player->momentboost += 3;
 							angle_t flingangle = player->mo->angle + ((P_RandomByte(PR_ITEM_RINGS) & 1) ? -ANGLE_90 : ANGLE_90);
-							P_FlingBurst(player, flingangle, MT_DEBTSPIKE, TICRATE/2, 3 * FRACUNIT / 2, 20, 4*FRACUNIT);
+							P_FlingBurst(player->mo, flingangle, MT_DEBTSPIKE, TICRATE/2, 3 * FRACUNIT / 2, 20, 4*FRACUNIT);			//SCS EDIT
 							S_StartSound(player->mo, sfx_gshae);
 						}
 						
@@ -18203,7 +18208,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 									if (player->itemamount >= 4)
 										S_StartSound(player->mo, sfx_telept);
 									
-									K_IcedusBlastAttack(player->mo, ((180 + 33) * FRACUNIT)*player->itemamount);
+									K_IcedusBlastAttack(player->mo, ((180 + 37) * FRACUNIT)*player->itemamount);
 									K_DropHnextList(player);
 									K_PlayBoostTaunt(player->mo);
 									//K_SetPlayerItemAmount(player, 0);

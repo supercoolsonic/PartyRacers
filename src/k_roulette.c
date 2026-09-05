@@ -314,7 +314,7 @@ static uint8_t K_KartLegacyBattleOdds[NUMKARTRESULTS-1][2] =
 	{ 2, 1 }, // Pressure Mine
 	{ 2, 2 }, // Chameleon Blaster
 	{ 2, 1 }, // Egg Blaster
-	{ 2, 1 }, // Ring Gun
+	{ 0, 0 }, // Ring Gun
 	{ 0, 0 }, // Butler Hyudoro
 	{ 0, 0 }, // Octus
 	{ 0, 0 }, // Icedus

@@ -503,10 +503,8 @@ static void I_ReportSignal(int num, int coredumped, const char* tracestr)
 
 	if (tracestr && tracestr[0])
 	{
-
 		if (msg_len < sizeof(msg))
 			msg_len += snprintf(msg + msg_len, sizeof(msg) - msg_len, "%s", "\n");
-
 		if (msg_len < sizeof(msg))
 			msg_len += snprintf(msg + msg_len, sizeof(msg) - msg_len, "%s", tracestr);
 	}

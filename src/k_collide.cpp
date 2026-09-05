@@ -678,6 +678,36 @@ void K_GHZBall_BallBounce(mobj_t *t1, mobj_t *t2)			//SCS ADD
 	}	
 }
 
+void SpawnSolDeathEffect(mobj_t *hitobject, mobj_t *fireball)
+{
+	mobj_t *fireexplo;
+			
+	fireexplo = P_SpawnMobj(hitobject->x, hitobject->y, hitobject->z, MT_THOK);
+	
+	if (fireexplo)
+	{
+		fireexplo->color = fireball->color;
+		//fireexplo->angle = an*i;
+		//fireexplo->extravalue1 = ((180 + 30)*min(player->itemamount, 6));	// Used to know whether we should teleport by radius or something.
+		fireexplo->scale = fireball->scale*2;
+		//P_SetTarget(&mo->target, player->mo); //Don't follow the player
+		P_SetMobjState(fireexplo, S_SOLFIRE_HIT);
+	}
+}
+
+void SpawnIcedusTrapDeathEffect(mobj_t *crystaltrap, int scale)
+{
+	uint8_t i;
+	angle_t flingangle;
+	
+	for (i = 0; i < 6; i++)
+	{
+		flingangle = crystaltrap->angle + ((P_RandomByte(PR_ITEM_RINGS) & 1) ? -ANGLE_90 : ANGLE_135) + ((P_RandomByte(PR_ITEM_RINGS) & 1) ? -ANGLE_45 : ANGLE_22h);
+		P_FlingBurst(crystaltrap, flingangle, MT_ICEDUSSHARD, TICRATE/2, (3 * scale), 20, 4*FRACUNIT);
+		S_StartSound(crystaltrap, sfx_gshae);
+	}
+}
+
 dboolean K_IcedusSolfireCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 {
 	if (t1->type == MT_ICEDUSCRYSTAL_TRAP && t1->target != NULL && t1->target == t2 && P_IsObjectOnGround(t1))
@@ -694,7 +724,7 @@ PickUp:
 		return true;
 
 
-	if ((t1->type == MT_ICEDUSCRYSTAL || t1->type == MT_ICEDUSCRYSTAL_SHIELD || t1->type == MT_ICEDUSCRYSTAL_TRAP) && t2->player)
+	if ((t1->type == MT_ICEDUSCRYSTAL || t1->type == MT_ICEDUSCRYSTAL_SHIELD || t1->type == MT_ICEDUSCRYSTAL_TRAP) && t2->player)							//ICEDUS
 	{
 		if (t2->player->icecube.frozen)	// (we do a frozen check here to prevent frozen players from eating all the crystals at once from a shield)
 			return true;
@@ -724,24 +754,44 @@ PickUp:
 			wind->target = t1->target;
 			wind->tracer = t2;
 		}
+		if (t1->type == MT_ICEDUSCRYSTAL_TRAP)
+			SpawnIcedusTrapDeathEffect(t1, (FRACUNIT/2));
+
 		S_StartSound(t2, sfx_s3k80);
 		P_KillMobj(t1, t2, t2, DMG_NORMAL);
 	}
-	else if ((t1->type == MT_SOLFIRE || t1->type == MT_SOLFIRE_SHIELD || t1->type == MT_SOLFIRE_TRAP) && t2->player)
-	{
+	else if ((t1->type == MT_SOLFIRE || t1->type == MT_SOLFIRE_SHIELD || t1->type == MT_SOLFIRE_TRAP) && t2->player)								//SOL
+	{		
 		if (t2->player->curshield == KSHIELD_FLAME)	//This one, tho, you'll need a Flame Shield
-			return true;
+		{
+			P_KillMobj(t1, t2, t2, DMG_NORMAL);
+			return false;
+		}
 		
 		if ((t1->target && t1->target != t2) || !t1->target)
 		{
+			SpawnSolDeathEffect(t2, t1);		
+			
 			P_DamageMobj(t2, t1, t1->target, 1, DMG_EXPLODE);
+			P_SetMobjState(t1, S_NULL);
 			P_KillMobj(t1, t2, t2, DMG_NORMAL);
 			S_StartSound(t2, sfx_s3k70);
+			S_StartSound(t2, sfx_mbs57);
 		}
 	}
-	else if (((t1->type == MT_ICEDUSCRYSTAL || t1->type == MT_ICEDUSCRYSTAL_SHIELD || t1->type == MT_ICEDUSCRYSTAL_TRAP) && (t2->type == MT_SOLFIRE || t2->type == MT_SOLFIRE_SHIELD || t2->type == MT_SOLFIRE_TRAP)) ||
+	else if (((t1->type == MT_ICEDUSCRYSTAL || t1->type == MT_ICEDUSCRYSTAL_SHIELD || t1->type == MT_ICEDUSCRYSTAL_TRAP) && (t2->type == MT_SOLFIRE || t2->type == MT_SOLFIRE_SHIELD || t2->type == MT_SOLFIRE_TRAP)) ||	//Gross...
 	((t1->type == MT_SOLFIRE || t1->type == MT_SOLFIRE_SHIELD || t1->type == MT_SOLFIRE_TRAP) && (t2->type == MT_ICEDUSCRYSTAL || t2->type == MT_ICEDUSCRYSTAL_SHIELD || t2->type == MT_ICEDUSCRYSTAL_TRAP)))
 	{
+		if (t1->type == MT_SOLFIRE || t1->type == MT_SOLFIRE_SHIELD || t1->type == MT_SOLFIRE_TRAP)	//More grossness...
+			SpawnSolDeathEffect(t2, t1);
+		else
+			SpawnSolDeathEffect(t1, t2);
+		
+		if (t1->type == MT_ICEDUSCRYSTAL_TRAP)	//Yuck...
+			SpawnIcedusTrapDeathEffect(t1, (FRACUNIT/2));
+		else
+			SpawnIcedusTrapDeathEffect(t2, (FRACUNIT/2));
+		
 		P_KillMobj(t1, t2, t2, DMG_NORMAL);
 		P_KillMobj(t2, t1, t1, DMG_NORMAL);
 	}
@@ -2098,7 +2148,7 @@ dboolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 				S_StartSound(t2->player->mo, sfx_antiri);
 			}
 			
-			if (t2->player->itemtype != KITEM_NONE)
+			if (t2->player->itemtype != KITEM_NONE && t1->player->position != 1) //You can't steal items when in 1st place
 			{
 				K_AwardPlayerRings(t1->player,  (((t2->player->bot ? 3 : 5) * t1->player->pickpockethyucombo)*t1->player->itemamount), true);
 				t1->player->itemtype = t2->player->itemtype;
@@ -2166,7 +2216,7 @@ dboolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 				S_StartSound(t1->player->mo, sfx_antiri);
 			}
 			
-			if (t1->player->itemtype != KITEM_NONE)
+			if (t1->player->itemtype != KITEM_NONE && t2->player->position != 1) //You can't steal items when in 1st place
 			{
 				K_AwardPlayerRings(t2->player, (((t1->player->bot ? 3 : 5) *t2->player->pickpockethyucombo)*t2->player->itemamount), true);
 				t2->player->itemtype = t1->player->itemtype;
@@ -2177,9 +2227,7 @@ dboolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 				t1->player->hyudorotimer = hyudorotime;
 			}
 			else
-			{
 				t1->player->hyudorotimer = hyudorotime/3;
-			}
 			
 			S_StartSound(t2->player->mo, sfx_s3k92);
 			t1->player->stealingtimer = hyudorotime;

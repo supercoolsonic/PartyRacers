@@ -803,7 +803,7 @@ consvar_t cv_showexponsplit = Player("showexponsplit", "On").on_off().radio();
 
 // Chat emotes
 
-consvar_t cv_chat_emotes = Player("chat_emotes", "On").on_off().onchange(RR_ChatEmotes_OnChange).radio();
+consvar_t cv_chat_emotes = Player("chat_emotes", "Off").on_off().onchange(RR_ChatEmotes_OnChange).radio();		//SCS EDIT - setting to OFF by default
 consvar_t cv_chat_emotes_animated = Player("chat_emotes_animate", "On").on_off().radio();
 consvar_t cv_chat_emotes_button = Player("chat_emotes_button", "On").on_off().radio();
 consvar_t cv_chat_emotes_preview = Player("chat_emotes_input_preview", "On").on_off().radio();/*

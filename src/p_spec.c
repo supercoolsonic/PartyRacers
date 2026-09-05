@@ -2089,7 +2089,7 @@ static void K_HandleLapIncrement(player_t *player)
 					// CONS_Printf("%d: %s gimme start award\n", leveltime, player_names[player - players]);
 					player->pflags2 |= PF2_GIMMESTARTAWARDS;
 					setupsplits = true;
-				}							//SCS - RADIO?
+				}
 
 					if (setupsplits)
 					{

@@ -1319,12 +1319,12 @@ static bool Impl_CreateContext(void)
 	init_imgui();
 	SDL_GL_MakeCurrent(window, sdlglcontext);
 	
-	#ifdef HWRENDER
+#ifdef HWRENDER
 		if (rendermode == render_opengl)
 		{
 			LoadGL();
 		}
-	#endif
+#endif
 
 	if (!g_rhi)
 	{

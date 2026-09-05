@@ -389,7 +389,7 @@ static void _drawOffscreenCheck(trackingResult_t *result, player_t* dangerousPla
     vector2_t targetPos = {};
     patch_t* targetPatch = faceprefix[dangerousPlayer->skin][FACE_MINIMAP];
 
-    screenSize.x = vid.width / vid.dupx;
+    screenSize.x = vid.width / vid.dupx;		//SCS NOTE - hunting divide by 0 crash
     screenSize.y = vid.height / vid.dupy;
 
     scrVal = std::max(screenSize.x, screenSize.y) - 80;

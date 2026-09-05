@@ -181,7 +181,7 @@ void RadioHudfeedMenu_Init(void)
 
 static menu_t OPTIONS_RadioRacersHudfeedDef =
 {
-	sizeof (OPTIONS_RadioRacersHudfeed) / sizeof (menuitem_t),
+	sizeof (OPTIONS_RadioRacersHudfeed) / sizeof (menuitem_t),		//SCS NOTE - hunting divide by 0 crash
 	&OPTIONS_RadioRacersHudDef,
 	0,
 	OPTIONS_RadioRacersHudfeed,
@@ -354,7 +354,7 @@ void RadioAccessibilityMenu_Init(void)
 }
 
 static menu_t OPTIONS_RadioRacersAccessibilityDef = {
-	sizeof (OPTIONS_RadioRacersAccessibility) / sizeof (menuitem_t),
+	sizeof (OPTIONS_RadioRacersAccessibility) / sizeof (menuitem_t),		//SCS NOTE - hunting divide by 0 crash
 	&OPTIONS_RadioRacersMenuDef,
 	0,
 	OPTIONS_RadioRacersAccessibility,
@@ -409,7 +409,7 @@ static menuitem_t OPTIONS_RadioRacersGameplay[] =
 };
 
 static menu_t OPTIONS_RadioRacersGameplayDef = {
-	sizeof (OPTIONS_RadioRacersGameplay) / sizeof (menuitem_t),
+	sizeof (OPTIONS_RadioRacersGameplay) / sizeof (menuitem_t),			//SCS NOTE - hunting divide by 0 crash
 	&OPTIONS_RadioRacersMenuDef,
 	0,
 	OPTIONS_RadioRacersGameplay,
@@ -475,7 +475,7 @@ void RadioFunMenu_Init(void)
 }
 
 static menu_t OPTIONS_RadioRacersFunDef = {
-	sizeof (OPTIONS_RadioRacersFun) / sizeof (menuitem_t),
+	sizeof (OPTIONS_RadioRacersFun) / sizeof (menuitem_t),		//SCS NOTE - hunting divide by 0 crash
 	&OPTIONS_RadioRacersMenuDef,
 	0,
 	OPTIONS_RadioRacersFun,
@@ -513,7 +513,7 @@ static menuitem_t OPTIONS_RadioRacersFun2[] =														//SCS ADD
 };
 
 static menu_t OPTIONS_RadioRacersFunDef2 = {
-	sizeof (OPTIONS_RadioRacersFun2) / sizeof (menuitem_t),
+	sizeof (OPTIONS_RadioRacersFun2) / sizeof (menuitem_t),		//SCS NOTE - hunting divide by 0 crash
 	&OPTIONS_RadioRacersMenuDef,
 	0,
 	OPTIONS_RadioRacersFun2,
@@ -616,7 +616,7 @@ void Roulette_OnChange(void)
 }
 
 menu_t OPTIONS_RadioRacersMenuDef = {
-	sizeof (OPTIONS_RadioRacersMenu) / sizeof (menuitem_t),
+	sizeof (OPTIONS_RadioRacersMenu) / sizeof (menuitem_t),		//SCS NOTE - hunting divide by 0 crash
 	&OPTIONS_MainDef,
 	0,
 	OPTIONS_RadioRacersMenu,

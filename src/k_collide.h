@@ -47,6 +47,7 @@ dboolean K_DropTargetCollide(mobj_t *t1, mobj_t *t2);
 void K_LightningShieldAttack(mobj_t *actor, fixed_t size);
 void K_ArmageddonShieldAttack(mobj_t *actor, fixed_t size);		//SCS ADD
 void K_IcedusBlastAttack(mobj_t *actor, fixed_t size);			//SCS ADD
+void SpawnIcedusTrapDeathEffect(mobj_t *crystaltrap, int scale);	//SCS ADD
 
 dboolean K_BubbleShieldCanReflect(mobj_t *t1, mobj_t *t2);
 dboolean K_BubbleShieldReflect(mobj_t *t1, mobj_t *t2);

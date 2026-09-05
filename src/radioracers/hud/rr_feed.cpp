@@ -668,17 +668,17 @@ static ItemConfigForFeedUpdate getItemConfigForFeedAttackUpdate(playerattacks_t 
             };
         case ATTACK_BUBBLESHIELD:
             return {"RRISBUBS", 18, 18};
-		case ATTACK_ARMA_SHIELD:				//SCS ADD
+		case ATTACK_ARMA_SHIELD:				//SCS ADD START
 			return {"RRISARMA", 18, 18};
-		case ATTACK_HYUDOROBUTLER:				//SCS ADD
+		case ATTACK_HYUDOROBUTLER:
 			return {"RRISHYUB", 23, 22};
-		case ATTACK_POGOSPRING:					//SCS ADD
+		case ATTACK_POGOSPRING:
 			return {"RRISPOGO", 20, 14};
-		case ATTACK_YOGOSPRING:					//SCS ADD
+		case ATTACK_YOGOSPRING:
 			return {"RRISYOGO", 20, 14};
-		case ATTACK_BOGOSPRING:					//SCS ADD
+		case ATTACK_BOGOSPRING:
 			return {"RRISBOGO", 20, 14};
-		case ATTACK_MASTEREMERALD:				//SCS ADD
+		case ATTACK_MASTEREMERALD:
             return {
                 .patch = "RRISEMR",
                 .width = 25,
@@ -691,7 +691,7 @@ static ItemConfigForFeedUpdate getItemConfigForFeedAttackUpdate(playerattacks_t 
                 },
                 .y_offset = 0
             };
-		case ATTACK_PICKPOCKETHYU:				//SCS ADD
+		case ATTACK_PICKPOCKETHYU:
             return {
                 .patch = "RRISPCK",
                 .width = 17,
@@ -704,7 +704,7 @@ static ItemConfigForFeedUpdate getItemConfigForFeedAttackUpdate(playerattacks_t 
                 },
                 .y_offset = 0
             };
-		case ATTACK_PICKPOCKETHYUCONTACT:				//SCS ADD
+		case ATTACK_PICKPOCKETHYUCONTACT:
             return {
                 .patch = "RRISPKH",
                 .width = 27,
@@ -717,13 +717,13 @@ static ItemConfigForFeedUpdate getItemConfigForFeedAttackUpdate(playerattacks_t 
                 },
                 .y_offset = 0
             };
-		case ATTACK_PANCAKE:					//SCS ADD
+		case ATTACK_PANCAKE:
 			return {"RRISPANK", 26, 22};
-		case ATTACK_RINGSTING:					//SCS ADD
+		case ATTACK_RINGSTING:
 			return {"RRISRSTG", 16, 16};
-		case ATTACK_ICEDUS:					//SCS ADD
+		case ATTACK_ICEDUS:
 			return {"RRISICED", 19, 22};
-		case ATTACK_DEATH:					//SCS ADD
+		case ATTACK_DEATH:					//SCS ADD END
 			return {"RRISDEATH", 26, 22};
         case ATTACK_BUBBLESHIELD_TRAP:
             return {"RRBLTRP", 31, 31, {true, false, 3, 8}, .25f};
