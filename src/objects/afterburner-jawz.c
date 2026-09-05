@@ -260,7 +260,7 @@ void Obj_ABJawzThink(mobj_t *th)
 	{
 		abjawz_selfdelay(th)--;
 		
-		if (abjawz_selfdelay(th) == 3)
+		if (abjawz_selfdelay(th) == 5)
 		{
 			//th->state = &states[S_AFTERBURNERJAWZ_JUMP];
 			P_SetMobjState(th, S_AFTERBURNERJAWZ_JUMP);
@@ -399,7 +399,7 @@ void Obj_ABJawzThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir)
 	
 	th->destscale = th->destscale*2;
 	
-	abjawz_selfdelay(th) = 20;
+	abjawz_selfdelay(th) = 22;
 
 	S_StartSound(th, th->info->activesound);
 	abjawz_speed(th) = finalSpeed;

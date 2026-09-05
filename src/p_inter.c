@@ -5274,7 +5274,8 @@ dboolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int32_t
 #define RING_LAYER_SIZE (RING_LAYER_SIDE_SIZE * 2)
 
 void P_FlingBurst
-(		player_t *player,
+//(		player_t *player,
+(		mobj_t *mobj,					//SCS EDIT - There's really no reason for this function require a player_t and not just use mobj_t, since all player uses in this function only use its mobj
 		angle_t fa,
 		mobjtype_t objType,
 		tic_t objFuse,
@@ -5282,14 +5283,14 @@ void P_FlingBurst
 		int32_t i,
 		fixed_t dampen)
 {
-	mobj_t *mo = P_SpawnMobjFromMobj(player->mo, 0, 0, 0, objType);
-	P_SetTarget(&mo->target, player->mo);
+	mobj_t *mo = P_SpawnMobjFromMobj(mobj, 0, 0, 0, objType);		//SCS EDIT
+	P_SetTarget(&mo->target, mobj);									//SCS EDIT
 
 	mo->threshold = 10; // not useful for spikes
 	mo->fuse = objFuse;
 
 	// We want everything from P_SpawnMobjFromMobj except scale.
-	objScale = FixedMul(objScale, FixedDiv(mapobjectscale, player->mo->scale));
+	objScale = FixedMul(objScale, FixedDiv(mapobjectscale, mobj->scale));	//SCS EDIT
 
 	if (objScale != FRACUNIT)
 	{
@@ -5301,6 +5302,14 @@ void P_FlingBurst
 	{
 		fa += ANGLE_180;
 	}
+	
+	if (mo->type == MT_ICEDUSSHARD)		//SCS ADD
+	{
+		if (P_RandomByte(PR_ITEM_RINGS) & 1)
+			P_SetMobjState(mo, S_ICEDUSSHARD2);
+		
+		mo->angle = fa;
+	}
 
 	// Pitch offset changes every other ring
 	angle_t offset = ANGLE_90 / (RING_LAYER_SIDE_SIZE + 2);
@@ -5309,9 +5318,9 @@ void P_FlingBurst
 	const uint8_t layer = i / RING_LAYER_SIZE;
 	fixed_t thrust = (13 * mo->scale) + (7 * mo->scale * layer);
 	thrust = FixedDiv(thrust, dampen);
-	mo->momx = (player->mo->momx / 2) + FixedMul(FixedMul(thrust, FINECOSINE(fp >> ANGLETOFINESHIFT)), FINECOSINE(fa >> ANGLETOFINESHIFT));
-	mo->momy = (player->mo->momy / 2) + FixedMul(FixedMul(thrust, FINECOSINE(fp >> ANGLETOFINESHIFT)), FINESINE(fa >> ANGLETOFINESHIFT));
-	mo->momz = (player->mo->momz / 2) + (FixedMul(thrust, FINESINE(fp >> ANGLETOFINESHIFT)) * P_MobjFlip(mo));
+	mo->momx = (mobj->momx / 2) + FixedMul(FixedMul(thrust, FINECOSINE(fp >> ANGLETOFINESHIFT)), FINECOSINE(fa >> ANGLETOFINESHIFT));		//SCS EDIT
+	mo->momy = (mobj->momy / 2) + FixedMul(FixedMul(thrust, FINECOSINE(fp >> ANGLETOFINESHIFT)), FINESINE(fa >> ANGLETOFINESHIFT));			//SCS EDIT
+	mo->momz = (mobj->momz / 2) + (FixedMul(thrust, FINESINE(fp >> ANGLETOFINESHIFT)) * P_MobjFlip(mo));									//SCS EDIT
 }
 
 /** Spills an injured player's rings.
@@ -5353,12 +5362,12 @@ void P_PlayerRingBurst(player_t *player, int32_t num_rings)
 
 	for (i = 0; i < num_fling_rings; i++)
 	{
-		P_FlingBurst(player, fa, MT_FLINGRING, 60*TICRATE, FRACUNIT, i, FRACUNIT);
+		P_FlingBurst(player->mo, fa, MT_FLINGRING, 60*TICRATE, FRACUNIT, i, FRACUNIT);		//SCS EDIT
 	}
 
 	while (i < spill_total)
 	{
-		P_FlingBurst(player, fa, MT_DEBTSPIKE, 0, 3 * FRACUNIT / 2, i++, FRACUNIT);
+		P_FlingBurst(player->mo, fa, MT_DEBTSPIKE, 0, 3 * FRACUNIT / 2, i++, FRACUNIT);			//SCS EDIT
 	}
 
 	K_DefensiveOverdrive(player);

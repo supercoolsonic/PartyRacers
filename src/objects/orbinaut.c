@@ -244,6 +244,8 @@ void Obj_IcedusThink(mobj_t *th)						//SCS ADD
 
 void Obj_SolFireThink(mobj_t *th)						//SCS ADD
 {
+	mobj_t *firefire = NULL;
+	
 	dboolean grounded = P_IsObjectOnGround(th);
 
 	if (th->fuse > 0 && th->fuse <= TICRATE)
@@ -265,12 +267,29 @@ void Obj_SolFireThink(mobj_t *th)						//SCS ADD
 		return;
 	}
 
-	if (orbinaut_flags(th) & ORBI_TRAIL)
+	if (leveltime % 2 == 0)
 	{
 		mobj_t *ghost = NULL;
 
 		ghost = P_SpawnGhostMobj(th);
 		ghost->colorized = true; // already has color!
+	}
+	
+	if (grounded && leveltime % 5 == 0 && th->target != NULL) //Thrown fireballs leave a trail of fire!
+	{
+		firefire= P_SpawnMobj(th->x + (P_RandomRange(PR_FUZZ, -10, 10)*mapobjectscale), th->y + (P_RandomRange(PR_FUZZ, -10, 10)*mapobjectscale), th->z, MT_SOLFIRE_TRAP);
+			
+		if (firefire != NULL)
+		{
+			P_SetTarget(&firefire->target, th->target);
+			P_InstaScale(firefire, th->scale);
+			firefire->momx = 0;
+			firefire->momy = 0;
+			firefire->momz = 0;
+			S_StartSound(th, sfx_s3k4f);
+			S_StartSound(th, sfx_s248);
+			firefire->color = th->color;
+		}
 	}
 
 	if (grounded == false && !(orbinaut_flags(th) & ORBI_DROPPED))	//we only want it to move when thrown forward

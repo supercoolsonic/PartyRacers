@@ -186,6 +186,10 @@ namespace FeedUpdateUtils {
         if (config.animation_config.animated) {
             int frames = config.animation_config.animated_frames;
             int tics_per_frame = config.animation_config.tics_per_frame;
+			
+			if (tics_per_frame == 0)	//SCS ADD - hunting divide by 0 crash
+				tics_per_frame = 1;
+			
             item_patch_name = fmt::format("{0}{1}", config.patch, (((current_time % (frames*tics_per_frame)) / tics_per_frame) + 1));
         }
 

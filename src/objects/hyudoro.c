@@ -808,7 +808,7 @@ award_immediately (mobj_t *hyu)
 		// locked permanently.
 		player->itemRoulette.reserved = 2*TICRATE;
 	}
-	//CONS_Printf("Bing bing wahoo");
+	
 	deliver_item(hyu);
 
 	return true;

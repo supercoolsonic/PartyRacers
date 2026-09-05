@@ -825,87 +825,91 @@ char sprnames[NUMSPRITES + 1][5] =
 	// First person view sprites; this is a sprite so that it can be replaced by a specialized MD2 draw later
 	"VIEW",
 	
-	"GHZB",			//SCS ADD
+	"GHZB",			//SCS ADD START
 	"GHZD",
 	"GHZR",
 	"GFBC",
 	
-	"EMMS",			//SCS ADD
+	"EMMS",
 	"XEMB",
 	"ITME",
 	
-	"HYSM", 		//SCS ADD
+	"HYSM", 
 	"ITMH",
 	
-	"YOGS",			//SCS ADD
+	"YOGS",
 
-	//new multi-item sprites		//SCS ADD	
+	//new multi-item sprites
 	"ITMB",
 	"ITMJ",
 	"ITMS",
 	
-	"BOGS",			//SCS ADD
+	"BOGS",
 	
-	"ITTS",			//SCS ADD
+	"ITTS",
 	
-	"PITY",			//SCS ADD
+	"PITY",
 	
-	"BPCH",			//SCS ADD
+	"BPCH",
 	
-	"ARMA",			//SCS ADD
+	"ARMA",
 	"ARMB",
 	
-	"ABJZ",			//SCS ADD
+	"ABJZ",
 	"ABJJ",
 	"ABJW",
 	"AJRT",
 	
-	"PRMN",			//SCS ADD
+	"PRMN",
 	
-	"BULL",		//SCS ADD
+	"BULL",
 	"LSTB",
 	"CBPF",
 	
 	"BEAM",		//SCS ADDING IN
 
-	"RGMA",		//SCS ADD
-	"RGST",		//SCS ADD
+	"RGMA",
+	"RGST",
 	
-	"HYUB",		//SCS ADD
+	"HYUB",
 	
-	"INKB",		//SCS ADD
+	"INKB",
 	
-	"TKFL",		//SCS ADD
+	"TKFL",
 	"TKLT",
 	
-	"KINO",		//SCS ADD
+	"KINO",
 	
-	"TTSP",		//SCS ADD
+	"TTSP",
 	
-	"SUPS",		//SCS ADD
+	"SUPS",
 	
-	"PRIB",		//SCS ADD
+	"PRIB",
 	
-	"HSTU", 	//SCS ADD
-	"HSWI", 	//SCS ADD
+	"HSTU",
+	"HSWI",
 	
-	"ITMF", //SCS ADD (sol)
+	"ITMF", //(sol)
 	"SOLB",
 	"SOLS",
 	"SOLT",
+	"SOLD",
+	"SOLH",
 	
-	"ITMD", //SCS ADD (icedus)
+	"ITMD", //(icedus)
 	"ICED",
 	"ICES",
 	"ICET",
 	"ICEE",
+	"ICEP",
+	"ICEM",
 	"FREZ",
 	
-	"SLIC",	//SCS ADD
+	"SLIC",
 	
-	"ITMP", //SCS ADD
+	"ITMP",
 	
-	"PLUR" //SCS ADD
+	"PLUR" //SCS ADD END
 };
 
 char spr2names[NUMPLAYERSPRITES][5] =
@@ -3939,25 +3943,20 @@ state_t states[NUMSTATES] =
 	//{SPR_ICED, 11, 3, {NULL}, 0, 0, S_ICEDUS_SHIELD1},	// S_ICEDUS_SHIELD6
 	{SPR_ICED,  0, 175, {NULL}, 0, 0, S_NULL},			// S_ICEDUS_SHIELDDEAD		//Maybe like animate it breaking apart?
 	{SPR_ICET,  0, -1, {NULL}, 0, 0, S_ICEDUSTRAP},			// S_ICEDUSTRAP
+	{SPR_ICET,  1, -1, {NULL}, 0, 0, S_ICEDUSTRAP2},		// S_ICEDUSTRAP2
 	{SPR_ICEE,  FF_FULLBRIGHT|FF_ANIMATE, 32, {NULL}, 7, 6, S_NULL},	// S_ICEDUSEXPLOSION
 	{SPR_FREZ,  FF_FULLBRIGHT|FF_ANIMATE, 24, {NULL}, 7, 1, S_NULL},	// S_ICEDUSSNOWFLAKE
-	//{SPR_BOM2, FF_FULLBRIGHT|FF_ANIMATE, (5*7), {NULL}, 6, 5, S_NULL}, // S_BOSSEXPLODE
+	{SPR_ICEP, 0|FF_FULLBRIGHT, 1, {NULL}, 0, 0, S_ICEDUSSHARD1}, // S_ICEDUSSHARD1
+	{SPR_ICEM, 0|FF_FULLBRIGHT, 1, {NULL}, 0, 0, S_ICEDUSSHARD2}, // S_ICEDUSSHARD2
 	
 	{SPR_SOLB,  FF_ANIMATE|0, 1, {NULL}, 0, 0, S_SOLFIRE2},		// S_SOLFIRE1
 	{SPR_SOLB,  FF_ANIMATE|1, 1, {NULL}, 0, 0, S_SOLFIRE3},		// S_SOLFIRE2
 	{SPR_SOLB,  FF_ANIMATE|2, 1, {NULL}, 0, 0, S_SOLFIRE4},		// S_SOLFIRE3
-	{SPR_SOLB,  FF_ANIMATE|3, 1, {NULL}, 0, 0, S_SOLFIRE5},		// S_SOLFIRE4
-	{SPR_SOLB,  FF_ANIMATE|4, 1, {NULL}, 0, 0, S_SOLFIRE6},		// S_SOLFIRE5
-	{SPR_SOLB,  FF_ANIMATE|5, 1, {NULL}, 0, 0, S_SOLFIRE1},		// S_SOLFIRE6
-	{SPR_SOLB,  0, 175, {NULL}, 0, 0, S_NULL},			// S_SOLFIRE_DEAD
-	{SPR_SOLS,  FF_FULLBRIGHT|FF_ANIMATE, -1, {NULL}, 11, 2, S_SOLFIRE_SHIELD1},	// S_SOLFIRE_SHIELD1
-	//{SPR_SOLB,  7, 3, {NULL}, 0, 0, S_SOLFIRE_SHIELD3},	// S_SOLFIRE_SHIELD2
-	//{SPR_SOLB,  8, 3, {NULL}, 0, 0, S_SOLFIRE_SHIELD4},	// S_SOLFIRE_SHIELD3
-	//{SPR_SOLB,  9, 3, {NULL}, 0, 0, S_SOLFIRE_SHIELD5},	// S_SOLFIRE_SHIELD4
-	//{SPR_SOLB, 10, 3, {NULL}, 0, 0, S_SOLFIRE_SHIELD6},	// S_SOLFIRE_SHIELD5
-	//{SPR_SOLB, 11, 3, {NULL}, 0, 0, S_SOLFIRE_SHIELD1},	// S_SOLFIRE_SHIELD6
-	{SPR_SOLB,  0, 175, {NULL}, 0, 0, S_NULL},			// S_SOLFIRE_SHIELDDEAD		//Maybe like animate the flame going out?
-	{SPR_SOLT, 0|FF_ANIMATE, 12, {NULL}, 11, 1, S_NULL}, // S_SOLFIRETRAP
+	{SPR_SOLB,  FF_ANIMATE|3, 1, {NULL}, 0, 0, S_SOLFIRE1},		// S_SOLFIRE4
+	{SPR_SOLD,  FF_FULLBRIGHT|FF_ANIMATE, 24, {NULL}, 11, 2, S_NULL},			// S_SOLFIRE_DEAD
+	{SPR_SOLH,  FF_FULLBRIGHT|FF_ANIMATE, 32, {NULL}, 6, 6, S_NULL},			// S_SOLFIRE_HIT
+	{SPR_SOLS,  FF_FULLBRIGHT|FF_ANIMATE|FF_RANDOMANIM, -1, {NULL}, 7, 2, S_SOLFIRE_SHIELD1},	// S_SOLFIRE_SHIELD1
+	{SPR_SOLT, 0|FF_ANIMATE, 12, {NULL}, 11, 2, S_NULL}, // S_SOLFIRETRAP
 	
 	{SPR_SLIC, FF_FULLBRIGHT|FF_ANIMATE, -1, {NULL}, 3, 2, S_SLICERCLAW},		// S_SLICERCLAW
 	{SPR_SLIC, FF_FULLBRIGHT|FF_ANIMATE, -1, {NULL}, 3, 3, S_NULL},				// S_SLICERCLAW_DEAD
@@ -24379,6 +24378,33 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 	
+	{           // MT_ICEDUSSHARD
+		-1,             // doomednum
+		S_ICEDUSSHARD1,   // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		0,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_SPRK1,        // deathstate
+		S_NULL,         // xdeathstate
+		sfx_itemup,     // deathsound
+		38*FRACUNIT,    // speed
+		24*FRACUNIT,    // radius
+		48*FRACUNIT,    // height
+		0,              // display offset
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_DONTENCOREMAP, // flags
+		S_NULL          // raisestate
+	},
+	
 	{           // MT_SOLFIRE
 		-1,             // doomednum
 		S_SOLFIRE1,    // spawnstate
@@ -24396,7 +24422,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // xdeathstate
 		sfx_s3k5d,      // deathsound
 		28*FRACUNIT,    // speed
-		24*FRACUNIT,    // radius
+		26*FRACUNIT,    // radius
 		64*FRACUNIT,    // height
 		0,              // display offset
 		100,            // mass
@@ -24419,7 +24445,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,       // painsound
 		S_NULL,         // meleestate
 		S_NULL,         // missilestate
-		S_SOLFIRE_SHIELDDEAD, // deathstate
+		S_SOLFIRE_DEAD, // deathstate
 		S_NULL,         // xdeathstate
 		sfx_None,       // deathsound
 		4*FRACUNIT,     // speed

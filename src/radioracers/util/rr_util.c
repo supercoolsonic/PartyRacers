@@ -76,6 +76,9 @@ void RR_AnnounceBattleWinner(player_t *player, battle_win_type_t type)
 
     HU_SetCEchoFlags(0);
     HU_SetCEchoDuration(4);
+	
+	//if (type >= 0 && sizeof(BATTLE_WIN_MESSAGES[0]) == 0)		//SCS ADD - hunting divide by 0 crash
+		//return;
 
     // This used to crash in netgames but just to be safe..
     if (type < 0 || type >= sizeof(BATTLE_WIN_MESSAGES) / sizeof(BATTLE_WIN_MESSAGES[0])) {

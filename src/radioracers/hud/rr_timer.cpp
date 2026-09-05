@@ -53,7 +53,7 @@ static void DrawSPBAttack_Bar(void)
 		V_DrawMappedPatch(160 + widthbar/2 - 7, ybar - 7, barflags, faceprefix[stplyr->skin][FACE_MINIMAP], colormap);
 
 		// vibes-based math
-		currentx = (stplyr->SPBdistance/mapobjectscale - mobjinfo[MT_SPB].radius/FRACUNIT - mobjinfo[MT_PLAYER].radius/FRACUNIT) * 6;
+		currentx = (stplyr->SPBdistance/mapobjectscale - mobjinfo[MT_SPB].radius/FRACUNIT - mobjinfo[MT_PLAYER].radius/FRACUNIT) * 6;		//SCS NOTE - hunting divide by 0 crash
 		if (currentx > 0)
 		{
 			currentx = sqrt(currentx);

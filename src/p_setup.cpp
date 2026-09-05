@@ -8807,7 +8807,7 @@ dboolean P_LoadLevel(dboolean fromnetsave, dboolean reloadinggamestate)
 	RR_resetRidersFinishTicker();								//SCS - RADIO START
 	RR_ClearHudFeed();
 	// RR_InitGradeEmoteTally();
-	RR_CleanupEmoteFrames(); // Do this here too, if need be	//SCS - RADIO END
+	//RR_CleanupEmoteFrames(); // Do this here too, if need be	//SCS - RADIO END
 
 	// internal game map
 	maplumpname = mapheaderinfo[gamemap-1]->lumpname;
@@ -9851,7 +9851,7 @@ uint16_t P_PartialAddWadFile(const char *wadfilename)
 	R_LoadSpriteInfoLumps(wadnum, numlumps);
 
 	/** RADIO: Inject */
-	RR_AddAllEmotes(wadnum);
+	//RR_AddAllEmotes(wadnum);
 	RR_CheckForServerConfig(wadnum);
 	RR_RefreshBookmarks();					//SCS - RADIO
 

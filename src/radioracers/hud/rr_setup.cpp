@@ -810,12 +810,12 @@ void RR_AddEmotes(uint16_t wadnum)
 
 void RR_AddAllEmotes(uint16_t wadnum)
 {
-    RR_AddEmotes(wadnum);
+    /*RR_AddEmotes(wadnum);
     RR_AddAtlasEmotes(wadnum);
 
     if (!EMOTES.empty()) {
         UpdateEmotesVector();
-    }
+    }*/
 }
 
 void RR_RefreshBookmarks(void)
@@ -1303,9 +1303,9 @@ void RR_Init(void) {
 
     // Any emotes?
     CONS_Printf("RADIO: Setting up emotes.\n");
-    RR_LoadMostUsedEmotes();
-    RR_LoadFavouriteEmotes();
-    RR_InitEmotes();
+    //RR_LoadMostUsedEmotes();
+    //RR_LoadFavouriteEmotes();
+    //RR_InitEmotes();
 	
     // Any bookmarks?
     CONS_Printf("RADIO: Loading bookmarks.\n");

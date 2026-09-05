@@ -771,12 +771,12 @@ static dboolean CompareReplacements(player_t *a, player_t *b)
 			// Push NO CONTEST to the back.
 			return ((a->pflags & PF_NOCONTEST) == 0);
 		}
+	}
 
-		if (a->position != b->position)
-		{
-			// Push bad position to the back.
-			return (a->position < b->position);
-		}
+	if (a->position != b->position)
+	{
+		// Push bad position to the back.
+		return (a->position < b->position);
 	}
 
 	// Fuck it

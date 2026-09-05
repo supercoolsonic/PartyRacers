@@ -2545,7 +2545,7 @@ dboolean P_ZMovement(mobj_t *mo)
 			else
 				mo->renderflags ^= RF_DONTDRAW;
 		}
-		else if (mo->type == MT_DEBTSPIKE)
+		else if (mo->type == MT_DEBTSPIKE || mo->type == MT_ICEDUSSHARD)		//SCS EDIT
 		{
 			mom.x = mom.y = 0;
 			mom.z = -mom.z/2;
@@ -7093,13 +7093,29 @@ static dboolean P_MobjDeadThink(mobj_t *mobj)
 		mobj->rollangle += spin;
 	}
 	break;
+	case MT_SOLFIRE:						//SCS ADD	
+		if (mobj->state != &states[S_NULL])
+		{
+			mobj_t *firedeath;
+			
+			firedeath = P_SpawnMobj(mobj->x, mobj->y, mobj->z, MT_THOK);
+			firedeath->scale = mobj->scale;
+			P_SetMobjState(firedeath, S_SOLFIRE_DEAD);
+			P_SetScale(firedeath, mobj->scale*2);
+			
+			if (mobj->target != NULL && mobj->target->player != NULL)
+				firedeath->color = mobj->target->player->skincolor;
+			
+			P_RemoveMobj(mobj);
+			return false;
+		}
+		break;
 	case MT_ORBINAUT:
 	case MT_EGGMANITEM:
 	case MT_LANDMINE:
 	case MT_PRESSUREMINE:					//SCS ADD
 	case MT_ICEDUSCRYSTAL:					//SCS ADD
 	case MT_ICEDUSCRYSTAL_TRAP:				//SCS ADD
-	case MT_SOLFIRE:						//SCS ADD
 	//case MT_DROPTARGET:
 	case MT_SPB:
 	case MT_GACHABOM:
@@ -7374,6 +7390,12 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 		if (mobj->fuse == 0 && P_GetMobjFeet(mobj) == P_GetMobjGround(mobj))
 		{
 			mobj->fuse = 90;
+		}
+		break;
+	case MT_ICEDUSSHARD:		//SCS ADD
+		if (mobj->fuse == 0 && P_GetMobjFeet(mobj) == P_GetMobjGround(mobj))
+		{
+			mobj->fuse = 180;
 		}
 		break;
 	case MT_EMBLEM:
@@ -8019,6 +8041,25 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 
 		if (mobj->threshold > 0)
 			mobj->threshold--;
+		break;
+	case MT_ICEDUSCRYSTAL_TRAP:							//SCS ADD
+		if (mobj->state == &states[S_ICEDUSTRAP] && P_IsObjectOnGround(mobj))
+		{
+			SpawnIcedusTrapDeathEffect(mobj, (FRACUNIT/4));
+			P_SetMobjState(mobj, S_ICEDUSTRAP2);
+		}
+		
+		if (mobj->target && mobj->target->player)
+			mobj->color = mobj->target->player->skincolor;
+		else
+			mobj->color = SKINCOLOR_SAPPHIRE;
+
+		if (mobj->momx || mobj->momy || mobj->momz)
+		{
+			mobj_t *ghost = P_SpawnGhostMobj(mobj);
+			ghost->colorized = true; // already has color!
+		}
+		
 		break;
 	case MT_LANDMINE:
 	case MT_PRESSUREMINE:								//SCS ADD
@@ -10016,7 +10057,7 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 				{
 					if (newplayer != NULL)
 					{
-						if (mobj->target->player->position > 3)										//SCS EDIT - Don't change the color for 1st, 2nd, and 3rd
+						if (netgame || !cv_toggle_colorized_signposts.value || (!netgame && cv_toggle_colorized_signposts.value && mobj->target->player->position > 3))			//SCS EDIT - Don't change the color for 1st, 2nd, and 3rd
 							cur->color = skincolors[newplayer->skincolor].invcolor;
 
 						cur->frame = cur->state->frame + skincolors[newplayer->skincolor].invshade;
@@ -11946,6 +11987,7 @@ static void P_DefaultMobjShadowScale(mobj_t *thing)
 		case MT_YOGOSPRING:						//SCS ADD
 		case MT_BOGOSPRING:						//SCS ADD
 		case MT_MEGACHOPPER:					//SCS ADD
+		case MT_ICEDUSSHARD:					//SCS ADD
 			thing->shadowscale = FRACUNIT/2;
 			break;
 		case MT_DRIFTCLIP:

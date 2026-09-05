@@ -288,6 +288,8 @@ void RR_DoChatStuff(chat_box_parameters_t parameters) {
     int16_t chatx = parameters.x, y = parameters.y;
     int16_t typelines = parameters.typelines;
     const int32_t charheight = parameters.charheight;
+	
+	return; //SCS ADD - hunting divide by 0 crash
 
     // Is the player trying to quick-select an emote?
     //if (is_emote_preview_on) {
@@ -549,6 +551,9 @@ lumpnum_t getEmoteFrame(emote_t* emote) {
         return emote->frames[frame];
 
     if ((int32_t)(leveltime - lastUpdate) >= emote->frame_delay) {
+		if (emote->frame_count == 0)		//SCS ADD - hunting divide by 0 crash
+			emote->frame_count = 1;
+		
         frame = (frame + 1) % emote->frame_count;
         lastUpdate = leveltime;
     }
@@ -570,6 +575,9 @@ lumpnum_t getChatEmoteFrame(emote_t* emote) {
         return emote->frames[frame];
 
     if ((int32_t)(gametic - lastUpdate) >= emote->frame_delay) {
+		if (emote->frame_count == 0)		//SCS ADD - hunting divide by 0 crash
+			emote->frame_count = 1;		
+		
         frame = (frame + 1) % emote->frame_count;
         lastUpdate = gametic;
     }

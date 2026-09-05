@@ -483,7 +483,8 @@ static lumpinfo_t* ResGetLumpsWad (FILE* handle, uint16_t* nlmp, const char* fil
 			// They're annoyingly randomised, BUT they follow \Temp\8\8.3...
 			// AND they're always guaranteed to follow the map file, which
 			// should already have a WADNAME in it for us to piggyback off.
-			// EXAMPLE: // \Temp\gj3l7w7n\4f926789.wad
+			// WINDOWS EXAMPLE: // \Temp\gj3l7w7n\4f926789.wad
+			// LINUX EXAMPLE:   // /tmp/p68uf2zt/65wav2y1.wad
 
 			if (trimname != 0
 				&& wadnamelump != LUMPERROR

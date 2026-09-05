@@ -1107,10 +1107,7 @@ static void M_PNGFrame(png_structp png_ptr, png_infop png_info_ptr, png_bytep pn
 
 	png_write_image(png_ptr, row_pointers);
 
-#ifndef PNG_STATIC
-	if (aPNG_write_frame_tail)
-#endif
-		aPNG_write_frame_tail(apng_ptr, apng_info_ptr);
+	aPNG_write_frame_tail(apng_ptr, apng_info_ptr);
 
 	png_free(png_ptr, (png_voidp)row_pointers);
 }

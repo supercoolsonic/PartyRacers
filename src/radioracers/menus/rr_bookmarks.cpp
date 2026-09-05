@@ -129,7 +129,7 @@ static bool M_AreBookmarksFull(void)
 static size_t M_GetMaxPagesForBookmarkMenu() {
     size_t bookmarks_size = (char_bookmarks.size() + 1 < MAX_BOOKMARKS) ? char_bookmarks.size() + 1 : char_bookmarks.size();
     return std::ceil(
-        static_cast<float>(bookmarks_size) / static_cast<float>((ROWS * COLUMNS))
+        static_cast<float>(bookmarks_size) / static_cast<float>((ROWS * COLUMNS))		//SCS NOTE - hunting divide by 0 crash
     );
 }
 
@@ -320,7 +320,7 @@ menuitem_t PLAY_CharacterBookmarks[] =
 };
 
 menu_t BOOKMARKS_MainDef = {
-    sizeof (PLAY_CharacterBookmarks) / sizeof (menuitem_t),
+    sizeof (PLAY_CharacterBookmarks) / sizeof (menuitem_t),		//SCS NOTE - hunting divide by 0 crash
     &MainDef,
     0,
     PLAY_CharacterBookmarks,
@@ -378,7 +378,7 @@ static void M_HandleBookmarkSave(void)
         bookmarkmenu.stage = BMENU_STAGE_BOOKMARKED;
 
         size_t global_idx = char_bookmarks.size() - 1;
-        bookmarkmenu.current_page = global_idx / (ROWS * COLUMNS);
+        bookmarkmenu.current_page = global_idx / (ROWS * COLUMNS);		//SCS NOTE - hunting divide by 0 crash
         bookmark_idx = global_idx % (ROWS * COLUMNS);
     } else {
         if (M_HandleBookmarkOverwrite()) {
@@ -414,7 +414,7 @@ static void M_HandleBookmarkDelete(void)
     if (global_bookmark_idx >= char_bookmarks.size())
         global_bookmark_idx = (char_bookmarks.size() > 0) ? char_bookmarks.size() - 1 : 0;
 
-    bookmarkmenu.current_page = global_bookmark_idx / (ROWS * COLUMNS);
+    bookmarkmenu.current_page = global_bookmark_idx / (ROWS * COLUMNS);		//SCS NOTE - hunting divide by 0 crash
     bookmark_idx = global_bookmark_idx % (ROWS * COLUMNS);
 
     S_StartSound(NULL, sfx_s3k7b); 
@@ -489,7 +489,7 @@ dboolean RRM_BookmarkHandler(int32_t choice) {
 
     const uint8_t pid = 0;
 
-    size_t current_row = bookmark_idx / COLUMNS;
+    size_t current_row = bookmark_idx / COLUMNS;			//SCS NOTE - hunting divide by 0 crash
     size_t current_col = bookmark_idx % COLUMNS;
     bool changed_bookmark = false;
     bool changed_direction = false;
@@ -1309,7 +1309,7 @@ void RRM_DrawCharacterBookmarks(void) {
         );
     }
 
-    int16_t current_row = (bookmark_idx) / COLUMNS;
+    int16_t current_row = (bookmark_idx) / COLUMNS;			//SCS NOTE - hunting divide by 0 crash
     int16_t current_column = (bookmark_idx) % COLUMNS;
 
     int16_t cursor_row_x = 0;

@@ -134,7 +134,7 @@ static void flipEmote(fixed_t x, fixed_t y, emote_t* grade_emote)
 
     // Scale down the emote in-case it's massive or too small
     // Looking at you, :widepeepo:
-    scale = FloatToFixed(GRADE_GRAPHIC_HEIGHT_F/static_cast<float_t>(emote->height));
+    scale = FloatToFixed(GRADE_GRAPHIC_HEIGHT_F/1);//static_cast<float_t>(emote->height));	//SCS EDIT - hunting divide by 0 crash
     
     /**
      * If the emote is wider than the RANK graphic (53px), then it should be drawn
@@ -204,6 +204,8 @@ static void flipEmote(fixed_t x, fixed_t y, emote_t* grade_emote)
 
 void RR_DrawGradeEmote(player_grade_info_t grade_info)
 {
+	return;	//SCS ADD - hunting divide by 0 crash
+	
     // Huh?
     if (!stplyr->tally.active)
         return;
