@@ -1873,7 +1873,7 @@ static void P_DoBubbleBreath(player_t *player)
 		return;
 
 #if 1										//SCS EDIT - fun feature, why disable?
-	if (player->charflags & SF_MACHINE)
+	if (player->charflags & SF_MACHINE && player->mo)	//SCS EDIT - validate the mo, too
 	{
 		if (P_RandomChance(PR_BUBBLE, FRACUNIT/5))
 		{
@@ -1892,6 +1892,10 @@ static void P_DoBubbleBreath(player_t *player)
 #endif
 	{
 		fixed_t topspeed = K_GetKartSpeed(player, false, false);
+		
+		if (topspeed == 0)		//SCS ADD
+			topspeed = 1;
+		
 		fixed_t f = FixedDiv(player->speed, topspeed/2);
 
 		if (player->mo->eflags & MFE_VERTICALFLIP)

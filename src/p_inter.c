@@ -2255,7 +2255,13 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, uint8_t damag
 			else if (target->threshold == KCAPSULE_RING)
 				target->fuse = 20*TICRATE;
 			else
-				target->fuse = 40*TICRATE;
+			{									//SCS ADD - customizable respawn times
+				if (netgame)
+					target->fuse = cv_itemcapsulerespawntime_net.value*TICRATE;
+				else
+					target->fuse = cv_itemcapsulerespawntime.value*TICRATE;
+				
+			}
 
 			// burst effects
 			for (i = 0; i < 2; i++)
