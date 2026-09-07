@@ -508,7 +508,7 @@ mobj_t *P_SetTarget2(mobj_t **mop, mobj_t *targ
 #endif
 )
 {
-	if (*mop && &(*mop)->thinker != NULL) // If there was a target already, decrease its refcount		//SCS EDIT - was getting an access violation here. Let's verify the thinker too
+	if (*mop)// && &(*mop)->thinker != NULL) // If there was a target already, decrease its refcount		//SCS EDIT - was getting an access violation here. Let's verify the thinker too
 	{
 		(*mop)->thinker.references--;
 

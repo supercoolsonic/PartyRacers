@@ -5636,10 +5636,10 @@ void P_RunOverlays(void)
 	// run overlays
 	mobj_t *mo, *next = NULL;
 	fixed_t destx,desty,zoffs;
-	dboolean breakoff;				//SCS ADD
+	//dboolean breakoff;				//SCS ADD
 	
 	
-	breakoff = false;
+	//breakoff = false;
 
 	for (mo = overlaycap; mo; mo = next)
 	{
@@ -5647,17 +5647,17 @@ void P_RunOverlays(void)
 
 		// grab next in chain, then unset the chain target
 		
-		if ((mo && mo->hnext) 
-			|| leveltime < 10)			//SCS ADD - another access violation here - Gotta have a small window here because otherwise, for some reason, item capsule numbers don't appear????
-		{
+		//if (mo->hnext 
+			//|| leveltime < 10)			//SCS ADD - another access violation here - Gotta have a small window here because otherwise, for some reason, item capsule numbers don't appear????
+		//{
 			next = mo->hnext;
-		}
-		else
-		{
-			breakoff = true;		//SCS - Jesus Christ, what is this dumb domino of stupid crashes??
+		//}
+		//else
+		//{
+			//breakoff = true;		//SCS - Jesus Christ, what is this dumb domino of stupid crashes??
 			//mo = NULL;
 			//break;
-		}
+		//}
 		
 		P_SetTarget(&mo->hnext, NULL);
 
@@ -5762,8 +5762,8 @@ void P_RunOverlays(void)
 			P_SetThingPosition(mo);
 		P_CheckPosition(mo, mo->x, mo->y, NULL);
 		
-		if (breakoff)		//SCS ADD
-			break;
+		//if (breakoff)		//SCS ADD
+			//break;
 	}
 	P_SetTarget(&overlaycap, NULL);
 }
@@ -7660,9 +7660,15 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 	{
 		Obj_SolFireBurstThink(mobj);
 		P_MobjCheckWater(mobj);
-		
-		if (mobj->target && mobj->target->momx == 0 && mobj->target->momy == 0) //If you're not moving anywhere, the effect looks bad. Kill it
-			P_RemoveMobj(mobj);
+			
+		if (mobj->target)
+		{
+			mobj->angle = mobj->target->angle;
+			
+			if (mobj->target->momx == 0 && mobj->target->momy == 0) //If you're not moving anywhere, the effect looks bad. Kill it
+				P_RemoveMobj(mobj);
+				
+		}
 		
 		break;
 	}
