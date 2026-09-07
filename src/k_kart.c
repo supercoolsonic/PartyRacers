@@ -18337,6 +18337,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 								if (player->orbinautchargetime >= (40 + 15*player->itemamount))
 								{
 									mobj_t *boomo = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_FZEROBOOM);
+									mobj_t *burst = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_SOLFIRE_BURST);
 									
 									if (boomo)
 									{
@@ -18345,6 +18346,18 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 										boomo->destscale = (mapobjectscale*player->mo->scale)/3;
 										boomo->fuse = 20;
 										K_FlipFromObject(boomo, player->mo);
+									}
+									
+									if (burst)
+									{
+										P_SetTarget(&burst->target, player->mo);
+										K_FlipFromObject(burst, player->mo);
+										burst->fuse = 20*player->itemamount;
+										P_SetScale(burst, (player->mo->scale*3)/2);
+										burst->destscale = burst->scale;
+										burst->angle += ANGLE_180;
+										burst->color = player->mo->color;
+										burst->colorized = true;
 									}
 									
 									S_StopSoundByID(player->mo, sfx_s3ka4);

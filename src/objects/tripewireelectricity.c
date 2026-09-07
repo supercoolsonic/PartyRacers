@@ -33,9 +33,13 @@ void Obj_TripWireEffects (mobj_t *tripwire)
     {
         mobj_t *mo = tripwire->target;
 
-        tripwire->flags &= ~(MF_NOCLIPTHING);
-		P_MoveOrigin(tripwire, mo->x, mo->y, mo->z + mo->height/2);
-		tripwire->flags |= MF_NOCLIPTHING;
+		if (mo)
+		{
+			tripwire->flags &= ~(MF_NOCLIPTHING);
+			P_MoveOrigin(tripwire, mo->x, mo->y, mo->z + mo->height/2);
+			tripwire->flags |= MF_NOCLIPTHING;
+			P_SetScale(tripwire, (mo->scale*3)/2);
+		}
         //tripwire->color = mo->color;
 
         //tripwire->renderflags &= ~RF_DONTDRAW;
@@ -49,7 +53,5 @@ void Obj_TripWireEffects (mobj_t *tripwire)
 			
 			tripwire->target = NULL;
 		}
-
-        P_SetScale(tripwire, (mo->scale*3)/2);
     }
 }

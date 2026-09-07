@@ -57,6 +57,7 @@
 
 #include "radioracers/rr_cvar.h"		//SCS ADD
 #include "k_hud.h"						//SCS ADD
+#include "k_roulette.h"					//SCS ADD
 
 actioncache_t actioncachehead;
 
@@ -3411,7 +3412,7 @@ void P_MobjCheckWater(mobj_t *mobj)
 	pslope_t *topslope = NULL;
 	pslope_t *bottomslope = NULL;
 	
-	if (!P_MobjWasRemoved(mobj) && (mobj->type == MT_SOLFIRE || mobj->type == MT_SOLFIRE_SHIELD) && (mobj->eflags & MFE_UNDERWATER))	//SCS ADD
+	if (!P_MobjWasRemoved(mobj) && (mobj->type == MT_SOLFIRE || mobj->type == MT_SOLFIRE_SHIELD || mobj->type == MT_SOLFIRE_BURST) && (mobj->eflags & MFE_UNDERWATER))	//SCS ADD
 	{
 		P_RemoveMobj(mobj);
 		return;
@@ -5635,13 +5636,29 @@ void P_RunOverlays(void)
 	// run overlays
 	mobj_t *mo, *next = NULL;
 	fixed_t destx,desty,zoffs;
+	dboolean breakoff;				//SCS ADD
+	
+	
+	breakoff = false;
 
 	for (mo = overlaycap; mo; mo = next)
 	{
 		I_Assert(!P_MobjWasRemoved(mo));
 
 		// grab next in chain, then unset the chain target
-		next = mo->hnext;
+		
+		if ((mo && mo->hnext) 
+			|| leveltime < 10)			//SCS ADD - another access violation here - Gotta have a small window here because otherwise, for some reason, item capsule numbers don't appear????
+		{
+			next = mo->hnext;
+		}
+		else
+		{
+			breakoff = true;		//SCS - Jesus Christ, what is this dumb domino of stupid crashes??
+			//mo = NULL;
+			//break;
+		}
+		
 		P_SetTarget(&mo->hnext, NULL);
 
 		if (!mo->target)
@@ -5744,6 +5761,9 @@ void P_RunOverlays(void)
 		else
 			P_SetThingPosition(mo);
 		P_CheckPosition(mo, mo->x, mo->y, NULL);
+		
+		if (breakoff)		//SCS ADD
+			break;
 	}
 	P_SetTarget(&overlaycap, NULL);
 }
@@ -7634,6 +7654,16 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 	{
 		Obj_SolFireThink(mobj);
 		P_MobjCheckWater(mobj);
+		break;
+	}
+	case MT_SOLFIRE_BURST:			//SCS ADD
+	{
+		Obj_SolFireBurstThink(mobj);
+		P_MobjCheckWater(mobj);
+		
+		if (mobj->target && mobj->target->momx == 0 && mobj->target->momy == 0) //If you're not moving anywhere, the effect looks bad. Kill it
+			P_RemoveMobj(mobj);
+		
 		break;
 	}
 	case MT_SLICERCLAW:				//SCS ADD
@@ -14933,6 +14963,9 @@ static dboolean P_SetupSpawnedMapThing(mapthing_t *mthing, mobj_t *mobj)
 		if (((!netgame && cv_randomizeitemcapsules.value == 1) || (netgame && cv_toggle_randomcapsules_net.value == 1)) && mobj->threshold != KCAPSULE_RING && mobj->threshold != HYUCAPSULE_RING)
 		{
 			mobj->threshold = P_RandomRange(PR_ITEM_SPAWNER, 1, NUMKARTITEMS - 1);													//SCS TESTING RANDOM ITEM CAPSULES IDEA
+			
+			if (!K_ItemEnabled(mobj->threshold))
+				mobj->threshold = KITEM_SUPERRING;
 	
 			switch (mobj->threshold)
 			{

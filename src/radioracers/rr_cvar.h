@@ -38,6 +38,7 @@ extern consvar_t cv_toggle_scaling_signposts;
 extern consvar_t cv_toggle_ribbon_signposts;
 extern consvar_t cv_toggle_sparkling_signposts;
 extern consvar_t cv_randomizeitemcapsules;
+extern consvar_t cv_itemcapsulerespawntime;
 extern consvar_t cv_toggle_minirankingshaking;
 extern consvar_t cv_toggle_coloredspbminimap;
 extern consvar_t cv_toggle_gardentoparrows;

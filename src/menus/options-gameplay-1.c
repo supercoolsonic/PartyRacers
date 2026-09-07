@@ -25,6 +25,9 @@ menuitem_t OPTIONS_Gameplay[] =
 		
 	{IT_STRING | IT_CVAR, "Random Item Capsules", "Randomize contents of item (not ring) capsules. \x82(Netgames only.)",
 		NULL, {.cvar = &cv_toggle_randomcapsules_net}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Item Capsule Respawn", "How long it takes item (not ring) capsules to respawn. \x82(Netgames only.)",
+		NULL, {.cvar = &cv_itemcapsulerespawntime_net}, 0, 0},
 
 	{IT_HEADER, "Race...", NULL,
 		NULL, {NULL}, 0, 0},

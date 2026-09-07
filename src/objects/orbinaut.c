@@ -341,6 +341,25 @@ void Obj_SolFireThink(mobj_t *th)						//SCS ADD
 	}*/
 }
 
+void Obj_SolFireBurstThink(mobj_t *th)						//SCS ADD
+{
+	if (!P_MobjWasRemoved(th))
+	{
+		mobj_t *burstplayer;
+		
+		burstplayer = th->target;
+		
+		if (burstplayer)
+		{	
+			th->flags &= ~(MF_NOCLIPTHING);
+			P_MoveOrigin(th, th->target->x, th->target->y, th->target->z);
+			th->flags |= MF_NOCLIPTHING;
+		}
+	}
+	
+	th->renderflags ^= RF_DONTDRAW;
+}
+
 dboolean Obj_OrbinautJawzCollide(mobj_t *t1, mobj_t *t2)
 {
 	dboolean damageitem = false;

@@ -354,6 +354,8 @@ fixed_t K_GetSlotOffset(itemroulette_t *const roulette, fixed_t renderDelta, uin
 
 void K_KartItemRoulette(player_t *const player, ticcmd_t *cmd);
 
+void K_ConvertShieldsToSuperJackpots(int8_t replaceitem);			//SCS ADD
+
 void K_KartGetItemResult(player_t *const player, kartitems_t getitem);
 
 /*--------------------------------------------------

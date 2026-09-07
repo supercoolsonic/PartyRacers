@@ -3957,6 +3957,7 @@ state_t states[NUMSTATES] =
 	{SPR_SOLH,  FF_FULLBRIGHT|FF_ANIMATE, 32, {NULL}, 6, 6, S_NULL},			// S_SOLFIRE_HIT
 	{SPR_SOLS,  FF_FULLBRIGHT|FF_ANIMATE|FF_RANDOMANIM, -1, {NULL}, 7, 2, S_SOLFIRE_SHIELD1},	// S_SOLFIRE_SHIELD1
 	{SPR_SOLT, 0|FF_ANIMATE, 12, {NULL}, 11, 2, S_NULL}, // S_SOLFIRETRAP
+	{SPR_FLMS, FF_FULLBRIGHT|18,  -1, {NULL}, 0, 0, S_SOLFIREBURST},			// S_SOLFIREBURST
 	
 	{SPR_SLIC, FF_FULLBRIGHT|FF_ANIMATE, -1, {NULL}, 3, 2, S_SLICERCLAW},		// S_SLICERCLAW
 	{SPR_SLIC, FF_FULLBRIGHT|FF_ANIMATE, -1, {NULL}, 3, 3, S_NULL},				// S_SLICERCLAW_DEAD
@@ -24483,6 +24484,33 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		1,              // damage
 		sfx_None,       // activesound
 		MF_SHOOTABLE|MF_DONTENCOREMAP|MF_APPLYTERRAIN|MF_SLOPE|MF_DONTPUNT|MF_NOGRAVITY, // flags
+		S_NULL          // raisestate
+	},
+	
+	{           // MT_SOLFIRE_BURST
+		-1,             // doomednum
+		S_SOLFIREBURST, // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,			 // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		8,     			// speed
+		28*FRACUNIT,    // radius
+		56*FRACUNIT,    // height
+		0,              // display offset
+		100,            // mass
+		1,              // damage
+		sfx_None,       // activesound
+		MF_NOGRAVITY|MF_NOCLIPHEIGHT|MF_DONTENCOREMAP, // flags
 		S_NULL          // raisestate
 	},
 	

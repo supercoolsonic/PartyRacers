@@ -108,7 +108,7 @@ static uint32_t K_DynamicItemOddsRace[NUMKARTRESULTS-1][2] =
 	{23, 12}, // gachabom
 	{1, 2}, // stoneshoe
 	{1, 2}, // toxomister
-	{40, 4}, // superjackpot																					//SCS ADD START
+	{55, 4}, // superjackpot																					//SCS ADD START
 	{25, 7}, //wreckingball	
 	{35, 6}, //masteremerald
 	{1, 2}, //pickpockethyu
@@ -2219,6 +2219,35 @@ fixed_t K_GetSlotOffset(itemroulette_t *const roulette, fixed_t renderDelta, uin
 }
 
 /*--------------------------------------------------
+	void K_ConvertShieldsToSuperJackpots()
+
+		See header file for description.
+--------------------------------------------------*/
+void K_ConvertShieldsToSuperJackpots(int8_t replaceitem)							//SCS ADD
+{
+	uint8_t i, k;
+	
+	for (i = 0; i < GetTotalInGameRacers(); i++)
+	{
+		if (players[i].spectator) //if you're spectating, skip!
+			continue;
+		
+		if (!(players[i].itemRoulette.active) || (players[i].itemRoulette.active && players[i].itemRoulette.ringbox)) //if your item wheel isn't spinning, or it's a slot machine, skip!
+			continue;
+		
+		if (players[i].itemRoulette.itemList.len <= 0)	//wtf???
+			continue;
+			
+		for (k = 0; k < players[i].itemRoulette.itemList.len; k++)	//search through the item list and replace the corresponding shield that the original player just selected
+		{
+			if (players[i].itemRoulette.itemList.items[k] == replaceitem)
+				players[i].itemRoulette.itemList.items[k] = KITEM_SUPERJACKPOT;
+			
+		}
+	}
+}
+
+/*--------------------------------------------------
 	void K_KartGetItemResult(player_t *const player, kartitems_t getitem)
 
 		See header file for description.
@@ -2227,7 +2256,7 @@ void K_KartGetItemResult(player_t *const player, kartitems_t getitem)
 {
 	if (K_ItemSingularity(getitem) == true)
 	{
-		switch (getitem)								//SCS ADD
+		switch (getitem)								//SCS ADD START
 		{	
 			case KITEM_SPB:
 			case KITEM_SHRINK:
@@ -2251,7 +2280,7 @@ void K_KartGetItemResult(player_t *const player, kartitems_t getitem)
 				break;
 			default:
 				break;
-		}
+		}												//SCS ADD END
 	}
 
 	player->botvars.itemdelay = TICRATE;
@@ -2266,6 +2295,15 @@ void K_KartGetItemResult(player_t *const player, kartitems_t getitem)
 
 	if (player->itemtype == KITEM_SPB)
 		Obj_SPBEradicateCapsules();
+	
+	if ((gametyperules & GTR_SPHERES) == 0 && K_ItemEnabled(KITEM_SUPERJACKPOT))														//SCS ADD START
+	{
+		if (player->itemtype == KITEM_BUBBLESHIELD || player->itemtype == KITEM_LIGHTNINGSHIELD 
+		|| player->itemtype == KITEM_FLAMESHIELD || player->itemtype == KITEM_NORMALSHIELD || player->itemtype == KITEM_ARMASHIELD)
+		{
+			K_ConvertShieldsToSuperJackpots(player->itemtype);
+		}
+	}																																	//SCS ADD END
 }
 
 /*--------------------------------------------------
@@ -2305,8 +2343,8 @@ void K_KartItemRoulette(player_t *const player, ticcmd_t *const cmd)
 
 	if (roulette->elapsed > TICRATE>>1) // Prevent accidental immediate item confirm
 	{
-		if (roulette->elapsed > TICRATE<<4 || (roulette->eggman && !roulette->autoroulette && roulette->elapsed > TICRATE*4))
-		{
+		if (roulette->elapsed > TICRATE<<8 || (roulette->eggman && !roulette->autoroulette && roulette->elapsed > TICRATE*4))		//SCS EDIT - doubled the amount of time you have to choose an item.
+		{																															//Mostly just for single player so the player can see the whole item wheel, since it's much longer now.
 			// Waited way too long, forcefully confirm the item.
 			confirmItem = true;
 		}

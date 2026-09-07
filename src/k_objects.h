@@ -83,6 +83,7 @@ void Obj_SolFireThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir);		//SCS ADD
 void Obj_IcedusCrystalThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir);	//SCS ADD
 void Obj_IcedusThink(mobj_t *th);											//SCS ADD
 void Obj_SolFireThink(mobj_t *th);											//SCS ADD
+void Obj_SolFireBurstThink(mobj_t *th);										//SCS ADD
 
 /* Slicer */							//SCS ADD
 void Obj_SlicerThink(mobj_t *th);
