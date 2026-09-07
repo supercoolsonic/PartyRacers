@@ -551,8 +551,8 @@ lumpnum_t getEmoteFrame(emote_t* emote) {
         return emote->frames[frame];
 
     if ((int32_t)(leveltime - lastUpdate) >= emote->frame_delay) {
-		if (emote->frame_count == 0)		//SCS ADD - hunting divide by 0 crash
-			emote->frame_count = 1;
+		//if (emote->frame_count == 0)		//SCS ADD - hunting divide by 0 crash
+			//emote->frame_count = 1;
 		
         frame = (frame + 1) % emote->frame_count;
         lastUpdate = leveltime;
@@ -575,8 +575,8 @@ lumpnum_t getChatEmoteFrame(emote_t* emote) {
         return emote->frames[frame];
 
     if ((int32_t)(gametic - lastUpdate) >= emote->frame_delay) {
-		if (emote->frame_count == 0)		//SCS ADD - hunting divide by 0 crash
-			emote->frame_count = 1;		
+		//if (emote->frame_count == 0)		//SCS ADD - hunting divide by 0 crash
+			//emote->frame_count = 1;		
 		
         frame = (frame + 1) % emote->frame_count;
         lastUpdate = gametic;

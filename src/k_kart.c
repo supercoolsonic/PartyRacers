@@ -18355,7 +18355,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 										burst->fuse = 20*player->itemamount;
 										P_SetScale(burst, (player->mo->scale*3)/2);
 										burst->destscale = burst->scale;
-										burst->angle += ANGLE_180;
+										burst->angle = player->mo->angle;
 										burst->color = player->mo->color;
 										burst->colorized = true;
 									}

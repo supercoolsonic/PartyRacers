@@ -2223,12 +2223,34 @@ fixed_t K_GetSlotOffset(itemroulette_t *const roulette, fixed_t renderDelta, uin
 
 		See header file for description.
 --------------------------------------------------*/
-void K_ConvertShieldsToSuperJackpots(int8_t replaceitem)							//SCS ADD
+void K_ConvertShieldsToSuperJackpots(int8_t replaceitem, player_t playerinstigator)							//SCS ADD
 {
 	uint8_t i, k;
 	
+	/*if (replaceitem == KITEM_BUBBLESHIELD)
+		CONS_Printf("Replacing Bubble Shields!\n");
+	else if (replaceitem == KITEM_LIGHTNINGSHIELD)
+		CONS_Printf("Replacing Lightning Shields!\n");
+	else if (replaceitem == KITEM_FLAMESHIELD)
+		CONS_Printf("Replacing Flame Shields!\n");
+	else if (replaceitem == KITEM_NORMALSHIELD)
+		CONS_Printf("Replacing Normal Shields!\n");
+	else if (replaceitem == KITEM_ARMASHIELD)
+		CONS_Printf("Replacing Arma Shields!\n");*/
+	
 	for (i = 0; i < GetTotalInGameRacers(); i++)
 	{
+		//CONS_Printf("Checking racer #%d\n", i);
+		
+		if (i > MAXPLAYERS)
+			return;
+		
+		if (!players[i].mo)
+			continue;
+		
+		if (players[i].mo == playerinstigator.mo)
+			continue;	
+		
 		if (players[i].spectator) //if you're spectating, skip!
 			continue;
 		
@@ -2240,6 +2262,10 @@ void K_ConvertShieldsToSuperJackpots(int8_t replaceitem)							//SCS ADD
 			
 		for (k = 0; k < players[i].itemRoulette.itemList.len; k++)	//search through the item list and replace the corresponding shield that the original player just selected
 		{
+			//CONS_Printf("Check player's item #%d\n", k);
+			if (k > 70)	//just in case
+				return;
+			
 			if (players[i].itemRoulette.itemList.items[k] == replaceitem)
 				players[i].itemRoulette.itemList.items[k] = KITEM_SUPERJACKPOT;
 			
@@ -2301,7 +2327,7 @@ void K_KartGetItemResult(player_t *const player, kartitems_t getitem)
 		if (player->itemtype == KITEM_BUBBLESHIELD || player->itemtype == KITEM_LIGHTNINGSHIELD 
 		|| player->itemtype == KITEM_FLAMESHIELD || player->itemtype == KITEM_NORMALSHIELD || player->itemtype == KITEM_ARMASHIELD)
 		{
-			K_ConvertShieldsToSuperJackpots(player->itemtype);
+			K_ConvertShieldsToSuperJackpots(player->itemtype, *player);
 		}
 	}																																	//SCS ADD END
 }
