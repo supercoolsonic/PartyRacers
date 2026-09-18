@@ -124,7 +124,7 @@ dboolean K_BananaBallhogCollide(mobj_t *t1, mobj_t *t2)
 		|| t2->type == MT_ORBINAUT || t2->type == MT_ORBINAUT_SHIELD
 		|| t2->type == MT_JAWZ || t2->type == MT_JAWZ_SHIELD
 		|| t2->type == MT_BALLHOG || t2->type == MT_GACHABOM
-		|| t2->type == MT_AFTERBURNER_JAWZ || t2->type == MT_SLICERCLAW)			//SCS ADD
+		|| t2->type == MT_AFTERBURNER_JAWZ || t2->type == MT_SLICERCLAW || t2->type == MT_GHZBALLMINI || t2->type == MT_GHZBALLMINI_SHIELD)			//SCS ADD
 	{
 		// Other Item Damage
 		angle_t bounceangle = K_GetCollideAngle(t1, t2);
@@ -445,8 +445,8 @@ dboolean K_MineCollide(mobj_t *t1, mobj_t *t2)
 	}
 	else if (t2->type == MT_ORBINAUT || t2->type == MT_JAWZ
 		|| t2->type == MT_ORBINAUT_SHIELD || t2->type == MT_JAWZ_SHIELD
-		|| t2->type == MT_GACHABOM || t2->type == MT_AFTERBURNER_JAWZ		//SCS ADD
-		|| t2->type == MT_SLICERCLAW)										//SCS ADD
+		|| t2->type == MT_GACHABOM || t2->type == MT_AFTERBURNER_JAWZ										//SCS ADD
+		|| t2->type == MT_SLICERCLAW || t2->type == MT_GHZBALLMINI || t2->type == MT_GHZBALLMINI_SHIELD)	//SCS ADD
 	{
 		// Bomb death
 		angle_t bounceangle = K_GetCollideAngle(t1, t2);
@@ -540,7 +540,7 @@ dboolean K_LandMineCollide(mobj_t *t1, mobj_t *t2)
 		|| t2->type == MT_ORBINAUT || t2->type == MT_ORBINAUT_SHIELD
 		|| t2->type == MT_JAWZ || t2->type == MT_JAWZ_SHIELD
 		|| t2->type == MT_BALLHOG || t2->type == MT_GACHABOM
-		|| t2->type == MT_AFTERBURNER_JAWZ || t2->type == MT_SLICERCLAW)			//SCS ADD
+		|| t2->type == MT_AFTERBURNER_JAWZ || t2->type == MT_SLICERCLAW || t2->type == MT_GHZBALLMINI || t2->type == MT_GHZBALLMINI_SHIELD)			//SCS ADD
 	{
 		// Other Item Damage
 		angle_t bounceangle = K_GetCollideAngle(t1, t2);
@@ -846,7 +846,8 @@ dboolean K_PickpocketCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 		|| t2->type == MT_JAWZ || t2->type == MT_JAWZ_SHIELD
 		|| t2->type == MT_BALLHOG || t2->type == MT_GACHABOM
 		|| t2->type == MT_AFTERBURNER_JAWZ || t2->type == MT_GHZBALL
-		|| t2->type == MT_GARDENTOP || t2->type == MT_SLICERCLAW)
+		|| t2->type == MT_GARDENTOP || t2->type == MT_SLICERCLAW
+		|| t2->type == MT_GHZBALLMINI || t2->type == MT_GHZBALLMINI_SHIELD)
 	{
 		if (t2->eflags & MFE_VERTICALFLIP)
 			t2->z -= t2->height;
@@ -948,7 +949,7 @@ dboolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 			{
 				if (R_PointToDist2(0, 0, t1->momx, t1->momy) > FRACUNIT*2)
 				{
-					if (!t2->player->squishedtimer && ((t2->player->growshrinktimer < 0 && K_IsBigger(t1, t2))))// || (K_IsBigger(t1, t2) && t1->scale >= 2)))		//squish smaller/tiny players
+					if (!t2->player->squishedtimer && ((t2->player->growshrinktimer < 0 && K_IsBigger(t1, t2))) && t2->player->curshield != KSHIELD_TOP)// || (K_IsBigger(t1, t2) && t1->scale >= 2)))		//squish smaller/tiny players
 					{
 						t2->player->squishedtimer = 80;
 						RR_PushPlayerInteractionToFeed(t1->target, t2, ATTACK_PANCAKE, 0);				//SCS ADD
@@ -984,7 +985,8 @@ dboolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 		|| t2->type == MT_ORBINAUT || t2->type == MT_ORBINAUT_SHIELD
 		|| t2->type == MT_JAWZ || t2->type == MT_JAWZ_SHIELD
 		|| t2->type == MT_BALLHOG || t2->type == MT_GACHABOM
-		|| t2->type == MT_AFTERBURNER_JAWZ || t2->type == MT_SLICERCLAW)
+		|| t2->type == MT_AFTERBURNER_JAWZ || t2->type == MT_SLICERCLAW
+		|| t2->type == MT_GHZBALLMINI || t2->type == MT_GHZBALLMINI_SHIELD)
 	{
 		if (t2->type == MT_BANANA || t2->type == MT_BANANA_SHIELD) //Speeds it up?
 		{

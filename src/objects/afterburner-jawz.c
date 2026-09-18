@@ -256,7 +256,7 @@ void Obj_ABJawzThink(mobj_t *th)
 		P_SetMobjState(th, S_AFTERBURNERJAWZ_A);
 		//th->state = &states[S_AFTERBURNERJAWZ_A];
 
-	if (abjawz_selfdelay(th) >= 0)
+	if (abjawz_selfdelay(th) >= 0 && P_IsObjectOnGround(th))
 	{
 		abjawz_selfdelay(th)--;
 		

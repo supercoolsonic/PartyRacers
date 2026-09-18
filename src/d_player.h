@@ -957,7 +957,7 @@ struct player_t
 
 	fixed_t loneliness;		// How long has a player been too far to interact? Do they need speed assist?
 
-	uint8_t eggmanexplode;	// Fake item recieved, explode in a few seconds
+	uint16_t eggmanexplode;	// Fake item recieved, explode in a few seconds				//SCS EDIT
 	int8_t eggmanblame;		// (-1 to 15) - Fake item recieved, who set this fake
 
 	uint8_t bananadrag;		// After a second of holding a banana behind you, you start to slow down

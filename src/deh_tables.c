@@ -3144,6 +3144,7 @@ const char *const STATE_LIST[] = { // array length left dynamic for sanity testi
 	"S_GHZBALLDEATHANIM",
 	"S_GHZBALLLINK",
 	"S_GHZBALLCHUNK",
+	"S_GHZBALLMINI",
 	
 	"S_EMERALDORBIT",
 	"S_XEMBEAM",
@@ -3180,6 +3181,7 @@ const char *const STATE_LIST[] = { // array length left dynamic for sanity testi
 	"S_AFTERBURNERJAWZ_DEAD2",
 	
 	"S_PRESSUREMINE",
+	"S_PRESSUREMINE_FLASH",
 	"S_PRESSUREMINE_EXPLODE",
 	
 	"S_XSNAPSHOT",
@@ -4185,6 +4187,9 @@ const char *const MOBJTYPE_LIST[] = {  // array length left dynamic for sanity t
 	"MT_GHZBALL",			//SCS ADD START
 	"MT_GHZBALLLINK",
 	"MT_GHZBALLCHUNK",
+	"MT_GHZBALLMINI",
+	"MT_GHZBALLMINI_SHIELD",
+	"MT_GHZBALLMINILINK",
 	
 	"MT_EMERALDORBIT",
 	"MT_XEMBEAM",

@@ -76,39 +76,36 @@ struct BChain : Mobj
 };
 */
 
-void Obj_WreckingBallDeath(mobj_t *th)
+void Obj_WreckingBallDeath(mobj_t *th, dboolean ismini)
 {
-	//P_SetMobjState(th, th->info->deathstate);
-	
 	th->momz = 0;
 	
-	for (int32_t i = 0; i < 16; ++i)
+	if (!ismini)
 	{
-		mobj_t* chunk = P_SpawnMobj(
-			P_RandomRange(PR_ITEM_DEBRIS, (th->x - th->radius), (th->x + th->radius)), 
-			P_RandomRange(PR_ITEM_DEBRIS, (th->y - th->radius), (th->y + th->radius)), 
-			P_RandomRange(PR_ITEM_DEBRIS, (th->z + (1)), (th->z + (th->height*3/4))), 
-		MT_GHZBALLCHUNK);
-		
-		K_FlipFromObject(chunk, th);
-		
-		chunk->momx = P_RandomRange(PR_ITEM_DEBRIS, -8, 8) * mapobjectscale;
-		chunk->momy = P_RandomRange(PR_ITEM_DEBRIS, -8, 8) * mapobjectscale;
-		chunk->momz = P_RandomRange(PR_ITEM_DEBRIS, 8, 20) * mapobjectscale * P_MobjFlip(chunk);
-		chunk->scale = th->scale/2;
-		chunk->fuse = 350;
+		for (int32_t i = 0; i < 16; ++i)
+		{
+			mobj_t* chunk = P_SpawnMobj(
+				P_RandomRange(PR_ITEM_DEBRIS, (th->x - th->radius), (th->x + th->radius)), 
+				P_RandomRange(PR_ITEM_DEBRIS, (th->y - th->radius), (th->y + th->radius)), 
+				P_RandomRange(PR_ITEM_DEBRIS, (th->z + (1)), (th->z + (th->height*3/4))), 
+			MT_GHZBALLCHUNK);
+			
+			K_FlipFromObject(chunk, th);
+			
+			chunk->momx = P_RandomRange(PR_ITEM_DEBRIS, -8, 8) * mapobjectscale;
+			chunk->momy = P_RandomRange(PR_ITEM_DEBRIS, -8, 8) * mapobjectscale;
+			chunk->momz = P_RandomRange(PR_ITEM_DEBRIS, 8, 20) * mapobjectscale * P_MobjFlip(chunk);
+			chunk->scale = th->scale/2;
+			chunk->fuse = 350;
+		}
 	}
 	
-	/*mobj_t* splitball = P_SpawnMobj(th->x, th->y, th->z, MT_THOK);
+	if (th->hnext != NULL && !ismini)
+		Obj_WreckingBallBreakChain(th->hnext);	//Starts from the end of the chain
 	
-	if (splitball)
-	{
-		P_SetMobjState(splitball, S_GHZBALLDEATHANIM);
-		splitball->scale = th->scale;
-	}*/
 }
 
-void Obj_WreckingBallThink(mobj_t *th)
+void Obj_WreckingBallThink(mobj_t *th, dboolean ismini)
 {
 	dboolean grounded = P_IsObjectOnGround(th);
 	
@@ -149,7 +146,6 @@ void Obj_WreckingBallThink(mobj_t *th)
 
 		return;
 	}
-	
 
 	if (wreckingball_flags(th) & WBALL_TRAIL)
 	{
@@ -184,13 +180,24 @@ void Obj_WreckingBallThink(mobj_t *th)
 		fixed_t thrustamount = 0;
 		fixed_t frictionsafety = (th->friction == 0) ? 1 : th->friction;
 
-		if (th->health <= 10)
+		if (th->health < 10)
 		{
-			int32_t i;
-			for (i = 10; i >= th->health; i--)
+			/*if (ismini)
 			{
-				finalspeed = FixedMul(finalspeed, FRACUNIT-FRACUNIT/4);
+				int32_t i;
+				for (i = 9; i >= th->health; i--)
+				{
+					if (i < 7)
+						break;
+					
+					finalspeed = FixedMul(finalspeed, FRACUNIT-FRACUNIT/4);
+				}
 			}
+			else*/
+			
+			if (!ismini)
+				finalspeed = FixedMul(finalspeed, FRACUNIT-FRACUNIT/4);
+			
 		}
 
 		finalspeed = abs(finalspeed);
@@ -213,7 +220,7 @@ void Obj_WreckingBallThink(mobj_t *th)
 	if (wreckingball_flags(th) & WBALL_SPIN)
 	{
 		th->angle = wreckingball_spin(th);
-		wreckingball_spin(th) += ANGLE_112h;
+		wreckingball_spin(th) += ANG1;//ANGLE_112h;
 	}
 
 	/* todo: UDMFify
@@ -231,13 +238,121 @@ void Obj_WreckingBallThink(mobj_t *th)
 	if (leveltime % 6 == 0)
 	{
 		S_StartSound(th, th->info->activesound);
-	}
+	}	
+
+	th->extravalue1 = FixedMul(mobjinfo[ismini ? MT_GHZBALLMINILINK : MT_GHZBALLLINK].height*P_MobjFlip(th), th->scale);
+		
+	if (!ismini && th->hnext != NULL)
+		Obj_WreckingBallChainThink(th->hnext, (th->hnext)->extravalue1);
 	
-	Obj_WreckingBallChainThink(th);
 }
 
-void Obj_WreckingBallChainThink(mobj_t *th)
+void Obj_WreckingBallChainThink(mobj_t *th, dboolean first)
 {
+	//Ashnal code, hi Ashnal! :D 0/ You are good at math!
+	if (!P_MobjWasRemoved(th) && th->target != NULL)
+	{
+		//CONS_Printf("We are link %d\n", th->extravalue2);
+		//if (first)
+			//CONS_Printf("We are the first link!!!\n");
+		
+		angle_t angletomovetowards = R_PointToAngle2(th->x, th->y, th->target->x, th->target->y);		//th->target is referencing the link's previous link in the chain, so checking backwards from the end to the start
+		fixed_t firstdist = first ? FixedMul(40*FRACUNIT, th->target->scale) : 0;				//HOWEVER, for the first link in the chain, target is the BALL, not a chain link!
+		fixed_t firstz = first ? th->target->height/2 : 0;
+		fixed_t dist = R_PointToDist2(th->x, th->y, th->target->x, th->target->y) - FixedMul(22*FRACUNIT, th->scale) - FixedMul(firstdist, th->scale);
+		th->momx = P_ReturnThrustX(th, angletomovetowards, dist);
+		th->momy = P_ReturnThrustY(th, angletomovetowards, dist);
+		//print("z "..mo.z.." momz "..(mo.target.z+mo.target.height/2).." - "..mo.z.." - "..mo.tracer.zadjust.." = "..(mo.target.z+mo.target.height/2 - mo.z))
+		//th->momz = FixedMul(th->target->z+firstz - th->z - (12*FRACUNIT*P_MobjFlip(th->tracer))/th->extravalue2, FRACUNIT/2);
+		th->momz = FixedMul(th->target->z+firstz - th->z - th->tracer->extravalue1, FRACUNIT/2);
+		
+		//CONS_Printf("Our momz is %d\n", th->momz);
+		//CONS_Printf("Our offset is %d\n", th->tracer->extravalue1);
+		//CONS_Printf("----------------\n");
+		
+		//th->tracer->extravalue1 = (th->tracer->extravalue1*8)/9;		//Nah, not gonna use this. Looks best when it doesn't get adjusted
+		th->fuse = 350;
+		
+		if (th->target->type != MT_GHZBALL)
+			Obj_WreckingBallChainThink(th->target, th->target->extravalue1);
+		
+	}
+	else
+	{
+		if (th->flags & MF_NOCLIP)
+			th->flags |= MF_NOCLIP;
+		
+		Obj_WreckingBallChunkThink(th);
+	}
+	
+}
+
+void Obj_WreckingBallChainMiniThink(mobj_t *th, dboolean first, fixed_t curx, fixed_t cury)
+{
+	if (th->type == MT_PLAYER)
+		return;
+	
+	if (!P_MobjWasRemoved(th) && th->target != NULL && th->tracer != NULL)
+	{
+		//CONS_Printf("curx = %d\n", curx);
+		//CONS_Printf("cury = %d\n", cury);
+
+		curx += (th->tracer->x - th->tracer->target->x) / 4;//stepx;
+		cury += (th->tracer->y - th->tracer->target->y) / 4;//stepy;
+		
+		//angle_t angletomovetowards = R_PointToAngle2(th->x, th->y, th->target->x, th->target->y);		//th->target is referencing the link's previous link in the chain, so checking backwards from the end to the start
+		//fixed_t firstdist = first ? FixedMul(15*FRACUNIT, th->target->scale) : 0;														//HOWEVER, for the first link in the chain, target is the BALL, not a chain link!
+		fixed_t firstz = th->tracer->height/6;//first ? th->target->height/5 : 0;
+		
+		if (th->extravalue2 == 3)
+			firstz = th->tracer->target->height/4;
+		
+		//fixed_t dist = R_PointToDist2(th->x, th->y, th->target->x, th->target->y) - FixedMul(11*FRACUNIT, th->scale) - FixedMul(firstdist, th->scale);
+		//th->momx = P_ReturnThrustX(th, angletomovetowards, dist);
+		//th->momy = P_ReturnThrustY(th, angletomovetowards, dist);
+		th->x = curx;///FRACUNIT;
+		th->y = cury;///FRACUNIT;
+		th->angle = th->tracer->angle;
+		
+		if (first)
+			th->z = th->tracer->z+firstz;		//don't use th->tracer->target here because it needs to align with the ball
+		else if (th->extravalue2 == 3)
+			th->z = th->tracer->target->z+firstz;
+		else
+		{
+			if (th->target->z > th->z)
+				th->z = th->tracer->z+(firstz/2);
+			else if (th->tracer->target->z < th->z)
+				th->z = th->tracer->target->z+(firstz/2);
+			else
+				th->z = th->target->z;
+			
+			//th->z = ((th->target->z)-(th->tracer->target->z))+firstz;
+			//th->momz = 0;
+		}
+		
+		//else		
+		//	th->momz = FixedMul(th->target->z+firstz - th->z - 1, FRACUNIT/2);						//th->target is prev link, which can be the ball, th->tracer IS the ball, th->tracer->target is the player
+		//th->z = th->tracer->z+firstz;
+		/*else
+		{
+			th->z = (th->tracer->z + (th->tracer->height/2));
+			//th->momz = 0;
+		}*/
+		
+		//CONS_Printf("Our momz is %d\n", th->momz);
+		//CONS_Printf("Our offset is %d\n", th->tracer->extravalue1);     
+		//CONS_Printf("----------------\n");
+		
+		//th->tracer->extravalue1 = (th->tracer->extravalue1*8)/9;		//Nah, not gonna use this. Looks best when it doesn't get adjusted
+		th->fuse = 165;
+		
+		if (th->target->type != MT_GHZBALLMINI)
+			Obj_WreckingBallChainMiniThink(th->target, th->target->extravalue1, curx, cury);
+		
+	}
+	else
+		Obj_WreckingBallChunkThink(th);
 	
 }
 
@@ -249,27 +364,63 @@ void Obj_WreckingBallChunkThink(mobj_t *th)
 	}
 		
 	dboolean onground = P_IsObjectOnGround(th);
-	uint8_t bounces = 0;
+	//uint8_t bounces = 0;
 	
-	th->spritexscale = FRACUNIT;
-	th->spriteyscale = FRACUNIT;	//brute forcing
+	//th->spritexscale = FRACUNIT;
+	//th->spriteyscale = FRACUNIT;	//brute forcing
 	
 	if (onground)
 	{
 		th->momz += (10*th->scale) * P_MobjFlip(th);
 		//th->momz = FixedMul(th->lastmomz*-1, FRACUNIT*3/4);
-		bounces++;
+		//bounces++;
 	}
 	
 	//th->lastmomz = th->momz;
 	
-	if (bounces >= 3)
-		P_KillMobj(th, NULL, NULL, DMG_NORMAL);
+	//if (bounces >= 3)
+		//P_KillMobj(th, NULL, NULL, DMG_NORMAL);
 	
+}
+
+void Obj_WreckingBallBreakChain(mobj_t *th)
+{
+	if (th->target != NULL)		//Is our connected link valid?
+	{
+		if (th->target->type != MT_GHZBALL && th->target->type != MT_GHZBALLMINI)	//Is our connection the ball, or a link? If it's a link, run the break code on it too so it can bounce around
+			Obj_WreckingBallBreakChain(th->target);
+		
+		th->target = NULL;		//This should set the chain links to bounce around instead of trying to follow the ball around
+	}
 }
 
 void Obj_WreckingBallSpawnChain(mobj_t *th)
 {
+	mobj_t *previous = th;
+	dboolean first = true;
+	uint8_t i;
+	
+	for (i = 0; i < 7; i++)		//Based on Ashnal's code! :D Ashnal, you are teh smarts!
+	{
+		mobj_t *link = P_SpawnMobj(th->x, th->y, th->z+(th->height/2), MT_GHZBALLLINK);
+		
+		if (link)
+		{
+			link->target = previous;	//The previous link in the chain - it's the ball itself if this is the first link
+			link->tracer = th;			//The reference to the ball, all links have this
+			link->scale = th->scale;
+			link->destscale = th->destscale*2;
+			link->extravalue1 = first;	//Determines if it's the first one in the chain
+			link->extravalue2 = (i+1);	//keeps track of which link it is in the chain
+			previous = link;			//Previous is now set to the current link, so the next link can keep a reference to it
+			th->hnext = link;		//This is a reference the ball keeps, which is the LAST link in the chain
+			first = false;
+		}
+		else
+			return;
+		
+	}
+	
 	/*BChain* link = nullptr;
 	int32_t numLinks = 7;
 
@@ -322,10 +473,13 @@ void Obj_WreckingBallThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir)
 	}
 }
 
-void Obj_WreckingBallThrown_Pre(mobj_t *th, fixed_t finalSpeed, fixed_t dir)
+void Obj_WreckingBallThrown_Pre(mobj_t *th, fixed_t finalSpeed, fixed_t dir, dboolean ismini)
 {
 	Obj_WreckingBallThrown(th, finalSpeed, dir);
-	Obj_WreckingBallSpawnChain(th);
+	
+	if (!ismini)
+		Obj_WreckingBallSpawnChain(th);
+	
 	//th->state = &states[S_GHZBALL];
 	th->scale = th->scale * 2;
 

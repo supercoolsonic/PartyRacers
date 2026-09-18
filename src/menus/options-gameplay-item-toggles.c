@@ -127,7 +127,7 @@ menuitem_t OPTIONS_GameplayItems_Party[] =		//SCS ADD
 {
 		// Mostly handled by the drawing function.
 	{IT_KEYHANDLER | IT_NOTHING, NULL, "Deca-Banana",			NULL, {.routine = M_HandleItemToggles}, KRITEM_DECABANANA, 0},
-	{IT_KEYHANDLER | IT_NOTHING, NULL, "Pressure Mine",			NULL, {.routine = M_HandleItemToggles}, KITEM_PRESSUREMINE, 0},	
+	{IT_KEYHANDLER | IT_NOTHING, NULL, "Blinker Mine",			NULL, {.routine = M_HandleItemToggles}, KITEM_PRESSUREMINE, 0},	
 	{IT_KEYHANDLER | IT_NOTHING, NULL, "Pickpocket Hyudoro",	NULL, {.routine = M_HandleItemToggles}, KITEM_PICKPOCKETHYU, 0},
 	{IT_KEYHANDLER | IT_NOTHING, NULL, "Butler Hyudoro",		NULL, {.routine = M_HandleItemToggles}, KITEM_BUTLERHYU, 0},
 	

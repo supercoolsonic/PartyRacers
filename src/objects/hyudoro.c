@@ -341,7 +341,7 @@ move_to_player (mobj_t *hyu)
 
 		if (hyu->type == MT_HYUDORO)
 			speed = min(speed*2, normalspeed*2);		//SCS EDIT - double speed
-		else
+		else if (hyu->type == MT_BHYUDORO)
 			speed = min(speed*3, normalspeed*3);		//SCS ADD - for Butler Hyudoro
 		
 	}													//SCS NOTE - the pickpocket will not get a speedboost
@@ -557,7 +557,13 @@ hyudoro_set_held_item_from_player
 	if (hyu->type == MT_BHYUDORO)		//SCS ADD
 	{
 		if (player->itemtype == KITEM_BUBBLESHIELD || player->itemtype == KITEM_FLAMESHIELD || player->itemtype == KITEM_NORMALSHIELD || player->itemtype == KITEM_ARMASHIELD)	//no stacking shields
-			set_item(hyu, player->itemtype, player->itemamount);
+		{
+			if (player->itemtype == KITEM_WRECKINGBALL && player->mo->hnext != NULL && player->mo->hnext->type == MT_GHZBALLMINI_SHIELD)
+				set_item(hyu, player->itemtype, max(1, player->itemamount/3)*2);
+			else
+				set_item(hyu, player->itemtype, player->itemamount);
+			
+		}
 		else
 			set_item(hyu, player->itemtype, min(player->itemamount*2, 99));
 		
@@ -566,7 +572,11 @@ hyudoro_set_held_item_from_player
 	{
 		if (hyu->type != MT_PPOCKETHYUDORO)		//if you're not a pickpocket, grab the item like normal
 		{
-			set_item(hyu, player->itemtype, player->itemamount);
+			if (player->itemtype == KITEM_WRECKINGBALL && player->mo->hnext != NULL && player->mo->hnext->type == MT_GHZBALLMINI_SHIELD)
+				set_item(hyu, player->itemtype, max(1, player->itemamount/3));
+			else
+				set_item(hyu, player->itemtype, player->itemamount);
+			
 			return;
 		}
 		else if (player->rings > 0 || player->superring > 0)
@@ -576,7 +586,11 @@ hyudoro_set_held_item_from_player
 			if (itemhyu)
 			{
 				itemhyu->target = hyu->target;
-				set_item(itemhyu, player->itemtype, player->itemamount);	//new hyu grabs the item
+				if (player->itemtype == KITEM_WRECKINGBALL && player->mo->hnext != NULL && player->mo->hnext->type == MT_GHZBALLMINI_SHIELD)	//new hyu grabs the item
+					set_item(itemhyu, player->itemtype, max(1, player->itemamount/3));
+				else
+					set_item(itemhyu, player->itemtype, player->itemamount);
+				
 				hyudoro_mode(itemhyu) = HYU_RETURN;
 				P_SetMobjState(itemhyu, S_HYUDORO_RETURNING);
 				player->hyudorotimer = hyudorotime;
@@ -762,8 +776,10 @@ award_immediately (mobj_t *hyu)
 
 	if (player)
 	{
-		if (hyudoro_itemtype(hyu) == -1 && hyu->target->health > 0)				//SCS ADD - -1 means we have rings and are a pickpocket. We can always take rings!
-		{
+		if (hyudoro_itemtype(hyu) == -1 && hyu->target->health > 0)// && (player->hoverhyudoro == NULL || (hyudoro_itemtype(player->hoverhyudoro) > -1 && hyudoro_mode(player->hoverhyudoro) != HYU_ORBIT))) //SCS ADD - -1 means we have rings and are a pickpocket 
+		{																										//We can always take rings! ...Lock the item box slot so that other hyus don't try to deliver while the pickpocket does
+			player->itemRoulette.reserved = 2*TICRATE;
+			//player->hoverhyudoro = hyu;
 			deliver_item(hyu);
 			return true;
 		}		

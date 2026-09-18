@@ -529,17 +529,19 @@ void Obj_MushroomHillPoleFuse(mobj_t *pole);
 
 
 /* Wrecking Ball */				//SCS ADD
-void Obj_WreckingBallThink(mobj_t *th);
+void Obj_WreckingBallThink(mobj_t *th, dboolean ismini);
 //dboolean Obj_WreckingBallJawzCollide(mobj_t *t1, mobj_t *t2);
 void Obj_WreckingBallThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir);
 void Obj_WreckingBallDrop(mobj_t *th);
 dboolean Obj_WreckingBallCanRunOnWater(mobj_t *th);
-void Obj_WreckingBallThrown_Pre(mobj_t *th, fixed_t finalSpeed, fixed_t dir);
+void Obj_WreckingBallThrown_Pre(mobj_t *th, fixed_t finalSpeed, fixed_t dir, dboolean ismini);
 dboolean Obj_WreckingBallWasTossed(mobj_t *th);
-void Obj_WreckingBallChainThink(mobj_t *th);
+void Obj_WreckingBallChainThink(mobj_t *th, dboolean first);
+void Obj_WreckingBallBreakChain(mobj_t *th);
 void Obj_WreckingBallChunkThink(mobj_t *th);
 void Obj_WreckingBallSpawnChain(mobj_t *th);
-void Obj_WreckingBallDeath(mobj_t *th);
+void Obj_WreckingBallDeath(mobj_t *th, dboolean ismini);
+void Obj_WreckingBallChainMiniThink(mobj_t *th, dboolean first, fixed_t curx, fixed_t cury);
 
 /*Master Emerald */					//SCS ADD
 void EM_OrbitThinker(mobj_t *th);

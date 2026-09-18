@@ -1880,7 +1880,7 @@ static void P_DoBubbleBreath(player_t *player)
 			fixed_t r = (player->mo->radius/7)>>FRACBITS;		//SCS EDIT - gotta divide this here otherwise sparks don't show up...
 			x += (P_RandomRange(PR_BUBBLE, r, -r)<<FRACBITS);
 			y += (P_RandomRange(PR_BUBBLE, r, -r)<<FRACBITS);
-			z += (P_RandomKey(PR_BUBBLE, player->mo->height>>FRACBITS)<<FRACBITS);
+			z += (P_RandomKey(PR_BUBBLE, ((player->mo->height>>FRACBITS)+1))<<FRACBITS);	//SCS EDIT - Got a divide by 0 here, let's add 1 to stop that?
 			bubble = P_SpawnMobj(x, y, z, MT_WATERZAP);
 			
 			if (bubble)								//SCS ADD - just in case...

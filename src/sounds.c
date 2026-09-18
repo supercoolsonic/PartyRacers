@@ -1568,6 +1568,10 @@ sfxinfo_t S_sfx[NUMSFX] =
   {"cblemp", false, 64,  0, -1, NULL, 0,        -1,  -1, LUMPERROR, ""},
   {"cblrld", false, 64,  0, -1, NULL, 0,        -1,  -1, LUMPERROR, ""},
   {"hmgsht", false, 64,  0, -1, NULL, 0,        -1,  -1, LUMPERROR, ""},
+  
+  // Blinker Mine sounds
+  {"sb414", false, 64,  0, -1, NULL, 0,        -1,  -1, LUMPERROR, ""},		//SCS ADD
+  {"sb417", false, 64,  0, -1, NULL, 0,        -1,  -1, LUMPERROR, ""},
 
   // SRB2kart - Skin sounds
   {"kwin",   false,  64, 96, -1, NULL, 0,   SKSKWIN,  -1, LUMPERROR, ""},

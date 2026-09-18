@@ -1280,6 +1280,12 @@ fixed_t P_GetMobjGravity(mobj_t *mo)
 			case MT_KARMAFIREWORK:
 				gravityadd /= 3;
 				break;
+			case MT_GHZBALL:			//SCS ADD
+				gravityadd *= 5;
+				break;
+			case MT_GHZBALLMINI:		//SCS ADD
+				gravityadd *= 3;
+				break;
 			case MT_ITEM_DEBRIS:
 				gravityadd *= 6;
 				break;
@@ -1866,7 +1872,7 @@ dboolean P_XYMovement(mobj_t *mo)
 
 					//{ SRB2kart - Orbinaut
 					// Bump sparks
-					if (mo->type == MT_ORBINAUT || mo->type == MT_GACHABOM || mo->type == MT_GHZBALL)		//SCS ADD
+					if (mo->type == MT_ORBINAUT || mo->type == MT_GACHABOM || mo->type == MT_GHZBALL || mo->type == MT_GHZBALLMINI)		//SCS EDIT
 					{
 						mobj_t *fx;
 						fx = P_SpawnMobj(mo->x, mo->y, mo->z, MT_BUMP);
@@ -1883,6 +1889,7 @@ dboolean P_XYMovement(mobj_t *mo)
 						case MT_GACHABOM:
 						case MT_GARDENTOP:
 						case MT_GHZBALL:		//SCS ADD
+						case MT_GHZBALLMINI:	//SCS ADD
 							if (mo->health > 1)
 							{
 								S_StartSound(mo, mo->info->attacksound);
@@ -1901,16 +1908,17 @@ dboolean P_XYMovement(mobj_t *mo)
 								S_StartSound(mo, mo->info->deathsound);
 								P_KillMobj(mo, NULL, NULL, DMG_NORMAL);
 								
-								if (mo->type != MT_GHZBALL)						//SCS ADD - stop flipping the ball so high up into the air!
+								if (mo->type != MT_GHZBALL && mo->type != MT_GHZBALLMINI)						//SCS ADD - stop flipping the ball so high up into the air!
+								{
 									P_SetObjectMomZ(mo, 24*FRACUNIT, false);
+									P_InstaThrust(mo, R_PointToAngle2(mo->x, mo->y, mo->x + xmove, mo->y + ymove)+ANGLE_90, 16*FRACUNIT);
+								}
 								else											//SCS ADD - it needs to be in the air for the death anim to play
 								{
-									P_SetObjectMomZ(mo, 3*FRACUNIT, false);
+									P_SetObjectMomZ(mo, 6*FRACUNIT, false);
 									mo->momx = 0;
 									mo->momy = 0;
 								}
-								
-								P_InstaThrust(mo, R_PointToAngle2(mo->x, mo->y, mo->x + xmove, mo->y + ymove)+ANGLE_90, 16*FRACUNIT);
 							}
 							else			//SCS ADD START
 							{
@@ -5412,6 +5420,8 @@ dboolean P_IsKartItem(int32_t type)
 		case MT_GACHABOM:
 		case MT_TOXOMISTER_POLE:
 		case MT_GHZBALL:					//SCS ADD START
+		case MT_GHZBALLMINI:
+		case MT_GHZBALLMINI_SHIELD:
 		case MT_YOGOSPRING:
 		case MT_BOGOSPRING:	
 		case MT_MEGACHOPPER:
@@ -5454,6 +5464,7 @@ dboolean P_IsKartFieldItem(int32_t type)
 		case MT_GACHABOM:
 		case MT_TOXOMISTER_POLE:
 		case MT_GHZBALL:					//SCS ADD START
+		case MT_GHZBALLMINI:
 		case MT_YOGOSPRING:
 		case MT_BOGOSPRING:
 		case MT_AFTERBURNER_JAWZ:
@@ -5500,6 +5511,8 @@ dboolean P_IsRelinkItem(int32_t type)
 		case MT_TOXOMISTER_POLE:
 		case MT_FLOATINGITEM:  // Stone Shoe Trap
 		case MT_GHZBALL: 							//SCS ADD START
+		case MT_GHZBALLMINI:
+		case MT_GHZBALLMINI_SHIELD:
 		case MT_YOGOSPRING:
 		case MT_BOGOSPRING:
 		case MT_MEGACHOPPER:
@@ -6271,6 +6284,7 @@ static void P_MobjSceneryThink(mobj_t *mobj)
 	case MT_EGGMANITEM_SHIELD:
 	case MT_ICEDUSCRYSTAL_SHIELD:	//SCS ADD
 	case MT_SOLFIRE_SHIELD:			//SCS ADD
+	case MT_GHZBALLMINI_SHIELD:		//SCS ADD
 	case MT_SINK_SHIELD:
 		if ((mobj->health > 0
 			&& (!mobj->target || !mobj->target->player || mobj->target->health <= 0 || mobj->target->player->spectator))
@@ -7152,10 +7166,12 @@ static dboolean P_MobjDeadThink(mobj_t *mobj)
 	case MT_EGGMANITEM_SHIELD:
 	case MT_ICEDUSCRYSTAL_SHIELD:			//SCS ADD
 	case MT_SOLFIRE_SHIELD:					//SCS ADD
+	case MT_GHZBALLMINI_SHIELD:				//SCS ADD
 		mobj->renderflags ^= RF_DONTDRAW;
 		break;
 	case MT_JAWZ:
 	case MT_GHZBALL:						//SCS ADD
+	case MT_GHZBALLMINI:					//SCS ADD
 	case MT_MEGACHOPPER:					//SCS ADD
 	case MT_AFTERBURNER_JAWZ:				//SCS ADD
 	case MT_SLICERCLAW:						//SCS ADD
@@ -7644,19 +7660,19 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 		P_MobjCheckWater(mobj);
 		break;
 	}
-	case MT_ICEDUSCRYSTAL:			//SCS ADD
+	case MT_ICEDUSCRYSTAL:			//SCS ADD START
 	{
 		Obj_IcedusThink(mobj);
 		P_MobjCheckWater(mobj);
 		break;
 	}
-	case MT_SOLFIRE:				//SCS ADD
+	case MT_SOLFIRE:
 	{
 		Obj_SolFireThink(mobj);
 		P_MobjCheckWater(mobj);
 		break;
 	}
-	case MT_SOLFIRE_BURST:			//SCS ADD
+	case MT_SOLFIRE_BURST:
 	{
 		Obj_SolFireBurstThink(mobj);
 		P_MobjCheckWater(mobj);
@@ -7664,6 +7680,8 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 		if (mobj->target)
 		{
 			mobj->angle = mobj->target->angle;
+			P_SetScale(mobj, (mobj->target->scale*3)/2);
+			mobj->destscale = mobj->scale;
 			
 			if (mobj->target->momx == 0 && mobj->target->momy == 0) //If you're not moving anywhere, the effect looks bad. Kill it
 				P_RemoveMobj(mobj);
@@ -7672,13 +7690,13 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 		
 		break;
 	}
-	case MT_SLICERCLAW:				//SCS ADD
+	case MT_SLICERCLAW:
 	{
 		Obj_SlicerThink(mobj);
 		P_MobjCheckWater(mobj);
 		break;
 	}
-	case MT_XSNAPLASTORBITSHOT:		//SCS ADD
+	case MT_XSNAPLASTORBITSHOT:
 	{
 		if (!mobj->target)
 			;
@@ -7695,9 +7713,9 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 		mobj->frame = ((leveltime%4)/2)|FF_FULLBRIGHT|(8-mobj->fuse)<<FF_TRANSSHIFT;
 		break;
 	}
-	case MT_XSNAPLASTSHOT:			//SCS ADD
-	case MT_XSNAPLASTSHOTSHRINK:	//SCS ADD
-	case MT_RINGGUNLARGESHOT:		//SCS ADD
+	case MT_XSNAPLASTSHOT:
+	case MT_XSNAPLASTSHOTSHRINK:
+	case MT_RINGGUNLARGESHOT:
 	{
 		if (leveltime % 8 == 0)
 		{
@@ -7719,7 +7737,7 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 		}
 		break;
 	}
-	case MT_RINGGUNLIGHTS:			//SCS ADD
+	case MT_RINGGUNLIGHTS:
 	{
 		if (mobj->target && mobj->target->player && mobj->target->player->playerringgunpower > 0)
 		{
@@ -7730,29 +7748,35 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 			
 		break;
 	}
-	case MT_GHZBALL:				//SCS ADD
+	case MT_GHZBALL:
 	{
-		Obj_WreckingBallThink(mobj);
+		Obj_WreckingBallThink(mobj, false);
 		P_MobjCheckWater(mobj);
 		break;		
 	}
-	case MT_PPOCKETHYUDORO:			//SCS ADD
+	case MT_GHZBALLMINI:
+	{
+		Obj_WreckingBallThink(mobj, true);
+		P_MobjCheckWater(mobj);
+		break;		
+	}
+	case MT_PPOCKETHYUDORO:
 	{
 		Obj_PPocketHyudoroThink(mobj);
 		break;
 	}
-	case MT_MINIHYUDORO:			//SCS ADD
+	case MT_MINIHYUDORO:
 	{
 		Obj_MiniHyudoroThink(mobj);
 		break;
 	}
-	case MT_TRIPWIREOK:				//SCS ADD
+	case MT_TRIPWIREOK:
 	case MT_TRIPWIRELOCKOUT:
 	{
 		Obj_TripWireEffects(mobj);
 		break;
 	}
-	case MT_TIMESTONEACTIVATE:		//SCS ADD
+	case MT_TIMESTONEACTIVATE:
 	{
 		if (mobj->fuse == 1)
 		{
@@ -7780,7 +7804,7 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 		break;
 		
 	}
-	case MT_TIMESTONEIDLE:			//SCS ADD
+	case MT_TIMESTONEIDLE:
 	{
 		if (mobj->target && mobj->target->player)
 		{
@@ -7795,7 +7819,7 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 		
 		break;
 	}
-	case MT_SUPERFORMSPARKLE:		//SCS ADD
+	case MT_SUPERFORMSPARKLE:
 	{
 		if (!mobj->target || !mobj->target->health || (mobj->target->player && !mobj->target->player->masteremeraldinvincibility))
 		{
@@ -7806,7 +7830,7 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 		//mobj->colorized = mobj->target->colorized;
 		break;
 	}
-	case MT_INKBUBBLE:				//SCS ADD
+	case MT_INKBUBBLE:
 	{
 		if (mobj->threshold)
 			mobj->threshold--;
@@ -7816,7 +7840,7 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 		mobj->momz = 0;
 		break;
 	}
-	case MT_MEGACHOPPER:				//SCS ADD
+	case MT_MEGACHOPPER:
 	{
 		if (!mobj->target || !mobj->target->health)
 		{
@@ -7839,19 +7863,33 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 		K_MatchFlipFlags(mobj, mobj->target);
 		break;		
 	}
-	case MT_EMERALDORBIT:					//SCS ADD
+	case MT_EMERALDORBIT:
 	{
 		EM_OrbitThinker(mobj);
 		break;
 	}
-	case MT_XEMBEAM:						//SCS ADD
+	case MT_XEMBEAM:
 	{
 		EM_BeamThinker(mobj);
 		break;
 	}
-	case MT_GHZBALLCHUNK:					//SCS ADD
+	case MT_GHZBALLCHUNK:
 	{
 		Obj_WreckingBallChunkThink(mobj);
+		break;
+	}
+	case MT_GHZBALLMINILINK:
+	{
+		if (mobj->target == NULL)									//For the mini chain, only run once the ball is launched - the chain snaps and they bounce around. Otherwise, they remain firm and stiffly attached to the ball and player
+			Obj_WreckingBallChainMiniThink(mobj, mobj->extravalue1, mobj->x, mobj->y);
+						
+		break;
+	}
+	case MT_GHZBALLLINK:				//SCS ADD END					
+	{
+		if (mobj->target == NULL)									//Only run the code from here if the ball is already destroyed, otherwise the ball itself will run the thinker code for the whole chain
+			Obj_WreckingBallChainThink(mobj, mobj->extravalue1);
+		
 		break;
 	}
 	case MT_JAWZ:
@@ -8101,8 +8139,10 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 	case MT_PRESSUREMINE:								//SCS ADD
 		if (mobj->target && mobj->target->player)
 			mobj->color = mobj->target->player->skincolor;
-		else
+		else if (mobj->type == MT_LANDMINE)				//SCS EDIT
 			mobj->color = SKINCOLOR_SAPPHIRE;
+		else											//SCS ADD
+			mobj->color = SKINCOLOR_ORANGE;
 
 		if (mobj->momx || mobj->momy || mobj->momz)
 		{
@@ -8117,6 +8157,17 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 		}
 		else
 		{
+			if (mobj->type == MT_PRESSUREMINE && leveltime % 90 == 0)
+			{
+				P_SetMobjState(mobj, S_PRESSUREMINE_FLASH);
+				S_StartSound(mobj, sfx_sb417);
+			}
+			else if (mobj->state == &states[S_PRESSUREMINE_FLASH])
+			{
+				P_SetMobjState(mobj, S_PRESSUREMINE);
+				S_StartSound(mobj, sfx_sb414);
+			}
+			
 			// Time to stop, ramp up the friction...
 			mobj->friction = ORIG_FRICTION/4; // too high still?
 		}
@@ -11211,9 +11262,11 @@ static dboolean P_CanFlickerFuse(mobj_t *mobj)
 		case MT_EMERALD:
 		case MT_BLENDEYE_PUYO:
 		case MT_KART_PARTICLE:
-		case MT_GHZBALL:			//SCS ADD
-		case MT_GHZBALLCHUNK:		//SCS ADD
-		case MT_MEGACHOPPER:		//SCS ADD
+		case MT_GHZBALL:			//SCS ADD START
+		case MT_GHZBALLMINI:
+		case MT_GHZBALLLINK:
+		case MT_GHZBALLCHUNK:
+		case MT_MEGACHOPPER:		//SCS ADD END
 			if (mobj->fuse <= TICRATE)
 			{
 				return true;
@@ -11675,6 +11728,7 @@ void P_MobjThinker(mobj_t *mobj)
 		|| mobj->type == MT_GACHABOM
 		|| mobj->type == MT_JAWZ
 		|| mobj->type == MT_GHZBALL										//SCS ADD
+		|| mobj->type == MT_GHZBALLMINI									//SCS ADD
 		|| mobj->type == MT_AFTERBURNER_JAWZ							//SCS ADD
 		|| (mobj->type == MT_DROPTARGET && mobj->reactiontime))
 	{
@@ -11942,6 +11996,8 @@ static void P_DefaultMobjShadowScale(mobj_t *thing)
 		case MT_MINIHYUDORO:					//SCS ADD
 			thing->shadowscale = FRACUNIT/2;
 			break;
+		case MT_GHZBALLMINI_SHIELD:				//SCS ADD
+			thing->shadowscale = FRACUNIT/20;
 		case MT_PLAYER:
 		case MT_KART_LEFTOVER:
 		case MT_BATTLECAPSULE:
@@ -11960,11 +12016,11 @@ static void P_DefaultMobjShadowScale(mobj_t *thing)
 		case MT_BANANA:
 		case MT_ORBINAUT:
 		case MT_ORBINAUT_SHIELD:
-		case MT_ICEDUSCRYSTAL:					//SCS ADD
-		case MT_ICEDUSCRYSTAL_SHIELD:			//SCS ADD
-		case MT_ICEDUSCRYSTAL_TRAP:				//SCS ADD
-		case MT_SOLFIRE:						//SCS ADD
-		case MT_SOLFIRE_SHIELD:					//SCS ADD
+		case MT_ICEDUSCRYSTAL:					//SCS ADD START
+		case MT_ICEDUSCRYSTAL_SHIELD:
+		case MT_ICEDUSCRYSTAL_TRAP:
+		case MT_SOLFIRE:
+		case MT_SOLFIRE_SHIELD:					//SCS ADD END
 		case MT_JAWZ:
 		case MT_JAWZ_SHIELD:
 		case MT_SSMINE:
@@ -11979,9 +12035,9 @@ static void P_DefaultMobjShadowScale(mobj_t *thing)
 		case MT_DUELBOMB:
 		case MT_GACHABOM:
 		case MT_BALLOON:
-		case MT_AFTERBURNER_JAWZ:				//SCS ADD
-		case MT_PRESSUREMINE:					//SCS ADD
-		case MT_SLICERCLAW:						//SCS ADD
+		case MT_AFTERBURNER_JAWZ:				//SCS ADD START
+		case MT_PRESSUREMINE:
+		case MT_SLICERCLAW:						//SCS ADD END
 			thing->shadowscale = 3*FRACUNIT/2;
 			break;
 		case MT_BANANA_SHIELD:
@@ -12053,6 +12109,9 @@ static void P_DefaultMobjShadowScale(mobj_t *thing)
 			break;
 		case MT_TOXOMISTER_POLE:
 			thing->shadowscale = FRACUNIT;
+			break;
+		case MT_GHZBALLMINI:					//SCS ADD
+			thing->shadowscale = 2*FRACUNIT;
 			break;
 		default:
 			if (thing->flags & (MF_ENEMY|MF_BOSS))
@@ -12810,21 +12869,11 @@ void P_RemoveMobj(mobj_t *mobj)
 			Obj_AncientGearRemoved(mobj);
 			break;
 		}
-		/*case MT_GHZBALL:						//SCS ADD
-		{
-			Obj_WreckingBallDeath(mobj);
-			break;
-		}*/
 		case MT_RINGGUNBLASTMAX:				//SCS ADD
 		{
 			K_SpawnMineExplosion(mobj, mobj->color, 4);
 			break;
 		}
-		/*case MT_INKBUBBLE:
-		{
-			P_RemoveMobj(mobj);
-			break;
-		}*/
 		case MT_PPOCKETHYUDORO:				//SCS ADD
 		{
 			if (mobj == NULL)
