@@ -391,7 +391,7 @@ dboolean Obj_OrbinautJawzCollide(mobj_t *t1, mobj_t *t2)
 	if (K_TryPickMeUp(t1, t2, false))
 		return true;
 
-	if (t1->type == MT_GARDENTOP)
+	if (t1->type == MT_GARDENTOP || t1->type == MT_GHZBALLMINI) //SCS EDIT
 	{
 		tumbleitem = true;
 	}
@@ -399,7 +399,7 @@ dboolean Obj_OrbinautJawzCollide(mobj_t *t1, mobj_t *t2)
 	if (t2->player)
 	{
 		if ((t2->player->flashing > 0 && t2->hitlag == 0)
-			&& !(t1->type == MT_ORBINAUT || t1->type == MT_JAWZ || t1->type == MT_GACHABOM || t1->type == MT_AFTERBURNER_JAWZ))		//SCS EDIT
+			&& !(t1->type == MT_ORBINAUT || t1->type == MT_JAWZ || t1->type == MT_GACHABOM || t1->type == MT_AFTERBURNER_JAWZ || t1->type == MT_GHZBALLMINI))		//SCS EDIT
 			return true;
 
 		if (t2->player->hyudorotimer)
@@ -415,9 +415,16 @@ dboolean Obj_OrbinautJawzCollide(mobj_t *t1, mobj_t *t2)
 			// Player Damage
 			P_DamageMobj(t2, t1, t1->target, 1, DMG_WOMBO |
 				(tumbleitem ? DMG_TUMBLE : DMG_WIPEOUT));
+				
+			if (t1->type == MT_GHZBALLMINI)					//SCS ADD - ball flies up when smacking someone, pls
+			{
+				P_SetObjectMomZ(t1, 6*FRACUNIT, false);
+				t1->momx = 0;
+				t2->momy = 0;
+			}
 
 			if (tumbleitem || !t2->player->tripwireLeniency)
-				if ((gametyperules & GTR_SPHERES) || (t1->type != MT_ORBINAUT_SHIELD && t1->type != MT_JAWZ_SHIELD))
+				if ((gametyperules & GTR_SPHERES) || (t1->type != MT_ORBINAUT_SHIELD && t1->type != MT_JAWZ_SHIELD && t1->type != MT_GHZBALLMINI_SHIELD))	//SCS EDIT
 					K_KartBouncing(t2, t1);
 
 			S_StartSound(t2, sfx_s3k7b);
@@ -428,7 +435,8 @@ dboolean Obj_OrbinautJawzCollide(mobj_t *t1, mobj_t *t2)
 	else if (t2->type == MT_ORBINAUT || t2->type == MT_JAWZ
 		|| t2->type == MT_ORBINAUT_SHIELD || t2->type == MT_JAWZ_SHIELD
 		|| t2->type == MT_BANANA || t2->type == MT_BANANA_SHIELD
-		|| t2->type == MT_BALLHOG || t2->type == MT_GACHABOM || t2->type == MT_AFTERBURNER_JAWZ)		//SCS EDIT
+		|| t2->type == MT_BALLHOG || t2->type == MT_GACHABOM || t2->type == MT_AFTERBURNER_JAWZ		//SCS EDIT
+		|| t2->type == MT_GHZBALLMINI || t2->type == MT_GHZBALLMINI_SHIELD)							//SCS ADD
 	{
 		// Other Item Damage
 		angle_t bounceangle = K_GetCollideAngle(t1, t2);
@@ -449,7 +457,7 @@ dboolean Obj_OrbinautJawzCollide(mobj_t *t1, mobj_t *t2)
 		// Bomb death
 		P_KillMobj(t2, t1, t1, DMG_NORMAL);
 	}
-	else if (t2->flags & MF_SPRING && (t1->type != MT_ORBINAUT_SHIELD && t1->type != MT_JAWZ_SHIELD))
+	else if (t2->flags & MF_SPRING && (t1->type != MT_ORBINAUT_SHIELD && t1->type != MT_JAWZ_SHIELD && t1->type != MT_GHZBALLMINI_SHIELD))		//SCS EDIT
 	{
 		// Let thrown items hit springs!
 		sprung = P_DoSpring(t2, t1);
@@ -502,7 +510,9 @@ dboolean Obj_OrbinautJawzCollide(mobj_t *t1, mobj_t *t2)
 		{
 			P_SetObjectMomZ(t1, 24*FRACUNIT, false);
 
-			P_InstaThrust(t1, bounceangle, 16*FRACUNIT);
+			if (t1->type != MT_GHZBALLMINI)	//SCS ADD - fly straight up when hitting someone
+				P_InstaThrust(t1, bounceangle, 16*FRACUNIT);
+				
 		}
 	}
 
@@ -651,6 +661,11 @@ void Obj_OrbinautJawzMoveHeld(player_t *player)
 
 		cur->angle -= ANGLE_90;
 		cur->angle += (FixedAngle(speed) / 3) * ((player->orbinautchargetime/2)+1);	//SCS EDIT
+		
+		if (cur->type == MT_GHZBALLMINI_SHIELD && cur->tracer != NULL && cur->target != NULL)	//SCS ADD - mini wrecker chain detail
+		{
+			Obj_WreckingBallChainMiniThink(cur->tracer, (cur->tracer)->extravalue1, cur->target->x, cur->target->y);
+		}
 
 		if (orbinaut_shield_dist(cur) < radius)
 		{

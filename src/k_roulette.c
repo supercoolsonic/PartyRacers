@@ -90,14 +90,14 @@ static uint32_t K_DynamicItemOddsRace[NUMKARTRESULTS-1][2] =
 	{3, 1}, // eggmark
 	{9, 4}, // orbinaut
 	{16, 4}, // jawz
-	{23, 4}, // mine
+	{21, 4}, // mine
 	{1, 3}, // landmine
 	{24, 3}, // ballhog
 	{53, 6}, // selfpropelledbomb
 	{40, 7}, // grow
 	{55, 8}, // shrink
 	{1, 1}, // lightningshield
-	{25, 4}, // bubbleshield
+	{24, 4}, // bubbleshield
 	{51, 9}, // flameshield
 	{1, 2}, // hyudoro
 	{32, 3}, // pogospring
@@ -109,25 +109,25 @@ static uint32_t K_DynamicItemOddsRace[NUMKARTRESULTS-1][2] =
 	{1, 2}, // stoneshoe
 	{1, 2}, // toxomister
 	{55, 4}, // superjackpot																					//SCS ADD START
-	{25, 7}, //wreckingball	
+	{23, 7}, //wreckingball	
 	{35, 6}, //masteremerald
 	{1, 2}, //pickpockethyu
-	{24, 4}, //yellowpogospring
-	{25, 3}, //timestone
+	{22, 4}, //yellowpogospring
+	{24, 3}, //timestone
 	{43, 1}, //bluepogospring
-	{14, 2}, //normalshield
+	{12, 2}, //normalshield
 	{25, 4}, //megachopper
 	{29, 5}, //armashield
 	{19, 3}, //afterburnerjawz
 	{12, 4}, //pressuremine
 	{24, 5}, //chameleonblaster
-	{20, 6}, //eggblaster
+	{18, 6}, //eggblaster
 	{32, 4}, //ringgun
 	{27, 7}, //butlerhyudoro
-	{15, 3}, //octus
-	{18, 3}, //icedus
-	{22, 4}, //slicer
-	{15, 3}, //sol										
+	{10, 3}, //octus
+	{13, 3}, //icedus
+	{21, 4}, //slicer
+	{11, 3}, //sol										
 	{60, 1}, // ringbonus (SPECIAL) 	Becomes more accessible with each checkpoint you cross at max rings			//SCS ADD END
 	{35, 6}, // dualsneaker
 	{45, 8}, // triplesneaker
@@ -139,9 +139,9 @@ static uint32_t K_DynamicItemOddsRace[NUMKARTRESULTS-1][2] =
 	{23, 2}, // decabanana						//SCS ADD START
 	{25, 2}, // dualafterburnerjawz
 	{22, 2}, // tripleicedus
-	{25, 2}, // quadicedus
+	{26, 2}, // quadicedus
 	{22, 2}, // triplesol
-	{25, 2}, // quadsol							//SCS ADD END
+	{26, 2}, // quadsol							//SCS ADD END
 };																															//SCS -Adjusted some odds around here, and made all but 1 item available in the roulette
 
 static uint32_t K_DynamicItemOddsBattle[NUMKARTRESULTS-1][2] =
@@ -1966,8 +1966,8 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, db
 
 		// Conversely, if we're lonely, try not to reselect an item that wouldn't be useful to us
 		// without any players to use it on.
-		if (!K_IsItemSpeed(bestitem))
-			deltapenalty = Easing_Linear(loneliness, deltapenalty, ((3*deltapenalty)/2));	//SCS EDIT
+		//if (!K_IsItemSpeed(bestitem))
+		//	deltapenalty = Easing_Linear(loneliness, deltapenalty, ((3*deltapenalty)/2));	//SCS EDIT
 
 		// Draw complex odds debugger. This one breaks down all the calcs in order.
 		if (cv_kartdebugdistribution.value > 1)
@@ -2393,8 +2393,22 @@ void K_KartItemRoulette(player_t *const player, ticcmd_t *const cmd)
 	{
 		if (roulette->eggman == true)
 		{
+			uint32_t eggmarkdistance;			//SCS ADD
+			
 			// FATASS JUMPSCARE instead of your actual item
-			player->eggmanexplode = 6*TICRATE;
+			
+			eggmarkdistance = K_GetUnscaledFirstDistance(player);
+			
+			if (eggmarkdistance >= FRACUNIT)				//SCS ADD START	- Dynamic Eggmark timers! You get a longer countdown if you're much further back in the pack, gives you a chance to catch up a little bit!
+				player->eggmanexplode = 10*TICRATE;
+			else if (eggmarkdistance >= FRACUNIT/2)
+				player->eggmanexplode = 9*TICRATE;
+			else if (eggmarkdistance >= FRACUNIT/3)
+				player->eggmanexplode = 8*TICRATE;
+			else if (eggmarkdistance > FRACUNIT/4)
+				player->eggmanexplode = 7*TICRATE;
+			else											//SCS ADD END
+				player->eggmanexplode = 6*TICRATE;
 
 			//player->karthud[khud_itemblink] = TICRATE;
 			//player->karthud[khud_itemblinkmode] = 1;

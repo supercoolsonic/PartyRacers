@@ -1065,6 +1065,7 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 		|| g_tm.thing->type == MT_KART_LEFTOVER
 		|| g_tm.thing->type == MT_TOXOMISTER_POLE
 		|| g_tm.thing->type == MT_GHZBALL				//SCS ADD START
+		|| g_tm.thing->type == MT_GHZBALLMINI
 		|| g_tm.thing->type == MT_AFTERBURNER_JAWZ
 		|| g_tm.thing->type == MT_PRESSUREMINE
 		|| g_tm.thing->type == MT_ICEDUSCRYSTAL
@@ -1091,6 +1092,7 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 		|| thing->type == MT_KART_LEFTOVER
 		|| thing->type == MT_TOXOMISTER_POLE
 		|| thing->type == MT_GHZBALL				//SCS ADD START
+		|| thing->type == MT_GHZBALLMINI
 		|| thing->type == MT_AFTERBURNER_JAWZ
 		|| thing->type == MT_PRESSUREMINE
 		|| thing->type == MT_ICEDUSCRYSTAL
@@ -1173,7 +1175,8 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 
 	if (g_tm.thing->type == MT_ORBINAUT || g_tm.thing->type == MT_JAWZ || g_tm.thing->type == MT_GACHABOM
 		|| g_tm.thing->type == MT_ORBINAUT_SHIELD || g_tm.thing->type == MT_JAWZ_SHIELD
-		|| g_tm.thing->type == MT_GARDENTOP || g_tm.thing->type == MT_AFTERBURNER_JAWZ)			//SCS EDIT
+		|| g_tm.thing->type == MT_GARDENTOP || g_tm.thing->type == MT_AFTERBURNER_JAWZ			//SCS EDIT
+		|| g_tm.thing->type == MT_GHZBALLMINI || g_tm.thing->type == MT_GHZBALLMINI_SHIELD)		//SCS ADD
 	{
 		// see if it went over / under
 		if (g_tm.thing->z > thing->z + thing->height)
@@ -1185,7 +1188,8 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 	}
 	else if (thing->type == MT_ORBINAUT || thing->type == MT_JAWZ || thing->type == MT_GACHABOM
 		|| thing->type == MT_ORBINAUT_SHIELD || thing->type == MT_JAWZ_SHIELD
-		|| thing->type == MT_GARDENTOP || thing->type == MT_AFTERBURNER_JAWZ)			//SCS EDIT
+		|| thing->type == MT_GARDENTOP || thing->type == MT_AFTERBURNER_JAWZ			//SCS EDIT
+		|| thing->type == MT_GHZBALLMINI || thing->type == MT_GHZBALLMINI_SHIELD)		//SCS ADD
 	{
 		// see if it went over / under
 		if (g_tm.thing->z > thing->z + thing->height)

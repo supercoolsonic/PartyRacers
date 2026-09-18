@@ -357,7 +357,9 @@ struct Kart : Mobj
 		health = 1;
 		state(!hasCustomHusk ? S_KART_LEFTOVER_NOTIRES : S_KART_LEFTOVER_PARTICLE_CUSTOM_F);
 		cooldown(20);
-		burning(burn_duration());
+		
+		if (p && !(p->eflags & MFE_UNDERWATER))	//SCS ADD - no fire underwater!
+			burning(burn_duration());
 
 		if (!cv_reducevfx.value)
 		{

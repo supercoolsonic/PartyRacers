@@ -3847,6 +3847,7 @@ state_t states[NUMSTATES] =
 	{SPR_GHZD,  FF_ANIMATE, 17, {NULL}, 7, 2, S_NULL},			// S_GHZBALLDEATHANIM
 	{SPR_GHZR,  0, -1, {NULL}, 0, 0, S_GHZBALLLINK},				// S_GHZBALLLINK
 	{SPR_GFBC,  FF_ANIMATE, -1, {NULL}, 15, 2, S_GHZBALLCHUNK},		// S_GHZBALLCHUNK
+	{SPR_GHZB,  0, -1, {NULL}, 0, 0, S_GHZBALLMINI},			// S_GHZBALLMINI
 	
 	{SPR_EMMS,  FF_FULLBRIGHT, -1, {NULL}, 0, 0, S_EMERALDORBIT},			// S_EMERALDORBIT
 	{SPR_XEMB,  FF_FULLBRIGHT|FF_ANIMATE, 8, {NULL}, 7, 1, S_NULL},			// S_XEMBEAM
@@ -3883,6 +3884,7 @@ state_t states[NUMSTATES] =
 	{SPR_NULL, 0, 1, {A_JawzExplode}, 0, 0, S_NULL},	// S_AFTERBURNERJAWZ_DEAD2
 	
 	{SPR_PRMN, 0, -1, {NULL}, 0, 0, S_PRESSUREMINE},			// S_PRESSUREMINE
+	{SPR_PRMN, 1, -1, {NULL}, 0, 0, S_PRESSUREMINE_FLASH},		// S_PRESSUREMINE_FLASH
 	{SPR_NULL, 0,  1, {A_LandMineExplode}, 0, 0, S_NULL},		// S_PRESSUREMINE_EXPLODE
 	
 	{SPR_BULL, FF_ANIMATE|FF_FULLBRIGHT|0, -1, {NULL}, 1, 2, S_XSNAPSHOT},	 // S_XSNAPSHOT
@@ -23268,7 +23270,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		48*FRACUNIT,    // mass
 		1,              // damage
 		sfx_s3kcds,      // activesound
-		MF_SOLID|MF_SHOOTABLE|MF_DONTENCOREMAP|MF_APPLYTERRAIN|MF_SLOPE|MF_DONTPUNT, // flags
+		MF_SOLID|MF_SHOOTABLE|MF_DONTENCOREMAP|MF_APPLYTERRAIN|MF_SLOPE|MF_DONTPUNT|MF_NOSQUISH, // flags
 		S_NULL          // raisestate
 	},
 	
@@ -23295,7 +23297,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		100,    			// mass
 		0,              // damage
 		sfx_None,      // activesound
-		MF_SLIDEME|MF_NOBLOCKMAP|MF_DONTENCOREMAP, // flags
+		MF_SLIDEME|MF_NOBLOCKMAP|MF_DONTENCOREMAP|MF_NOSQUISH, // flags
 		S_NULL          // raisestate
 	},
 	
@@ -23323,6 +23325,87 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		0,              // damage
 		sfx_None,      // activesound
 		MF_SLIDEME|MF_NOBLOCKMAP|MF_DONTENCOREMAP|MF_NOSQUISH, // flags
+		S_NULL          // raisestate
+	},
+	
+	{           // MT_GHZBALLMINI
+		-1,             // doomednum
+		S_GHZBALL,      // spawnstate
+		5,              // spawnhealth
+		S_NULL,         // seestate
+		sfx_tossed,     // seesound
+		8,              // reactiontime
+		sfx_s3k49,      // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_GHZBALLDEATHANIM,// deathstate
+		S_NULL,         // xdeathstate
+		sfx_crumbl,      // deathsound
+		19*FRACUNIT,    // speed
+		14*FRACUNIT,    // radius
+		30*FRACUNIT,    // height
+		0,              // display offset
+		24*FRACUNIT,    // mass
+		1,              // damage
+		sfx_s3kcds,      // activesound
+		MF_SOLID|MF_SHOOTABLE|MF_DONTENCOREMAP|MF_APPLYTERRAIN|MF_SLOPE|MF_DONTPUNT|MF_NOSQUISH, // flags
+		S_NULL          // raisestate
+	},
+	
+	{           // MT_GHZBALLMINI_SHIELD
+		-1,             // doomednum
+		S_GHZBALLMINI, // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_GHZBALLDEATHANIM, // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		4*FRACUNIT,     // speed
+		16*FRACUNIT,    // radius
+		32*FRACUNIT,    // height
+		0,              // display offset
+		100,            // mass
+		1,              // damage
+		sfx_None,       // activesound
+		MF_SHOOTABLE|MF_NOGRAVITY|MF_SCENERY|MF_DONTENCOREMAP|MF_APPLYTERRAIN|MF_SLOPE|MF_DONTPUNT|MF_NOGRAVITY, // flags
+		S_NULL          // raisestate
+	},
+	
+	{           // MT_GHZBALLMINILINK
+		-1,             // doomednum
+		S_GHZBALLLINK,  // spawnstate
+		0,              // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,     // seesound
+		0,              // reactiontime
+		sfx_None,      // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,			// deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,      // deathsound
+		0,    			// speed
+		0,    			// radius
+		6*FRACUNIT,    // height
+		0,              // display offset
+		100,    			// mass
+		0,              // damage
+		sfx_None,      // activesound
+		MF_SLIDEME|MF_NOBLOCKMAP|MF_DONTENCOREMAP|MF_NOSQUISH|MF_NOCLIP, // flags
 		S_NULL          // raisestate
 	},
 	

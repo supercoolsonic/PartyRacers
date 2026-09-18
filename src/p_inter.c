@@ -1936,8 +1936,9 @@ void P_UpdateRemovedOrbital(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 			}
 			else if ((target->type == MT_ORBINAUT_SHIELD && target->target->player->itemtype == KITEM_ORBINAUT) // orbit items
 				|| (target->type == MT_JAWZ_SHIELD && target->target->player->itemtype == KITEM_JAWZ)
-				|| (target->type == MT_ICEDUSCRYSTAL_SHIELD && target->target->player->itemtype == KITEM_ICEDUS)	//SCS ADD
-				|| (target->type == MT_SOLFIRE_SHIELD && target->target->player->itemtype == KITEM_SOL))			//SCS ADD
+				|| (target->type == MT_ICEDUSCRYSTAL_SHIELD && target->target->player->itemtype == KITEM_ICEDUS)		//SCS ADD
+				|| (target->type == MT_SOLFIRE_SHIELD && target->target->player->itemtype == KITEM_SOL)					//SCS ADD
+				|| (target->type == MT_GHZBALLMINI_SHIELD && target->target->player->itemtype == KITEM_WRECKINGBALL))	//SCS ADD
 			{
 				if (target->target->player->itemamount)
 					K_AdjustPlayerItemAmount(target->target->player, -1);
@@ -1978,10 +1979,11 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, uint8_t damag
 		 || target->type == MT_DROPTARGET || target->type == MT_DROPTARGET_SHIELD
 		 || target->type == MT_EGGMANITEM || target->type == MT_EGGMANITEM_SHIELD
 		 || target->type == MT_BALLHOG || target->type == MT_SPB
-		 || target->type == MT_GACHABOM || target->type == MT_AFTERBURNER_JAWZ 		//SCS ADD
-		 || target->type == MT_ICEDUSCRYSTAL || target->type == MT_ICEDUSCRYSTAL_SHIELD								//SCS ADD
-		 || target->type == MT_SOLFIRE || target->type == MT_SOLFIRE_SHIELD											//SCS ADD
-		 || target->type == MT_SLICERCLAW																			//SCS ADD
+		 || target->type == MT_GACHABOM || target->type == MT_AFTERBURNER_JAWZ										//SCS ADD START
+		 || target->type == MT_ICEDUSCRYSTAL || target->type == MT_ICEDUSCRYSTAL_SHIELD	
+		 || target->type == MT_SOLFIRE || target->type == MT_SOLFIRE_SHIELD
+		 || target->type == MT_GHZBALLMINI || target->type == MT_GHZBALLMINI_SHIELD
+		 || target->type == MT_SLICERCLAW																			//SCS ADD END
 		 || target->type == MT_KART_LEFTOVER)) // kart dead items
 		target->flags |= MF_NOGRAVITY; // Don't drop Tails 03-08-2000
 	else
@@ -2610,9 +2612,13 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, uint8_t damag
 		case MT_ANCIENTGEAR:
 			Obj_AncientGearDeath(target, source);
 			break;
-		case MT_GHZBALL:
+		case MT_GHZBALL:								//SCS ADD
 			//if (target->health <= 0)
-			Obj_WreckingBallDeath(target);
+			Obj_WreckingBallDeath(target, false);
+			break;
+		case MT_GHZBALLMINI:							//SCS ADD
+			//if (target->health <= 0)
+			Obj_WreckingBallDeath(target, true);
 			break;
 		default:
 			break;
@@ -3824,11 +3830,6 @@ static dboolean P_DamageMobjCompat(mobj_t *target, mobj_t *inflictor, mobj_t *so
 						inflictor->momx = 0;
 						inflictor->momy = 0;
 					}
-					
-					/*if (inflictor->type == MT_GHZBALL)		//SCS ADD
-					{
-						Obj_WreckingBallCollide(target, inflictor);
-					}*/
 
 					K_TryHurtSoundExchange(target, source);
 
@@ -3934,13 +3935,6 @@ static dboolean P_DamageMobjCompat(mobj_t *target, mobj_t *inflictor, mobj_t *so
 				player->ringburst += 5; // IT'S THE DAMAGE STUMBLE HACK AGAIN AAAAAAAAHHHHHHHHHHH
 				K_PopPlayerShield(player);
 			}
-			
-			/*if (type != DMG_WHUMBLE && !downgraded && inflictor && inflictor->type == MT_GHZBALL)
-			{
-				type = DMG_TUMBLE;
-				softenTumble = false;
-				target->momz += (5*abs(player->rings))/target->scale;
-			}*/
 
 			if (!(gametyperules & GTR_SPHERES) && player->tripwireLeniency && !P_PlayerInPain(player))
 			{
@@ -4214,7 +4208,7 @@ dboolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int32_t
 			break;
 		case MT_CDUFO:
 			// Make it possible to pick them up during race
-			if (inflictor->type == MT_ORBINAUT_SHIELD || inflictor->type == MT_JAWZ_SHIELD || inflictor->type == MT_ICEDUSCRYSTAL_SHIELD || inflictor->type == MT_SOLFIRE_SHIELD)	//SCS EDIT
+			if (inflictor->type == MT_ORBINAUT_SHIELD || inflictor->type == MT_JAWZ_SHIELD || inflictor->type == MT_ICEDUSCRYSTAL_SHIELD || inflictor->type == MT_SOLFIRE_SHIELD || inflictor->type == MT_GHZBALLMINI_SHIELD)	//SCS EDIT
 				return false;
 			break;
 
@@ -5062,13 +5056,6 @@ dboolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int32_t
 				type = DMG_WHUMBLE;
 				downgraded = true;
 			}
-			
-			/*if (type != DMG_WHUMBLE && !downgraded && inflictor && inflictor->type == MT_GHZBALL)
-			{
-				type = DMG_TUMBLE;
-				softenTumble = false;
-				target->momz += (5*abs(player->rings))/target->scale;
-			}*/
 
 			if (!(gametyperules & GTR_SPHERES) && player->tripwireLeniency && !P_PlayerInPain(player))
 			{

@@ -967,6 +967,8 @@ fixed_t K_GetMobjWeight(mobj_t *mobj, mobj_t *against)
 		case MT_DUELBOMB:
 		case MT_STONESHOE:
 		case MT_GHZBALL: 			//SCS ADD
+		case MT_GHZBALLMINI:		//SCS ADD
+		case MT_GHZBALLMINI_SHIELD: //SCS ADD
 			if (against->player)
 				weight = K_PlayerWeight(against, NULL);
 			break;
@@ -3461,6 +3463,7 @@ dboolean K_WaterRun(mobj_t *mobj)
 		case MT_ORBINAUT:
 		case MT_GACHABOM:
 		case MT_GHZBALL:			//SCS ADD
+		case MT_GHZBALLMINI:		//SCS ADD
 		{
 			if (Obj_OrbinautCanRunOnWater(mobj))
 			{
@@ -3582,6 +3585,7 @@ dboolean K_WaterSkip(mobj_t *mobj)
 		case MT_ORBINAUT:
 		case MT_JAWZ:
 		case MT_GHZBALL: 			//SCS ADD
+		case MT_GHZBALLMINI:		//SCS ADD
 		case MT_AFTERBURNER_JAWZ:	//SCS ADD
 		{
 			// Allow
@@ -5433,9 +5437,9 @@ static dboolean K_IsScaledItem(mobj_t *mobj)
 		(mobj->type == MT_ORBINAUT || mobj->type == MT_JAWZ || mobj->type == MT_GACHABOM || mobj->type == MT_STONESHOE
 		|| mobj->type == MT_BANANA || mobj->type == MT_EGGMANITEM || mobj->type == MT_BALLHOG
 		|| mobj->type == MT_SSMINE || mobj->type == MT_LANDMINE || mobj->type == MT_SINK
-		|| mobj->type == MT_GARDENTOP || mobj->type == MT_DROPTARGET || mobj->type == MT_GHZBALL || mobj->type == MT_MEGACHOPPER 				//SCS EDIT
-		|| mobj->type == MT_ICEDUSCRYSTAL || mobj->type == MT_ICEDUSCRYSTAL_TRAP || mobj->type == MT_SOLFIRE || mobj->type == MT_SOLFIRE_TRAP	//SCS ADD
-		|| mobj->type == MT_SLICERCLAW || mobj->type == MT_AFTERBURNER_JAWZ || mobj->type == MT_PRESSUREMINE || mobj->type == MT_PLAYER);		//SCS EDIT
+		|| mobj->type == MT_GARDENTOP || mobj->type == MT_DROPTARGET || mobj->type == MT_GHZBALL || mobj->type == MT_GHZBALLMINI || mobj->type == MT_MEGACHOPPER 				//SCS EDIT
+		|| mobj->type == MT_ICEDUSCRYSTAL || mobj->type == MT_ICEDUSCRYSTAL_TRAP || mobj->type == MT_SOLFIRE || mobj->type == MT_SOLFIRE_TRAP									//SCS ADD
+		|| mobj->type == MT_SLICERCLAW || mobj->type == MT_AFTERBURNER_JAWZ || mobj->type == MT_PRESSUREMINE || mobj->type == MT_PLAYER);										//SCS EDIT
 }
 
 
@@ -6650,7 +6654,9 @@ static mobj_t *K_SpawnKartMissile(mobj_t *source, mobjtype_t type, angle_t an, i
 		{
 			case MT_ORBINAUT:
 			case MT_GACHABOM:
-			case MT_GHZBALL:						//SCS ADD
+			//case MT_GHZBALL:						//SCS ADD
+			case MT_GHZBALLMINI:					//SCS ADD - (ehhh, maybe? It still kinda runs into the same issue the larger ball had: it looks very strange watching it orbit in place. The animation is so fast and jarring...
+																//Maybe it'd just be best to let it be thrown backwards? It's kind of a strong power item, after all.)
 				// These items orbit in place.
 				// Look for a tight radius...
 				nerf = FRACUNIT/4;
@@ -6734,18 +6740,21 @@ static mobj_t *K_SpawnKartMissile(mobj_t *source, mobjtype_t type, angle_t an, i
 		case MT_GACHABOM:
 			Obj_GachaBomThrown(th, finalspeed, dir);
 			break;
-		case MT_GHZBALL:										//SCS ADD
-			Obj_WreckingBallThrown_Pre(th, finalspeed, dir);
+		case MT_GHZBALL:										//SCS ADD START
+			Obj_WreckingBallThrown_Pre(th, finalspeed, dir, false);
 			break;
-		case MT_ICEDUSCRYSTAL:									//SCS ADD
+		case MT_GHZBALLMINI:
+			Obj_WreckingBallThrown_Pre(th, finalspeed, dir, true);			//temp, probably do break chain thing here, once the chain is set up and implemented
+			break;
+		case MT_ICEDUSCRYSTAL:
 			Obj_IcedusCrystalThrown(th, finalspeed, dir);
 			break;
-		case MT_SOLFIRE:										//SCS ADD
+		case MT_SOLFIRE:
 			Obj_SolFireThrown(th, finalspeed, dir);
 			break;
-		case MT_SLICERCLAW:										//SCS ADD
+		case MT_SLICERCLAW:	
 			Obj_SlicerThrown(th, finalspeed, dir);
-			break;
+			break;												//SCS ADD END
 		default:
 			break;
 	}
@@ -7909,11 +7918,6 @@ mobj_t *K_ThrowKartItemEx(player_t *player, dboolean missile, mobjtype_t mapthin
 				mo->destscale = (5*mo->destscale)>>2;
 				S_StartSound(mo, sfx_s3kbfl);
 			}
-			//else if (mapthing == MT_INKBUBBLE)
-			//{
-				//P_SetScale(mo, ((5*mo->destscale)>>2)*4);
-				//mo->destscale = (5*mo->destscale)>>2;				
-			//}
 		}
 	}
 
@@ -8937,6 +8941,9 @@ void K_DropHnextList(player_t *player)
 				orbit = true;
 				type = MT_SOLFIRE;
 				break;
+			case MT_GHZBALLMINI_SHIELD:		//SCS ADD
+				orbit = true;
+				type = MT_GHZBALLMINI;
 			// intentionally do nothing
 			case MT_ROCKETSNEAKER:
 			case MT_SINK_SHIELD:
@@ -9577,6 +9584,7 @@ static void K_MoveHeldObjects(player_t *player)
 		case MT_JAWZ_SHIELD:
 		case MT_ICEDUSCRYSTAL_SHIELD:	//SCS ADD
 		case MT_SOLFIRE_SHIELD:			//SCS ADD
+		case MT_GHZBALLMINI_SHIELD:		//SCS ADD
 			{
 				Obj_OrbinautJawzMoveHeld(player);
 				
@@ -17661,7 +17669,98 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 							}
 							break;
 						case KITEM_WRECKINGBALL:
-							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
+							if (player->throwdir < 0 && ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
+							{
+								angle_t newangle;
+								int32_t moloop, linkloop;
+								mobj_t *mo = NULL;
+								mobj_t *link = NULL;
+								mobj_t *prev = player->mo;
+								mobj_t *prevlink;
+								dboolean firstlink;
+
+								//K_PlayAttackTaunt(player->mo);
+								K_SetItemOut(player);
+								S_StartSound(player->mo, sfx_s3k3a);
+								
+
+								for (moloop = 0; moloop < (player->itemamount*3); moloop++)
+								{
+									newangle = (player->mo->angle + ANGLE_157h) + FixedAngle(((360 / (player->itemamount*3)) * moloop) << FRACBITS) + ANGLE_90;
+									mo = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_GHZBALLMINI_SHIELD);
+									if (!mo)
+									{
+										CONS_Printf("Failed to spawn mini-wreckers!\n");
+										K_SetPlayerItemAmount(player, moloop);
+										break;
+									}
+									mo->scalespeed = (mo->scale*2)/26;
+									mo->destscale = (mo->scale)/2;							
+									mo->scale = mo->scale/4;
+									mo->flags |= MF_NOCLIPTHING;
+									mo->angle = newangle;
+									mo->threshold = 10;
+									mo->movecount = player->itemamount*3;
+									mo->movedir = mo->lastlook = moloop+1;
+									mo->color = player->skincolor;
+									mo->cusval = player->itemscale;
+									P_SetTarget(&mo->target, player->mo);
+									P_SetTarget(&mo->hprev, prev);
+									P_SetTarget(&prev->hnext, mo);
+									prev = mo;
+									prevlink = mo;
+									firstlink = true;
+									
+									for (linkloop = 0; linkloop < 3; linkloop++)	//Spawn 3 chain links per ball
+									{
+										link = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_GHZBALLMINILINK);
+										
+										if (link)		//copy of link spawner code
+										{
+											link->target = prevlink;	//The previous link in the chain - it's the shield-ball itself if this is the first link
+											link->tracer = mo;			//The reference to the shield-ball, all links have this
+											link->scale = mo->scale;
+											link->destscale = mo->destscale*2;
+											link->extravalue1 = firstlink;	//Determines if it's the first one in the chain
+											link->extravalue2 = (linkloop+1);	//keeps track of which link it is in the chain
+											prevlink = link;			//Previous is now set to the current link, so the next link can keep a reference to it
+											mo->tracer = link;		//This is a reference the shield-ball keeps, which is the LAST link in the chain (SCS NOTE - changing this to tracer since other mobj tracking variables are already full)
+											firstlink = false;
+										}
+									}
+								}
+								player->botvars.itemconfirm = 0;
+								K_SetPlayerItemAmount(player, moloop);
+							}
+							else if (ATTACK_IS_DOWN && (player->itemflags & IF_ITEMOUT)) // Mini Checker Wrecker x3 thrown
+							{
+								K_AdjustPlayerItemAmount(player, -1);
+								mobj_t *mo = K_ThrowKartItem(player, true, MT_GHZBALLMINI, 1, 0, 0);
+								//K_ThrowKartItem(player, true, MT_GHZBALLMINI, 1, 0, 0);
+								
+								if (mo)
+								{
+									mo->scale = mo->scale/3;
+									mo->fuse = 3000;
+									
+									if (player->throwdir >= 0)
+									{
+										mo->z += (player->mo->height*3)/2;
+										mo->momz += (FRACUNIT*5);	//lob it
+									}
+									
+									/*if (mo->tracer && mo->tracer->type == MT_GHZBALLMINILINK)
+									{
+										CONS_Printf("We should be breaking the chain, somehow~!\n");
+										Obj_WreckingBallBreakChain(mo->tracer);
+									}*/
+								}
+								
+								K_PlayAttackTaunt(player->mo);
+								K_UpdateHnextList(player, false);
+								player->botvars.itemconfirm = 0;
+							}
+							else if (!(player->itemflags & IF_ITEMOUT) && ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO) //throw forward, beeeg ball with the chain following it
 							{
 								K_AdjustPlayerItemAmount(player, -1);
 								K_SetItemOut(player); // need this to set itemscale
@@ -17669,7 +17768,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 								
 								if (ball)
 								{
-									ball->scalespeed = ball->scale*2/14;
+									ball->scalespeed = (ball->scale*2)/14;
 									ball->destscale = (ball->scale*3)/2;							
 									ball->scale = ball->scale/2;
 									ball->fuse = 5000;
@@ -17841,6 +17940,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 								{
 									K_ThrowPressureMine(player);
 								}
+								S_StartSound(player->mo, sfx_sb417);
 								K_UnsetItemOut(player);
 								K_PlayAttackTaunt(player->mo);
 								player->botvars.itemconfirm = 0;
@@ -19470,7 +19570,10 @@ void K_EggmanTransfer(player_t *source, player_t *victim)
 	K_AddHitLag(victim->mo, 5, false);
 	K_DropItems(victim);
 
-	victim->eggmanexplode = 6*TICRATE;
+	if (source->eggmanexplode >= 6*TICRATE)					//SCS ADD - if your eggman timer is above 5, just transfer over what the current timer is. Otherwise, set it to 5 (6).
+		victim->eggmanexplode = source->eggmanexplode;
+	else
+		victim->eggmanexplode = 6*TICRATE;
 	victim->eggmanblame = (source - players);
 	K_StopRoulette(&victim->itemRoulette);
 
@@ -20018,16 +20121,16 @@ static dboolean K_PickUp(player_t *player, mobj_t *picked)
 		case MT_TOXOMISTER_POLE:
 			type = KITEM_TOXOMISTER;
 			break;
-		case MT_AFTERBURNER_JAWZ:				//SCS ADD
+		case MT_AFTERBURNER_JAWZ:				//SCS ADD START
 			type = KITEM_ABURNERJAWZ;
 			break;
-		case MT_PRESSUREMINE:					//SCS ADD
+		case MT_PRESSUREMINE:
 			type = KITEM_PRESSUREMINE;
 			break;
-		case MT_INKBUBBLE:						//SCS ADD
+		case MT_INKBUBBLE:
 			type = KITEM_OCTUS;
 			break;
-		case MT_PPOCKETHYUDORO:					//SCS ADD
+		case MT_PPOCKETHYUDORO:
 			if (picked->extravalue1 != 0)						//if we're not patrolling, we're returning to the owner. Don't pick up here
 				return false;
 		
@@ -20045,16 +20148,16 @@ static dboolean K_PickUp(player_t *player, mobj_t *picked)
 			type = KITEM_PICKPOCKETHYU;
 			amount = picked->extravalue2;
 			break;
-		case MT_ICEDUSCRYSTAL:				//SCS ADD
+		case MT_ICEDUSCRYSTAL:
 		case MT_ICEDUSCRYSTAL_SHIELD:
 		case MT_ICEDUSCRYSTAL_TRAP:
 			type = KITEM_ICEDUS;
 			break;
-		case MT_SOLFIRE:					//SCS ADD
+		case MT_SOLFIRE:
 		case MT_SOLFIRE_SHIELD:
 			type = KITEM_SOL;
 			break;
-		case MT_SLICERCLAW:					//SCS ADD
+		case MT_SLICERCLAW:					//SCS ADD END
 			type = KITEM_SLICER;
 			break;
 		default:

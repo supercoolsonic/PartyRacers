@@ -490,6 +490,8 @@ static BlockItReturn_t K_FindObjectsForNudging(mobj_t *thing)
 		case MT_PPOCKETHYUDORO:	
 		case MT_ICEDUSCRYSTAL:
 		case MT_ICEDUSCRYSTAL_SHIELD:
+		case MT_GHZBALLMINI:
+		case MT_GHZBALLMINI_SHIELD:
 		case MT_SOLFIRE:
 		case MT_SOLFIRE_SHIELD:
 		case MT_SOLFIRE_TRAP:

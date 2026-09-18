@@ -1643,6 +1643,10 @@ typedef enum
 	sfx_cblemp,
 	sfx_cblrld,
 	sfx_hmgsht,
+	
+	//blinker mine beeps
+	sfx_sb414,		//SCS ADD
+	sfx_sb417,
 
 	// And LASTLY, Kart's skin sounds.
 	sfx_kwin,

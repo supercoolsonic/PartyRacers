@@ -3039,7 +3039,7 @@ static void K_drawKartItem(void)
 			((fx + (int)(17 * baseHudScaleFloat)) << FRACBITS), 
 			((fy + (int)(13 * baseHudScaleFloat) - offset) << FRACBITS), 
 			baseHudScale, eggmanNumbersFlags|fflags,
-			kp_eggnum[std::min<int32_t>(5, G_TicsToSeconds(stplyr->eggmanexplode))], 0
+			kp_eggnum[std::min<int32_t>(9, G_TicsToSeconds(stplyr->eggmanexplode))], 0			//SCS EDIT
 		);																																			//SCS - RADIO END
 	}
 

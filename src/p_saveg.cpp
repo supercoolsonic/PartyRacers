@@ -642,7 +642,7 @@ static void P_NetArchivePlayers(savebuffer_t *save)
 
 		WRITEFIXED(save->p, players[i].loneliness);
 
-		WRITEUINT8(save->p, players[i].eggmanexplode);
+		WRITEUINT16(save->p, players[i].eggmanexplode);		//SCS EDIT
 		WRITESINT8(save->p, players[i].eggmanblame);
 
 		WRITEUINT8(save->p, players[i].bananadrag);
@@ -1376,7 +1376,7 @@ static void P_NetUnArchivePlayers(savebuffer_t *save)
 
 		players[i].loneliness = READFIXED(save->p);
 
-		players[i].eggmanexplode = READUINT8(save->p);
+		players[i].eggmanexplode = READUINT16(save->p);	//SCS EDIT
 		players[i].eggmanblame = READSINT8(save->p);
 
 		players[i].bananadrag = READUINT8(save->p);
