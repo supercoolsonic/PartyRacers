@@ -727,7 +727,7 @@ PickUp:
 	if ((t1->type == MT_ICEDUSCRYSTAL || t1->type == MT_ICEDUSCRYSTAL_SHIELD || t1->type == MT_ICEDUSCRYSTAL_TRAP) && t2->player)							//ICEDUS
 	{
 		if (t2->player->icecube.frozen)	// (we do a frozen check here to prevent frozen players from eating all the crystals at once from a shield)
-			return true;
+			return false;
 		
 		else if (t2->player->curshield != KSHIELD_NONE 	//Yes, ALL shields block it, like in S3K
 		//|| t2->player->icecube.frozen 
@@ -773,8 +773,8 @@ PickUp:
 			SpawnSolDeathEffect(t2, t1);		
 			
 			P_DamageMobj(t2, t1, t1->target, 1, DMG_EXPLODE);
-			P_SetMobjState(t1, S_NULL);
 			P_KillMobj(t1, t2, t2, DMG_NORMAL);
+			P_SetMobjState(t1, S_NULL);
 			S_StartSound(t2, sfx_s3k70);
 			S_StartSound(t2, sfx_mbs57);
 		}
