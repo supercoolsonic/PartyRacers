@@ -17923,7 +17923,6 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 								K_ThrowKartItem(player, true, MT_AFTERBURNER_JAWZ, 1, 0, 0);
 								K_UnsetItemOut(player);
 								K_PlayAttackTaunt(player->mo);
-								//K_UpdateHnextList(player, false);
 								player->botvars.itemconfirm = 0;
 							}	
 							break;
@@ -18369,7 +18368,6 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 								
 								K_UnsetItemOut(player);
 								K_PlayAttackTaunt(player->mo);
-								//K_UpdateHnextList(player, false);
 								player->botvars.itemconfirm = 0;
 							}
 							break;
