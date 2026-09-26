@@ -58,6 +58,7 @@
 #include "radioracers/rr_cvar.h"		//SCS ADD
 #include "k_hud.h"						//SCS ADD
 #include "k_roulette.h"					//SCS ADD
+#include "k_specialstage.h"				//SCS ADD
 
 actioncache_t actioncachehead;
 
@@ -4409,7 +4410,7 @@ static void P_RingThinker(mobj_t *mobj)
 				mobj->renderflags &= ~RF_DONTDRAW;
 		}
 
-		if (!mobj->fuse)
+		if (!mobj->fuse && mobj->state != &states[S_EGGSLOTSPIKE])	//SCS EDIT
 		{
 			if (!LUA_HookMobj(mobj, MOBJ_HOOK(MobjFuse)))
 			{
@@ -15015,7 +15016,7 @@ static dboolean P_SetupSpawnedMapThing(mapthing_t *mthing, mobj_t *mobj)
 		// Parameter = extra items (x5 for rings)
 		mobj->movecount += mthing->thing_args[1];
 		
-		if (((!netgame && cv_randomizeitemcapsules.value == 1) || (netgame && cv_toggle_randomcapsules_net.value == 1)) && mobj->threshold != KCAPSULE_RING && mobj->threshold != HYUCAPSULE_RING)
+		if (((!netgame && !specialstageinfo.valid && cv_randomizeitemcapsules.value == 1) || (netgame && cv_toggle_randomcapsules_net.value == 1)) && mobj->threshold != KCAPSULE_RING && mobj->threshold != HYUCAPSULE_RING)
 		{
 			mobj->threshold = P_RandomRange(PR_ITEM_SPAWNER, 1, NUMKARTITEMS - 1);													//SCS TESTING RANDOM ITEM CAPSULES IDEA
 			

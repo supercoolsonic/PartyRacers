@@ -390,12 +390,14 @@ static kartslotmachine_t K_KartItemReelRingBox[] =
 
 static sfxenum_t ringboxsound[] =
 {
+	sfx_slot00,			//SCS ADD - DUMMY for KSM_NONE
 	sfx_slot00,
 	sfx_slot01,
 	sfx_slot02,
 	sfx_slot03,
 	sfx_slot04,
-	sfx_slot05
+	sfx_slot05,
+	sfx_kc34		//SCS ADD - eggman
 };
 
 /*--------------------------------------------------
@@ -1480,6 +1482,7 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, db
 	kartitems_t singleItem = KITEM_SAD;
 
 	size_t i, j;
+	dboolean addeggmanslot = false;	//SCS ADD
 
 	if (roulette->itemList.items == NULL)
 	{
@@ -1492,9 +1495,31 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, db
 		kartslotmachine_t *presetlist = K_KartItemReelRingBox;
 		roulette->ringbox = true;
 
+		if (K_EffectiveGradingFactor(player) >= (FRACUNIT*5)/4)	//SCS ADD - Good EXP means you get a more risky slot!
+			addeggmanslot = true;
+			
+			//presetlist = K_KartItemReelRingBoxEgg;
+		
 		for (i = 0; presetlist[i] != KSM__MAX; i++)
 		{
+			if (addeggmanslot && P_RandomRange(PR_DECORATION, KSM_BAR, KSM_JACKPOT) == i)	//SCS ADD START
+			{
+				K_PushToRouletteItemList(roulette, KSM_EGGMAN);
+				i--;
+				//roulette->itemList.len++;
+				addeggmanslot = false;
+				continue;
+			}																				//SCS ADD END
+			
 			K_PushToRouletteItemList(roulette, presetlist[i]);
+		}
+		
+		if (addeggmanslot == true)	//SCS ADD - if you are supposed to get an eggman and it never rolled the random number, just add it at the end, after the Jackpot
+		{
+			//roulette->itemList.items[ roulette->itemList.len ] = item;
+			//roulette->itemList.len++;
+			K_PushToRouletteItemList(roulette, KSM_EGGMAN);
+			addeggmanslot = false;
 		}
 
 		return;
@@ -2451,16 +2476,15 @@ void K_KartItemRoulette(player_t *const player, ticcmd_t *const cmd)
 
 			if (roulette->ringbox == true)
 			{
+				//CONS_Printf("My value is %d\n", finalItem);
 				player->ringboxdelay = TICRATE;
-				player->ringboxaward = finalItem+1;	//SCS EDIT - bumping up by 1 so BAR can show up in slot item spy properly
-				//player->karthud[khud_rouletteoffset] = K_GetSlotOffset(roulette, FRACUNIT, baseFudge); 		//SCS EDIT
-				player->karthud[khud_rouletteoffset] = K_GetSlotOffset(roulette, FRACUNIT, 0);
+				player->ringboxaward = finalItem;
+				player->karthud[khud_rouletteoffset] = K_GetSlotOffset(roulette, FRACUNIT, baseFudge);
 			}
 			else
 			{
 				K_KartGetItemResult(player, finalItem);
-				//player->karthud[khud_rouletteoffset] = K_GetRouletteOffset(roulette, FRACUNIT, baseFudge);		/SCS EDIT
-				player->karthud[khud_rouletteoffset] = K_GetRouletteOffset(roulette, FRACUNIT, 0);
+				player->karthud[khud_rouletteoffset] = K_GetRouletteOffset(roulette, FRACUNIT, baseFudge);
 			}
 
 			player->karthud[khud_itemblink] = TICRATE;

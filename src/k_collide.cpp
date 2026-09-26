@@ -2138,7 +2138,7 @@ dboolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 				//K_AddMessage(va("Pickpocket Combo x%d!", t1->player->pickpockethyucombo), true, false);
 				K_AddMessageForPlayer(t1->player, va("Pickpocket Combo x%d!", t1->player->pickpockethyucombo), true, false);
 				
-				if (t2->player->superring > 0)
+				if (t2->player->superring > 0 && t2->player->eggmanslot <= 0)
 				{
 					K_AwardPlayerRings(t1->player, ((t2->player->rings + t2->player->superring)*(t1->player->pickpockethyucombo*t1->player->itemamount)) / (t2->player->bot ? 2 : 1), true);
 					t2->player->superring = 0;					
@@ -2206,7 +2206,7 @@ dboolean K_PvPTouchDamage(mobj_t *t1, mobj_t *t2)
 				//K_AddMessage(va("Pickpocket Combo x%d!", t2->player->pickpockethyucombo), true, false);
 				K_AddMessageForPlayer(t2->player, va("Pickpocket Combo x%d!", t2->player->pickpockethyucombo), true, false);
 				
-				if (t1->player->superring > 0)
+				if (t1->player->superring > 0 && t1->player->eggmanslot <= 0)
 				{
 					K_AwardPlayerRings(t2->player, ((t1->player->rings + t1->player->superring)*(t2->player->pickpockethyucombo*t2->player->itemamount)) / (t1->player->bot ? 2 : 1), true);
 					t1->player->superring = 0;					

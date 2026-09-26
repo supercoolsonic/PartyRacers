@@ -3523,7 +3523,7 @@ void A_AttractChase(mobj_t *actor)
 				blocked |= !!(actor->target->player->bailcharge || actor->target->player->defenseLockout > PUNISHWINDOW);
 		}
 
-		if (!G_CompatLevel(0x0010) || actor->extravalue2)
+		if (actor->state != &states[S_EGGSLOTSPIKE] && (!G_CompatLevel(0x0010) || actor->extravalue2))	//SCS EDIT
 		{
 			if (stale || blocked)
 			{
@@ -3544,32 +3544,37 @@ void A_AttractChase(mobj_t *actor)
 
 			if (actor->extravalue1 >= 21)
 			{
-				mobj_t *sparkle;
-				angle_t offset = FixedAngle(18<<FRACBITS);
-
-				// Base add is 3 tics for 9,9, adds 1 tic for each point closer to the 1,1 end
-				actor->target->player->ringboost += K_GetFullKartRingPower(actor->target->player, true);
-
-				S_ReducedVFXSoundAtVolume(actor->target, sfx_s1b5, actor->target->player->ringvolume, NULL);
-
-				if (actor->target->player->rings <= 10 && P_IsDisplayPlayer(actor->target->player))
+				if (actor->state != &states[S_EGGSLOTSPIKE])	//SCS ADD
 				{
-					S_ReducedVFXSoundAtVolume(actor->target, sfx_gshab,
-						210 - 10*actor->target->player->rings
-					, NULL);
+					mobj_t *sparkle;
+					angle_t offset = FixedAngle(18<<FRACBITS);
 
-					if (actor->target->player->rings == 0)
-						S_ReducedVFXSoundAtVolume(actor->target, sfx_gshad, 127, NULL);
+					// Base add is 3 tics for 9,9, adds 1 tic for each point closer to the 1,1 end
+					actor->target->player->ringboost += K_GetFullKartRingPower(actor->target->player, true);
+
+					S_ReducedVFXSoundAtVolume(actor->target, sfx_s1b5, actor->target->player->ringvolume, NULL);
+
+					if (actor->target->player->rings <= 10 && P_IsDisplayPlayer(actor->target->player))
+					{
+						S_ReducedVFXSoundAtVolume(actor->target, sfx_gshab,
+							210 - 10*actor->target->player->rings
+						, NULL);
+
+						if (actor->target->player->rings == 0)
+							S_ReducedVFXSoundAtVolume(actor->target, sfx_gshad, 127, NULL);
+					}
+
+					actor->target->player->ringvolume -= RINGVOLUMEUSEPENALTY;
+
+					sparkle = P_SpawnMobj(actor->target->x, actor->target->y, actor->target->z, MT_RINGSPARKS);
+					P_SetTarget(&sparkle->target, actor->target);
+					sparkle->angle = (actor->target->angle + (offset>>1)) + (offset * actor->target->player->sparkleanim);
+					actor->target->player->sparkleanim = (actor->target->player->sparkleanim+1) % 20;
+					P_SetTarget(&sparkle->owner, actor->target);
+					sparkle->renderflags |= RF_REDUCEVFX;
 				}
-
-				actor->target->player->ringvolume -= RINGVOLUMEUSEPENALTY;
-
-				sparkle = P_SpawnMobj(actor->target->x, actor->target->y, actor->target->z, MT_RINGSPARKS);
-				P_SetTarget(&sparkle->target, actor->target);
-				sparkle->angle = (actor->target->angle + (offset>>1)) + (offset * actor->target->player->sparkleanim);
-				actor->target->player->sparkleanim = (actor->target->player->sparkleanim+1) % 20;
-				P_SetTarget(&sparkle->owner, actor->target);
-				sparkle->renderflags |= RF_REDUCEVFX;
+				else if (actor->target->player->rings > -actor->target->player->ringlimit)	//SCS ADD
+					P_GivePlayerRings(actor->target->player, -1);
 
 				P_KillMobj(actor, actor->target, actor->target, DMG_NORMAL);
 				return;
@@ -3603,19 +3608,31 @@ void A_AttractChase(mobj_t *actor)
 		{
 			if (actor->extravalue1 >= 16)
 			{
-				if (!P_GivePlayerRings(actor->target->player, 1)) // returns 0 if addition failed
-					actor->target->player->ringboost += K_GetFullKartRingPower(actor->target->player, true);
+				if (actor->state != &states[S_EGGSLOTSPIKE])	//SCS ADD
+				{
+					if (!P_GivePlayerRings(actor->target->player, 1)) // returns 0 if addition failed
+						actor->target->player->ringboost += K_GetFullKartRingPower(actor->target->player, true);
 
-				if (actor->cvmem) // caching
-					S_StartSound(actor->target, sfx_s1c5);
-				else
-					S_StartSoundAtVolume(actor->target, sfx_s227, actor->target->player->ringvolume);
+					if (actor->cvmem) // caching
+						S_StartSound(actor->target, sfx_s1c5);
+					else
+						S_StartSoundAtVolume(actor->target, sfx_s227, actor->target->player->ringvolume);
 
-				actor->target->player->ringvolume -= RINGVOLUMECOLLECTPENALTY;
-				actor->target->player->ringtransparency -= RINGTRANSPARENCYCOLLECTPENALTY;
+					actor->target->player->ringvolume -= RINGVOLUMECOLLECTPENALTY;
+					actor->target->player->ringtransparency -= RINGTRANSPARENCYCOLLECTPENALTY;
 
-				if (actor->target->player->pickuprings || !G_CompatLevel(0x0011))
-					actor->target->player->pickuprings = max(actor->target->player->pickuprings--, 0);		//SCS EDIT - fix underflow?
+					if (actor->target->player->pickuprings || !G_CompatLevel(0x0011))
+						actor->target->player->pickuprings = max(actor->target->player->pickuprings--, 0);		//SCS EDIT - fix underflow?
+					
+				}
+				else	//SCS ADD
+				{
+					S_StartSoundAtVolume(actor->target, sfx_s226, actor->target->player->ringvolume);
+					
+					if (actor->target->player->rings > -actor->target->player->ringlimit)
+						P_GivePlayerRings(actor->target->player, -1);
+					
+				}
 
 				P_RemoveMobj(actor);
 				return;

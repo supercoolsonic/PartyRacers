@@ -3260,7 +3260,9 @@ const char *const STATE_LIST[] = { // array length left dynamic for sanity testi
 	"S_RINGCAPINCREASEF",
 	"S_RINGCAPINCREASEG",
 	"S_RINGCAPINCREASEH",
-	"S_RINGCAPINCREASEI",		//SCS ADD END
+	"S_RINGCAPINCREASEI",		
+	
+	"S_EGGSLOTSPIKE",			//SCS ADD END
 };
 
 // RegEx to generate this from info.h: ^\tMT_([^,]+), --> \t"MT_\1",
@@ -5488,6 +5490,7 @@ struct int_const_s const INT_CONST[] = {
 	{"KSM_RING", KSM_RING},
 	{"KSM_SEVEN", KSM_SEVEN},
 	{"KSM_JACKPOT", KSM_JACKPOT},
+	{"KSM_EGGMAN", KSM_EGGMAN},						//SCS ADD
 	//{"KSM_SUPERJACKPOT", KSM_SUPERJACKPOT},
 	{"KSM__MAX", KSM__MAX},
 
