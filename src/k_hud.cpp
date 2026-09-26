@@ -222,6 +222,7 @@ static patch_t *kp_triplebar[4];
 static patch_t *kp_slotring[4];
 static patch_t *kp_seven[4];
 static patch_t *kp_jackpot[4];
+static patch_t *kp_eggslot[4];	//SCS ADD
 
 static patch_t *kp_ringemeralds[7];	//SCS ADD
 static patch_t *kp_ringemeraldssmall[7];	//SCS ADD
@@ -876,8 +877,9 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_slotring[0], "K_RBRING");
 	HU_UpdatePatch(&kp_seven[0], "K_RBSEV");
 	HU_UpdatePatch(&kp_jackpot[0], "K_RBJACK");
+	HU_UpdatePatch(&kp_eggslot[0], "K_RBEGGM");					//SCS ADD START
 	
-	snprintf(buffer, sizeof(buffer), "K_ITICEx");					//SCS ADD START
+	snprintf(buffer, sizeof(buffer), "K_ITICEx");
 	for (i = 0; i < 4; i++)
 	{
 		buffer[7] = '1'+i;
@@ -1020,21 +1022,24 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_slotring[1], "K_SBRING");
 	HU_UpdatePatch(&kp_seven[1], "K_SBSEV");
 	HU_UpdatePatch(&kp_jackpot[1], "K_SBJACK");
+	HU_UpdatePatch(&kp_eggslot[1], "K_SBEGGM");				//SCS ADD START
 	
 
-	HU_UpdatePatch(&kp_bar[2], "K_ISBAR");					//SCS ADD START
+	HU_UpdatePatch(&kp_bar[2], "K_ISBAR");
 	HU_UpdatePatch(&kp_doublebar[2], "K_ISBAR2");
 	HU_UpdatePatch(&kp_triplebar[2], "K_ISBAR3");
 	HU_UpdatePatch(&kp_slotring[2], "K_ISBING");
 	HU_UpdatePatch(&kp_seven[2], "K_ISSEVE");
 	HU_UpdatePatch(&kp_jackpot[2], "K_ISJACK");
+	HU_UpdatePatch(&kp_eggslot[2], "K_SPEGGM");
 	
 	HU_UpdatePatch(&kp_bar[3], "ISPYBAR");
 	HU_UpdatePatch(&kp_doublebar[3], "ISPYBAR2");
 	HU_UpdatePatch(&kp_triplebar[3], "ISPYBAR3");
 	HU_UpdatePatch(&kp_slotring[3], "ISPYSRNG");
 	HU_UpdatePatch(&kp_seven[3], "ISPYSEVE");
-	HU_UpdatePatch(&kp_jackpot[3], "ISPYJACK");				//SCS ADD END
+	HU_UpdatePatch(&kp_jackpot[3], "ISPYJACK");
+	HU_UpdatePatch(&kp_eggslot[3], "ISPEEGGM");				//SCS ADD END
 
 	snprintf(buffer, sizeof(buffer), "FSMFSxxx");
 	for (i = 0; i < 120; i++)
@@ -1718,6 +1723,8 @@ static patch_t *K_GetSlotPatch_RaceFaces(uint8_t slot)	//SCS ADD
 {
 	switch (slot)
 	{
+		case 7:
+			return kp_eggslot[3];
 		case 6:
 			return kp_jackpot[3];
 		case 5:
@@ -1850,19 +1857,53 @@ patch_t *K_GetSmallStaticCachedItemPatch(kartitems_t item)
 
 static patch_t *K_GetCachedSlotMachinePatch(int32_t item, uint8_t offset)
 {
-	patch_t **kp[KSM__MAX] = {
+	/*patch_t **kp[KSM__MAX] = {
+		NULL,				//SCS ADD
 		kp_bar,
 		kp_doublebar,
 		kp_triplebar,
 		kp_slotring,
 		kp_seven,
 		kp_jackpot,
-	};
-
+		kp_eggslot,			//SCS ADD
+	};*/
+	
+	switch (item)							//SCS ADD - redid the patch indexing here, since the slot machine is now technically dynamic
+	{
+		case KSM_NONE:
+			return NULL;
+		break;
+		case KSM_BAR:
+			return kp_bar[offset];
+		break;
+		case KSM_DOUBLEBAR:
+			return kp_doublebar[offset];
+		break;
+		case KSM_TRIPLEBAR:
+			return kp_triplebar[offset];
+		break;
+		case KSM_RING:
+			return kp_slotring[offset];
+		break;
+		case KSM_SEVEN:
+			return kp_seven[offset];
+		break;
+		case KSM_JACKPOT:
+			return kp_jackpot[offset];
+		break;
+		case KSM_EGGMAN:
+			return kp_eggslot[offset];
+		break;
+		default:
+			return NULL;
+		break;
+	}
+	/*
 	if (item >= 0 && item < KSM__MAX)
 		return kp[item][offset];
 	else
 		return NULL;
+	*/
 }
 
 //}
@@ -3362,7 +3403,8 @@ static void K_drawKartSlotMachine(void)
 
 	fixed_t rouletteOffset = 0;
 	fixed_t rouletteSpace = SLOT_SPACING;
-	vector2_t rouletteCrop = {10, 10};
+	//vector2_t rouletteCrop = {10, 10};
+	vector2_t rouletteCrop = {8, 10};	//SCS EDIT
 	int32_t i;
 
 	// RadioRacers
@@ -3408,7 +3450,10 @@ static void K_drawKartSlotMachine(void)
 		// RadioRacers: and that's why I'm re-enabling it				//SCS - RADIO
 		switch (stplyr->ringboxaward)
 		{
-			case 5: // JACKPOT!
+			case 7: // EGGMAN?!		SCS ADD
+				localcolor[1] = SKINCOLOR_CRIMSON;
+				break;
+			case 6: // JACKPOT!	//SCS EDIT
 				//localcolor[1] = K_RainbowColor(leveltime);
 				localcolor[1] = static_cast<skincolornum_t>(K_RainbowColor(leveltime));		//SCS - RADIO
 				break;
@@ -3438,7 +3483,7 @@ static void K_drawKartSlotMachine(void)
 
 		rouletteSpace = SLOT_SPACING_SPLITSCREEN;
 		rouletteOffset = FixedMul(rouletteOffset, FixedDiv(SLOT_SPACING_SPLITSCREEN, SLOT_SPACING));
-		rouletteCrop.x = 16;
+		rouletteCrop.x = 15;	//SCS EDIT
 		rouletteCrop.y = 13;
 		splitbsx = -6;
 		splitbsy = -6;
@@ -5731,7 +5776,7 @@ static dboolean K_drawKartLaps(void)
 			skincolornum_t overlaycolor = K_EffectiveGradingFactor(stplyr) < FRACUNIT ? SKINCOLOR_RUBY : SKINCOLOR_ULTRAMARINE ;
 			auto colormap = R_GetTranslationColormap(TC_RAINBOW, overlaycolor, GTC_CACHE);
 			//V_DrawMappedPatch(LAPS_X+bump, LAPS_Y, transflag|V_SLIDEIN|splitflags, kp_exp[0], colormap);
-			V_DrawMappedPatch(EXP_X+bump, EXP_Y, transflag|expFlags, kp_exp[0], colormap);																				//SCS - RADIO
+			V_DrawMappedPatch(EXP_X+bump, EXP_Y, transflag|V_SLIDEIN|splitflags, kp_exp[0], colormap);				//SCS EDIT - changed flags to fix coloration issue	//SCS - RADIO
 		}
 
 		using srb2::Draw;
@@ -8276,6 +8321,11 @@ static void K_DrawNameTagItemSpy(int32_t x, int32_t y, player_t *p, int32_t flag
 	{
 		switch (slot_type)
 		{
+			case 6:												//EGGMAN
+			{
+				box.patch(kp_eggslot[tiny ? 3 : 2]);
+				break;
+			}
 			case 5:												//JACKPOT
 			{
 				box.patch(kp_jackpot[tiny ? 3 : 2]);
@@ -8313,6 +8363,11 @@ static void K_DrawNameTagItemSpy(int32_t x, int32_t y, player_t *p, int32_t flag
 	{
 		switch (p->ringboxaward)
 		{
+			case 7:												//EGGMAN
+			{
+				box.patch(kp_eggslot[tiny ? 3 : 2]);
+				break;
+			}
 			case 6:												//JACKPOT
 			{
 				box.patch(kp_jackpot[tiny ? 3 : 2]);

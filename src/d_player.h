@@ -267,26 +267,17 @@ typedef enum
 
 typedef enum
 {
+	KSM_NONE,			//SCS ADD
 	KSM_BAR,
 	KSM_DOUBLEBAR,
 	KSM_TRIPLEBAR,
 	KSM_RING,
 	KSM_SEVEN,
 	KSM_JACKPOT,
+	KSM_EGGMAN,			//SCS ADD
 	KSM__MAX,
 } kartslotmachine_t;
-/*
-typedef enum
-{
-	KSM_BAR,
-	KSM_DOUBLEBAR,
-	KSM_TRIPLEBAR,
-	KSM_RING,
-	KSM_SEVEN,
-	KSM_SUPERJACKPOT,
-	KSM__MAX,
-} kartslotmachineback_t;
-*/
+
 typedef int32_t kartspinoutflags_t;
 #define KSPIN_THRUST    (1<<0)
 #define KSPIN_IFRAMES   (1<<1)
@@ -870,6 +861,7 @@ struct player_t
 	int8_t ringlimit;		//SCS ADD - Max number of rings a player can have, both positive and negative
 	int8_t perfectcheckpointstreak;	//SCS ADD - number of checkpoints in a row that the player has crossed with maxed out rings
 	uint16_t ringboxawardwindow;	//SCS ADD - Timer to claim the Ring Bonus Box if you obtain one. When it depletes, it becomes a Super Jackpot. Allows the player to not be forced to increase their ring limit if they don't want to.
+	uint16_t eggmanslot;			//SCS ADD - This is how many spikeballs you get when rolling eggman on the slots
 
 	uint8_t curshield;	// see kartshields_t
 	uint8_t bubblecool;	// Bubble Shield use cooldown

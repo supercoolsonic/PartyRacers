@@ -839,6 +839,25 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, dboolean heightcheck)
 
 		case MT_RING:
 		case MT_FLINGRING:
+
+		if (special->state == &states[S_EGGSLOTSPIKE])	//SCS ADD START
+		{
+			//if (special->extravalue1)
+				return;
+			
+			/*if (!toucher || !toucher->health)
+				return;
+			
+			special->momx = special->momy = special->momz = 0;
+
+			special->extravalue1 = 1; // Ring collect animation timer
+			special->angle = R_PointToAngle2(toucher->x, toucher->y, special->x, special->y); // animation angle
+			P_SetTarget(&special->target, toucher); // toucher for thinker
+			
+			player->rings = max((-1*player->ringlimit), (player->rings--));*/
+		}
+		else											//SCS ADD END
+		{
 			if (special->extravalue1)
 				return;
 
@@ -880,6 +899,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, dboolean heightcheck)
 				player->pickuprings++;
 
 			return;
+		}
 
 		case MT_BLUESPHERE:
 			if (!(P_CanPickupItem(player, PICKUP_RINGORSPHERE)))

@@ -11558,6 +11558,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 				player->masteremeraldinvincibility = false;
 				player->usedmasteremeraldduringringboxaward = false;
 				player->invincibilitytimer = 0;
+				player->stunned = (BAILSTUN*3)/2;
 			}
 			
 			if (player->usedmasteremeraldduringringboxaward)
@@ -11989,6 +11990,26 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 			}
 		}
 	}
+	else if (player->eggmanslot && !player->timestonefrozen)	//SCS ADD START
+	{
+		player->stunned = (BAILSTUN/2);
+
+		//spawn a ring set its state to S_EGGSLOTSPIKE
+		mobj_t *ring = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_RING);
+			
+		if (ring)
+		{
+			P_SetMobjState(ring, S_EGGSLOTSPIKE);
+			ring->extravalue1 = 1; // Ring collect animation timer
+			ring->angle = player->mo->angle; // animation angle
+			P_SetTarget(&ring->target, player->mo); // toucher for thinker
+			//player->pickuprings++;
+			//if (player->superring == 1)
+				//ring->cvmem = 1; // play caching when collected
+			player->nextringaward = 0;
+			player->eggmanslot--;
+		}
+	}															//SCS ADD END
 	else
 	{
 		player->nextringaward = 99; // Next time we need to award superring, spawn the first one instantly.
@@ -16071,6 +16092,13 @@ uint32_t K_CalcRingBoxAward(player_t *player, uint32_t Multiplier, dboolean IsSu
 	player->lastringboost = player->ringboost;
 	
 	uint32_t award = 0;
+	dboolean eggmanresult = false;
+	
+	if (player->ringboxaward == 7)	//eggman	SCS ADD
+	{
+		player->ringboxaward = 4;
+		eggmanresult = true;
+	}
 	
 	if (IsSuperJackpot)
 		award = 40;
@@ -16166,6 +16194,42 @@ uint32_t K_CalcRingBoxAward(player_t *player, uint32_t Multiplier, dboolean IsSu
 	reductionfactor = min(reductionfactor, FRACUNIT); // Cap for easing function, and...
 	award = Easing_Linear(reductionfactor, award, award/4); // ...ease between unmodified and minimum award.
 	*/
+	
+	if (eggmanresult)			//SCS ADD START - if you roll an eggman on the slots while you have a payout going, just deduct the penalty from the current payout. If the deduction takes you below 0, just be nice and keep you at 0.
+	{
+		if (player->superring > 0)
+		{
+			if (award > player->superring)	//the eggman penalty is greater than your current payout - just drop to 0
+				player->superring = 1;
+			else
+				player->superring = (player->superring - award);
+			
+			return 0;
+		}
+		else
+		{
+			player->eggmanslot += (award*Multiplier);
+			return 0;			
+		}
+	}
+	else if (player->eggmanslot > 0) //If you have an eggman payout going and you roll a positive slot, deduct the remaining eggman payout from the slot reward, and reward the remaining
+	{
+		if (award > player->eggmanslot)
+		{
+			award = (award - player->eggmanslot);
+			player->eggmanslot = 0;
+		}
+		else if (award == player->eggmanslot)
+		{
+			player->eggmanslot = 0;
+			return 0;
+		}
+		else
+		{
+			player->eggmanslot = (player->eggmanslot - award);
+			return 0;
+		}
+	}							//SCS ADD END
 
 	return (award*Multiplier);
 }

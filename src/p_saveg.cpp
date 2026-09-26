@@ -565,6 +565,7 @@ static void P_NetArchivePlayers(savebuffer_t *save)
 		WRITESINT8(save->p, players[i].ringlimit);								//SCS ADD
 		WRITESINT8(save->p, players[i].perfectcheckpointstreak);				//SCS ADD
 		WRITEUINT16(save->p, players[i].ringboxawardwindow);					//SCS ADD
+		WRITEUINT16(save->p, players[i].eggmanslot);							//SCS ADD
 
 		WRITEUINT8(save->p, players[i].curshield);
 		WRITEUINT8(save->p, players[i].bubblecool);
@@ -1299,7 +1300,8 @@ static void P_NetUnArchivePlayers(savebuffer_t *save)
 		
 		players[i].ringlimit = READSINT8(save->p);								//SCS ADD
 		players[i].perfectcheckpointstreak = READSINT8(save->p);				//SCS ADD
-		players[i].ringboxawardwindow = READUINT16(save->p);						//SCS ADD
+		players[i].ringboxawardwindow = READUINT16(save->p);					//SCS ADD
+		players[i].eggmanslot = READUINT16(save->p);							//SCS ADD
 
 		players[i].curshield = READUINT8(save->p);
 		players[i].bubblecool = READUINT8(save->p);
