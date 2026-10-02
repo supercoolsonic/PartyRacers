@@ -901,7 +901,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	"ICES",
 	"ICET",
 	"ICEE",
-	"ICEP",
+	"ICEQ",
 	"ICEM",
 	"FREZ",
 	
@@ -3948,7 +3948,7 @@ state_t states[NUMSTATES] =
 	{SPR_ICET,  1, -1, {NULL}, 0, 0, S_ICEDUSTRAP2},		// S_ICEDUSTRAP2
 	{SPR_ICEE,  FF_FULLBRIGHT|FF_ANIMATE, 32, {NULL}, 7, 6, S_NULL},	// S_ICEDUSEXPLOSION
 	{SPR_FREZ,  FF_FULLBRIGHT|FF_ANIMATE, 24, {NULL}, 7, 1, S_NULL},	// S_ICEDUSSNOWFLAKE
-	{SPR_ICEP, 0|FF_FULLBRIGHT, 1, {NULL}, 0, 0, S_ICEDUSSHARD1}, // S_ICEDUSSHARD1
+	{SPR_ICEQ, 0|FF_FULLBRIGHT, 1, {NULL}, 0, 0, S_ICEDUSSHARD1}, // S_ICEDUSSHARD1
 	{SPR_ICEM, 0|FF_FULLBRIGHT, 1, {NULL}, 0, 0, S_ICEDUSSHARD2}, // S_ICEDUSSHARD2
 	
 	{SPR_SOLB,  FF_ANIMATE|0, 1, {NULL}, 0, 0, S_SOLFIRE2},		// S_SOLFIRE1
@@ -24218,6 +24218,33 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		0,              // damage
 		sfx_None,       // activesound
 		MF_SPECIAL|MF_NOGRAVITY|MF_DONTENCOREMAP, // flags
+		S_NULL          // raisestate
+	},
+	
+	{           // MT_INKSPLAT
+		-1,             // doomednum
+		S_GARDENTOPARROW, // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		8,              // speed
+		8*FRACUNIT,     // radius
+		54*FRACUNIT,    // height
+		1,              // display offset
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_NOBLOCKMAP|MF_NOCLIP|MF_NOCLIPHEIGHT|MF_NOGRAVITY|MF_DONTENCOREMAP|MF_NOSQUISH, // flags
 		S_NULL          // raisestate
 	},
 	

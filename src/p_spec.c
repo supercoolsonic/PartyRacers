@@ -4805,7 +4805,7 @@ void P_SetupSignExit(player_t *player, dboolean tie)
 	angle_t bestAngle = K_MomentumAngle(player->mo) + ANGLE_180;
 
 	for (; node; node = node->m_thinglist_next)
-	{
+	{	
 		thing = node->m_thing;
 		if (thing->type != MT_SIGN)
 			continue;
@@ -4815,6 +4815,9 @@ void P_SetupSignExit(player_t *player, dboolean tie)
 
 		if (tie)
 		{
+			if (player->position == 1)
+				bestAngle = bestAngle - ANGLE_90;
+			
 			break;
 		}
 
@@ -4823,6 +4826,7 @@ void P_SetupSignExit(player_t *player, dboolean tie)
 
 		P_SetupSignObject(thing, player->mo, false, signcolor);
 		++numfound;
+		//CONS_Printf("We're copying a signpost! - 1\n");
 	}
 
 	if (numfound)
@@ -4844,6 +4848,9 @@ void P_SetupSignExit(player_t *player, dboolean tie)
 
 		if (tie)
 		{
+			if (player->position == 1)
+				bestAngle = bestAngle - ANGLE_90;
+			
 			break;
 		}
 
@@ -4852,10 +4859,16 @@ void P_SetupSignExit(player_t *player, dboolean tie)
 
 		P_SetupSignObject(thing, player->mo, false, signcolor);
 		++numfound;
+		//CONS_Printf("We're copying a signpost! - 2\n");
 	}
 
 	if (numfound)
 		return;
+	
+	/*if (!tie)
+		CONS_Printf("WEEWOOWEEWOO!\n");
+	else
+		CONS_Printf("We got a tie!\n");*/
 
 	// SRB2Kart: FINALLY, add in an alternative if no place is found
 	if (player->mo && !P_MobjWasRemoved(player->mo) && !K_EndCameraIsFreezing())

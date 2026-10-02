@@ -4235,6 +4235,7 @@ const char *const MOBJTYPE_LIST[] = {  // array length left dynamic for sanity t
 	"MT_BHYUDORO_CENTER",
 	
 	"MT_INKBUBBLE",
+	"MT_INKSPLAT",
 	
 	"MT_TIMESTONEACTIVATE",
 	"MT_TIMESTONEIDLE",
