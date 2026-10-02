@@ -784,6 +784,22 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, dboolean heightcheck)
 			player->inkblotchtimer = (max(400, min((300/player->position)*12, 700)) - (5*player->position));
 			P_DamageMobj(player->mo, special, special->target, 1, DMG_NORMAL);
 			P_SetMobjState(special, special->info->deathstate);
+				
+			/*mobj_t *x = P_SpawnMobj(special->x, special->y, special->z, MT_INKSPLAT);		//Nah, it's just not looking right. Doesn't align to slopes correctly and too much of a liability to look bad on parts of geometry (edges, ect.) Disabling for now.
+					
+			if (x)
+			{
+				x->frame |= FF_FLOORSPRITE|FF_ADD;	
+				x->renderflags |= RF_SLOPESPLAT|RF_NOSPLATBILLBOARD;
+				
+				x->floorz = player->mo->z;
+				x->ceilingz = player->mo->z + player->mo->height;
+				x->z = P_GetMobjGround(x) - P_MobjFlip(x);
+				x->angle = player->mo->angle;
+				
+				x->height = 0;
+				x->spriteyscale = 2*FRACUNIT;				
+			}*/
 			
 			return;
 

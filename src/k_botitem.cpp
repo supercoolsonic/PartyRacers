@@ -2113,10 +2113,10 @@ static void K_BotItemRouletteMash(const player_t *player, ticcmd_t *cmd)
 
 	if (player->botvars.itemconfirm > confirmTime)
 	{
-		if (player->inkblotchtimer > 5 && leveltime % 2 == 0)		//SCS ADD - throw off the CPUs a little more if they're meant to have their item slot blinded
+		if (player->inkblotchtimer > 5 && leveltime % 30 != 0)		//SCS ADD - throw off the CPUs a little more if they're meant to have their item slot blinded
 			return;
 		
-		if ((player->itemRoulette.ringbox == true && leveltime % 23 == 0) 
+		if ((player->itemRoulette.ringbox == true && leveltime % 26 == 0) 
 		|| player->itemRoulette.ringbox == false)			//SCS ADD - add a little variance on how bots select their result in the slots; max levels always seems to pick RING, which isn't the best.
 		{
 			// We've waited out our reaction time -- press the button now!

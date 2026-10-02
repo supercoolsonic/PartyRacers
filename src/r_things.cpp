@@ -58,6 +58,8 @@
 #include "radioracers/rr_cvar.h"
 #include "radioracers/rr_util.h"	//SCS - RADIO END
 
+#include "k_specialstage.h"			//SCS ADD
+
 #define MINZ (FRACUNIT*4)
 #define BASEYCENTER (BASEVIDHEIGHT/2)
 
@@ -1005,18 +1007,27 @@ static void R_DrawVisSprite(vissprite_t *vis)
 
 	if (encoremap && !vis->mobj->color && !(vis->mobj->flags & MF_DONTENCOREMAP))
 	{
-		if (shouldUseHaki()){												//SCS - RADIO START
-			if (vis->mobj->tracer) {
+		if (specialstageinfo.valid)											//SCS ADD - fix oversight with Radio where special stage objects weren't getting colorized
+			goto DoColor;
+		
+		if (shouldUseHaki())												//SCS - RADIO START
+		{
+			if (vis->mobj->tracer) 
+			{
 				// Exclude maces
-				if (vis->mobj->tracer->type != MT_CUSTOMMACEPOINT) {		//SCS - RADIO END
+				if (vis->mobj->tracer->type != MT_CUSTOMMACEPOINT) 
+				{															//SCS - RADIO END
 					dc.colormap += COLORMAP_REMAPOFFSET;
 					dc.fullbright += COLORMAP_REMAPOFFSET;
 				}
-			} else {														//SCS - RADIO START
+			} 
+			else 
+			{														//SCS - RADIO START
+				DoColor:											//SCS ADD
 				dc.colormap += COLORMAP_REMAPOFFSET;
 				dc.fullbright += COLORMAP_REMAPOFFSET;
 			}
-		} 																	//SCS - RADIO END
+		} 															//SCS - RADIO END
 	}
 
 	dc.texturemid = vis->texturemid;

@@ -11409,29 +11409,6 @@ void K_drawKartHUD(void)
 				}
 			}
 
-			// Draw the speedometer and/or accessibility icons
-			//if (cv_kartspeedometer.value && !r_splitscreen && (LUA_HudEnabled(hud_speedometer)))
-			if (cv_kartspeedometer.value && (LUA_HudEnabled(hud_speedometer)))							//SCS EDIT - Gonna draw it in splitscreen now
-			{
-				K_drawKartSpeedometer(gametypeinfoshown);
-			}
-			else
-			{
-				K_drawKartAccessibilityIcons(gametypeinfoshown, 0);
-			}
-
-			if (LUA_HudEnabled(hud_rings))
-			{
-				if (gametyperules & GTR_SPHERES)
-				{
-					K_drawBlueSphereMeter(gametypeinfoshown);
-				}
-				else
-				{
-					K_drawRingCounter(gametypeinfoshown);
-				}
-			}
-
 			// This sucks, but we need to draw rings before EXP because 4P amps
 			// are fuckhuge and cover gameplay info if we don't.
 			// Propagate any changes above.
@@ -11463,6 +11440,29 @@ void K_drawKartHUD(void)
 
 				if (stplyr->backupitemtype)
 					K_drawBackupItem();
+			}
+			
+			// Draw the speedometer and/or accessibility icons
+			//if (cv_kartspeedometer.value && !r_splitscreen && (LUA_HudEnabled(hud_speedometer)))
+			if (cv_kartspeedometer.value && (LUA_HudEnabled(hud_speedometer)))				//SCS EDIT - Gonna draw it in splitscreen now		SCS EDIT 2 - Moving this down here because Super Jackpot icon is 'fuckhuge' and covers speedo in 2P splitscreen
+			{
+				K_drawKartSpeedometer(gametypeinfoshown);
+			}
+			else
+			{
+				K_drawKartAccessibilityIcons(gametypeinfoshown, 0);
+			}
+
+			if (LUA_HudEnabled(hud_rings))
+			{
+				if (gametyperules & GTR_SPHERES)
+				{
+					K_drawBlueSphereMeter(gametypeinfoshown);
+				}
+				else
+				{
+					K_drawRingCounter(gametypeinfoshown);
+				}
 			}
 		}
 	}

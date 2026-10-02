@@ -12117,12 +12117,16 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 	{
 		player->gunusagetimer--;
 		
-		if (player->position < 2)
-			player->gunusagetimer -= 3;		//drains 4x as fast in 1st place
-		else if (player->position < 3)
-			player->gunusagetimer -= 2;		//drains 3x as fast starting in 2nd place
-		else if (player->position < 4)
-			player->gunusagetimer--;		//drains 2x as fast starting in 3rd place
+		if (player->distancetofinish > 0)
+		{
+			if (player->position < 2)
+				player->gunusagetimer -= 3;		//drains 4x as fast in 1st place
+			else if (player->position < 3)
+				player->gunusagetimer -= 2;		//drains 3x as fast starting in 2nd place
+			else if (player->position < 4)
+				player->gunusagetimer--;		//drains 2x as fast starting in 3rd place
+			
+		}
 	
 		if (player->gunusagetimer <= 2*TICRATE)
 		{	
@@ -12687,8 +12691,8 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 
 	if ((player->mo->eflags & MFE_UNDERWATER) && player->curshield != KSHIELD_BUBBLE)
 	{
-		if ((player->curshield == KSHIELD_LIGHTNING && !(player->lightningcharge)) || (player->lightningcharge && player->lightningcharge < LIGHTNING_CHARGE))	//SCS ADD START
-		{
+		if (!specialstageinfo.valid && (player->curshield == KSHIELD_LIGHTNING && !(player->lightningcharge)) || (player->lightningcharge && player->lightningcharge < LIGHTNING_CHARGE))	//SCS ADD START - NOTE - allow it to be used underwater in special
+		{																																																			//stages, since at least one uses it...
 			if (player->lightningcharge)
 				player->lightningcharge = LIGHTNING_CHARGE;
 			
@@ -18010,6 +18014,10 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 							}
 							break;
 						case KITEM_CHAMBLASTER:
+							
+							if (player->position > 1 || player->distancetofinish <= 0)
+								player->hyudorotimer = 3;			//Bonus, since it was lacking a bit in power. You get to be invisible while you have it...
+							
 							if (player->gunusagetimer <= 0)
 							{
 								player->gunusagetimer = (itemtime*3);
@@ -18017,6 +18025,8 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 							}
 							if ((cmd->buttons & BT_ATTACK) && !HOLDING_ITEM && NO_HYUDORO && player->gunfiredelay <= 0)
 							{
+								player->hyudorotimer = 0;	//...until you start firing, then you're visible.
+								
 								K_SetItemOut(player);
 								player->throwdir = 1;												//you can only fire forward
 								if (player->chamblasterrapidshots < 8)
@@ -18054,7 +18064,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 										bullet->destscale = 2*bullet->scale;
 										bullet->color = SKINCOLOR_YELLOW;
 										//bullet->angle = player->mo->angle;
-										player->gunusagetimer--;						//But you can use misfires to get rid of the gun faster, if you want
+										player->gunusagetimer = max(0, player->gunusagetimer - 2);		//But you can use misfires to get rid of the gun faster, if you want
 									}
 								}
 								K_UnsetItemOut(player);
