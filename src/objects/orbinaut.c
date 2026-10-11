@@ -164,11 +164,37 @@ void Obj_OrbinautThink(mobj_t *th)
 
 void Obj_IcedusThink(mobj_t *th)						//SCS ADD
 {
+	mobj_t *icetwinkle = NULL;
+	
 	dboolean grounded = P_IsObjectOnGround(th);
 
 	if (th->fuse > 0 && th->fuse <= TICRATE)
 	{
 		th->renderflags ^= RF_DONTDRAW;
+	}
+	
+	if (leveltime % 2 == 0)
+	{
+		mobj_t *ghost = NULL;
+
+		ghost = P_SpawnGhostMobj(th);
+		ghost->colorized = true; // already has color!
+	}
+	
+	if (leveltime % 3 == 0)
+	{
+		icetwinkle = P_SpawnMobj(th->x + (P_RandomRange(PR_FUZZ, -th->radius, th->radius)), 
+										th->y + (P_RandomRange(PR_FUZZ, -th->radius, th->radius)), 
+										th->z + (P_RandomRange(PR_FUZZ, -th->radius, th->radius)), MT_SIGNSPARKLE);
+			
+		if (icetwinkle != NULL)
+		{
+			P_InstaScale(icetwinkle, th->scale*2);
+			//S_StartSound(th, sfx_s3k4f);
+			//S_StartSound(th, sfx_s248);
+			icetwinkle->colorized = true;
+			icetwinkle->color = th->color;
+		}
 	}
 
 	if (orbinaut_flags(th) & ORBI_DROPPED)
@@ -200,51 +226,21 @@ void Obj_IcedusThink(mobj_t *th)						//SCS ADD
 		fixed_t thrustamount = 0;
 		fixed_t frictionsafety = (th->friction == 0) ? 1 : th->friction;
 
-		/*if (th->health <= 5)		//We don't slow down until we hit something
-		{
-			int32_t i;
-			for (i = 5; i >= th->health; i--)
-			{
-				finalspeed = FixedMul(finalspeed, FRACUNIT-FRACUNIT/4);
-			}
-		}*/
 
-		//if (currentspeed >= finalspeed)
-		//{
-			// Thrust as if you were at top speed, slow down naturally
-			thrustamount = FixedDiv(finalspeed, frictionsafety) - finalspeed;
-		//}
-		/*else
-		{
-			const fixed_t beatfriction = FixedDiv(currentspeed, frictionsafety) - currentspeed;
-			// Thrust to immediately get to top speed
-			thrustamount = beatfriction + FixedDiv(finalspeed - currentspeed, frictionsafety);
-		}*/
+		thrustamount = FixedDiv(finalspeed, frictionsafety) - finalspeed;
 
 		P_Thrust(th, th->angle, thrustamount);
 	}
-
-	/* todo: UDMFify
-	if (P_MobjTouchingSectorSpecialFlag(th, ?))
-	{
-		K_DoPogoSpring(th, 0, 1);
-	}
-	*/
 
 	if (orbinaut_selfdelay(th) > 0)
 	{
 		orbinaut_selfdelay(th)--;
 	}
-
-	/*if (leveltime % 6 == 0)
-	{
-		S_StartSound(th, th->info->activesound);
-	}*/
 }
 
 void Obj_SolFireThink(mobj_t *th)						//SCS ADD
 {
-	mobj_t *firefire = NULL;
+	mobj_t *firefire, *firesmoke = NULL;
 	
 	dboolean grounded = P_IsObjectOnGround(th);
 
@@ -275,20 +271,35 @@ void Obj_SolFireThink(mobj_t *th)						//SCS ADD
 		ghost->colorized = true; // already has color!
 	}
 	
-	if (grounded && leveltime % 5 == 0 && th->target != NULL) //Thrown fireballs leave a trail of fire!
+	if (grounded && th->target != NULL) //Thrown fireballs leave a trail of fire!
 	{
-		firefire= P_SpawnMobj(th->x + (P_RandomRange(PR_FUZZ, -10, 10)*mapobjectscale), th->y + (P_RandomRange(PR_FUZZ, -10, 10)*mapobjectscale), th->z, MT_SOLFIRE_TRAP);
-			
-		if (firefire != NULL)
+		if (leveltime % 5 == 0)
 		{
-			P_SetTarget(&firefire->target, th->target);
-			P_InstaScale(firefire, th->scale);
-			firefire->momx = 0;
-			firefire->momy = 0;
-			firefire->momz = 0;
-			S_StartSound(th, sfx_s3k4f);
-			S_StartSound(th, sfx_s248);
-			firefire->color = th->color;
+			firefire = P_SpawnMobj(th->x + (P_RandomRange(PR_FUZZ, -th->radius, th->radius)), th->y + (P_RandomRange(PR_FUZZ, -th->radius, th->radius)), th->z , MT_SOLFIRE_TRAP);
+			
+			if (firefire != NULL)
+			{
+				P_SetTarget(&firefire->target, th->target);
+				P_InstaScale(firefire, th->scale);
+				firefire->momx = 0;
+				firefire->momy = 0;
+				firefire->momz = 0;
+				S_StartSound(th, sfx_s3k4f);
+				S_StartSound(th, sfx_s248);
+				firefire->color = th->color;
+			}
+		}
+		
+		if (leveltime % 3 == 0)
+		{
+			firesmoke = P_SpawnMobj(th->x, th->y, th->z, MT_THOK);
+			
+			if (firesmoke)
+			{
+				firesmoke->color = th->color;
+				P_InstaScale(firesmoke, th->scale);
+				P_SetMobjState(firesmoke, S_SOLFIRE_DEAD);
+			}			
 		}
 	}
 
@@ -299,46 +310,16 @@ void Obj_SolFireThink(mobj_t *th)						//SCS ADD
 		fixed_t thrustamount = 0;
 		fixed_t frictionsafety = (th->friction == 0) ? 1 : th->friction;
 
-		/*if (th->health <= 5)		//We don't slow down until we hit something
-		{
-			int32_t i;
-			for (i = 5; i >= th->health; i--)
-			{
-				finalspeed = FixedMul(finalspeed, FRACUNIT-FRACUNIT/4);
-			}
-		}*/
 
-		//if (currentspeed >= finalspeed)
-		//{
-			// Thrust as if you were at top speed, slow down naturally
-			thrustamount = FixedDiv(finalspeed, frictionsafety) - finalspeed;
-		//}
-		/*else
-		{
-			const fixed_t beatfriction = FixedDiv(currentspeed, frictionsafety) - currentspeed;
-			// Thrust to immediately get to top speed
-			thrustamount = beatfriction + FixedDiv(finalspeed - currentspeed, frictionsafety);
-		}*/
+		thrustamount = FixedDiv(finalspeed, frictionsafety) - finalspeed;
 
 		P_Thrust(th, th->angle, thrustamount);
 	}
-
-	/* todo: UDMFify
-	if (P_MobjTouchingSectorSpecialFlag(th, ?))
-	{
-		K_DoPogoSpring(th, 0, 1);
-	}
-	*/
 
 	if (orbinaut_selfdelay(th) > 0)
 	{
 		orbinaut_selfdelay(th)--;
 	}
-
-	/*if (leveltime % 6 == 0)
-	{
-		S_StartSound(th, th->info->activesound);
-	}*/
 }
 
 void Obj_SolFireBurstThink(mobj_t *th)						//SCS ADD

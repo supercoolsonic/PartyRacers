@@ -206,6 +206,7 @@ Run this macro, then #undef FOREACH afterward
 	FOREACH (SLICER,		44),\
 	FOREACH (SOL,			45),\
 	FOREACH (RINGCAPBONUS,	46)
+	//FOREACH (PLAYERSWAP,	47)
 
 
 typedef enum

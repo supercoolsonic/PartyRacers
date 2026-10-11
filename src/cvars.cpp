@@ -1055,7 +1055,8 @@ consvar_t cv_items[] = {
 	UnsavedNetVar("sol",				"On").on_off().onchange_noinit(KartItem_OnChange),
 	UnsavedNetVar("triplesol",			"On").on_off().onchange_noinit(KartItem_OnChange),
 	UnsavedNetVar("quadsol",			"On").on_off().onchange_noinit(KartItem_OnChange),
-	UnsavedNetVar("ringcapbonus",		"On").on_off().onchange_noinit(KartItem_OnChange),		//SCS ADD END
+	UnsavedNetVar("ringcapbonus",		"On").on_off().onchange_noinit(KartItem_OnChange),
+	//UnsavedNetVar("playerswap",			"On").on_off().onchange_noinit(KartItem_OnChange),	//SCS ADD END
 };
 
 consvar_t cv_kartbot = UnsavedNetVar("bots", "Off").values({
