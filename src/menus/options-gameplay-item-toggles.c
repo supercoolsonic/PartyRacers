@@ -159,6 +159,7 @@ menuitem_t OPTIONS_GameplayItems_Party[] =		//SCS ADD
 	{IT_KEYHANDLER | IT_NOTHING, NULL, "Slicer",				NULL, {.routine = M_HandleItemToggles}, KITEM_SLICER, 0},
 	{IT_KEYHANDLER | IT_NOTHING, NULL, "Super Jackpot",			NULL, {.routine = M_HandleItemToggles}, KITEM_SUPERJACKPOT, 0},
 	{IT_KEYHANDLER | IT_NOTHING, NULL, "Ring Bonus Box",		NULL, {.routine = M_HandleItemToggles}, KITEM_RINGCAPBONUS, 0},
+	//{IT_KEYHANDLER | IT_NOTHING, NULL, "Player Swap",			NULL, {.routine = M_HandleItemToggles}, KITEM_PLAYERSWAP, 0},
 	
 };
 

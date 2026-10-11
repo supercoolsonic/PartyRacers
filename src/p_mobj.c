@@ -8124,6 +8124,22 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 			P_SetMobjState(mobj, S_ICEDUSTRAP2);
 		}
 		
+		if (leveltime % 9 == 0)
+		{
+			mobj_t *icetwinkle = P_SpawnMobj(mobj->x + (P_RandomRange(PR_FUZZ, -mobj->radius, mobj->radius)),
+								mobj->y + (P_RandomRange(PR_FUZZ, -mobj->radius, mobj->radius)), 
+								mobj->z + (P_RandomRange(PR_FUZZ, 0, mobj->radius)), MT_SIGNSPARKLE);
+				
+			if (icetwinkle != NULL)
+			{
+				P_InstaScale(icetwinkle, (mobj->scale*3)/2);
+				//S_StartSound(th, sfx_s3k4f);
+				//S_StartSound(th, sfx_s248);
+				icetwinkle->colorized = true;
+				icetwinkle->color = mobj->color;
+			}
+		}
+		
 		if (mobj->target && mobj->target->player)
 			mobj->color = mobj->target->player->skincolor;
 		else
@@ -15016,11 +15032,11 @@ static dboolean P_SetupSpawnedMapThing(mapthing_t *mthing, mobj_t *mobj)
 		// Parameter = extra items (x5 for rings)
 		mobj->movecount += mthing->thing_args[1];
 		
-		if (((!netgame && !specialstageinfo.valid && cv_randomizeitemcapsules.value == 1) || (netgame && cv_toggle_randomcapsules_net.value == 1)) && mobj->threshold != KCAPSULE_RING && mobj->threshold != HYUCAPSULE_RING)
+		if (((!netgame && !specialstageinfo.valid && cv_randomizeitemcapsules.value == 1) || (netgame && cv_toggle_randomcapsules_net.value == 1)) && mobj->threshold != KCAPSULE_RING && mobj->threshold != HYUCAPSULE_RING) //SCS ADD START
 		{
-			mobj->threshold = P_RandomRange(PR_ITEM_SPAWNER, 1, NUMKARTITEMS - 1);													//SCS TESTING RANDOM ITEM CAPSULES IDEA
+			mobj->threshold = P_RandomRange(PR_ITEM_SPAWNER, 1, NUMKARTITEMS - 1);
 			
-			if (!K_ItemEnabled(mobj->threshold))
+			if (!K_ItemEnabled(mobj->threshold))// || mobj->threshold == KITEM_PLAYERSWAP)		//No swaps or disabled items
 				mobj->threshold = KITEM_SUPERRING;
 	
 			switch (mobj->threshold)
@@ -15079,7 +15095,7 @@ static dboolean P_SetupSpawnedMapThing(mapthing_t *mthing, mobj_t *mobj)
 			}
 			
 			mobj->movecount = P_RandomChance(PR_ITEM_SPAWNER, FRACUNIT/3) ? 1 : P_RandomKey(PR_ITEM_SPAWNER, randitemamtmax) + 1;
-		}
+		}																																					//SCS ADD END
 
 		// Ambush = double size (grounded) / half size (aerial)
 		if (!(mthing->thing_args[2] & TMICF_INVERTSIZE) == !P_IsObjectOnGround(mobj))

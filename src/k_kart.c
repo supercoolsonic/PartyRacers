@@ -18015,7 +18015,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 							break;
 						case KITEM_CHAMBLASTER:
 							
-							if (player->position > 1 || player->distancetofinish <= 0)
+							if (player->chamblasterrapidshots <= 0 && (player->position > 1 || player->distancetofinish <= 0))
 								player->hyudorotimer = 3;			//Bonus, since it was lacking a bit in power. You get to be invisible while you have it...
 							
 							if (player->gunusagetimer <= 0)
@@ -18620,6 +18620,99 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 									player->botvars.itemconfirm = 0;
 								}
 							}
+							break;
+						/*case KITEM_PLAYERSWAP:
+							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
+							{
+								uint8_t chosenplayer;
+								player_t *mockplayer2;
+								
+								
+								uint32_t player1_roundscore;		//	each is a separate roll
+								
+								uint8_t player1_emeralds;			//|	battle mode swaps
+								
+								int16_t player1_spheres;			//	so you can only get 1 per slot
+								
+								chosenplayer = P_RandomRange(PR_DECORATION, 0, GetTotalInGameRacers());
+								
+								if (players[chosenplayer].mo != NULL && !players[chosenplayer].exiting && !players[chosenplayer].spectator && players[chosenplayer].mo->health > 0 && players[chosenplayer].mo != player->mo)
+								{
+									fixed_t x_1, y_1, z_1, momx_1, momy_1, momz_1;
+									angle_t angle_1, angle_2;
+									mockplayer2 = &players[chosenplayer];
+									//mockplayer1 = player;
+									
+									x_1 = player->mo->x;
+									y_1 = player->mo->y;
+									z_1 = player->mo->z;
+									momx_1 = player->mo->momx;
+									momy_1 = player->mo->momy;
+									momz_1 = player->mo->momz;
+									angle_1 = player->mo->angle;
+
+									if (gametyperules & GTR_SPHERES)	//do battle mode swaps
+									{
+										player1_roundscore = player->roundscore;
+										player1_emeralds = player->emeralds;
+										player1_spheres = player->spheres;										
+									}
+									else								//we got this in a race
+									{
+										player1_itemtype = player->itemtype;
+										player1_itemamount = player->itemamount;
+										player1_backupitemtype = player->backupitemtype;
+										player1_backupitemamount = player->backupitemamount;
+									}
+									
+									player->emeralds = mockplayer2->emeralds;
+									player->spheres = mockplayer2->spheres;
+									player->roundscore = mockplayer2->roundscore;
+									player->mo->x = mockplayer2->mo->x;
+									player->mo->y = mockplayer2->mo->y;
+									player->mo->z = mockplayer2->mo->z;
+									player->mo->momx = mockplayer2->mo->momx;
+									player->mo->momy = mockplayer2->mo->momy;
+									player->mo->momz = mockplayer2->mo->momz;
+									P_ForceLocalAngle(player, mockplayer2->mo->angle);
+									player->mo->angle = mockplayer2->mo->angle;
+									player->hyudorotimer += 70;
+									
+
+									mockplayer2->emeralds = player1_emeralds;
+									mockplayer2->spheres = player1_spheres;
+									mockplayer2->roundscore = player1_roundscore;
+									mockplayer2->hyudorotimer += 70;
+									
+									players[chosenplayer].mo->x = x_1;
+									players[chosenplayer].mo->y = y_1;
+									players[chosenplayer].mo->z = z_1;
+									players[chosenplayer].mo->momx = momx_1;
+									players[chosenplayer].mo->momy = momy_1;
+									players[chosenplayer].mo->momz = momz_1;
+									players[chosenplayer].mo->angle = angle_1;
+									P_ForceLocalAngle(&players[chosenplayer], angle_1);
+
+									
+									CONS_Printf("Successful transfer!\n");
+
+								K_AdjustPlayerItemAmount(player, -1);
+								player->botvars.itemconfirm = 0;
+								}
+								else if (GetTotalInGameRacers() < 2)
+								{
+									K_AwardPlayerRings(player, 10, true);
+								}
+								else
+								{
+									CONS_Printf("Bad roll!\n");
+									; //test - do nothing
+								}
+								
+								//S_StartSound(player, sfx_mycwin);
+								//S_StartSound(player->mo, SUPERJACKPOT_SOUND);
+
+							}*/
 							break;
 						case KITEM_SAD:
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO

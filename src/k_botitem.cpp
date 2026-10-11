@@ -2213,6 +2213,7 @@ void K_BotItemUsage(const player_t *player, ticcmd_t *cmd, int16_t turnamt)
 					case KITEM_SUPERJACKPOT:					//SCS ADD
 					case KITEM_WRECKINGBALL:					//SCS ADD
 					case KITEM_RINGCAPBONUS:					//SCS ADD
+					//case KITEM_PLAYERSWAP:						//SCS ADD
 						K_BotItemGenericTap(player, cmd);
 						break;
 					case KITEM_MASTEREMERALD:					//SCS ADD
