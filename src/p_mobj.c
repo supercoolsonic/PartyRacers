@@ -1928,7 +1928,6 @@ dboolean P_XYMovement(mobj_t *mo)
 								mo->threshold = 0;
 							}				//SCS ADD END
 							break;
-							
 						case MT_PPOCKETHYUDORO:
 							P_RemoveMobj(mo);
 							break;
@@ -5436,7 +5435,9 @@ dboolean P_IsKartItem(int32_t type)
 		case MT_ICEDUSCRYSTAL_TRAP:
 		case MT_SOLFIRE:
 		case MT_SOLFIRE_SHIELD:
-		case MT_SLICERCLAW:					//SCS ADD END
+		case MT_SLICERCLAW:					
+		case MT_SWAPHOLOGRAM:
+		case MT_SWAPSTICKER:				//SCS ADD END
 			return true;
 
 		default:
@@ -5475,7 +5476,9 @@ dboolean P_IsKartFieldItem(int32_t type)
 		case MT_ICEDUSCRYSTAL:
 		case MT_ICEDUSCRYSTAL_TRAP:
 		case MT_SOLFIRE:
-		case MT_SLICERCLAW:					//SCS ADD END
+		case MT_SLICERCLAW:
+		case MT_SWAPHOLOGRAM:
+		case MT_SWAPSTICKER:				//SCS ADD END
 			return true;
 
 		default:
@@ -5528,7 +5531,9 @@ dboolean P_IsRelinkItem(int32_t type)
 		case MT_ICEDUSCRYSTAL_TRAP:
 		case MT_SOLFIRE:
 		case MT_SOLFIRE_SHIELD:
-		case MT_SLICERCLAW:							//SCS ADD END
+		case MT_SLICERCLAW:
+		case MT_SWAPHOLOGRAM:
+		case MT_SWAPSTICKER:						//SCS ADD END
 			return true;
 
 		default:
@@ -7145,12 +7150,23 @@ static dboolean P_MobjDeadThink(mobj_t *mobj)
 			return false;
 		}
 		break;
+	case MT_ICEDUSCRYSTAL:					//SCS ADD
+		mobj_t *snowcloud = P_SpawnMobj(mobj->x, mobj->y, mobj->z, MT_ICEDUSCLOUD);
+		
+		if (snowcloud != NULL && mobj->target != NULL)
+		{
+			snowcloud->angle = mobj->angle;
+			snowcloud->scale = mobj->scale*2;
+			snowcloud->destscale = snowcloud->scale;
+			snowcloud->fuse = 200;
+			snowcloud->target = mobj->target;
+		}
+		/* FALLTHRU */
 	case MT_ORBINAUT:
 	case MT_EGGMANITEM:
 	case MT_LANDMINE:
 	case MT_PRESSUREMINE:					//SCS ADD
-	case MT_ICEDUSCRYSTAL:					//SCS ADD
-	case MT_ICEDUSCRYSTAL_TRAP:				//SCS ADD
+	case MT_ICEDUSCRYSTAL_TRAP:				//SCS ADD - NOTE: crystal traps do not generate clouds
 	//case MT_DROPTARGET:
 	case MT_SPB:
 	case MT_GACHABOM:
@@ -7667,6 +7683,24 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 		P_MobjCheckWater(mobj);
 		break;
 	}
+	case MT_ICEDUSCLOUD:
+	{
+		if (leveltime % 10 == 0)
+		{
+			mobj_t *cloudtwinkle = P_SpawnMobj(mobj->x + (P_RandomRange(PR_FUZZ, -mobj->radius, mobj->radius)), 
+											mobj->y + (P_RandomRange(PR_FUZZ, -mobj->radius, mobj->radius)), 
+											mobj->z + (P_RandomRange(PR_FUZZ, (-mobj->height/2), (mobj->height*2))), MT_SIGNSPARKLE);
+				
+			if (cloudtwinkle != NULL)
+			{
+				P_InstaScale(cloudtwinkle, ((mobj->scale*3)/2));
+				cloudtwinkle->colorized = true;
+				cloudtwinkle->color = mobj->target->color;
+			}
+		}		
+			
+		break;
+	}
 	case MT_SOLFIRE:
 	{
 		Obj_SolFireThink(mobj);
@@ -7836,9 +7870,39 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 		if (mobj->threshold)
 			mobj->threshold--;
 		
+		P_MobjCheckWater(mobj);
+		
 		mobj->momx = 0;
 		mobj->momy = 0;
-		mobj->momz = 0;
+		
+		if (mobj->eflags & MFE_UNDERWATER)
+			mobj->momz = min(FRACUNIT, (mobj->momz + FRACUNIT/20));
+		else
+			mobj->momz = 0;
+		
+		break;
+	}
+	case MT_SWAPHOLOGRAM:
+	{
+		if (leveltime % 128 == 0)
+		{
+			mobj_t *holoring = P_SpawnMobj(mobj->x, mobj->y, mobj->z, MT_SWAPHOLOGRAM_RING);
+								
+			if (holoring)
+			{
+				holoring->momx = 0;
+				holoring->momy = 0;
+				holoring->momz = FRACUNIT*2;
+				holoring->fuse = 50;
+
+				holoring->frame = FF_FLOORSPRITE|FF_ADD;
+				holoring->renderflags |= RF_SLOPESPLAT | RF_NOSPLATBILLBOARD;
+				holoring->height = 1;
+				holoring->scale = mobj->scale;
+				holoring->destscale = holoring->scale;
+			}
+		}
+		mobj->angle -= (ANGLE_11hh/4);
 		break;
 	}
 	case MT_MEGACHOPPER:
@@ -12011,6 +12075,7 @@ static void P_DefaultMobjShadowScale(mobj_t *thing)
 	switch (thing->type)
 	{
 		case MT_MINIHYUDORO:					//SCS ADD
+		case MT_SWAPSTICKER:					//SCS ADD
 			thing->shadowscale = FRACUNIT/2;
 			break;
 		case MT_GHZBALLMINI_SHIELD:				//SCS ADD
@@ -15036,7 +15101,7 @@ static dboolean P_SetupSpawnedMapThing(mapthing_t *mthing, mobj_t *mobj)
 		{
 			mobj->threshold = P_RandomRange(PR_ITEM_SPAWNER, 1, NUMKARTITEMS - 1);
 			
-			if (!K_ItemEnabled(mobj->threshold))// || mobj->threshold == KITEM_PLAYERSWAP)		//No swaps or disabled items
+			if (!K_ItemEnabled(mobj->threshold) || mobj->threshold == KITEM_PLAYERSWAP)		//No swaps or disabled items
 				mobj->threshold = KITEM_SUPERRING;
 	
 			switch (mobj->threshold)

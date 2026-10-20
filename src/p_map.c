@@ -1284,7 +1284,7 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 		return K_RingGunBlastMaxCollide(thing, g_tm.thing) ? BMIT_CONTINUE : BMIT_ABORT;
 	}
 	
-	if (g_tm.thing->type == MT_ICEDUSCRYSTAL || g_tm.thing->type == MT_ICEDUSCRYSTAL_SHIELD || g_tm.thing->type == MT_ICEDUSCRYSTAL_TRAP 
+	if (g_tm.thing->type == MT_ICEDUSCRYSTAL || g_tm.thing->type == MT_ICEDUSCRYSTAL_SHIELD || g_tm.thing->type == MT_ICEDUSCRYSTAL_TRAP || g_tm.thing->type == MT_ICEDUSCLOUD
 	|| g_tm.thing->type == MT_SOLFIRE || g_tm.thing->type == MT_SOLFIRE_SHIELD || g_tm.thing->type == MT_SOLFIRE_TRAP)
 	{
 		// see if it went over / under
@@ -1295,7 +1295,7 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 
 		return K_IcedusSolfireCollide(g_tm.thing, thing) ? BMIT_CONTINUE : BMIT_ABORT;
 	}
-	else if (thing->type == MT_ICEDUSCRYSTAL || thing->type == MT_ICEDUSCRYSTAL_SHIELD || thing->type == MT_ICEDUSCRYSTAL_TRAP 
+	else if (thing->type == MT_ICEDUSCRYSTAL || thing->type == MT_ICEDUSCRYSTAL_SHIELD || thing->type == MT_ICEDUSCRYSTAL_TRAP || thing->type == MT_ICEDUSCLOUD
 	|| thing->type == MT_SOLFIRE || thing->type == MT_SOLFIRE_SHIELD || thing->type == MT_SOLFIRE_TRAP)
 	{
 		// see if it went over / under
@@ -1326,7 +1326,28 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 			return BMIT_CONTINUE; // underneath
 
 		return K_SlicerClawCollide(thing, g_tm.thing) ? BMIT_CONTINUE : BMIT_ABORT;
-	}	
+	}
+	
+	if (g_tm.thing->type == MT_SWAPHOLOGRAM || g_tm.thing->type == MT_SWAPSTICKER)
+	{
+		// see if it went over / under
+		if (g_tm.thing->z > thing->z + thing->height)
+			return BMIT_CONTINUE; // overhead
+		if (g_tm.thing->z + g_tm.thing->height < thing->z)
+			return BMIT_CONTINUE; // underneath
+
+		return K_PlayerSwapCollide(g_tm.thing, thing) ? BMIT_CONTINUE : BMIT_ABORT;
+	}
+	else if (thing->type == MT_SWAPHOLOGRAM || thing->type == MT_SWAPSTICKER)
+	{
+		// see if it went over / under
+		if (g_tm.thing->z > thing->z + thing->height)
+			return BMIT_CONTINUE; // overhead
+		if (g_tm.thing->z + g_tm.thing->height < thing->z)
+			return BMIT_CONTINUE; // underneath
+
+		return K_PlayerSwapCollide(thing, g_tm.thing) ? BMIT_CONTINUE : BMIT_ABORT;
+	}
 	
 	if (g_tm.thing->type == MT_MEGACHOPPER)
 	{

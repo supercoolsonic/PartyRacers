@@ -1561,6 +1561,16 @@ const char *const STATE_LIST[] = { // array length left dynamic for sanity testi
 	"S_MONITOR_SCREEN3B",
 	"S_MONITOR_SCREEN4A",
 	"S_MONITOR_SCREEN4B",
+	
+	"S_MONITOR_SCREEN5A",		//SCS ADD START
+	"S_MONITOR_SCREEN5B",
+	"S_MONITOR_SCREEN6A",
+	"S_MONITOR_SCREEN6B",
+	"S_MONITOR_SCREEN7A",
+	"S_MONITOR_SCREEN7B",
+	"S_MONITOR_SCREEN8A",
+	"S_MONITOR_SCREEN8B",		//SCS ADD END
+	
 	"S_MONITOR_STAND",
 	"S_MONITOR_CRACKA",
 	"S_MONITOR_CRACKB",
@@ -2943,6 +2953,9 @@ const char *const STATE_LIST[] = { // array length left dynamic for sanity testi
 	"S_GGZPARTICLE22",
 	"S_GGZPARTICLE23",
 	"S_GGZPARTICLE24",
+	"S_GGZPARTICLE25",	//SCS ADD START
+	"S_GGZPARTICLE26",
+	"S_GGZPARTICLE27",	//SCS ADD END
 
 	"S_GGZICECUBE",
 
@@ -3241,6 +3254,7 @@ const char *const STATE_LIST[] = { // array length left dynamic for sanity testi
 	"S_ICEDUSSNOWFLAKE",
 	"S_ICEDUSSHARD1",
 	"S_ICEDUSSHARD2",
+	"S_ICEDUSCLOUD",
 	
 	"S_SOLFIRE1",
 	"S_SOLFIRE2",
@@ -3268,7 +3282,10 @@ const char *const STATE_LIST[] = { // array length left dynamic for sanity testi
 	"S_RINGCAPINCREASEH",
 	"S_RINGCAPINCREASEI",		
 	
-	"S_EGGSLOTSPIKE",			//SCS ADD END
+	"S_EGGSLOTSPIKE",
+	
+	"S_SWAPHOLOGRAM",
+	"S_SWAPHOLORING",				//SCS ADD END
 };
 
 // RegEx to generate this from info.h: ^\tMT_([^,]+), --> \t"MT_\1",
@@ -4257,6 +4274,7 @@ const char *const MOBJTYPE_LIST[] = {  // array length left dynamic for sanity t
 	"MT_ICEDUSCRYSTAL",
 	"MT_ICEDUSCRYSTAL_SHIELD",
 	"MT_ICEDUSCRYSTAL_TRAP",
+	"MT_ICEDUSCLOUD",
 	"MT_ICEDUSSHARD",
 	
 	"MT_SOLFIRE",
@@ -4266,7 +4284,11 @@ const char *const MOBJTYPE_LIST[] = {  // array length left dynamic for sanity t
 	
 	"MT_SLICERCLAW",
 	
-	"MT_RINGCAPINSREASE",			//SCS ADD END
+	"MT_RINGCAPINSREASE",
+
+	"MT_SWAPHOLOGRAM",
+	"MT_SWAPHOLOGRAM_RING",
+	"MT_SWAPSTICKER",		//SCS ADD END
 };
 
 const char *const MOBJFLAG_LIST[] = {

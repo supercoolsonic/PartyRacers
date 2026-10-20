@@ -490,12 +490,14 @@ static BlockItReturn_t K_FindObjectsForNudging(mobj_t *thing)
 		case MT_PPOCKETHYUDORO:	
 		case MT_ICEDUSCRYSTAL:
 		case MT_ICEDUSCRYSTAL_SHIELD:
+		case MT_ICEDUSCLOUD:
 		case MT_GHZBALLMINI:
 		case MT_GHZBALLMINI_SHIELD:
 		case MT_SOLFIRE:
 		case MT_SOLFIRE_SHIELD:
 		case MT_SOLFIRE_TRAP:
-		case MT_SLICERCLAW:								//SCS ADD END
+		case MT_SLICERCLAW:
+		case MT_SWAPSTICKER:							//SCS ADD END
 			K_AddDodgeObject(thing, side, 20);
 			break;
 		case MT_SHRINK_GUN:

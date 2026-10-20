@@ -2019,7 +2019,7 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, uint8_t damag
 		 || target->type == MT_ICEDUSCRYSTAL || target->type == MT_ICEDUSCRYSTAL_SHIELD	
 		 || target->type == MT_SOLFIRE || target->type == MT_SOLFIRE_SHIELD
 		 || target->type == MT_GHZBALLMINI || target->type == MT_GHZBALLMINI_SHIELD
-		 || target->type == MT_SLICERCLAW																			//SCS ADD END
+		 || target->type == MT_SLICERCLAW || target->type == MT_SWAPSTICKER											//SCS ADD END
 		 || target->type == MT_KART_LEFTOVER)) // kart dead items
 		target->flags |= MF_NOGRAVITY; // Don't drop Tails 03-08-2000
 	else

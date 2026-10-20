@@ -330,7 +330,7 @@ struct Shatter : Mobj
 	{
 		auto rng = [source](int x, int y) { return P_RandomRange(PR_DECORATION, x, y) * source->scale(); };
 		Shatter* part = source->spawn_from<Shatter>({rng(-64, 64), rng(-64, 64), rng(0, 64)}, MT_GGZICESHATTER);
-		part->state(P_RandomRange(PR_DECORATION, 0, 1) ? S_GGZPARTICLE11 : S_GGZPARTICLE21);
+		part->state(P_RandomRange(PR_DECORATION, 0, 1) ? P_RandomRange(PR_ITEM_DEBRIS, 0, 1) ? S_GGZPARTICLE11 : S_GGZPARTICLE25 : P_RandomRange(PR_ITEM_DEBRIS, 0, 1) ? S_GGZPARTICLE21 : S_GGZPARTICLE25);	//SCS EDIT
 		part->fuse = TICRATE * 4;
 		return part;
 	}

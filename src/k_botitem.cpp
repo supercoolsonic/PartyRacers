@@ -193,7 +193,7 @@ static player_t *K_PlayerPredictThrow(const player_t *player, uint8_t extra)
 /*--------------------------------------------------
 	static player_t *K_PlayerInCone(const player_t *player, uint16_t cone, dboolean flip)
 
-		Looks for players in the .
+		Looks for players in the cone.
 
 	Input Arguments:-
 		player - Bot to compare against.
@@ -2062,7 +2062,7 @@ static void K_BotItemIceCube(const player_t *player, ticcmd_t *cmd)
 		return;
 	}
 
-	if (!P_IsObjectOnGround(player->mo))
+	if (!(player->mo->eflags & MFE_UNDERWATER) && !P_IsObjectOnGround(player->mo))	//SCS EDIT - CPUs gotta be able to break out now that ice floats
 	{
 		return;
 	}

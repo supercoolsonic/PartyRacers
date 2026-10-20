@@ -904,13 +904,18 @@ char sprnames[NUMSPRITES + 1][5] =
 	"ICEE",
 	"ICEQ",
 	"ICEM",
+	"ICEC",
 	"FREZ",
 	
 	"SLIC",
 	
 	"ITMP",
 	
-	"PLUR" //SCS ADD END
+	"PLUR",
+
+	"SWAP",
+	"RWAP",
+	"IMOS"		//SCS ADD END
 };
 
 char spr2names[NUMPLAYERSPRITES][5] =
@@ -2273,6 +2278,16 @@ state_t states[NUMSTATES] =
 	{SPR_IMON, FF_PAPERSPRITE|0, 1, {NULL}, 3, 1, S_MONITOR_SCREEN4A}, // S_MONITOR_SCREEN3B
 	{SPR_IMON, FF_PAPERSPRITE|4, 1, {NULL}, 3, 1, S_MONITOR_SCREEN4B}, // S_MONITOR_SCREEN4A
 	{SPR_IMON, FF_PAPERSPRITE|0, 1, {NULL}, 3, 1, S_MONITOR_SCREEN1A}, // S_MONITOR_SCREEN4B
+	
+	{SPR_IMOS, FF_PAPERSPRITE|1, 1, {NULL}, 3, 1, S_MONITOR_SCREEN5B}, // S_MONITOR_SCREEN5A		//SCS ADD START
+	{SPR_IMOS, FF_PAPERSPRITE|0, 1, {NULL}, 3, 1, S_MONITOR_SCREEN6A}, // S_MONITOR_SCREEN5B
+	{SPR_IMOS, FF_PAPERSPRITE|2, 1, {NULL}, 3, 1, S_MONITOR_SCREEN6B}, // S_MONITOR_SCREEN6A
+	{SPR_IMOS, FF_PAPERSPRITE|0, 1, {NULL}, 3, 1, S_MONITOR_SCREEN7A}, // S_MONITOR_SCREEN6B
+	{SPR_IMOS, FF_PAPERSPRITE|3, 1, {NULL}, 3, 1, S_MONITOR_SCREEN7B}, // S_MONITOR_SCREEN7A
+	{SPR_IMOS, FF_PAPERSPRITE|0, 1, {NULL}, 3, 1, S_MONITOR_SCREEN8A}, // S_MONITOR_SCREEN7B
+	{SPR_IMOS, FF_PAPERSPRITE|4, 1, {NULL}, 3, 1, S_MONITOR_SCREEN8B}, // S_MONITOR_SCREEN8A
+	{SPR_IMOS, FF_PAPERSPRITE|0, 1, {NULL}, 3, 1, S_MONITOR_SCREEN5A}, // S_MONITOR_SCREEN8B		//SCS ADD END
+	
 	{SPR_IMON, FF_PAPERSPRITE|5, -1, {NULL}, 3, 1, S_NULL}, // S_MONITOR_STAND
 	{SPR_NULL, FF_PAPERSPRITE|FF_TRANS50|FF_ADD|6, -1, {NULL}, 3, 35, S_NULL}, // S_MONITOR_CRACKA
 	{SPR_NULL, FF_PAPERSPRITE|FF_TRANS50|FF_SUBTRACT|10, -1, {NULL}, 3, 35, S_NULL}, // S_MONITOR_CRACKB
@@ -3648,6 +3663,9 @@ state_t states[NUMSTATES] =
 	{SPR_GGZ2, 1|FF_FULLBRIGHT, 1, {NULL}, 0, 0, S_GGZPARTICLE23},  // S_GGZPARTICLE22
 	{SPR_GGZ2, 2|FF_FULLBRIGHT, 1, {NULL}, 0, 0, S_GGZPARTICLE24},  // S_GGZPARTICLE23
 	{SPR_GGZ2, 3|FF_FULLBRIGHT, 1, {NULL}, 0, 0, S_GGZPARTICLE21},  // S_GGZPARTICLE24
+	{SPR_GGZ3, 0|FF_FULLBRIGHT, 1, {NULL}, 0, 0, S_GGZPARTICLE26},  // S_GGZPARTICLE25	//SCS ADD START
+	{SPR_GGZ3, 1|FF_FULLBRIGHT, 1, {NULL}, 0, 0, S_GGZPARTICLE27},  // S_GGZPARTICLE26
+	{SPR_GGZ3, 2|FF_FULLBRIGHT, 1, {NULL}, 0, 0, S_GGZPARTICLE25},  // S_GGZPARTICLE27	//SCS ADD END
 
 	{SPR_GGZ8, FF_PAPERSPRITE, -1, {NULL}, 0, 0, S_NULL},  // S_GGZICECUBE
 
@@ -3934,29 +3952,20 @@ state_t states[NUMSTATES] =
 	
 	{SPR_PRIB, FF_FULLBRIGHT, -1, {NULL}, 8, 1, S_SP_RIBBON},				// S_SP_RIBBON
 	
-	{SPR_HSTU, FF_FULLBRIGHT|FF_ANIMATE, -1, {NULL}, 3, 3, S_PPOCKET_STUNNED},			// S_PPOCKET_STUNNED
-	{SPR_HSWI, FF_FULLBRIGHT|FF_ANIMATE, -1, {NULL}, 4, 7, S_INVISIBLE},				// S_PPOCKET_VANISH	
+	{SPR_HSTU, FF_FULLBRIGHT|FF_ANIMATE, -1, {NULL}, 3, 3, S_PPOCKET_STUNNED},		// S_PPOCKET_STUNNED
+	{SPR_HSWI, FF_FULLBRIGHT|FF_ANIMATE, -1, {NULL}, 4, 7, S_INVISIBLE},			// S_PPOCKET_VANISH	
 	
 	{SPR_ICED,  FF_FULLBRIGHT|FF_ANIMATE|FF_RANDOMANIM, -1, {NULL}, 15, 2, S_ICEDUS1},			// S_ICEDUS1
-	//{SPR_ICED,  1, 1, {NULL}, 0, 0, S_ICEDUS3},			// S_ICEDUS2
-	//{SPR_ICED,  2, 1, {NULL}, 0, 0, S_ICEDUS4},			// S_ICEDUS3
-	//{SPR_ICED,  3, 1, {NULL}, 0, 0, S_ICEDUS5},			// S_ICEDUS4
-	//{SPR_ICED,  4, 1, {NULL}, 0, 0, S_ICEDUS6},			// S_ICEDUS5
-	//{SPR_ICED,  5, 1, {NULL}, 0, 0, S_ICEDUS1},			// S_ICEDUS6
-	{SPR_ICED,  0, 175, {NULL}, 0, 0, S_NULL},			// S_ICEDUS_DEAD
+	{SPR_ICED,  0, 175, {NULL}, 0, 0, S_NULL},													// S_ICEDUS_DEAD
 	{SPR_ICES,  FF_FULLBRIGHT|FF_ANIMATE|FF_RANDOMANIM, -1, {NULL}, 15, 6, S_ICEDUS_SHIELD1},	// S_ICEDUS_SHIELD1
-	//{SPR_ICED,  7, 3, {NULL}, 0, 0, S_ICEDUS_SHIELD3},	// S_ICEDUS_SHIELD2
-	//{SPR_ICED,  8, 3, {NULL}, 0, 0, S_ICEDUS_SHIELD4},	// S_ICEDUS_SHIELD3
-	//{SPR_ICED,  9, 3, {NULL}, 0, 0, S_ICEDUS_SHIELD5},	// S_ICEDUS_SHIELD4
-	//{SPR_ICED, 10, 3, {NULL}, 0, 0, S_ICEDUS_SHIELD6},	// S_ICEDUS_SHIELD5
-	//{SPR_ICED, 11, 3, {NULL}, 0, 0, S_ICEDUS_SHIELD1},	// S_ICEDUS_SHIELD6
-	{SPR_ICED,  0, 175, {NULL}, 0, 0, S_NULL},			// S_ICEDUS_SHIELDDEAD		//Maybe like animate it breaking apart?
-	{SPR_ICET,  0, -1, {NULL}, 0, 0, S_ICEDUSTRAP},			// S_ICEDUSTRAP
-	{SPR_ICET,  1, -1, {NULL}, 0, 0, S_ICEDUSTRAP2},		// S_ICEDUSTRAP2
+	{SPR_ICED,  0, 175, {NULL}, 0, 0, S_NULL},													// S_ICEDUS_SHIELDDEAD		//Maybe like animate it breaking apart?
+	{SPR_ICET,  0, -1, {NULL}, 0, 0, S_ICEDUSTRAP},												// S_ICEDUSTRAP
+	{SPR_ICET,  1, -1, {NULL}, 0, 0, S_ICEDUSTRAP2},											// S_ICEDUSTRAP2
 	{SPR_ICEE,  FF_FULLBRIGHT|FF_ANIMATE, 32, {NULL}, 7, 6, S_NULL},	// S_ICEDUSEXPLOSION
 	{SPR_FREZ,  FF_FULLBRIGHT|FF_ANIMATE, 24, {NULL}, 7, 1, S_NULL},	// S_ICEDUSSNOWFLAKE
 	{SPR_ICEQ, 0|FF_FULLBRIGHT, 1, {NULL}, 0, 0, S_ICEDUSSHARD1}, // S_ICEDUSSHARD1
 	{SPR_ICEM, 0|FF_FULLBRIGHT, 1, {NULL}, 0, 0, S_ICEDUSSHARD2}, // S_ICEDUSSHARD2
+	{SPR_ICEC, FF_ANIMATE|FF_RANDOMANIM, -1, {NULL}, 6, 5, S_ICEDUSCLOUD}, // S_ICEDUSCLOUD
 	
 	{SPR_SOLB,  FF_ANIMATE|0, 1, {NULL}, 0, 0, S_SOLFIRE2},		// S_SOLFIRE1
 	{SPR_SOLB,  FF_ANIMATE|1, 1, {NULL}, 0, 0, S_SOLFIRE3},		// S_SOLFIRE2
@@ -3965,7 +3974,7 @@ state_t states[NUMSTATES] =
 	{SPR_SOLD,  FF_FULLBRIGHT|FF_ANIMATE, 24, {NULL}, 11, 2, S_NULL},			// S_SOLFIRE_DEAD
 	{SPR_SOLH,  FF_FULLBRIGHT|FF_ANIMATE, 32, {NULL}, 6, 6, S_NULL},			// S_SOLFIRE_HIT
 	{SPR_SOLS,  FF_FULLBRIGHT|FF_ANIMATE|FF_RANDOMANIM, -1, {NULL}, 7, 2, S_SOLFIRE_SHIELD1},	// S_SOLFIRE_SHIELD1
-	{SPR_SOLT, 0|FF_ANIMATE, 12, {NULL}, 11, 2, S_NULL}, // S_SOLFIRETRAP
+	{SPR_SOLT, 0|FF_ANIMATE, 12, {NULL}, 11, 2, S_NULL}, 						// S_SOLFIRETRAP
 	{SPR_FLMS, FF_FULLBRIGHT|18,  -1, {NULL}, 0, 0, S_SOLFIREBURST},			// S_SOLFIREBURST
 	
 	{SPR_SLIC, FF_FULLBRIGHT|FF_ANIMATE, -1, {NULL}, 3, 2, S_SLICERCLAW},		// S_SLICERCLAW
@@ -3981,7 +3990,10 @@ state_t states[NUMSTATES] =
 	{SPR_PLUR, FF_FULLBRIGHT|5, 1, {NULL}, 0, 0, S_RINGCAPINCREASEI}, // S_RINGCAPINCREASEH
 	{SPR_PLUR, FF_FULLBRIGHT|6, 1, {NULL}, 0, 0, S_NULL}, // S_RINGCAPINCREASEI
 		
-	{SPR_DEBT, 7|FF_FULLBRIGHT, 1, {NULL}, 0, 0, S_EGGSLOTSPIKE}, // S_EGGSLOTSPIKE						//SCS ADD END
+	{SPR_DEBT, 7|FF_FULLBRIGHT, 1, {NULL}, 0, 0, S_EGGSLOTSPIKE}, // S_EGGSLOTSPIKE
+	
+	{SPR_SWAP, FF_FULLBRIGHT|FF_TRANS50, -1, {NULL}, 5, 2, S_SWAPHOLOGRAM}, // S_SWAPHOLOGRAM
+	{SPR_RWAP, FF_FULLBRIGHT|FF_TRANS50, -1, {NULL}, 5, 2, S_SWAPHOLORING}, // S_SWAPHOLORING						//SCS ADD END
 	
 };
 
@@ -24498,6 +24510,33 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 	
+	{           // MT_ICEDUSCLOUD
+		-1,             // doomednum
+		S_ICEDUSCLOUD, // spawnstate
+		2,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_tossed,		// seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_ICEDUS_DEAD, // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		128*FRACUNIT,	// speed
+		35*FRACUNIT,	// radius
+		70*FRACUNIT,	// height
+		0,              // display offset
+		100,            // mass
+		1,              // damage
+		sfx_None,       // activesound
+		MF_SPECIAL|MF_NOGRAVITY|MF_DONTENCOREMAP|MF_ELEMENTAL|MF_DONTPUNT|MF_NOBLOCKMAP, // flags
+		S_NULL          // raisestate
+	},
+	
 	{           // MT_ICEDUSSHARD
 		-1,             // doomednum
 		S_ICEDUSSHARD1,   // spawnstate
@@ -24684,6 +24723,87 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		0,						// damage
 		sfx_None,				// activesound
 		MF_NOBLOCKMAP|MF_NOGRAVITY|MF_NOCLIP|MF_NOCLIPHEIGHT|MF_DONTENCOREMAP, // flags
+		S_NULL					// raisestate
+	},
+	
+	{           // MT_SWAPHOLOGRAM
+		-1,						// doomednum
+		S_SWAPHOLOGRAM,		// spawnstate
+		1000,					// spawnhealth
+		S_NULL,					// seestate
+		sfx_None,				// seesound
+		8,						// reactiontime
+		sfx_None,				// attacksound
+		S_NULL,					// painstate
+		0,						// painchance
+		sfx_None,				// painsound
+		S_NULL,					// meleestate
+		S_NULL,					// missilestate
+		S_NULL,					// deathstate
+		S_NULL,					// xdeathstate
+		sfx_None,				// deathsound
+		8,						// speed
+		8*FRACUNIT,				// radius
+		8*FRACUNIT,				// height
+		-1,						// display offset
+		100,					// mass
+		0,						// damage
+		sfx_None,				// activesound
+		MF_NOBLOCKMAP|MF_DONTENCOREMAP||MF_NOSQUISH, // flags
+		S_NULL					// raisestate
+	},
+	
+	{           // MT_SWAPHOLOGRAM_RING
+		-1,						// doomednum
+		S_SWAPHOLORING,		// spawnstate
+		1000,					// spawnhealth
+		S_NULL,					// seestate
+		sfx_None,				// seesound
+		8,						// reactiontime
+		sfx_None,				// attacksound
+		S_NULL,					// painstate
+		0,						// painchance
+		sfx_None,				// painsound
+		S_NULL,					// meleestate
+		S_NULL,					// missilestate
+		S_NULL,					// deathstate
+		S_NULL,					// xdeathstate
+		sfx_None,				// deathsound
+		6,						// speed
+		6*FRACUNIT,				// radius
+		6*FRACUNIT,				// height
+		-1,						// display offset
+		100,					// mass
+		0,						// damage
+		sfx_None,				// activesound
+		MF_NOBLOCKMAP|MF_NOCLIP|MF_NOCLIPHEIGHT|MF_NOGRAVITY|MF_DONTENCOREMAP|MF_NOSQUISH, // flags
+		S_NULL					// raisestate
+	},
+	
+	{           // MT_SWAPSTICKER
+		-1,						// doomednum
+		S_SLICERCLAW,		// spawnstate
+		1000,					// spawnhealth
+		S_NULL,					// seestate
+		sfx_None,				// seesound
+		8,						// reactiontime
+		sfx_None,				// attacksound
+		S_NULL,					// painstate
+		0,						// painchance
+		sfx_None,				// painsound
+		S_NULL,					// meleestate
+		S_NULL,					// missilestate
+		S_NULL,					// deathstate
+		S_NULL,					// xdeathstate
+		sfx_None,				// deathsound
+		6,						// speed
+		6*FRACUNIT,				// radius
+		6*FRACUNIT,				// height
+		-1,						// display offset
+		100,					// mass
+		0,						// damage
+		sfx_None,				// activesound
+		MF_NOBLOCKMAP|MF_MISSILE|MF_DONTENCOREMAP|MF_APPLYTERRAIN|MF_SLOPE|MF_DONTPUNT|MF_NOGRAVITY, // flags
 		S_NULL					// raisestate
 	},
 };
