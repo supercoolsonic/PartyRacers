@@ -88,7 +88,8 @@ struct Shoe : Mobj
 	bool valid() const { return Mobj::valid(follow()) && follow()->valid() && Mobj::valid(chain()); }
 
 	Fixed minDist() const { return 200 * mapobjectscale; }
-	Fixed maxDist() const { return 800 * mapobjectscale; }		//SCS EDIT - yeah, we're not changing this. Too much fun lol
+	Fixed maxDist() const { return 800 * mapobjectscale; }			//SCS EDIT - reverting to original value
+	Fixed maxDistBad() const { return 500 * mapobjectscale; }		//SCS ADD - Non-blue EXP equals shorter chain
 
 	angle_t followAngle() const { return R_PointToAngle2(x, y, follow()->x, follow()->y); }
 	Fixed followDistance() const { return FixedHypot(x - follow()->x, y - follow()->y); }
@@ -115,7 +116,7 @@ struct Shoe : Mobj
 		shoe->dir(0);
 		shoe->fuse = 15 * TICRATE;
 
-		int32_t numLinks = 8;//5;			//Should this really be changed? SCS - maybe worth changing it back. More chaos hahaha
+		int32_t numLinks = (players[shoe->owner()].gradingfactor >= (FRACUNIT*5)/4) ? 8 : 5;//5;	//SCS EDIT - better EXP equals longer chain (original length)
 		Chain* link = nullptr;
 
 		for (int32_t i = 0; i < numLinks; ++i)
@@ -208,21 +209,22 @@ private:
 		Fixed dist = followDistance();
 		angle_t a = followAngle();
 		bool close = true;
+		bool longerchain = (K_EffectiveGradingFactor(ownerPlayer()) >= (FRACUNIT*5)/4);	//SCS ADD
 
 		Fixed dz = z - follow()->z;
 
-		if (dz < -maxDist())
-			z = follow()->z - maxDist();
-		else if (dz > maxDist())
-			z = follow()->z + maxDist();
+		if (dz < (longerchain ? -maxDist() : -maxDistBad()))	//SCS EDIT
+			z = follow()->z - (longerchain ? maxDist() : maxDistBad());	//SCS EDIT
+		else if (dz > (longerchain ? maxDist() : maxDistBad()))	//SCS EDIT
+			z = follow()->z + (longerchain ? maxDist() : maxDistBad());	//SCS EDIT
 
 		if (dist > minDist())
 		{
-			if (dist > maxDist())
+			if (dist > (longerchain ? maxDist() : maxDistBad()))		//SCS EDIT
 			{
 				move_origin({
-					follow()->x - maxDist() * Fixed {FCOS(a)},
-					follow()->y - maxDist() * Fixed {FSIN(a)},
+					follow()->x - (longerchain ? maxDist() : maxDistBad()) * Fixed {FCOS(a)},	//SCS EDIT
+					follow()->y - (longerchain ? maxDist() : maxDistBad()) * Fixed {FSIN(a)},	//SCS EDIT
 					z,
 				});
 
@@ -259,7 +261,7 @@ private:
 		else
 			friction += 500;
 
-		if (dist > maxDist())
+		if (dist > (longerchain ? maxDist() : maxDistBad()))	//SCS EDIT
 			animate();
 		else
 		{

@@ -20,6 +20,7 @@
 #include "../m_random.h"
 #include "../r_main.h"
 #include "../s_sound.h"
+#include "../k_collide.h"		//SCS ADD
 
 #define FINE90 (FINEANGLES/4)
 #define FINE180 (FINEANGLES/2)
@@ -52,6 +53,7 @@ static const struct monitor_part_config {
 #define monitor_damage(o) ((o)->extravalue2)
 #define monitor_rammingspeed(o) ((o)->movefactor)
 #define monitor_combohit(o) ((o)->cusval)
+#define monitor_swapowner(o) ((o)->tracer)				//SCS ADD
 
 static inline uint8_t
 get_monitor_itemcount (const mobj_t *monitor)
@@ -313,10 +315,15 @@ kill_monitor_part (mobj_t *part)
 			break;
 
 		case S_MONITOR_SCREEN1A:
-			spawn_debris(part);
-			P_SetMobjState(part, S_MONITOR_SCREEN1B);
+			P_SetMobjState(part, S_MONITOR_SCREEN1B);	//SCS MOVE
+			goto SkipSet;								//SCS ADD
 			/*FALLTHRU*/
-
+		case S_MONITOR_SCREEN5A:		//SCS ADD
+			spawn_debris(part);
+			P_SetMobjState(part, S_MONITOR_SCREEN5B);	//SCS ADD
+			
+			SkipSet:									//SCS ADD
+			/*FALLTHRU*/			
 		default:
 			/* To be clear, momx/y do not need to set because
 			   those fields are set every tic to offset each
@@ -571,6 +578,14 @@ Obj_MonitorPartThink (mobj_t *part)
 	switch (statenum)
 	{
 		case S_MONITOR_SCREEN1A:
+			if (monitor != NULL && monitor->tracer != NULL && part_type(part) != S_MONITOR_SCREEN5A)	//SCS ADD START
+			{
+				part_type(part) = S_MONITOR_SCREEN5A;
+				part->sprite = SPR_IMOS; 
+				P_SetMobjState(part, S_MONITOR_SCREEN5A);
+			}
+				/*FALLTHRU*/
+		case S_MONITOR_SCREEN5A:																		//SCS ADD END
 			if (has_state(monitor, monitor->info->painstate))
 			{
 				spawn_debris(part);
@@ -698,6 +713,12 @@ Obj_MonitorOnDeath
 
 	uint32_t sharedseed = restore_item_rng(
 			monitor_rngseed(monitor));
+			
+	if (monitor != NULL && monitor->tracer != NULL)	//SCS ADD - player swap item
+	{
+		DoPlayerPositionSwap(source, monitor->tracer);
+		source = monitor->tracer;
+	}
 
 	for (i = 0; i < itemcount; ++i)
 	{

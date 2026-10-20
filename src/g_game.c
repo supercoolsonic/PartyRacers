@@ -2691,6 +2691,9 @@ void G_PlayerReborn(int32_t player, dboolean betweenmaps)
 	p->xtralife = xtralife;
 	p->ringlimit = 20;			//SCS ADD
 	p->perfectcheckpointstreak = 0;		//SCS ADD
+	
+	if (leveltime < 10)// && GetTotalInGameRacers() > 16)
+		p->flashing += TICRATE/16;	//SCS ADD - Potential solution for bumping players on maps with less than 32 player starts with more than 16 players
 
 	p->finalized = finalized;
 	

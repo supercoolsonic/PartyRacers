@@ -216,7 +216,7 @@ static patch_t *kp_icedus[6];
 static patch_t *kp_slicer[3];
 static patch_t *kp_sol[6];
 static patch_t *kp_ringbonus[12];
-//static patch_t *kp_playerswap[2];	//SCS ADD END
+static patch_t *kp_playerswap[2];	//SCS ADD END
 static patch_t *kp_bar[4];
 static patch_t *kp_doublebar[4];
 static patch_t *kp_triplebar[4];
@@ -917,7 +917,7 @@ void K_LoadKartHUDGraphics(void)
 		HU_UpdatePatch(&kp_ringbonus[i], "%s", buffer);
 	}
 	
-	//HU_UpdatePatch(&kp_playerswap[0], "K_ITSWAP");				//SCS ADD END
+	HU_UpdatePatch(&kp_playerswap[0], "K_ITSWAP");				//SCS ADD END
 
 
 	snprintf(buffer, sizeof(buffer), "FSMFGxxx");
@@ -999,7 +999,7 @@ void K_LoadKartHUDGraphics(void)
 		HU_UpdatePatch(&kp_ringbonus[i+4], "%s", buffer);
 	}
 	
-	//HU_UpdatePatch(&kp_playerswap[1], "K_ISSWAP");
+	HU_UpdatePatch(&kp_playerswap[1], "K_ISSWAP");
 	
 	snprintf(buffer, sizeof(buffer), "K_ISTSNx");
 	for (i = 0; i < 9; i++)
@@ -1129,7 +1129,7 @@ void K_LoadKartHUDGraphics(void)
 		HU_UpdatePatch(&kp_ringbonus[i+8], "%s", buffer);
 	}
 
-	//HU_UpdatePatch(&kp_playerswap[2], "ISPYSWAP");
+	HU_UpdatePatch(&kp_playerswap[2], "ISPYSWAP");
 	
 	HU_UpdatePatch(&kp_timestone[29], "ISPYSTN10");
 	HU_UpdatePatch(&kp_normalshield[2], "ISPYSHLD");
@@ -1621,8 +1621,8 @@ const char *K_GetItemPatch(uint8_t item, dboolean tiny)
 			return (tiny ? "K_ISSOLF" : "K_ITSOL4");
 		case KITEM_RINGCAPBONUS:
 			return (tiny ? "K_ISBON1" : "K_ITBON1");
-		//case KITEM_PLAYERSWAP:
-			//return (tiny ? "K_ISSWAP" : "K_ITSWAP");		//SCS ADD END
+		case KITEM_PLAYERSWAP:
+			return (tiny ? "K_ISSWAP" : "K_ITSWAP");		//SCS ADD END
 		default:
 			return (tiny ? "K_ISSAD" : "K_ITSAD");
 	}
@@ -1724,8 +1724,8 @@ static patch_t *K_GetItemPatch_RaceFaces(uint8_t item)	//SCS ADD
 			return kp_sol[5];
 		case KITEM_RINGCAPBONUS:
 			return kp_ringbonus[((leveltime % (4*3)) / 3) + 8];
-		//case KITEM_PLAYERSWAP:
-			//return kp_playerswap[2];
+		case KITEM_PLAYERSWAP:
+			return kp_playerswap[2];
 		default:
 			return kp_sadface[1];		//there is no ISPYSAD...
 	}
@@ -1803,8 +1803,8 @@ static patch_t *K_GetCachedItemPatch(int32_t item, uint8_t offset)
 		kp_icedus,
 		kp_slicer,
 		kp_sol,
-		kp_ringbonus
-		//kp_playerswap		//SCS ADD END
+		kp_ringbonus,
+		kp_playerswap		//SCS ADD END
 	};
 
 	if (item == KITEM_SAD || (item > KITEM_NONE && item < NUMKARTITEMS))

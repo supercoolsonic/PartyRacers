@@ -28,26 +28,31 @@ dboolean K_MineCollide(mobj_t *t1, mobj_t *t2);
 
 dboolean K_LandMineCollide(mobj_t *t1, mobj_t *t2);
 
-dboolean K_RingGunBlastMaxCollide(mobj_t *t1, mobj_t *t2);		//SCS ADD
+dboolean K_RingGunBlastMaxCollide(mobj_t *t1, mobj_t *t2);		//SCS ADD START
 
-dboolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2);		//SCS ADD
-void K_GHZBall_BalBounce(mobj_t *t1, mobj_t *t2);		//SCS ADD
-void K_GHZBall_BounceWithOther(mobj_t *t1, mobj_t *t2); //SCS ADD
+dboolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2);
+void K_GHZBall_BalBounce(mobj_t *t1, mobj_t *t2);
+void K_GHZBall_BounceWithOther(mobj_t *t1, mobj_t *t2);
 
-dboolean K_IcedusSolfireCollide(mobj_t *t1, mobj_t *t2);		//SCS ADD
+dboolean K_IcedusSolfireCollide(mobj_t *t1, mobj_t *t2);
 
-dboolean K_SlicerClawCollide(mobj_t *t1, mobj_t *t2);		//SCS ADD
+dboolean K_SlicerClawCollide(mobj_t *t1, mobj_t *t2);
 
-dboolean K_PickpocketCollide(mobj_t *t1, mobj_t *t2);		//SCS ADD
+dboolean K_PlayerSwapCollide(mobj_t *t1, mobj_t *t2);
 
-dboolean K_MegaChopperCollide(mobj_t *t1, mobj_t *t2);		//SCS ADD
+dboolean K_PickpocketCollide(mobj_t *t1, mobj_t *t2);
+
+dboolean K_MegaChopperCollide(mobj_t *t1, mobj_t *t2);
+
+void DoPlayerPositionSwap(mobj_t *t1, mobj_t *t2);
+
+void K_ArmageddonShieldAttack(mobj_t *actor, fixed_t size);
+void K_IcedusBlastAttack(mobj_t *actor, fixed_t size);
+void SpawnIcedusTrapDeathEffect(mobj_t *crystaltrap, int scale);	//SCS ADD END
 
 dboolean K_DropTargetCollide(mobj_t *t1, mobj_t *t2);
 
 void K_LightningShieldAttack(mobj_t *actor, fixed_t size);
-void K_ArmageddonShieldAttack(mobj_t *actor, fixed_t size);		//SCS ADD
-void K_IcedusBlastAttack(mobj_t *actor, fixed_t size);			//SCS ADD
-void SpawnIcedusTrapDeathEffect(mobj_t *crystaltrap, int scale);	//SCS ADD
 
 dboolean K_BubbleShieldCanReflect(mobj_t *t1, mobj_t *t2);
 dboolean K_BubbleShieldReflect(mobj_t *t1, mobj_t *t2);

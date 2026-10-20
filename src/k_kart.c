@@ -1193,7 +1193,7 @@ dboolean K_KartBouncing(mobj_t *mobj1, mobj_t *mobj2)
 		flash = K_GetKartFlashing(mobj1->player);
 		if (mobj1->player && mobj1->player->flashing > 0 && mobj1->player->flashing < flash)
 		{
-			if (mobj1->player->flashing < flash-1)
+			if (mobj1->player->flashing < flash-1)// && leveltime > introtime)	//SCS EDIT
 				mobj1->player->flashing++;
 			return false;
 		}
@@ -1201,7 +1201,7 @@ dboolean K_KartBouncing(mobj_t *mobj1, mobj_t *mobj2)
 		flash = K_GetKartFlashing(mobj2->player);
 		if (mobj2->player && mobj2->player->flashing > 0 && mobj2->player->flashing < flash)
 		{
-			if (mobj2->player->flashing < flash-1)
+			if (mobj2->player->flashing < flash-1)// && leveltime > introtime)	//SCS EDIT
 				mobj2->player->flashing++;
 			return false;
 		}
@@ -5438,8 +5438,8 @@ static dboolean K_IsScaledItem(mobj_t *mobj)
 		|| mobj->type == MT_BANANA || mobj->type == MT_EGGMANITEM || mobj->type == MT_BALLHOG
 		|| mobj->type == MT_SSMINE || mobj->type == MT_LANDMINE || mobj->type == MT_SINK
 		|| mobj->type == MT_GARDENTOP || mobj->type == MT_DROPTARGET || mobj->type == MT_GHZBALL || mobj->type == MT_GHZBALLMINI || mobj->type == MT_MEGACHOPPER 				//SCS EDIT
-		|| mobj->type == MT_ICEDUSCRYSTAL || mobj->type == MT_ICEDUSCRYSTAL_TRAP || mobj->type == MT_SOLFIRE || mobj->type == MT_SOLFIRE_TRAP									//SCS ADD
-		|| mobj->type == MT_SLICERCLAW || mobj->type == MT_AFTERBURNER_JAWZ || mobj->type == MT_PRESSUREMINE || mobj->type == MT_PLAYER);										//SCS EDIT
+		|| mobj->type == MT_ICEDUSCRYSTAL || mobj->type == MT_ICEDUSCRYSTAL_TRAP || mobj->type == MT_SOLFIRE || mobj->type == MT_SOLFIRE_TRAP || mobj->type == MT_SLICERCLAW	//SCS ADD
+		|| mobj->type == MT_SWAPHOLOGRAM || mobj->type == MT_SWAPSTICKER || mobj->type == MT_AFTERBURNER_JAWZ || mobj->type == MT_PRESSUREMINE || mobj->type == MT_PLAYER);		//SCS EDIT
 }
 
 
@@ -12691,6 +12691,14 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 
 	if ((player->mo->eflags & MFE_UNDERWATER) && player->curshield != KSHIELD_BUBBLE)
 	{
+		if (player->icecube.frozen)	//SCS ADD - Ice cubes float, it's just physics :)
+		{
+			player->mo->momx /= 2;
+			player->mo->momy /= 2;
+			player->mo->momz = max(player->mo->momz, -FRACUNIT/5);
+			player->mo->momz += FRACUNIT/3;
+		}
+		
 		if (!specialstageinfo.valid && (player->curshield == KSHIELD_LIGHTNING && !(player->lightningcharge)) || (player->lightningcharge && player->lightningcharge < LIGHTNING_CHARGE))	//SCS ADD START - NOTE - allow it to be used underwater in special
 		{																																																			//stages, since at least one uses it...
 			if (player->lightningcharge)
@@ -18331,7 +18339,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 							else if ((gametyperules & GTR_CIRCUIT) && player->orbichargetap && player->orbinautchargetime < (40 + 15*min(player->itemamount, 6))) //Disable this ability in Battle
 							{
 								angle_t an;
-								mobj_t *snomo;
+								mobj_t *snomo, *snoclo;
 								int i = 0;
 								fixed_t sx;
 								fixed_t sy;
@@ -18343,7 +18351,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 						
 								player->orbinautchargetime++;
 
-								if (player->orbinautchargetime >= (40 + 15*player->itemamount))
+								if (player->orbinautchargetime >= (40 + 15*min(player->itemamount, 6)))
 								{
 									mobj_t *bigsnow = P_SpawnMobj(
 										//player->mo,
@@ -18360,9 +18368,17 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 										K_FlipFromObject(bigsnow, player->mo);
 									}
 									
-									for (i=0; i<15; i++)
+									for (i = 0; i < (4*min(4, player->itemamount)); i++)
 									{
-										an = ANGLE_22h;
+										if (player->itemamount >= 4)
+											an = ANGLE_22h;
+										else if (player->itemamount >= 3)
+											an = (ANGLE_270)/9;
+										else if (player->itemamount >= 2)
+											an = ANGLE_45;
+										else
+											an = ANGLE_90;
+										
 										sx = player->mo->x + FixedMul(player->mo->scale*((180 + 30)*min(player->itemamount, 6)), FINECOSINE((an*i)>>ANGLETOFINESHIFT));
 										sy = player->mo->y + FixedMul(player->mo->scale*((180 + 30)*min(player->itemamount, 6)), FINESINE((an*i)>>ANGLETOFINESHIFT));
 										snomo = P_SpawnMobj(sx, sy, player->mo->z, MT_THOK);
@@ -18371,6 +18387,14 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 										snomo->scale = player->mo->scale*3;
 										//P_SetTarget(&mo->target, player->mo); //Don't follow the player
 										P_SetMobjState(snomo, S_ICEDUSSNOWFLAKE);
+										
+										snoclo = P_SpawnMobj(sx, sy, player->mo->z, MT_ICEDUSCLOUD);
+										snoclo->angle = an*i;
+										snoclo->extravalue1 = ((180 + 30)*min(player->itemamount, 6));
+										snoclo->scale = player->mo->scale*2;
+										snoclo->destscale = snoclo->scale;
+										snoclo->fuse = max(50*player->itemamount, 90);	//This is where having more than 4 Icedus really shines. Blast radius and cloud size cap at 6, but their longevity can be extended further if you have even more.
+										snoclo->target = player->mo;
 									}
 									
 									S_StopSoundByID(player->mo, sfx_mbs55);
@@ -18378,7 +18402,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 									S_StartSound(player->mo, sfx_mbs6e);
 									S_StartSound(player->mo, sfx_cdfm63);
 									
-									if (player->itemamount >= 4)
+									if (player->itemamount >= 3)
 										S_StartSound(player->mo, sfx_telept);
 									
 									K_IcedusBlastAttack(player->mo, ((180 + 37) * FRACUNIT)*player->itemamount);
@@ -18621,98 +18645,49 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 								}
 							}
 							break;
-						/*case KITEM_PLAYERSWAP:
+						case KITEM_PLAYERSWAP:
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
 							{
-								uint8_t chosenplayer;
-								player_t *mockplayer2;
-								
-								
-								uint32_t player1_roundscore;		//	each is a separate roll
-								
-								uint8_t player1_emeralds;			//|	battle mode swaps
-								
-								int16_t player1_spheres;			//	so you can only get 1 per slot
-								
-								chosenplayer = P_RandomRange(PR_DECORATION, 0, GetTotalInGameRacers());
-								
-								if (players[chosenplayer].mo != NULL && !players[chosenplayer].exiting && !players[chosenplayer].spectator && players[chosenplayer].mo->health > 0 && players[chosenplayer].mo != player->mo)
-								{
-									fixed_t x_1, y_1, z_1, momx_1, momy_1, momz_1;
-									angle_t angle_1, angle_2;
-									mockplayer2 = &players[chosenplayer];
-									//mockplayer1 = player;
-									
-									x_1 = player->mo->x;
-									y_1 = player->mo->y;
-									z_1 = player->mo->z;
-									momx_1 = player->mo->momx;
-									momy_1 = player->mo->momy;
-									momz_1 = player->mo->momz;
-									angle_1 = player->mo->angle;
-
-									if (gametyperules & GTR_SPHERES)	//do battle mode swaps
-									{
-										player1_roundscore = player->roundscore;
-										player1_emeralds = player->emeralds;
-										player1_spheres = player->spheres;										
-									}
-									else								//we got this in a race
-									{
-										player1_itemtype = player->itemtype;
-										player1_itemamount = player->itemamount;
-										player1_backupitemtype = player->backupitemtype;
-										player1_backupitemamount = player->backupitemamount;
-									}
-									
-									player->emeralds = mockplayer2->emeralds;
-									player->spheres = mockplayer2->spheres;
-									player->roundscore = mockplayer2->roundscore;
-									player->mo->x = mockplayer2->mo->x;
-									player->mo->y = mockplayer2->mo->y;
-									player->mo->z = mockplayer2->mo->z;
-									player->mo->momx = mockplayer2->mo->momx;
-									player->mo->momy = mockplayer2->mo->momy;
-									player->mo->momz = mockplayer2->mo->momz;
-									P_ForceLocalAngle(player, mockplayer2->mo->angle);
-									player->mo->angle = mockplayer2->mo->angle;
-									player->hyudorotimer += 70;
-									
-
-									mockplayer2->emeralds = player1_emeralds;
-									mockplayer2->spheres = player1_spheres;
-									mockplayer2->roundscore = player1_roundscore;
-									mockplayer2->hyudorotimer += 70;
-									
-									players[chosenplayer].mo->x = x_1;
-									players[chosenplayer].mo->y = y_1;
-									players[chosenplayer].mo->z = z_1;
-									players[chosenplayer].mo->momx = momx_1;
-									players[chosenplayer].mo->momy = momy_1;
-									players[chosenplayer].mo->momz = momz_1;
-									players[chosenplayer].mo->angle = angle_1;
-									P_ForceLocalAngle(&players[chosenplayer], angle_1);
-
-									
-									CONS_Printf("Successful transfer!\n");
-
-								K_AdjustPlayerItemAmount(player, -1);
-								player->botvars.itemconfirm = 0;
-								}
-								else if (GetTotalInGameRacers() < 2)
-								{
-									K_AwardPlayerRings(player, 10, true);
-								}
+								if (!(gametyperules & GTR_SPHERES))
+									K_AwardPlayerRings(player, 5, true);	//How did you get this
 								else
 								{
-									CONS_Printf("Bad roll!\n");
-									; //test - do nothing
+									K_SetItemOut(player); // need this to set itemscale
+									
+									if (player->throwdir < 1)
+									{
+										mobj_t *swapper = K_ThrowKartItem(player, false, MT_SWAPHOLOGRAM, -1, 0, 0);
+										
+										if (swapper)
+										{
+											swapper->renderflags |= RF_SLOPESPLAT | RF_NOSPLATBILLBOARD;
+											swapper->frame = FF_FLOORSPRITE;//|FF_ADD;
+											swapper->height = 1;
+											swapper->scale = player->mo->scale*2;
+											swapper->destscale = swapper->scale;
+											swapper->color = player->mo->color;
+										}
+									}
+									else
+									{
+										mobj_t *sticker = K_ThrowKartItem(player, false, MT_SWAPSTICKER, -1, 0, 0);
+										
+										if (sticker)
+										{
+											; //maybe I'll put stuff here, I dunno lol
+										}										
+									}
+
+									K_UnsetItemOut(player);
 								}
+
+								K_AdjustPlayerItemAmount(player, -1);
+								K_PlayAttackTaunt(player->mo);
+								player->botvars.itemconfirm = 0;
 								
 								//S_StartSound(player, sfx_mycwin);
 								//S_StartSound(player->mo, SUPERJACKPOT_SOUND);
-
-							}*/
+							}
 							break;
 						case KITEM_SAD:
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO
@@ -20221,7 +20196,8 @@ dboolean K_IsPickMeUpItem(mobjtype_t type)
 		case MT_ICEDUSCRYSTAL_TRAP:
 		case MT_SOLFIRE:
 		case MT_SOLFIRE_SHIELD:
-		case MT_SLICERCLAW:						//SCS ADD END
+		case MT_SLICERCLAW:
+		case MT_SWAPSTICKER:					//SCS ADD END
 			return true;
 		default:
 			return false;
@@ -20322,8 +20298,11 @@ static dboolean K_PickUp(player_t *player, mobj_t *picked)
 		case MT_SOLFIRE_SHIELD:
 			type = KITEM_SOL;
 			break;
-		case MT_SLICERCLAW:					//SCS ADD END
+		case MT_SLICERCLAW:
 			type = KITEM_SLICER;
+			break;
+		case MT_SWAPSTICKER:					//SCS ADD END
+			type = KITEM_PLAYERSWAP;
 			break;
 		default:
 			type = KITEM_SAD;

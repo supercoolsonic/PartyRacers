@@ -708,6 +708,17 @@ void SpawnIcedusTrapDeathEffect(mobj_t *crystaltrap, int scale)
 	}
 }
 
+dboolean IsVulnerableToIce(player_t *player)
+{
+	if (player->flashing 
+	|| player->growshrinktimer > 0 
+	|| player->invincibilitytimer 
+	|| player->hyudorotimer)
+		return false;
+		
+	return true;
+}
+
 dboolean K_IcedusSolfireCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 {
 	if (t1->type == MT_ICEDUSCRYSTAL_TRAP && t1->target != NULL && t1->target == t2 && P_IsObjectOnGround(t1))
@@ -724,21 +735,39 @@ PickUp:
 		return true;
 
 
-	if ((t1->type == MT_ICEDUSCRYSTAL || t1->type == MT_ICEDUSCRYSTAL_SHIELD || t1->type == MT_ICEDUSCRYSTAL_TRAP) && t2->player)							//ICEDUS
+	if ((t1->type == MT_ICEDUSCRYSTAL || t1->type == MT_ICEDUSCRYSTAL_SHIELD || t1->type == MT_ICEDUSCRYSTAL_TRAP || t1->type == MT_ICEDUSCLOUD) && (t2->player || t2->type == MT_MONITOR))							//ICEDUS
 	{
-		if (t2->player->icecube.frozen)	// (we do a frozen check here to prevent frozen players from eating all the crystals at once from a shield)
-			return false;
-		
-		else if (t2->player->curshield != KSHIELD_NONE 	//Yes, ALL shields block it, like in S3K
-		//|| t2->player->icecube.frozen 
-		|| t2->player->flashing 
-		|| t2->player->growshrinktimer > 0 
-		|| t2->player->invincibilitytimer 
-		|| t2->player->hyudorotimer)
+		if (t2->player)
 		{
-			P_KillMobj(t1, t2, t2, DMG_NORMAL);
-			return true;
+			if (t2->player->icecube.frozen)	// (we do a frozen check here to prevent frozen players from eating all the crystals at once from a shield)
+				return false;
+			else if (t1->type == MT_ICEDUSCLOUD)
+			{
+				if (t1->target == t2)
+					return false;
+				else if (t1->fuse < 199 && t2->player->curshield != KSHIELD_FLAME && IsVulnerableToIce(t2->player))	//only flame shield can block the cloud
+					goto CloudFreeze;
+				else
+					return false;
+				
+			}			
+			else if (t2->player->curshield != KSHIELD_NONE || !IsVulnerableToIce(t2->player)) 	//Yes, ALL shields block it, like in S3K
+			{
+				if (t1->type != MT_ICEDUSCLOUD)
+				{
+					P_KillMobj(t1, t2, t2, DMG_NORMAL);
+					return true;
+				}
+			}
 		}
+		else// if (t2->type == MT_MONITOR)
+		{
+			P_DamageMobj(t2, t1, t1->target, 1, DMG_NORMAL);
+			P_KillMobj(t1, t2, t2, DMG_NORMAL);
+			P_SetMobjState(t1, S_NULL);		
+		}
+		
+CloudFreeze:
 			
 		uint8_t IcedusAmps = K_PvPAmpReward(10, t1->target->player, t2->player);
 		K_SpawnAmps(t1->target->player, IcedusAmps, t1);
@@ -753,25 +782,33 @@ PickUp:
 		{
 			wind->target = t1->target;
 			wind->tracer = t2;
+			P_TouchSpecialThing(wind, t2, false);
 		}
+		
 		if (t1->type == MT_ICEDUSCRYSTAL_TRAP)
 			SpawnIcedusTrapDeathEffect(t1, (FRACUNIT/2));
 
 		S_StartSound(t2, sfx_s3k80);
-		P_KillMobj(t1, t2, t2, DMG_NORMAL);
-	}
-	else if ((t1->type == MT_SOLFIRE || t1->type == MT_SOLFIRE_SHIELD || t1->type == MT_SOLFIRE_TRAP) && t2->player)								//SOL
-	{		
-		if (t2->player->curshield == KSHIELD_FLAME)	//This one, tho, you'll need a Flame Shield
-		{
+		
+		if (t1->type != MT_ICEDUSCLOUD)
 			P_KillMobj(t1, t2, t2, DMG_NORMAL);
-			return false;
+		
+	}
+	else if ((t1->type == MT_SOLFIRE || t1->type == MT_SOLFIRE_SHIELD || t1->type == MT_SOLFIRE_TRAP) && (t2->player || t2->type == MT_MONITOR))								//SOL
+	{
+		if (t2->player)
+		{
+			if (t2->player->curshield == KSHIELD_FLAME)	//This one, tho, you'll need a Flame Shield
+			{
+				P_KillMobj(t1, t2, t2, DMG_NORMAL);
+				return false;
+			}
 		}
 		
 		if ((t1->target && t1->target != t2) || !t1->target)
 		{
 			SpawnSolDeathEffect(t2, t1);		
-			
+				
 			P_DamageMobj(t2, t1, t1->target, 1, DMG_EXPLODE);
 			P_KillMobj(t1, t2, t2, DMG_NORMAL);
 			P_SetMobjState(t1, S_NULL);
@@ -815,10 +852,141 @@ dboolean K_SlicerClawCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 	if (t1->extravalue1 > 0)	//timer to prevent stunlocks
 		return true;
 
-	if (t2->player)
+	if (t2->player || t2->type == MT_MONITOR)
 	{
 		P_DamageMobj(t2, t1, t1->target, 1, DMG_NORMAL);
 		t1->extravalue1 = 10;	//reset damage timer
+	}
+
+	return true;
+}
+
+void DoPlayerPositionSwap(mobj_t *t1, mobj_t *t2)	//SCS ADD
+{
+	return;	//I give up
+	
+	if (t2->player)
+	{
+		//P_DamageMobj(t2, t1, t1->target, 1, DMG_NORMAL);
+		//t1->extravalue1 = 10;	//reset damage timer
+		
+		//uint8_t chosenplayer;
+		//player_t *mockplayer2;
+		mobj_t mockplayer2;
+		mobj_t *mockplayer1;
+								
+		//uint32_t player1_roundscore;		//	each is a separate roll
+								
+		//uint8_t player1_emeralds;			//|	battle mode swaps
+								
+		//int16_t player1_spheres;			//	so you can only get 1 per slot
+							
+		//chosenplayer = P_RandomRange(PR_DECORATION, 0, GetTotalInGameRacers());		
+		
+		//if (players[chosenplayer].mo != NULL && !players[chosenplayer].exiting && !players[chosenplayer].spectator && players[chosenplayer].mo->health > 0 && players[chosenplayer].mo != player->mo)
+		if (t1->target && !t2->player->exiting && !t2->player->spectator && t2->player->mo->health > 0 && t2->player->mo != t1->target)
+		{
+			fixed_t x_1, y_1, z_1, momx_1, momy_1, momz_1, x_2, y_2, z_2;
+			angle_t angle_1;//, angle_2;
+			mockplayer2 = *t1->target;
+			//mockplayer2 = &players[chosenplayer];
+			//mockplayer1 = player;
+			
+			mobj_t *bullshit = P_SpawnMobj(t1->target->x, t1->target->y, t1->target->z, MT_XEMBEAM);
+			P_SpawnMobj(t2->x, t2->y, t2->z, MT_XEMBEAM);
+									
+			x_1 = t2->x;
+			y_1 = t2->y;
+			z_1 = t2->z;
+			momx_1 = t2->momx;
+			momy_1 = t2->momy;
+			momz_1 = t2->momz;
+			angle_1 = t2->angle;
+			
+			x_2 = bullshit->x;
+			y_2 = bullshit->y;
+			z_2 = bullshit->z;
+
+			/*if (gametyperules & GTR_SPHERES)	//do battle mode swaps
+			{
+				player1_roundscore = player->roundscore;
+				player1_emeralds = player->emeralds;
+				player1_spheres = player->spheres;
+			}
+			else								//we got this in a race
+			{
+				player1_itemtype = player->itemtype;
+				player1_itemamount = player->itemamount;
+				player1_backupitemtype = player->backupitemtype;
+				player1_backupitemamount = player->backupitemamount;
+			}*/
+
+			/*player->emeralds = mockplayer2->emeralds;
+			player->spheres = mockplayer2->spheres;
+			player->roundscore = mockplayer2->roundscore;*/
+			t2->x = x_2;							//NOT WORKING ATM. FOR SOME REASON, THE PLAYER WHO HITS THE TELEPORTER WON'T TELEPORT. ONLY THE OTHER PLAYER, THE ONE WHO PLACED IT, DOES.
+			t2->y = y_2;
+			t2->z = z_2;
+			t2->momx = mockplayer2.momx;
+			t2->momy = mockplayer2.momy;
+			t2->momz = mockplayer2.momz;
+			P_ForceLocalAngle(t2->player, mockplayer2.angle);
+			t2->angle = mockplayer2.angle;
+			t2->player->hyudorotimer += 70;	
+			//P_KillMobj(t2, t1->target, t1->target, DMG_NORMAL);
+
+			/*mockplayer2->emeralds = player1_emeralds;
+			mockplayer2->spheres = player1_spheres;
+			mockplayer2->roundscore = player1_roundscore;*/
+			/*t1->target->x = x_1;
+			t1->target->y = y_1;
+			t1->target->z = z_1;
+			t1->target->momx = momx_1;
+			t1->target->momy = momy_1;
+			t1->target->momz = momz_1;
+			P_ForceLocalAngle(t1->target->player, angle_1);
+			t1->target->angle = angle_1;*/
+			t1->target->player->hyudorotimer += 70;
+			
+
+			CONS_Printf("Successful transfer!\n");
+			
+			S_StartSound(t1->target, sfx_s26c);
+			S_StartSound(t2, sfx_s26c);
+			P_RemoveMobj(t1);
+		}				
+	}	
+}
+
+dboolean K_PlayerSwapCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
+{
+	if (t1->type == MT_SWAPHOLOGRAM && !t2->player)	//Holograms only collide with players
+		return false;
+	else if (!t2->player && t2->type != MT_MONITOR)	//Stickers only collide with players and battle monitors
+		return false;
+	
+	if (((t1->target == t2) || (!(t2->flags & (MF_ENEMY|MF_BOSS)) && (t1->target == t2->target))) && (t1->threshold > 0 || (t2->type != MT_PLAYER && t2->threshold > 0)))
+		return true;
+
+	if (t1->health <= 0 || t2->health <= 0)
+		return true;
+		
+	//CONS_Printf("Collided!\n");
+
+	//if (K_TryPickMeUp(t1, t2, false))
+		//return true;
+	
+	//if (t1->extravalue1 > 0)	//timer to prevent stunlocks
+		//return true;
+
+	if (t2->type != MT_MONITOR)
+		DoPlayerPositionSwap(t1, t2);
+	else
+	{
+		t1->tracer = t2->target;			//Assign the player to the monitor, which swapifies the graphics and allows it to do the teleport when broken.
+		t1->fuse *= 2;						//Lengthen the lifetime of the monitor, so it has more chances to actually do something instead of just fading away a few seconds later...
+		P_RemoveMobj(t1);
+		CONS_Printf("We swapified the monitor!\n");
 	}
 
 	return true;
