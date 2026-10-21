@@ -694,7 +694,7 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 			return BMIT_CONTINUE; // overhead
 		if (thing->z + thing->height < g_tm.thing->z)
 			return BMIT_CONTINUE; // underneath
-		if (g_tm.thing->flags & MF_SHOOTABLE && thing->health > 0)
+		if (g_tm.thing->flags & MF_SHOOTABLE && thing->health > 0 && g_tm.thing->type != MT_GHZBALL)	//SCS EDIT - Wrecking balls should plow through stuff like cacti
 		{
 			uint32_t damagetype = (thing->info->mass & 0xFF);
 
@@ -704,6 +704,10 @@ static BlockItReturn_t PIT_CheckThing(mobj_t *thing)
 				return BMIT_CONTINUE;
 
 			damage = true;
+		}
+		else if (g_tm.thing->type == MT_GHZBALL)	//SCS ADD
+		{
+			K_PuntCollide(thing, g_tm.thing);
 		}
 	}
 	else if (g_tm.thing->flags & MF_PAIN && thing->player)

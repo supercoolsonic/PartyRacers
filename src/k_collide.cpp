@@ -1223,7 +1223,7 @@ dboolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 		
 		//Obj_WreckingBallDeath(t1);
 		P_KillMobj(t1, t2, t2, DMG_NORMAL);
-		P_KillMobj(t2, t1, t1, DMG_NORMAL);		
+		P_KillMobj(t2, t1, t1, DMG_NORMAL);
 	}
 	else if (t2->type == MT_SSMINE_SHIELD || t2->type == MT_SSMINE || t2->type == MT_LANDMINE || t2->type == MT_PRESSUREMINE)
 	{
@@ -1237,13 +1237,10 @@ dboolean K_GHZBallCollide(mobj_t *t1, mobj_t *t2)			//SCS ADD
 		P_DamageMobj(t2, t1, t1->target, 1, DMG_NORMAL);
 
 		if (P_MobjWasRemoved(t2))
-		{
 			t2 = NULL; // handles the arguments to P_KillMobj
-		}
 		else
-		{
 			t1->reactiontime = t2->hitlag;
-		}
+		
 	}
 
 	return true;
@@ -2705,6 +2702,9 @@ dboolean K_PuntCollide(mobj_t *t1, mobj_t *t2)
 	{
 		return false;
 	}
+	
+	if (t2->type == MT_GHZBALL)	//SCS ADD
+		K_PuntHazard(t1, t2);
 
 	if (!t2->player)
 	{
