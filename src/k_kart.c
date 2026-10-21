@@ -4117,7 +4117,7 @@ static void K_GetKartBoostPower(player_t *player)
 			(FRACUNIT/4 + (player->playerringgunpower/55)*FRACUNIT/(86/(GetTotalInGameRacers()+1))),//*(player->position/GetTotalInGameRacers()*GetTotalInGameRacers()), 
 			((player->playerringgunpower/55)*FRACUNIT/(86/(GetTotalInGameRacers()+1))));//*(player->position/GetTotalInGameRacers())*GetTotalInGameRacers()); // + ???% top speed, + 25 + ???% acceleration, +???% handling
 		}
-		else if (player->distancetofinish != 0)
+		else if (player->distancetofinish != 0 && player->playerringgunpower > 10)		//I'll give you a bit a leeway to fire off a shot in 1st so you can get rid of it if you need to.
 		{
 			P_KillMobj(player->mo, NULL, NULL, DMG_NORMAL);	//Don't drag it into 1st for too long
 		}
