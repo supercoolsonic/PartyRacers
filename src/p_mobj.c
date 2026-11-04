@@ -7151,6 +7151,7 @@ static dboolean P_MobjDeadThink(mobj_t *mobj)
 		}
 		break;
 	case MT_ICEDUSCRYSTAL:					//SCS ADD
+		SpawnIcedusTrapDeathEffect(mobj, (FRACUNIT/4));
 		mobj_t *snowcloud = P_SpawnMobj(mobj->x, mobj->y, mobj->z, MT_ICEDUSCLOUD);
 		
 		if (snowcloud != NULL && mobj->target != NULL)
@@ -7160,6 +7161,7 @@ static dboolean P_MobjDeadThink(mobj_t *mobj)
 			snowcloud->destscale = snowcloud->scale;
 			snowcloud->fuse = 200;
 			snowcloud->target = mobj->target;
+			snowcloud->renderflags = (snowcloud->renderflags & ~RF_TRANSMASK)|RF_TRANS20;
 		}
 		/* FALLTHRU */
 	case MT_ORBINAUT:
@@ -8186,6 +8188,7 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 		{
 			SpawnIcedusTrapDeathEffect(mobj, (FRACUNIT/4));
 			P_SetMobjState(mobj, S_ICEDUSTRAP2);
+			mobj->friction = 0;
 		}
 		
 		if (leveltime % 9 == 0)
