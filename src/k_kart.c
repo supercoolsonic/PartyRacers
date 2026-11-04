@@ -18366,6 +18366,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 										P_InstaScale(bigsnow, player->mo->scale*5*min(player->itemamount, 6));
 										P_SetMobjState(bigsnow, S_ICEDUSEXPLOSION);
 										K_FlipFromObject(bigsnow, player->mo);
+										bigsnow->renderflags = (bigsnow->renderflags & ~RF_TRANSMASK)|RF_TRANS30;
 									}
 									
 									for (i = 0; i < (4*min(4, player->itemamount)); i++)
@@ -18387,7 +18388,9 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 										snomo->scale = player->mo->scale*3;
 										//P_SetTarget(&mo->target, player->mo); //Don't follow the player
 										P_SetMobjState(snomo, S_ICEDUSSNOWFLAKE);
-										
+
+										sx = player->mo->x + FixedMul(player->mo->scale*((200 + 30)*min(player->itemamount, 6)), FINECOSINE((an*i)>>ANGLETOFINESHIFT));
+										sy = player->mo->y + FixedMul(player->mo->scale*((200 + 30)*min(player->itemamount, 6)), FINESINE((an*i)>>ANGLETOFINESHIFT));										
 										snoclo = P_SpawnMobj(sx, sy, player->mo->z, MT_ICEDUSCLOUD);
 										snoclo->angle = an*i;
 										snoclo->extravalue1 = ((180 + 30)*min(player->itemamount, 6));
@@ -18395,6 +18398,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 										snoclo->destscale = snoclo->scale;
 										snoclo->fuse = max(50*player->itemamount, 90);	//This is where having more than 4 Icedus really shines. Blast radius and cloud size cap at 6, but their longevity can be extended further if you have even more.
 										snoclo->target = player->mo;
+										snoclo->renderflags = (snoclo->renderflags & ~RF_TRANSMASK)|RF_TRANS20;
 									}
 									
 									S_StopSoundByID(player->mo, sfx_mbs55);

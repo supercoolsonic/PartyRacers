@@ -1443,6 +1443,7 @@ typedef enum sprite
 	SPR_ICEQ,
 	SPR_ICEM,
 	SPR_ICEC,
+	//SPR_ICEB,
 	SPR_FREZ,
 	
 	SPR_SLIC,

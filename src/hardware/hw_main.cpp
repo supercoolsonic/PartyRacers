@@ -6333,7 +6333,7 @@ void HWR_DoPostProcessor(player_t *player)
 		return;
 
 	// Drunken vision! WooOOooo~
-	if (*type == postimg_water || *type == postimg_heat)
+	if (!cv_reducevfx.value && *type == postimg_water || *type == postimg_heat)		//SCS EDIT - Merge Request
 	{
 		// 10 by 10 grid. 2 coordinates (xy)
 		float v[SCREENVERTS][SCREENVERTS][2];
