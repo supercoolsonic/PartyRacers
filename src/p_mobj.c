@@ -7697,7 +7697,10 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 			{
 				P_InstaScale(cloudtwinkle, ((mobj->scale*3)/2));
 				cloudtwinkle->colorized = true;
-				cloudtwinkle->color = mobj->target->color;
+				
+				if (mobj->target != NULL)
+					cloudtwinkle->color = mobj->target->color;
+				
 			}
 		}		
 			

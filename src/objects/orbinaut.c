@@ -173,7 +173,7 @@ void Obj_IcedusThink(mobj_t *th)						//SCS ADD
 		th->renderflags ^= RF_DONTDRAW;
 	}
 	
-	if (leveltime % 2 == 0)
+	if (leveltime % 2 == 0 && (th->momx != 0 || th->momy != 0 || th->momz != 0))
 	{
 		mobj_t *ghost = NULL;
 

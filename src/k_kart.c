@@ -9054,7 +9054,10 @@ void K_DropHnextList(player_t *player)
 			// is commented out.
 			//dropwork->movedir = work->angle - ANGLE_90;
 
-			P_SetMobjState(dropwork, dropwork->info->deathstate);
+			if (type != MT_SOLFIRE)										//SCS ADD
+				P_SetMobjState(dropwork, dropwork->info->deathstate);
+			else														//SCS ADD
+				P_SetMobjState(dropwork, S_SOLFIRE_SHIELD1);
 
 			dropwork->tics = -1;
 
