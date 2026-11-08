@@ -7706,8 +7706,8 @@ mobj_t *K_ThrowKartItemEx(player_t *player, dboolean missile, mobjtype_t mapthin
 	// Intentionally NOT player scale, that doesn't work.
 	PROJSPEED = FixedMul(PROJSPEED, mapobjectscale);
 	
-	if (mapthing == MT_PRESSUREMINE)	//SCS ADD - nerf the pressure ones a bit to make the land mind feel more special
-		PROJSPEED /= 2;
+	if (mapthing == MT_PRESSUREMINE)	//SCS ADD - nerf the pressure ones a bit to make the land mine feel more special
+		PROJSPEED /= 3;
 
 	if (missile) // Shootables
 	{
