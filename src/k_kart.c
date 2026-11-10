@@ -18339,7 +18339,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 								player->botvars.itemconfirm = 0;
 								player->orbichargetap = true;
 							}
-							else if ((gametyperules & GTR_CIRCUIT) && player->orbichargetap && player->orbinautchargetime < (40 + 15*min(player->itemamount, 6))) //Disable this ability in Battle
+							else if (player->orbichargetap && player->orbinautchargetime < (40 + 15*min(player->itemamount, 6)))
 							{
 								angle_t an;
 								mobj_t *snomo, *snoclo;

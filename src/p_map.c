@@ -439,7 +439,7 @@ dboolean P_DoSpring(mobj_t *spring, mobj_t *object)
 			{	
 				object->eflags &= ~MFE_SPRUNG; // needed to permit the following
 				
-				if (spring->type == MT_YOGOSPRING)
+				if (spring->type == MT_YOGOSPRING)																	//SCS ADD
 					K_DoYellowPogoSpring(object, -vertispeed, 0); // negative so momz isn't modified
 				else
 					K_DoPogoSpring(object, -vertispeed, 0); // negative so momz isn't modified
@@ -456,14 +456,13 @@ dboolean P_DoSpring(mobj_t *spring, mobj_t *object)
 				// FIXME: try to compensate tumbling gravity
 				object->momz = 3 * object->momz / 2;
 				
-				if (object->momx == 0)			//SCS ADD START
+				if (object->momx == 0)																		//SCS ADD START
 					object->momx = 5;
 					
 				if (object->momy == 0)
-					object->momy = 5;			//SCS ADD END
+					object->momy = 5;
 				
-				//spring->fuse -= 2;																					//SCS ADD - trying to prevent respawning on top of a spring essentially softlocking you until its fuse expires.
-				if (cv_hudfeed_toggle_spring.value)															//SCS ADD
+				if (cv_hudfeed_toggle_spring.value)
 				{
 					if (spring->type == MT_YOGOSPRING)
 						RR_PushPlayerInteractionToFeed(spring->target, object, ATTACK_YOGOSPRING, 0);
@@ -471,7 +470,7 @@ dboolean P_DoSpring(mobj_t *spring, mobj_t *object)
 						RR_PushPlayerInteractionToFeed(spring->target, object, ATTACK_BOGOSPRING, 0);
 					else
 						RR_PushPlayerInteractionToFeed(spring->target, object, ATTACK_POGOSPRING, 0);
-				}
+				}																							//SCS ADD END
 			}
 
 			if (!spring->fuse)
