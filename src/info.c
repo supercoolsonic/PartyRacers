@@ -24695,7 +24695,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		0,              // display offset
 		100,            // mass
 		1,              // damage
-		sfx_s3k96,      // activesound
+		sfx_s3k52,      // activesound
 		MF_SHOOTABLE|MF_DONTENCOREMAP|MF_APPLYTERRAIN|MF_SLOPE|MF_DONTPUNT|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},

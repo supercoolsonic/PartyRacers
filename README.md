@@ -96,12 +96,7 @@ Mega Chopper: from Battle Plus by Snu. Touched-up sprites by me.
 Original Battle Plus mod here: https://mb.srb2.org/addons/srb2kart-battle-plus-kl_bp-v2-0-pk3.2350/
 
 
-Pressure Mine: sprites by ArtoMeister
-
-Original Lethal Landmine mod here: https://mb.srb2.org/addons/lethal-landmine-a-mine-reskin.6291/
-
-
-Sol, Icedus, Slicer HUD icons by Sieggy
+Blinker Mine: sprites by ArtoMeister
 
 
 Custom Sprites for Double Banana, Triple Banana, Quad Banana, Double Sneakers, Triple Sneakers, and Dual Jawz by Spee, Jin, and Momphi, originally used in Sunflower's Garden/Saturn/Blankart. Small modifications by me.
@@ -110,8 +105,19 @@ Saturn Build here: https://github.com/Indev450/SRB2Kart-Saturn
 
 Blankart Build here: https://codeberg.org/NepDisk/blankart
 
+
+Normal Shield, Yellow Spring, Blue Spring, Octus, Balkiry, Ring Bonus Box items by me, graphics by me, except the Normal Shield sprites, which are from SRB2. Item icons for Egg Blaster, Chameleon Blaster, and Ring Gun by me.
+
+Pickpocket Hyudoro item icon sprites by me.
+
+
+Eggmark and Chaos Emerald CHECK sprites from Battle Plus.
+
 Signpost ribbon from Expanded Signposts mod for SRB2Kart.
 Original Expanded Signposts mode here: https://mb.srb2.org/addons/expanded-signposts.4968/
+
+
+Icedus, Sol, and Slicer sprites by Sieggy.
 
 
 Help with getting 32-player online stable: Pura/mileswolfgang

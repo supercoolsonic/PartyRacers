@@ -314,15 +314,15 @@ static uint8_t K_KartLegacyBattleOdds[NUMKARTRESULTS-1][2] =
 	{ 0, 0 }, // Mega Chopper
 	{ 0, 0 }, // Armageddon Shield
 	{ 3, 1 }, // Afterburner Jawz
-	{ 2, 1 }, // Pressure Mine
-	{ 2, 2 }, // Chameleon Blaster
-	{ 2, 1 }, // Egg Blaster
+	{ 3, 1 }, // Pressure Mine
+	{ 1, 1 }, // Chameleon Blaster
+	{ 1, 1 }, // Egg Blaster
 	{ 0, 0 }, // Ring Gun
 	{ 0, 0 }, // Butler Hyudoro
 	{ 0, 0 }, // Octus
 	{ 0, 0 }, // Icedus
-	{ 3, 0 }, // Slicer
-	{ 2, 0 }, // Sol
+	{ 2, 1 }, // Slicer
+	{ 4, 1 }, // Sol
 	{ 0, 0 }, // Ring Cap Bonus
 	{ 0, 0 }, // Player Swap					//SCS ADD END
 	{ 0, 0 }, // Sneaker x2
@@ -332,12 +332,12 @@ static uint8_t K_KartLegacyBattleOdds[NUMKARTRESULTS-1][2] =
 	{ 2, 1 }, // Orbinaut x4
 	{ 2, 1 }, // Jawz x2
 	{ 2, 0 }, // Gachabom x3
-	{ 2, 1 }, // Banana x10
+	{ 2, 1 }, // Banana x10						//SCS ADD START
 	{ 2, 1 }, // Afterburner Jawz x2
-	{ 0, 0 }, // Icedus x3						//SCS ADD START
-	{ 0, 1 }, // Icedus x4
-	{ 2, 0 }, // Sol x3
-	{ 2, 1 }, // Sol x4							//SCS ADD END
+	{ 0, 0 }, // Icedus x3
+	{ 0, 0 }, // Icedus x4
+	{ 3, 1 }, // Sol x3
+	{ 2, 0 }, // Sol x4							//SCS ADD END
 };
 
 static kartitems_t K_KartItemReelSpecialEnd[] =

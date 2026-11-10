@@ -204,10 +204,11 @@ void Obj_SlicerThink(mobj_t *th)
 
 	if (slicer_stillturn(th) > 0)
 	{
+		if (!(gametyperules & GTR_BUMPERS) || ((gametyperules & GTR_BUMPERS) && leveltime % 2 == 0))
 		slicer_stillturn(th)--;
 	}
 
-	if (leveltime % TICRATE == 0)
+	if (leveltime % 6 == 0)
 	{
 		S_StartSound(th, th->info->activesound);
 	}
@@ -215,13 +216,6 @@ void Obj_SlicerThink(mobj_t *th)
 
 void Obj_SlicerThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir)
 {
-	// Thrown backwards, init self-chase
-	//P_SetTarget(&th->target, slicer_owner(th));
-
-	// Stop it here.
-	//th->momx = 0;
-	//th->momy = 0;
-	
 	// Return at absolutely 120% of the owner's speed if it's any less than that.
 	fixed_t min_backthrowspeed = 6*(K_GetKartSpeed(slicer_owner(th)->player, false, false))/5;
 	if (slicer_owner(th)->player->speed >= min_backthrowspeed)
@@ -241,46 +235,11 @@ void Obj_SlicerThrown(mobj_t *th, fixed_t finalSpeed, fixed_t dir)
 	
 	if (dir >= 0)
 		th->destscale = th->scale*(3/2);
-		
-	/*
-	if (dir < 0)
-	{
-		// Return at absolutely 120% of the owner's speed if it's any less than that.
-		fixed_t min_backthrowspeed = 6*(K_GetKartSpeed(owner, false, false))/5;
-		if (slicer_owner(th)->speed >= min_backthrowspeed)
-		{
-			finalSpeed = 6*(slicer_owner(th)->speed)/5;
-		}
-		else
-		{
-			finalSpeed = min_backthrowspeed; 
-		}
-
-		// Set a fuse.
-		th->fuse = RR_PROJECTILE_FUSE;
-
-		// Stay still while you turn towards the player
-		slicer_stillturn(th) = ANGLE_180 / MAX_SLICER_TURN;
-	}
-	else
-	{
-		if ((lastTarg >= 0 && lastTarg < MAXPLAYERS) && playeringame[lastTarg] == true)
-		{
-			player_t *tryPlayer = &players[lastTarg];
-
-			if (tryPlayer->spectator == false)
-			{
-				P_SetTarget(&slicer_chase(th), tryPlayer->mo);	
-			}
-		}
-		
-		th->destscale = th->scale*(3/2);	//I'll keep this. Give it a bigger size when thrown forward, and let it be smaller/normal size when thrown backwards, as some balancing
-	}*/
 	
 	th->destscale = th->destscale*2;
 	
 	slicer_selfdelay(th) = 20;
 
 	S_StartSound(th, th->info->activesound);
-	slicer_speed(th) = finalSpeed;
+	slicer_speed(th) = (gametyperules & GTR_BUMPERS) ? (finalSpeed / 4) : finalSpeed;
 }
