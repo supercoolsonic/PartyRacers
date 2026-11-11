@@ -18652,7 +18652,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 								}
 							}
 							break;
-						case KITEM_PLAYERSWAP:
+						/*case KITEM_PLAYERSWAP:
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO)
 							{
 								if (!(gametyperules & GTR_SPHERES))
@@ -18695,7 +18695,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 								//S_StartSound(player, sfx_mycwin);
 								//S_StartSound(player->mo, SUPERJACKPOT_SOUND);
 							}
-							break;
+							break;*/
 						case KITEM_SAD:
 							if (ATTACK_IS_DOWN && !HOLDING_ITEM && NO_HYUDORO
 								&& !player->sadtimer)
@@ -20308,9 +20308,9 @@ static dboolean K_PickUp(player_t *player, mobj_t *picked)
 		case MT_SLICERCLAW:
 			type = KITEM_SLICER;
 			break;
-		case MT_SWAPSTICKER:					//SCS ADD END
+		/*case MT_SWAPSTICKER:
 			type = KITEM_PLAYERSWAP;
-			break;
+			break;*/					//SCS ADD END
 		default:
 			type = KITEM_SAD;
 			break;

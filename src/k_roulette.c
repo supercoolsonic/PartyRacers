@@ -129,7 +129,7 @@ static uint32_t K_DynamicItemOddsRace[NUMKARTRESULTS-1][2] =
 	{21, 4}, //slicer
 	{11, 3}, //sol										
 	{60, 1}, // ringbonus (SPECIAL) 	Becomes more accessible with each checkpoint you cross at max rings
-	{0, 0},	 // playerswap																						//SCS ADD END
+	//{0, 0},	 // playerswap																						//SCS ADD END
 	{35, 6}, // dualsneaker
 	{45, 8}, // triplesneaker
 	{18, 2}, // triplebanana
@@ -194,7 +194,7 @@ static uint32_t K_DynamicItemOddsBattle[NUMKARTRESULTS-1][2] =
 	{10, 2}, //slicer
 	{10, 2}, //sol
 	{0, 0}, // ringbonus
-	{0, 0},	 // playerswap							//SCS ADD END
+	//{0, 0},	 // playerswap							//SCS ADD END
 	{0, 0}, // dualsneaker
 	{20, 1}, // triplesneaker
 	{0, 0}, // triplebanana
@@ -259,7 +259,7 @@ static uint32_t K_DynamicItemOddsSpecial[NUMKARTRESULTS-1][2] =
 	{0, 0}, //slicer
 	{0, 0}, //sol
 	{0, 0}, // ringbonus
-	{0, 0},	 // playerswap							//SCS ADD END
+	//{0, 0},	 // playerswap							//SCS ADD END
 	{35, 2}, // dualsneaker
 	{0, 0}, // triplesneaker
 	{0, 0}, // triplebanana
@@ -324,7 +324,7 @@ static uint8_t K_KartLegacyBattleOdds[NUMKARTRESULTS-1][2] =
 	{ 2, 1 }, // Slicer
 	{ 4, 1 }, // Sol
 	{ 0, 0 }, // Ring Cap Bonus
-	{ 0, 0 }, // Player Swap					//SCS ADD END
+	//{ 0, 0 }, // Player Swap					//SCS ADD END
 	{ 0, 0 }, // Sneaker x2
 	{ 0, 1 }, // Sneaker x3
 	{ 0, 0 }, // Banana x3
