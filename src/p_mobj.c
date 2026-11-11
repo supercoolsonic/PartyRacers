@@ -15107,7 +15107,7 @@ static dboolean P_SetupSpawnedMapThing(mapthing_t *mthing, mobj_t *mobj)
 		{
 			mobj->threshold = P_RandomRange(PR_ITEM_SPAWNER, 1, NUMKARTITEMS - 1);
 			
-			if (!K_ItemEnabled(mobj->threshold) || mobj->threshold == KITEM_PLAYERSWAP)		//No swaps or disabled items
+			if (!K_ItemEnabled(mobj->threshold))// || mobj->threshold == KITEM_PLAYERSWAP)		//No swaps or disabled items
 				mobj->threshold = KITEM_SUPERRING;
 	
 			switch (mobj->threshold)
