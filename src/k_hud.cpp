@@ -4298,7 +4298,7 @@ void PositionFacesInfo::draw_1p()
 				distance = R_PointToDist2(pPos.x, pPos.y, vdist.x, vdist.y)/(FRACUNIT/4);
 				
 				//if (&players[rankplayer[i]] != stplyr && distance > (FRACUNIT/10))
-				if (distance > (FRACUNIT/13)*(mapobjectscale/(FRACUNIT/4)))
+				if (distance > fmax((FRACUNIT/15), ((FRACUNIT/13)*(mapobjectscale/(FRACUNIT/4)))))
 				{
 					//CONS_Printf("TOO FAR TOO DRAW %d\n", distance);
 					goto TooFarToDraw;
@@ -4306,7 +4306,7 @@ void PositionFacesInfo::draw_1p()
 				//else
 					//CONS_Printf("We're drawing: %d\n", distance);
 			}
-			//CONS_Printf("Our draw limit is %d\n", (FRACUNIT/13)*(mapobjectscale/(FRACUNIT/4)));
+			//CONS_Printf("Our draw limit is %d\n", fmax((FRACUNIT/15), ((FRACUNIT/13)*(mapobjectscale/(FRACUNIT/4)))));
 			
 			if (!(gametyperules & GTR_POINTLIMIT) && (players[rankplayer[i]].itemtype != KITEM_NONE || (players[rankplayer[i]].itemRoulette.active && !players[rankplayer[i]].itemRoulette.ringbox)))	//Not playing Battle 
 			{	
@@ -4330,8 +4330,8 @@ void PositionFacesInfo::draw_1p()
 			{
 				V_DrawMappedPatch(FACE_X + xoff + 9, Y + yoff - 7, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, K_GetSlotPatch_RaceFaces(players[rankplayer[i]].ringboxaward), NULL);
 			}				
-		}										//SCS ADD END
-		TooFarToDraw:
+		}
+		TooFarToDraw:										//SCS ADD END
 
 		if ((gametyperules & GTR_BUMPERS) && (players[rankplayer[i]].pflags & PF_ELIMINATED))
 			V_DrawScaledPatch(FACE_X-4, Y-3, V_HUDTRANS|V_SLIDEIN|V_SNAPTOLEFT, kp_ranknobumpers);
