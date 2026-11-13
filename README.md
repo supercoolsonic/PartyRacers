@@ -17,13 +17,19 @@ Updated for version 2.4.
 -22 new items, original and returning from Xitem mods from SRB2Kart.
 
 
-<img src="./party/readme/DRPR_CheckerDemo.gif" width="500">
+<img src="./party/readme/DRPR_CheckerDemo_New.gif" width="500">
 
-<img src="./party/readme/DRPR_DecaBananaDemo.gif" width="500">
+<img src="./party/readme/DRPR_DecaBananaDemo_New2.gif" width="500">
 
-<img src="./party/readme/DRPR_NormalShieldDemo.gif" width="500">
+<img src="./party/readme/DRPR_NormalShieldDemo_New.gif" width="500">
 
-<img src="./party/readme/DRPR_TimeStoneDemo.gif" width="500">
+<img src="./party/readme/DRPR_RingGunDemo_New.gif" width="500">
+
+<img src="./party/readme/DRPR_SolDemo2.gif" width="500">
+
+<img src="./party/readme/DRPR_IcedusDemo2.gif" width="500">
+
+<img src="./party/readme/DRPR_SlicerDemo.gif" width="500">
 
 * Adjustments to several mechanics, nerfs and buffs, and some new things...
 
@@ -31,7 +37,7 @@ Updated for version 2.4.
 
 * Shields now demonstrate their elemental properites a bit more. For example, try to avoid water when using a Fire Shield.
 
-<img src="./party/readme/DRPR_FireShieldDemo.gif" width="500">
+<img src="./party/readme/DRPR_FireShieldDemo_New.gif" width="500">
 
 * CHECK warnings now appear sooner. There are new CHECK warnings, as well.
 * Insta-whip charges a little faster and drains rings much slower.
