@@ -533,7 +533,7 @@ word_wrap_results_t V_RR_ScaledWordWrap(
 					}
 				}
 				
-                ew = SHORT(emote_w) * dupx;
+                ew = LSBF_SHORT(emote_w) * dupx;
 				
 				// Is the emote width about to pass the chat box width?
 				if (ex + (ew * FRACUNIT) > w) {
@@ -596,7 +596,7 @@ word_wrap_results_t V_RR_ScaledWordWrap(
 				c -= font->start;
 				if (V_CharacterValid(font, c) == true)
 				{
-					cw = SHORT(font->font[c]->width) * dupx;
+					cw = LSBF_SHORT(font->font[c]->width) * dupx;
 
 					// How bunched dims work is by incrementing cx slightly less than a full character width.
 					// This causes the next character to be drawn overlapping the previous.
@@ -923,7 +923,7 @@ void V_RR_DrawStringScaled(
 					}
                     
                     int32_t width = getEmotePatchWidthDirectly(emote, contains_text);
-                    cw = SHORT(width) * dupx;
+                    cw = LSBF_SHORT(width) * dupx;
 
                     // CONS_Printf("[DRAW] font space width %d\n", fontspec.spacew/FRACUNIT);
                     cx += cw;
@@ -981,8 +981,8 @@ void V_RR_DrawStringScaled(
 				if (V_CharacterValid(font, c) == true)
 				{
 					// Remove offsets from patch
-					fixed_t patchxofs = SHORT(font->font[c]->leftoffset) * dupx * scale;
-					cw = SHORT(font->font[c]->width) * dupx;
+					fixed_t patchxofs = LSBF_SHORT(font->font[c]->leftoffset) * dupx * scale;
+					cw = LSBF_SHORT(font->font[c]->width) * dupx;
 					cxoff = (*fontspec.dim_fn)(scale, fontspec.chw, hchw, dupx, &cw);
 					V_DrawFixedPatch(cx + cxoff + patchxofs, cy + cyoff, scale, flags, font->font[c], colormap);
 					cx += cw;
@@ -1082,7 +1082,7 @@ fixed_t V_RR_StringScaledWidth(
 					emote_t* emote = emote_fetch_map[chat_log_type_t::CLT_MINI](chat_log_index, emote_tracker_idx);
 
                     int32_t width = getEmotePatchWidthDirectly(emote, contains_text);
-                    cw = SHORT(width) * dupx;
+                    cw = LSBF_SHORT(width) * dupx;
 
 					cx += cw;
 
@@ -1121,7 +1121,7 @@ fixed_t V_RR_StringScaledWidth(
 				c -= font->start;
 				if (V_CharacterValid(font, c) == true)
 				{
-					cw = SHORT (font->font[c]->width) * dupx;
+					cw = LSBF_SHORT (font->font[c]->width) * dupx;
 
 					// How bunched dims work is by incrementing cx slightly less than a full character width.
 					// This causes the next character to be drawn overlapping the previous.
