@@ -871,7 +871,8 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_ringgun[0], "K_ITXSNP");
 	HU_UpdatePatch(&kp_butlerhyu[0], "K_ITHYUB");
 	HU_UpdatePatch(&kp_octus[0], "K_ITTAKN");
-	HU_UpdatePatch(&kp_slicer[0], "K_ITSLIC");			//SCS ADD END
+	HU_UpdatePatch(&kp_slicer[0], "K_ITSLIC");
+	HU_UpdatePatch(&kp_playerswap[0], "K_ITSWAP");	//SCS ADD END
 	HU_UpdatePatch(&kp_bar[0], "K_RBBAR");
 	HU_UpdatePatch(&kp_doublebar[0], "K_RBBAR2");
 	HU_UpdatePatch(&kp_triplebar[0], "K_RBBAR3");
@@ -915,10 +916,7 @@ void K_LoadKartHUDGraphics(void)
 	{
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_ringbonus[i], "%s", buffer);
-	}
-	
-	HU_UpdatePatch(&kp_playerswap[0], "K_ITSWAP");				//SCS ADD END
-
+	}														//SCS ADD END
 
 	snprintf(buffer, sizeof(buffer), "FSMFGxxx");
 	for (i = 0; i < FLAMESHIELD_MAX; i++)
@@ -1122,6 +1120,8 @@ void K_LoadKartHUDGraphics(void)
 		buffer[7] = '1'+i;
 		HU_UpdatePatch(&kp_timestone[i+20], "%s", buffer);
 	}
+	HU_UpdatePatch(&kp_timestone[29], "ISPYSTN10");
+	
 	snprintf(buffer, sizeof(buffer), "ISPYBONx");
 	for (i = 0; i < 4; i++)
 	{
@@ -1130,8 +1130,6 @@ void K_LoadKartHUDGraphics(void)
 	}
 
 	HU_UpdatePatch(&kp_playerswap[2], "ISPYSWAP");
-	
-	HU_UpdatePatch(&kp_timestone[29], "ISPYSTN10");
 	HU_UpdatePatch(&kp_normalshield[2], "ISPYSHLD");
 	HU_UpdatePatch(&kp_megachopper[2], "ISPYMCHP");
 	HU_UpdatePatch(&kp_armashield[2], "ISPYARMA");
