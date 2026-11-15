@@ -1704,11 +1704,11 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, db
 		}
 	}
 
-	fixed_t largegamescaler = (max((min(roulette->playing, 24)*3)/4, 2) * 7 + 112) - (roulette->playing/player->position); //SCS ADD - new formula to push some items forward a little bit in non-frantic races
+	fixed_t largegamescaler = (max((min(roulette->playing, 24)*3)/4, 2) * 7 + 112) - (roulette->playing/(max(player->position, 1))); //SCS ADD - new formula to push some items forward a little bit in non-frantic races
 
 	//fixed_t largegamescaler = roulette->playing * 11 + 115; // Spread out item odds in large games for a less insane experience.
 	if (roulette->playing <= 8)	//SCS ADD - trying out different formulas for different amount of players. <= 8, try an almost vanilla formula.
-		largegamescaler = (((roulette->playing*3)/2) * 9 + 112) - ((roulette->playing/player->position)*2);
+		largegamescaler = (((roulette->playing*3)/2) * 9 + 112) - ((roulette->playing/(max(player->position, 1)))*2);
 		
 	largegamescaler = (largegamescaler * K_GetNumWaypoints())/(((K_GetNumWaypoints()*2)/3)+1);
 	largegamescaler = min(335, largegamescaler);
@@ -1725,7 +1725,7 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, db
 	if (franticitems)
 		largegamescaler = 100; // Except in Frantic, where you know what you're getting
 
-	uint32_t targetpower = 100 * roulette->dist / largegamescaler; // fill roulette with items around this value!
+	uint32_t targetpower = 100 * roulette->dist / (max(largegamescaler, 1)); // fill roulette with items around this value!
 	if (!(specialstageinfo.valid))
 		targetpower = Easing_Linear(crowdingFirst, targetpower, targetpower/2);
 

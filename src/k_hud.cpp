@@ -216,7 +216,7 @@ static patch_t *kp_icedus[6];
 static patch_t *kp_slicer[3];
 static patch_t *kp_sol[6];
 static patch_t *kp_ringbonus[12];
-static patch_t *kp_playerswap[2];	//SCS ADD END
+static patch_t *kp_playerswap[3];	//SCS ADD END
 static patch_t *kp_bar[4];
 static patch_t *kp_doublebar[4];
 static patch_t *kp_triplebar[4];
