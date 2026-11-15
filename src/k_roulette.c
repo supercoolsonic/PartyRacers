@@ -1289,19 +1289,21 @@ static dboolean K_IsItemSpeed(kartitems_t item)
 			return false;
 	}
 }
-/*
+
 static fixed_t K_RequiredXPForItem(kartitems_t item)
 {
 	switch (item)
 	{
-		//case KITEM_GARDENTOP:								//SCS - Disabling this crap
+		case KITEM_SUPERJACKPOT:							//SCS ADD - This is NOT restoring EXP lockout; you can still always get a super jackpot by having it swap out in realtime.
+			return ((FRACUNIT*4)/5);								// But...given how apparently strong it is, let's stop relying on it so hard, eh?
+		//case KITEM_GARDENTOP:
 		//case KITEM_SHRINK:
 			//return FRACUNIT; // "Base" item odds
 		default:
 			return 0;
 	}
 }
-*/
+
 // Which items are disallowed for this player's specific placement?
 static dboolean K_ShouldPlayerAllowItem(kartitems_t item, const player_t *player)
 {
@@ -1319,8 +1321,8 @@ static dboolean K_ShouldPlayerAllowItem(kartitems_t item, const player_t *player
 			//return false;
 
 		// GIGA power items reserved only for players who were doing great and died.
-		//if (K_EffectiveGradingFactor(player) < K_RequiredXPForItem(item))
-			//return false;
+		if (!franticitems && K_EffectiveGradingFactor(player) < K_RequiredXPForItem(item))								//SCS EDIT - EXP lockout should NEVER apply to frantic items, otherwise it wouldn't truly be FRANTIC!
+			return false;
 
 		// Expert items are G2+ only, no Top in Relaxed!
 		//if (K_RequiredXPForItem(item) >= FRACUNIT && gamespeed == KARTSPEED_EASY)
