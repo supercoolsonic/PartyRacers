@@ -16759,7 +16759,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 								if (player->masteremeraldinvincibility == true)										//SCS ADD - Just a little bonus so it's not wasted.
 									K_AwardPlayerRings(player, 100, true);
 
-								player->invincibilitytimer = min((player->invincibilitytimer * 3/2), 60*TICRATE);					//SCS ADD
+								player->invincibilitytimer = min((player->invincibilitytimer * 15/12), 60*TICRATE);					//SCS ADD
 
 								K_AdjustPlayerItemAmount(player, -1);
 								player->botvars.itemconfirm = 0;
@@ -17166,7 +17166,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 								player->growshrinktimer = max(0, player->growshrinktimer);
 								player->growshrinktimer = max(player->growshrinktimer + 5*TICRATE, ((gametyperules & GTR_CLOSERPLAYERS) ? 8 : 12) * TICRATE);
 								
-								player->growshrinktimer = (player->growshrinktimer * 2);			//SCS ADD
+								player->growshrinktimer = (player->growshrinktimer * 3)/2;			//SCS ADD
 								
 								player->growshrinktimer = min(player->growshrinktimer, 60*TICRATE);			//SCS ADD - prevent overflowing
 
@@ -17360,7 +17360,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 								if ((cmd->buttons & BT_ATTACK) && (player->itemflags & IF_HOLDREADY))
 								{
 									const int32_t incr = (gametyperules & GTR_CLOSERPLAYERS) ? 4 : 2;
-									player->flamemeter += incr;
+									player->flamemeter += (incr*13)/15;										//SCS EDIT
 
 									if (player->flamelength)
 									{
