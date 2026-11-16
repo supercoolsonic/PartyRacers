@@ -1502,7 +1502,7 @@ void K_FillItemRouletteData(player_t *player, itemroulette_t *const roulette, db
 		kartslotmachine_t *presetlist = K_KartItemReelRingBox;
 		roulette->ringbox = true;
 
-		if (K_EffectiveGradingFactor(player) >= (FRACUNIT*5)/4)	//SCS ADD - Good EXP means you get a more risky slot!
+		if (franticitems || (K_EffectiveGradingFactor(player) >= (FRACUNIT*5)/4))	//SCS ADD - Good EXP means you get a more risky slot!
 			addeggmanslot = true;
 			
 			//presetlist = K_KartItemReelRingBoxEgg;
