@@ -1321,7 +1321,7 @@ static dboolean K_ShouldPlayerAllowItem(kartitems_t item, const player_t *player
 			//return false;
 
 		// GIGA power items reserved only for players who were doing great and died.
-		if ((player->exp <= 0 && K_RequiredXPForItem(item) != 0) || (!franticitems && K_EffectiveGradingFactor(player) < K_RequiredXPForItem(item)))	//SCS EDIT - EXP lockout should NEVER apply to frantic items, otherwise it wouldn't truly be FRANTIC!
+		if (!franticitems && ((player->exp <= 0 && K_RequiredXPForItem(item) != 0) || (K_EffectiveGradingFactor(player) < K_RequiredXPForItem(item))))	//SCS EDIT - EXP lockout should NEVER apply to frantic items, otherwise it wouldn't truly be FRANTIC!
 			return false;																												//Also, don't let a player chill at the back at the start with items set to appear instantly in races to get it for free!
 
 		// Expert items are G2+ only, no Top in Relaxed!
