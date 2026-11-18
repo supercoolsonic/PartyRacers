@@ -17979,6 +17979,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 							}
 							break;
 						case KITEM_ARMASHIELD:
+							player->itemamount = 1;						//SCS - do not stack the shield, ffs
 							if (player->curshield != KSHIELD_ARMA)
 							{
 								player->armashielddraindelay = 4;
