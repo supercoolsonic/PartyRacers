@@ -10043,7 +10043,7 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 			{
 				if (mobj->extravalue2 == NULL)								//SCS ADD START - Trying to get the Dynamite Derby sign to not be green, and have ribbons
 				{
-					if (!netgame && cv_toggle_colorized_signposts.value)
+					if ((!netgame && cv_toggle_colorized_signposts.value) || (netgame && cv_toggle_colorized_signposts_net.value))
 					{
 						if (mobj->target->player->position == 1)
 							mobj->color = SKINCOLOR_MUSTARD;
@@ -10057,7 +10057,8 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 					else
 						mobj->color = SKINCOLOR_GREY;
 								
-					if (!netgame && cv_toggle_ribbon_signposts.value && (mobj->target->player->rings + mobj->target->player->superringdisplay) >= 20) //No, we're not accounting for more than 20 here.
+					if (((!netgame && cv_toggle_ribbon_signposts.value) || (netgame && cv_toggle_ribbon_signposts.value)) 
+						&& (mobj->target->player->rings + mobj->target->player->superringdisplay) >= 20) //No, we're not accounting for more than 20 here.
 					{
 						mobj_t *ribbon = P_SpawnMobjFromMobj(mobj, 0, 0, 0, MT_SIGNPOSTRIBBON);
 									
@@ -10167,7 +10168,7 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 					mobj->angle += ANGLE_11hh;
 			}
 			
-			if (!netgame && cv_toggle_sparkling_signposts.value && mobj->target->player->exp == EXP_TARGET)													//SCS ADD
+			if (((!netgame && cv_toggle_sparkling_signposts.value) || (netgame && cv_toggle_sparkling_signposts_net.value)) && mobj->target->player->exp == EXP_TARGET)		//SCS ADD
 			{
 				P_SpawnMobj(
 						mobj->x + (P_RandomRange(PR_DECORATION, -((mobj->radius*3)/FRACUNIT), ((mobj->radius*3)/FRACUNIT))*FRACUNIT),
@@ -10231,7 +10232,9 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 				{
 					if (newplayer != NULL)
 					{
-						if (netgame || !cv_toggle_colorized_signposts.value || (!netgame && cv_toggle_colorized_signposts.value && mobj->target->player->position > 3))			//SCS EDIT - Don't change the color for 1st, 2nd, and 3rd
+						if ((netgame && cv_toggle_colorized_signposts_net.value && mobj->target->player->position > 3) 
+						|| (!netgame && cv_toggle_colorized_signposts.value && mobj->target->player->position > 3) 
+						|| !cv_toggle_colorized_signposts.value)			//SCS EDIT - Don't change the color for 1st, 2nd, and 3rd
 							cur->color = skincolors[newplayer->skincolor].invcolor;
 
 						cur->frame = cur->state->frame + skincolors[newplayer->skincolor].invshade;
@@ -10268,7 +10271,7 @@ static dboolean P_MobjRegularThink(mobj_t *mobj)
 				{
 					//if (mobj->extravalue2 == NULL)
 					//{
-						if (!netgame && cv_toggle_colorized_signposts.value)
+						if ((!netgame && cv_toggle_colorized_signposts.value) || (netgame && cv_toggle_colorized_signposts_net.value))
 						{
 							if (mobj->target->player->position == 1)
 								cur->color = SKINCOLOR_MUSTARD;

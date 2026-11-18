@@ -409,7 +409,7 @@ static menuitem_t OPTIONS_RadioRacersGameplay[] =
 };
 
 static menu_t OPTIONS_RadioRacersGameplayDef = {
-	sizeof (OPTIONS_RadioRacersGameplay) / sizeof (menuitem_t),			//SCS NOTE - hunting divide by 0 crash
+	sizeof (OPTIONS_RadioRacersGameplay) / sizeof (menuitem_t),
 	&OPTIONS_RadioRacersMenuDef,
 	0,
 	OPTIONS_RadioRacersGameplay,

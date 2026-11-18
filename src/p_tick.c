@@ -978,7 +978,7 @@ void P_Ticker(dboolean run)
 					numingame++;
 
 					// Check for the number of ties for first place after every player has thunk run for this tic
-					if (players[i].exiting == 1 && ((!netgame && players[i].position <= cv_toggle_multi_signposts.value) || players[i].position == 1) &&		//SCS EDIT - Allow for multiple signposts outside of ties
+					if (players[i].exiting == 1 && ((netgame && players[i].position <= cv_toggle_multi_signposts_net.value) || (!netgame && players[i].position <= cv_toggle_multi_signposts.value) || players[i].position == 1) &&		//SCS EDIT - Allow for multiple signposts outside of ties
 							(players[i].pflags & (PF_HITFINISHLINE|PF_NOCONTEST)) == PF_HITFINISHLINE)
 					{
 						finishingPlayers[numFinishingPlayers++] = &players[i];
