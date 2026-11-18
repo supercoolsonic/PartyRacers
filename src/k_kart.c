@@ -17661,7 +17661,6 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 							}
 							break;
 						case KITEM_NORMALSHIELD:
-							CONS_Printf("Num skins loaded: %d\n", numskins);
 							if (player->curshield != KSHIELD_NORMAL)
 							{
 								mobj_t *shield = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_NORMALSHIELD);
