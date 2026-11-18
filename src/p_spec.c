@@ -4783,7 +4783,7 @@ void P_SetupSignExit(player_t *player, dboolean tie)
 	int32_t numfound = 0;
 	uint16_t signcolor = 0;												//SCS ADD START
 	
-	if (!netgame && cv_toggle_colorized_signposts.value || (netgame && cv_toggle_colorized_signposts.value))
+	if ((!netgame && cv_toggle_colorized_signposts.value) || (netgame && cv_toggle_colorized_signposts_net.value))
 	{
 		if (player->position == 1)
 			signcolor = SKINCOLOR_MUSTARD;
@@ -4805,7 +4805,7 @@ void P_SetupSignExit(player_t *player, dboolean tie)
 	angle_t bestAngle = K_MomentumAngle(player->mo) + ANGLE_180;
 
 	for (; node; node = node->m_thinglist_next)
-	{	
+	{
 		thing = node->m_thing;
 		if (thing->type != MT_SIGN)
 			continue;
@@ -4816,7 +4816,7 @@ void P_SetupSignExit(player_t *player, dboolean tie)
 		if (tie)
 		{
 			if (player->position == 1)
-				bestAngle = bestAngle - ANGLE_90;
+				bestAngle = thing->angle;
 			
 			break;
 		}
@@ -4849,7 +4849,7 @@ void P_SetupSignExit(player_t *player, dboolean tie)
 		if (tie)
 		{
 			if (player->position == 1)
-				bestAngle = bestAngle - ANGLE_90;
+				bestAngle = thing->angle;
 			
 			break;
 		}
