@@ -2709,6 +2709,9 @@ dboolean K_PuntCollide(mobj_t *t1, mobj_t *t2)
 		return false;
 	}
 	
+	if (t1->type == MT_MEGACHOPPER)	//SCS ADD - stop killing the fucking fish!
+		return false;
+	
 	if (t2->type == MT_GHZBALL)	//SCS ADD
 		K_PuntHazard(t1, t2);
 
