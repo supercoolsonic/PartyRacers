@@ -1081,9 +1081,23 @@ consvar_t cv_kartbumpers = UnsavedNetVar("battlebumpers", "3").min_max(0, 12);
 void KartEliminateLast_OnChange(void);
 consvar_t cv_karteliminatelast = NetVar("eliminatelast", "Yes").yes_no().onchange(KartEliminateLast_OnChange);
 
-consvar_t cv_toggle_checkpointitemnum_net = UnsavedNetVar("numcheckpointsforitemboxesonline", "1").min_max(0, 99);		//SCS ADD
-consvar_t cv_toggle_randomcapsules_net = UnsavedNetVar("randomizeitemcapsules", "No").yes_no();						//SCS ADD
-consvar_t cv_itemcapsulerespawntime_net = UnsavedNetVar("netcaspulerespawn", "40").min_max(0, 99);					//SCS ADD
+consvar_t cv_toggle_checkpointitemnum_net = UnsavedNetVar("numcheckpointsforitemboxesonline", "1").min_max(0, 99);	//SCS ADD START
+consvar_t cv_toggle_randomcapsules_net = UnsavedNetVar("randomizeitemcapsules", "No").yes_no();
+consvar_t cv_itemcapsulerespawntime_net = UnsavedNetVar("netcaspulerespawn", "40").min_max(0, 99);
+consvar_t cv_toggle_multi_signposts_net = Player("netsignpostnumtoggle", "1st").values({
+	{1, "1st"},
+	{2, "2nd"}, 
+	{3, "3rd"}, 
+	{4, "4th"}, 
+	{5, "5th"}, 
+	{6, "6th"}, 
+	{7, "7th"}, 
+	{8, "8th"}
+}).radio();
+consvar_t cv_toggle_colorized_signposts_net = Player("netsignpostcolorizetoggle", "No").yes_no();
+consvar_t cv_toggle_scaling_signposts_net = Player("netsignpostscalingtoggle", "Yes").yes_no();
+consvar_t cv_toggle_ribbon_signposts_net = Player("netsignpostribbontoggle", "Yes").yes_no();
+consvar_t cv_toggle_sparkling_signposts_net = Player("netsignpostsparkletoggle", "Yes").yes_no();			//SCS AND END
 
 void KartEncore_OnChange(void);
 consvar_t cv_kartencore = UnsavedNetVar("encore", "Auto").values({{-1, "Auto"}, {0, "Off"}, {1, "On"}}).onchange_noinit(KartEncore_OnChange);

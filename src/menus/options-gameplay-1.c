@@ -22,15 +22,6 @@ menuitem_t OPTIONS_Gameplay[] =
 
 	{IT_STRING | IT_CVAR, "Frantic Items", "Stronger comebacks, even with low EXP. (Not recommended for even matches!)",
 		NULL, {.cvar = &cv_kartfrantic}, 0, 0},
-		
-	{IT_HEADER, "Capsules...", NULL,
-		NULL, {NULL}, 0, 0},
-		
-	{IT_STRING | IT_CVAR, "Random Item Capsules", "Randomize contents of item (not ring) capsules. \x82(Netgames only.)",
-		NULL, {.cvar = &cv_toggle_randomcapsules_net}, 0, 0},
-		
-	{IT_STRING | IT_CVAR, "Item Capsule Respawn", "How long it takes item (not ring) capsules to respawn. \x82(Netgames only.)",
-		NULL, {.cvar = &cv_itemcapsulerespawntime_net}, 0, 0},
 
 	{IT_HEADER, "Race...", NULL,
 		NULL, {NULL}, 0, 0},
@@ -46,9 +37,6 @@ menuitem_t OPTIONS_Gameplay[] =
 
 	{IT_STRING | IT_CVAR, "Last Place Explodes", "Once the standings are complete, give the race an explosive finish!",
 		NULL, {.cvar = &cv_karteliminatelast}, 0, 0},
-		
-	{IT_STRING | IT_CVAR, "Checkpoint Items Number", "How many checkpoints are needed in a race to make item boxes appear? \x82(Netgames only.)",		//SCS ADD
-		NULL, {.cvar = &cv_toggle_checkpointitemnum_net}, 0, 0},
 
 
 	{IT_HEADER, "Battle...", NULL,
@@ -83,6 +71,9 @@ menuitem_t OPTIONS_Gameplay[] =
 
 	{IT_STRING | IT_SUBMENU, "Random Item Toggles...", "Which items appear in your games.",
 		NULL, {.submenu = &OPTIONS_GameplayItemsDef}, 0, 0},
+		
+	{IT_STRING | IT_SUBMENU, "Party Racers Options...", "Capsule and Signpost Options. \x82(Netgames only!)",
+		NULL, {.submenu = &OPTIONS_PartyGameplayDef}, 0, 0},
 
 };
 
@@ -108,3 +99,55 @@ menu_t OPTIONS_GameplayDef = {
 	NULL,
 	NULL,
 };
+
+menuitem_t OPTIONS_PartyGameplay[] =								//SCS ADD START
+{		
+	{IT_STRING | IT_CVAR, "Checkpoint Items Number", "How many checkpoints are needed in a race to make item boxes appear?",
+		NULL, {.cvar = &cv_toggle_checkpointitemnum_net}, 0, 0},
+		
+	{IT_HEADER, "Capsules...", NULL,
+		NULL, {NULL}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Random Item Capsules", "Randomize contents of item (not ring) capsules.",
+		NULL, {.cvar = &cv_toggle_randomcapsules_net}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Item Capsule Respawn", "How long it takes item (not ring) capsules to respawn.",
+		NULL, {.cvar = &cv_itemcapsulerespawntime_net}, 0, 0},
+
+	{IT_HEADER, "Signposts...", NULL,
+		NULL, {NULL}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Multiple Signposts", "Last position from 1st place that will spawn a signpost when you cross the finish line.",
+		NULL, {.cvar = &cv_toggle_multi_signposts_net}, 0, 0},  
+		
+	{IT_STRING | IT_CVAR, "Sign Coloration", "Should 1st, 2nd, and 3rd place signposts be colored gold, silver, and bronze?",
+		NULL, {.cvar = &cv_toggle_colorized_signposts_net}, 0, 0},
+		
+	{IT_STRING | IT_CVAR, "Sign Sizes", "Should each sign after 1st place be smaller than the previous position's sign?",
+		NULL, {.cvar = &cv_toggle_scaling_signposts_net}, 0, 0},   
+		
+	{IT_STRING | IT_CVAR, "Sign Ribbons", "Should a ribbon be tied to signposts for players that cross the finish line with 20 rings?",
+		NULL, {.cvar = &cv_toggle_ribbon_signposts_net}, 0, 0}, 
+		
+	{IT_STRING | IT_CVAR, "Sign Sparkles", "Should 1st place's signpost sparkle if the player achieved perfect EXP during the race?",
+		NULL, {.cvar = &cv_toggle_sparkling_signposts_net}, 0, 0},																					
+		
+};
+
+menu_t OPTIONS_PartyGameplayDef = {
+	sizeof (OPTIONS_PartyGameplay) / sizeof (menuitem_t),
+	&OPTIONS_GameplayDef,
+	0,
+	OPTIONS_PartyGameplay,
+	48, 80,
+	SKINCOLOR_SCARLET, 0,
+	MBF_DRAWBGWHILEPLAYING,
+	NULL,
+	2, 5,
+	M_DrawGenericOptions,
+	M_DrawOptionsCogs,
+	M_OptionsTick,
+	NULL,
+	NULL,
+	NULL,
+};																//SCS ADD END

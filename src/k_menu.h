@@ -504,10 +504,13 @@ typedef enum
 extern menuitem_t OPTIONS_Gameplay[];
 extern menu_t OPTIONS_GameplayDef;
 
+extern menuitem_t OPTIONS_PartyGameplay[];				//SCS ADD
+extern menu_t OPTIONS_PartyGameplayDef;					//SCS ADD
+
 extern menuitem_t OPTIONS_GameplayItems[];
 extern menuitem_t OPTIONS_GameplayItems_Party[];		//SCS ADD
 extern menu_t OPTIONS_GameplayItemsDef;
-extern menu_t OPTIONS_GameplayItemsDef_Party;				//SCS ADD
+extern menu_t OPTIONS_GameplayItemsDef_Party;			//SCS ADD
 
 extern menuitem_t OPTIONS_Server[];
 extern menu_t OPTIONS_ServerDef;

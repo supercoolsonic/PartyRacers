@@ -80,9 +80,14 @@ extern consvar_t cv_kartvoices;
 extern consvar_t cv_karthorns;
 extern consvar_t cv_kartbot;
 extern consvar_t cv_karteliminatelast;
-extern consvar_t cv_toggle_checkpointitemnum_net;				//SCS ADD
-extern consvar_t cv_toggle_randomcapsules_net;					//SCS ADD
-extern consvar_t cv_itemcapsulerespawntime_net;					//SCS ADD
+extern consvar_t cv_toggle_checkpointitemnum_net;				//SCS ADD START
+extern consvar_t cv_toggle_multi_signposts_net;
+extern consvar_t cv_toggle_colorized_signposts_net;
+extern consvar_t cv_toggle_scaling_signposts_net;
+extern consvar_t cv_toggle_ribbon_signposts_net;
+extern consvar_t cv_toggle_sparkling_signposts_net;				//SCS ADD END
+extern consvar_t cv_toggle_randomcapsules_net;
+extern consvar_t cv_itemcapsulerespawntime_net;
 extern consvar_t cv_thunderdome;
 extern consvar_t cv_teamplay;
 extern consvar_t cv_duel;

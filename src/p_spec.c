@@ -4681,7 +4681,7 @@ static void P_SetupSignObject(mobj_t *sign, mobj_t *pmo, dboolean error, uint16_
 	P_SetTarget(&sign->target, pmo);
 	P_SetMobjState(sign, S_SIGN_POLE);
 	
-	if (!netgame && cv_toggle_scaling_signposts.value && signcolor != SKINCOLOR_MUSTARD)														//SCS ADD - We gradually scale down all sign posts after 1st
+	if (((!netgame && cv_toggle_scaling_signposts.value) || (netgame && cv_toggle_scaling_signposts_net.value)) && signcolor != SKINCOLOR_MUSTARD)			//SCS ADD - We gradually scale down all sign posts after 1st
 		sign->destscale = ((sign->destscale/pmo->player->position)*3)/2;
 		
 		//P_SetScale(sign, (sign->scale/pmo->player->position));
@@ -4695,7 +4695,7 @@ static void P_SetupSignObject(mobj_t *sign, mobj_t *pmo, dboolean error, uint16_
 	sign->color = signcolor;																//SCS ADD
 	
 	
-	if (!netgame && cv_toggle_ribbon_signposts.value && (pmo->player->rings + pmo->player->superringdisplay) >= 20)						//SCS ADD 		NOTE - (We don't account for more than 20 here)
+	if (((!netgame && cv_toggle_ribbon_signposts.value) || (netgame && cv_toggle_ribbon_signposts_net.value)) && (pmo->player->rings + pmo->player->superringdisplay) >= 20)	//SCS ADD 		NOTE - (We don't account for more than 20 here)
 	{
 		ribbon = P_SpawnMobjFromMobj(sign, 0, 0, 0, MT_SIGNPOSTRIBBON);
 		
@@ -4783,7 +4783,7 @@ void P_SetupSignExit(player_t *player, dboolean tie)
 	int32_t numfound = 0;
 	uint16_t signcolor = 0;												//SCS ADD START
 	
-	if (!netgame && cv_toggle_colorized_signposts.value)
+	if (!netgame && cv_toggle_colorized_signposts.value || (netgame && cv_toggle_colorized_signposts.value))
 	{
 		if (player->position == 1)
 			signcolor = SKINCOLOR_MUSTARD;
