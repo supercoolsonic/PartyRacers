@@ -17661,6 +17661,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 							}
 							break;
 						case KITEM_NORMALSHIELD:
+							CONS_Printf("Num skins loaded: %d\n", numskins);
 							if (player->curshield != KSHIELD_NORMAL)
 							{
 								mobj_t *shield = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_NORMALSHIELD);
@@ -17979,6 +17980,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 							}
 							break;
 						case KITEM_ARMASHIELD:
+							player->itemamount = 1;						//SCS - do not stack the shield, ffs
 							if (player->curshield != KSHIELD_ARMA)
 							{
 								player->armashielddraindelay = 4;
