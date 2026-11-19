@@ -122,4 +122,4 @@ Signpost ribbon from Expanded Signposts mod for SRB2Kart.
 Original Expanded Signposts mode here: https://mb.srb2.org/addons/expanded-signposts.4968/
 
 
-Icedus, Sol, and Slicer sprites by Sieggy.
+Icedus, Sol, and Slicer sprites by Sieggy. Model render by AboAlrokDawn.

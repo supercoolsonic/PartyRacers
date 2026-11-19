@@ -3873,6 +3873,32 @@ static fixed_t K_RingDurationBoost(const player_t *player)
 	return ret;
 }
 
+static void K_FlameDashLeftoverSmoke(mobj_t *src)		//SCS - moving this here
+{
+	uint8_t i;
+
+	for (i = 0; i < 2; i++)
+	{
+		angle_t rand_angle;
+		fixed_t rand_move;
+		mobj_t *smoke = P_SpawnMobj(src->x, src->y, src->z+(8<<FRACBITS), MT_BOOSTSMOKE);
+
+		P_SetScale(smoke, src->scale);
+		smoke->destscale = 3*src->scale/2;
+		smoke->scalespeed = src->scale/12;
+
+		smoke->momx = 3*src->momx/4;
+		smoke->momy = 3*src->momy/4;
+		smoke->momz = 3*P_GetMobjZMovement(src)/4;
+
+		// note: determinate random argument eval order
+		rand_move = P_RandomRange(PR_DECORATION, 0, 8);
+		rand_angle = P_RandomRange(PR_DECORATION, 135, 225);
+		P_Thrust(smoke, src->angle + FixedAngle(rand_angle<<FRACBITS), rand_move * src->scale);
+		smoke->momz += P_RandomRange(PR_DECORATION, 0, 4) * src->scale;
+	}
+}
+
 // sets boostpower, speedboost, accelboost, and handleboost to whatever we need it to be
 static void K_GetKartBoostPower(player_t *player)
 {
@@ -4111,15 +4137,31 @@ static void K_GetKartBoostPower(player_t *player)
 	
 	if (player->itemtype == KITEM_RINGGUN && player->playerringgunpower) // SCS ADD
 	{
-		if (player->leaderpenalty < POS_DELAY_TIME + 4)
+		if (player->playerringgunpower < 300)
 		{
-			ADDBOOST(((player->playerringgunpower/55)*FRACUNIT/(86/(GetTotalInGameRacers()+1))),//*(player->position/GetTotalInGameRacers()*GetTotalInGameRacers()), 
-			(FRACUNIT/4 + (player->playerringgunpower/55)*FRACUNIT/(86/(GetTotalInGameRacers()+1))),//*(player->position/GetTotalInGameRacers()*GetTotalInGameRacers()), 
-			((player->playerringgunpower/55)*FRACUNIT/(86/(GetTotalInGameRacers()+1))));//*(player->position/GetTotalInGameRacers())*GetTotalInGameRacers()); // + ???% top speed, + 25 + ???% acceleration, +???% handling
+			if (player->position > 1 || player->distancetofinish <= 0)	//You only get the buffs outside of 1st
+			{
+				ADDBOOST(((player->playerringgunpower/55)*FRACUNIT/(86/(GetTotalInGameRacers()+1))),//*(player->position/GetTotalInGameRacers()*GetTotalInGameRacers()), 
+				(FRACUNIT/4 + (player->playerringgunpower/55)*FRACUNIT/(86/(GetTotalInGameRacers()+1))),//*(player->position/GetTotalInGameRacers()*GetTotalInGameRacers()), 
+				((player->playerringgunpower/55)*FRACUNIT/(86/(GetTotalInGameRacers()+1))));//*(player->position/GetTotalInGameRacers())*GetTotalInGameRacers()); // + ???% top speed, + 25 + ???% acceleration, +???% handling
+			}
+			
+			if ((player->playerringgunpower >= 200 && leveltime % 10 == 0) || (player->playerringgunpower >= 250 && leveltime % 6 == 0))
+				K_FlameDashLeftoverSmoke(player->mo);
+			
 		}
-		else if (player->distancetofinish != 0 && player->playerringgunpower > 10)		//I'll give you a bit a leeway to fire off a shot in 1st so you can get rid of it if you need to.
+		else
 		{
-			P_KillMobj(player->mo, NULL, NULL, DMG_NORMAL);	//Don't drag it into 1st for too long
+			//CONS_Printf("OVERCHARGE!\n");
+			if (K_EffectiveGradingFactor(player) >= (FRACUNIT*5)/4)
+			{
+
+				P_DamageMobj(player->mo, NULL, NULL, 1, DMG_TUMBLE);
+				K_StripItemsExceptBackup(player);
+				K_SpawnMineExplosion(player->mo, player->mo->color, 3);
+			}
+			else
+				P_KillMobj(player->mo, NULL, NULL, DMG_NORMAL);	//No blue EXP? You die.
 		}
 	}
 
@@ -8078,32 +8120,6 @@ static void K_DoLightningShield(player_t *player)
 #undef THUNDERRADIUS
 #undef THUNDERSPRITE
 
-static void K_FlameDashLeftoverSmoke(mobj_t *src)
-{
-	uint8_t i;
-
-	for (i = 0; i < 2; i++)
-	{
-		angle_t rand_angle;
-		fixed_t rand_move;
-		mobj_t *smoke = P_SpawnMobj(src->x, src->y, src->z+(8<<FRACBITS), MT_BOOSTSMOKE);
-
-		P_SetScale(smoke, src->scale);
-		smoke->destscale = 3*src->scale/2;
-		smoke->scalespeed = src->scale/12;
-
-		smoke->momx = 3*src->momx/4;
-		smoke->momy = 3*src->momy/4;
-		smoke->momz = 3*P_GetMobjZMovement(src)/4;
-
-		// note: determinate random argument eval order
-		rand_move = P_RandomRange(PR_DECORATION, 0, 8);
-		rand_angle = P_RandomRange(PR_DECORATION, 135, 225);
-		P_Thrust(smoke, src->angle + FixedAngle(rand_angle<<FRACBITS), rand_move * src->scale);
-		smoke->momz += P_RandomRange(PR_DECORATION, 0, 4) * src->scale;
-	}
-}
-
 #if 0
 static void K_DoHyudoroSteal(player_t *player)		//SCS RESTORE - I mean, is it coming back? No, lmao. Is it funny? Kinda. Could it be used for something? Maybe...
 {
@@ -11562,6 +11578,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 				player->usedmasteremeraldduringringboxaward = false;
 				player->invincibilitytimer = 0;
 				player->stunned = (BAILSTUN*3)/2;
+				K_FlameDashLeftoverSmoke(player->mo);
 			}
 			
 			if (player->usedmasteremeraldduringringboxaward)
@@ -11575,6 +11592,7 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 						player->rings = -1*player->ringlimit;
 						player->stunned = BAILSTUN;
 						K_DefensiveOverdrive(player);
+						K_FlameDashLeftoverSmoke(player->mo);
 					}
 			}
 			else if (player->masteremeraldinvincibility)
@@ -12084,13 +12102,13 @@ void K_KartPlayerThink(player_t *player, ticcmd_t *cmd)
 	{
 		player->armageddonshieldboosttimer--;
 			
-		if (player->baildrop) //Kiiiiiillll yoooouuuuuu
+		/*if (player->baildrop) //Kiiiiiillll yoooouuuuuu				//lol arma shield catchup isn't THAT good, this doesn't need to happen anymore imo
 		{
 			player->rings = -1*player->ringlimit;
 			player->armageddonshieldboosttimer = 0;
 			player->armageddonshieldboostdelay = 0;
 			P_KillMobj(player->mo, NULL, NULL, DMG_NORMAL);			
-		}
+		}*/
 	}
 		
 	if (player->stealingtimer == 0
@@ -18132,6 +18150,7 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 							}
 							break;					
 						case KITEM_RINGGUN:
+							//CONS_Printf("Ring Power %d\n", player->playerringgunpower);
 							if (!HOLDING_ITEM && NO_HYUDORO)
 							{
 								if (player->playerringgunpower && !(cmd->buttons & BT_ATTACK))
@@ -18151,6 +18170,9 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 											player->superring = max(0, player->superring - 1);
 											player->playerringgunpower++;
 											
+											if (player->position <= 3 && player->distancetofinish != 0)	//The power is multiplied by 5 while in top 3
+												player->playerringgunpower += 4;
+											
 											if (player->bot)					//lol cheating
 												player->playerringgunpower++;
 											
@@ -18161,6 +18183,9 @@ void K_MoveKartPlayer(player_t *player, dboolean onground)
 											player->rings = max(0, player->rings - 1);
 											K_DefensiveOverdrive(player);
 											player->playerringgunpower++;
+											
+											if (player->position <= 3 && player->distancetofinish != 0)	//The power is multiplied by 5 while in top 3
+												player->playerringgunpower += 4;
 											
 											if (player->bot)					//SCS ADD - lol cheating
 												player->playerringgunpower++;

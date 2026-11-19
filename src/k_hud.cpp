@@ -227,6 +227,7 @@ static patch_t *kp_eggslot[4];	//SCS ADD
 
 static patch_t *kp_ringemeralds[7];	//SCS ADD
 static patch_t *kp_ringemeraldssmall[7];	//SCS ADD
+static patch_t *kp_ringgunwarnings[3];		//SCS ADD
 
 static patch_t *kp_check[12];
 
@@ -910,6 +911,10 @@ void K_LoadKartHUDGraphics(void)
 	HU_UpdatePatch(&kp_ringemeraldssmall[4], "K_REMS5");
 	HU_UpdatePatch(&kp_ringemeraldssmall[5], "K_REMS6");
 	HU_UpdatePatch(&kp_ringemeraldssmall[6], "K_REMS7");
+	
+	HU_UpdatePatch(&kp_ringgunwarnings[0], "RNGGUN1");
+	HU_UpdatePatch(&kp_ringgunwarnings[1], "RNGGUN2");
+	HU_UpdatePatch(&kp_ringgunwarnings[2], "RNGGUS1");
 	
 	snprintf(buffer, sizeof(buffer), "K_ITBONx");
 	for (i = 0; i < 4; i++)
@@ -2365,6 +2370,7 @@ static void K_drawKartItem(void)
 	uint8_t localamt[3] = {0, 0, 0};
 	patch_t *localbg = ((offset) ? kp_itembg[2] : kp_itembg[0]);
 	patch_t *localinkblotch = ((offset) ? kp_inkblotches[0] : kp_inkblotches[1]);		//SCS ADD
+	patch_t *localringgunwarning = ((offset) ? kp_ringgunwarnings[2] : kp_ringgunwarnings[1]);		//SCS ADD
 	//patch_t *localhyucombo = ((offset) ? kp_pickpockcombo[1] : kp_pickpockcombo[0]);	//SCS ADD
 	patch_t *localinv = ((offset) ? kp_invincibility[((leveltime % (6*3)) / 3) + 7] : kp_invincibility[(leveltime % (7*3)) / 3]);
 	patch_t *localmemer = ((offset) ? kp_masteremerald[((leveltime % (6*3)) / 3) + 6] : kp_masteremerald[(leveltime % (6*3)) / 3]);				//SCS ADD
@@ -3189,7 +3195,48 @@ static void K_drawKartItem(void)
 		}
 	}
 	
-	if (stplyr->inkblotchtimer >= 10 || (stplyr->inkblotchtimer && stplyr->inkblotchtimer < 10 && leveltime % 2 == 0))			//SCS ADD - want it to flicker when about to disappear
+	if (stplyr->playerringgunpower >= 150)			//SCS ADD START
+	{
+		dboolean shoulddraw = ((stplyr->playerringgunpower > 200) || (leveltime % 2 == 0) || (cv_reducevfx.value)); //don't flash it if the player has reducevfx enabled
+		
+		if (!shoulddraw)
+			goto SkipWarning;
+		
+		uint8_t *rgflash = R_GetTranslationColormap(TC_BLINK, SKINCOLOR_RED, GTC_CACHE);
+		
+		if (stplyr->playerringgunpower >= 250 && (leveltime % 3 == 0 || cv_reducevfx.value))	//just keep it yellow if reducevfx is enabled
+			rgflash = R_GetTranslationColormap(TC_BLINK, SKINCOLOR_YELLOW, GTC_CACHE);
+			
+		
+		if (shouldDrawOnPlayer)
+		{
+			V_DrawFixedPatch(
+				(fx<<FRACBITS), (fy<<FRACBITS), 
+				baseHudScale, V_HUDTRANS|V_SLIDEIN|fflags,
+				localringgunwarning, rgflash
+			);
+			
+			if (r_splitscreen <= 1 && stplyr->playerringgunpower > 200 && (leveltime % 2 == 0 || stplyr->playerringgunpower >= 250))	//only start drawing the smaller ones at 200 rings, and ALWAYS draw them starting at 250
+			{
+				V_DrawFixedPatch(
+					(fx<<FRACBITS), (fy<<FRACBITS), 
+					baseHudScale, V_HUDTRANS|V_SLIDEIN|fflags,
+					kp_ringgunwarnings[0], rgflash
+				);
+			}
+		}
+		else
+		{
+			V_DrawMappedPatch(fx, fy, V_HUDTRANS|V_SLIDEIN|fflags, localringgunwarning, rgflash);
+			
+			if (r_splitscreen <= 1 && stplyr->playerringgunpower > 200 && (leveltime % 2 == 0 || stplyr->playerringgunpower >= 250))	//bleh, repeating code...
+				V_DrawMappedPatch(fx, fy, V_HUDTRANS|V_SLIDEIN|fflags, kp_ringgunwarnings[0], rgflash);
+				
+		}
+	}
+	SkipWarning:
+	
+	if (stplyr->inkblotchtimer >= 10 || (stplyr->inkblotchtimer && stplyr->inkblotchtimer < 10 && leveltime % 2 == 0))
 	{
 		if (shouldDrawOnPlayer)
 		{
@@ -3200,14 +3247,9 @@ static void K_drawKartItem(void)
 			);
 		}
 		else
-			V_DrawMappedPatch(fx, fy, V_HUDTRANS|V_SLIDEIN|fflags, localinkblotch, 0);	
+			V_DrawMappedPatch(fx, fy, V_HUDTRANS|V_SLIDEIN|fflags, localinkblotch, 0);
 		
-	}
-	
-	/*if (stplyr->pickpockethyucombo > 0)			//SCS ADD 
-	{
-		V_DrawMappedPatch(fx, fy, V_HUDTRANS|V_SLIDEIN|fflags, localhyucombo, boxmap);		
-	}*/
+	}										//SCS ADD END
 }
 
 // So, like, we've already established that HUD code is unsavable, right?
